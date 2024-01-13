@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import DatePicker from "./components/DatePicker.vue";
+var date = new Date();
 </script>
 
 <template>
@@ -11,7 +12,7 @@ import HelloWorld from './components/HelloWorld.vue'
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <HelloWorld msg="Vite + Vue" />
+  <DatePicker v-model="date" />
 </template>
 
 <style scoped>
