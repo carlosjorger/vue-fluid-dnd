@@ -3,11 +3,32 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "files": [
+    "dist",
+    "src/components/"
+  ],
+  "main": "./dist/vue-datepicker.umd.js",
+  "module": "./dist/vue-datepicker.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/vue-datepicker.js",
+      "require": "./dist/vue-datepicker.umd.js"
+    },
+    "./style.css": "./dist/style.css"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview"
   },
+  "keywords": [
+    "vue",
+    "vue3",
+    "component",
+    "library"
+  ],
+  "author": "Carlos Jorge",
   "dependencies": {
     "vue": "^3.3.11"
   },
