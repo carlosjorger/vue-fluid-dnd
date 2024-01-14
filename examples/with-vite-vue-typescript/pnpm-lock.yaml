@@ -9,8 +9,8 @@ dependencies:
     specifier: ^3.3.11
     version: 3.3.11(typescript@5.2.2)
   vue-date-picker:
-    specifier: file:../../
-    version: file:../..(typescript@5.2.2)
+    specifier: link:..\..
+    version: link:../..
 
 devDependencies:
   '@vitejs/plugin-vue':
@@ -746,14 +746,3 @@ packages:
   /yallist@4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
     dev: true
-
-  file:../..(typescript@5.2.2):
-    resolution: {directory: ../.., type: directory}
-    id: file:../..
-    name: vue-datepicker
-    version: 0.0.1
-    dependencies:
-      vue: 3.3.11(typescript@5.2.2)
-    transitivePeerDependencies:
-      - typescript
-    dev: false
