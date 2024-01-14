@@ -10,6 +10,7 @@
   "module": "./dist/vue-chrono-picker.js",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/vue-chrono-picker.js",
       "require": "./dist/vue-chrono-picker.umd.cjs"
     },
@@ -19,6 +20,7 @@
     }
   },
   "types": "./dist/index.d.ts",
+  "typings": "./dist/index.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
