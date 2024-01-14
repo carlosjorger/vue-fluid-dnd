@@ -1,18 +1,18 @@
 {
-  "name": "vue-date-picker",
+  "name": "vue-chrono-picker",
   "version": "0.0.1",
   "type": "module",
   "files": [
     "dist",
     "src/components/"
   ],
-  "main": "./dist/vue-datepicker.umd.js",
-  "module": "./dist/vue-datepicker.js",
+  "main": "./dist/vue-chrono-picker.umd.js",
+  "module": "./dist/vue-chrono-picker.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/vue-datepicker.js",
-      "require": "./dist/vue-datepicker.umd.js"
+      "import": "./dist/vue-chrono-picker.js",
+      "require": "./dist/vue-chrono-picker.umd.js"
     },
     "./style.css": "./dist/style.css"
   },

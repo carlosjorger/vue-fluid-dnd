@@ -15,8 +15,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
-      name: "VueDatePicker",
-      fileName: "vue-date-picker",
+      name: "VueChronoPicker",
+      fileName: "vue-chrono-picker",
     },
     rollupOptions: {
       external: ["vue"],

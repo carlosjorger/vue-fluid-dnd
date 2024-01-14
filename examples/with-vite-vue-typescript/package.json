@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "vue": "^3.3.11",
-    "vue-date-picker": "link:..\\.."
+    "vue-chrono-picker": "link:..\\.."
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.2",
