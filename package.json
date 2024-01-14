@@ -1,24 +1,24 @@
 {
   "name": "vue-chrono-picker",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "files": [
     "dist",
     "src/components/"
   ],
-  "main": "./dist/vue-chrono-picker.umd.js",
+  "main": "./dist/vue-chrono-picker.umd.cjs",
   "module": "./dist/vue-chrono-picker.js",
-  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/vue-chrono-picker.js",
-      "require": "./dist/vue-chrono-picker.umd.js"
+      "require": "./dist/vue-chrono-picker.umd.cjs"
     },
     "./dist/style.css": {
       "import": "./dist/style.css",
       "require": "./dist/style.css"
     }
   },
+  "types": "./dist/index.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
@@ -33,6 +33,9 @@
   "author": "Carlos Jorge",
   "dependencies": {
     "vue": "^3.3.11"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.13"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.2",

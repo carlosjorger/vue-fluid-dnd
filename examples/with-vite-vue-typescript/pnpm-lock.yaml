@@ -10,7 +10,7 @@ dependencies:
     version: 3.3.11(typescript@5.2.2)
   vue-chrono-picker:
     specifier: link:..\..
-    version: 0.0.1(typescript@5.2.2)
+    version: link:../..
 
 devDependencies:
   '@vitejs/plugin-vue':
@@ -708,14 +708,6 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
     dev: true
-
-  /vue-chrono-picker@0.0.1(typescript@5.2.2):
-    resolution: {integrity: sha512-GgPP3OJcNHbM089fIEFeo7HZ9w6JgBg01cwqIcHHFMCDDllx5hnZm6NNWogyPceLmb06jmyB+YgtaDGKRM5UXA==}
-    dependencies:
-      vue: 3.3.11(typescript@5.2.2)
-    transitivePeerDependencies:
-      - typescript
-    dev: false
 
   /vue-template-compiler@2.7.16:
     resolution: {integrity: sha512-AYbUWAJHLGGQM7+cNTELw+KsOG9nl2CnSv467WobS5Cv9uk3wFcnr1Etsz2sEIHEZvw1U+o9mRlEO6QbZvUPGQ==}

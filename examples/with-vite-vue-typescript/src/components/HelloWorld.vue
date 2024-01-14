@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
+
 import { DatePicker } from "vue-chrono-picker";
 defineProps<{ msg: string }>();
 
 const count = ref(0);
+console.log(count);
 let date = new Date();
 </script>
 
