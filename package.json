@@ -1,6 +1,6 @@
 {
   "name": "vue-chrono-picker",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "files": [
     "dist",
@@ -14,7 +14,10 @@
       "import": "./dist/vue-chrono-picker.js",
       "require": "./dist/vue-chrono-picker.umd.js"
     },
-    "./style.css": "./dist/style.css"
+    "./dist/style.css": {
+      "import": "./dist/style.css",
+      "require": "./dist/style.css"
+    }
   },
   "scripts": {
     "dev": "vite",
