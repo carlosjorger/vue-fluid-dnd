@@ -13,7 +13,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
-      name: "vue-datepicker",
+      name: "VueDatePicker",
       fileName: "vue-date-picker",
     },
     rollupOptions: {

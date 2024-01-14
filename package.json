@@ -19,7 +19,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "vue-tsc --emitDeclarationOnly && vite build",
     "preview": "vite preview"
   },
   "keywords": [
