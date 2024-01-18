@@ -1,5 +1,6 @@
 <template>
-  <div
+  <component
+    :is="tag"
     @dragstart="startDrag($event, draggableId)"
     @drop="onDrop($event, enableDrag)"
     @dragenter="onDragEnter(draggableId, enableDrag)"
@@ -7,29 +8,17 @@
     :draggable="draggable"
   >
     <slot></slot>
-  </div>
+  </component>
 </template>
 <script setup lang="ts">
-import { PropType } from "vue";
 import { useDrag } from "../composables/useDrag";
-const { onDropChange } = defineProps({
-  draggableId: {
-    type: Object as PropType<string>,
-    required: true,
-  },
-  onDropChange: {
-    type: Object as PropType<(id: string) => void>,
-    required: true,
-  },
-  enableDrag: {
-    type: Object as PropType<boolean>,
-    required: true,
-  },
-  draggable: {
-    type: Object as PropType<boolean>,
-    required: true,
-  },
-});
+const { onDropChange } = defineProps<{
+  draggableId: string;
+  onDropChange: (id: string) => void;
+  enableDrag: boolean;
+  draggable: boolean;
+  tag: string;
+}>();
 const { onDragEnter, onDrop, startDrag } = useDrag(
   "Element",
   () => ({}),
