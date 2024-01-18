@@ -24,7 +24,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "install-package-examples": "cd examples\\with-vite-vue-typescript && pnpm i \"../../\""
   },
   "keywords": [
     "vue",
