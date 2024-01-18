@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import DatePicker from "./components/DatePicker.vue";
+import DragAndDrop from "./components/DragAndDrop.vue";
 var date = new Date();
 </script>
 
@@ -12,7 +13,32 @@ var date = new Date();
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <DatePicker v-model="date" />
+  <ul>
+    <DragAndDrop
+      draggable
+      draggable-id="1"
+      enable-drag
+      :onDropChange="(_) => {}"
+    >
+      <div
+        style="width: 40px; height: 40px; color: white; background-color: red"
+      >
+        1
+      </div>
+    </DragAndDrop>
+    <DragAndDrop
+      draggable
+      draggable-id="1"
+      enable-drag
+      :onDropChange="(_) => {}"
+    >
+      <div
+        style="width: 40px; height: 40px; color: white; background-color: blue"
+      >
+        2
+      </div>
+    </DragAndDrop>
+  </ul>
 </template>
 
 <style scoped>
