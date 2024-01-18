@@ -19,12 +19,9 @@ var date = new Date();
       enable-drag
       :onDropChange="(_) => {}"
       tag="li"
+      style="width: 40px; height: 40px; color: white; background-color: red"
     >
-      <div
-        style="width: 40px; height: 40px; color: white; background-color: red"
-      >
-        1
-      </div>
+      1
     </DragAndDrop>
     <DragAndDrop
       draggable
@@ -32,12 +29,9 @@ var date = new Date();
       enable-drag
       :onDropChange="(_) => {}"
       tag="li"
+      style="width: 40px; height: 40px; color: white; background-color: blue"
     >
-      <div
-        style="width: 40px; height: 40px; color: white; background-color: blue"
-      >
-        2
-      </div>
+      2
     </DragAndDrop>
   </ul>
 </template>
