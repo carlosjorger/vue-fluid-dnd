@@ -12,28 +12,26 @@ var date = new Date();
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <ul>
+  <transition-group name="subsection" tag="ul">
     <DragAndDrop
-      draggable
       draggable-id="1"
       enable-drag
       :onDropChange="(_) => {}"
       tag="li"
-      style="width: 40px; height: 40px; color: white; background-color: red"
+      style="width: 100px; height: 100px; color: white; background-color: red"
     >
       1
     </DragAndDrop>
     <DragAndDrop
-      draggable
       draggable-id="1"
       enable-drag
       :onDropChange="(_) => {}"
       tag="li"
-      style="width: 40px; height: 40px; color: white; background-color: blue"
+      style="width: 100px; height: 100px; color: white; background-color: blue"
     >
       2
     </DragAndDrop>
-  </ul>
+  </transition-group>
 </template>
 
 <style scoped>
@@ -48,5 +46,23 @@ var date = new Date();
 }
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
+}
+.subsection-move {
+  transition: all 0.5s ease;
+}
+.subsection-leave-active {
+  transition: all 0.5s ease;
+}
+.subsection-enter-active {
+  transition: all 0.5s ease;
+}
+.subsection-enter-from,
+.subsection-leave-to {
+  opacity: 0;
+  transform: translateX(-1rem);
+}
+
+.subsection-leave-active {
+  position: absolute;
 }
 </style>
