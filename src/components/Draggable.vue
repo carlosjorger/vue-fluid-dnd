@@ -18,19 +18,17 @@
 <script setup lang="ts">
 //TODO: add dragOver functionality https://medium.com/codex/drag-n-drop-with-vanilla-javascript-75f9c396ecd
 import { computed, ref } from "vue";
-defineProps<{
+const { style } = defineProps<{
   draggableId: string;
   enableDrag: boolean;
   tag: string;
-  style: {};
+  style: CSSStyleDeclaration;
 }>();
 const position = ref({ top: 0, left: 0 });
 const offset = ref({ X: 0, Y: 0 });
 const dragging = ref(false);
 
 const setTransform = (element: HTMLElement, pageX: number, pageY: number) => {
-  element.style.top = `${position.value.top}px`;
-  element.style.left = `${position.value.left}px`;
   const { height } = element.getBoundingClientRect();
   element.style.transform = `translate( ${
     pageX - position.value.left - offset.value.X
@@ -45,15 +43,23 @@ const onmousemove = function (event: MouseEvent, element: HTMLElement) {
 };
 const onmousedown = function (event: DragEvent) {
   const element = event.target as HTMLElement;
+  const { top, left, width } = element.getBoundingClientRect();
   dragging.value = true;
   element.style.position = "absolute";
   element.style.zIndex = "1000";
-  const { top, left } = element.getBoundingClientRect();
   position.value.top = top;
   position.value.left = left;
+
   offset.value.X = event.offsetX;
   offset.value.Y = event.offsetY;
+
   element.style.transition = "";
+  element.style.top = `${position.value.top}px`;
+  element.style.left = `${position.value.left}px`;
+  if (!element.style.width) {
+    element.style.width = `${width}px`;
+  }
+  setTransform(element, event.x, event.y);
 
   document.addEventListener("mousemove", (event: MouseEvent) => {
     onmousemove(event, element);
@@ -62,10 +68,12 @@ const onmousedown = function (event: DragEvent) {
 const onmouseup = (event: DragEvent) => {
   dragging.value = false;
   const element = event.target as HTMLElement;
-  element.style.position = "";
-  element.style.top = "";
-  element.style.left = "";
-  element.style.transform = "";
+  element.style.position = style.position ?? "";
+  element.style.top = style.top ?? "";
+  element.style.left = style.left ?? "";
+  element.style.transform = style.transform ?? "";
+  element.style.width = style.width ?? "";
+
   element.style.transition = "transform 0.3s ease";
   document.removeEventListener("mousemove", (event: MouseEvent) => {
     onmousemove(event, element);
@@ -84,5 +92,5 @@ const computedCursor = computed(() => (dragging.value ? "grabbing" : "grab"));
   cursor: v-bind("computedCursor") !important;
 }
 </style>
-<!-- TODO: work with not fixed widht and height -->
+<!-- TODO: work with not fixed height -->
 <!-- TODO: create Droppable -->
