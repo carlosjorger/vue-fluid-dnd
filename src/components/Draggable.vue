@@ -6,11 +6,6 @@
     @mousedown="onmousedown($event)"
     @dragstart="ondragstart()"
     @mouseup="onmouseup($event)"
-    @dragend="
-      () => {
-        console.log('dragend');
-      }
-    "
   >
     <slot></slot>
   </component>
@@ -18,11 +13,18 @@
 <script setup lang="ts">
 //TODO: add dragOver functionality https://medium.com/codex/drag-n-drop-with-vanilla-javascript-75f9c396ecd
 import { computed, ref } from "vue";
+type StyleCSS = {
+  position?: string;
+  top?: string;
+  left?: string;
+  transform?: string;
+  width?: string;
+};
 const { style } = defineProps<{
   draggableId: string;
   enableDrag: boolean;
   tag: string;
-  style: CSSStyleDeclaration;
+  style: StyleCSS;
 }>();
 const position = ref({ top: 0, left: 0 });
 const offset = ref({ X: 0, Y: 0 });
@@ -56,9 +58,8 @@ const onmousedown = function (event: DragEvent) {
   element.style.transition = "";
   element.style.top = `${position.value.top}px`;
   element.style.left = `${position.value.left}px`;
-  if (!element.style.width) {
-    element.style.width = `${width}px`;
-  }
+  element.style.width = `${updateWidht(width, element.style)}px`;
+  console.log(element.style.width);
   setTransform(element, event.x, event.y);
 
   document.addEventListener("mousemove", (event: MouseEvent) => {
@@ -79,6 +80,22 @@ const onmouseup = (event: DragEvent) => {
     onmousemove(event, element);
   });
 };
+const parseFloatEmpty = (value: string) => {
+  if (value.trim().length == 0) {
+    return 0;
+  }
+  return parseFloat(value);
+};
+const updateWidht = (widht: number, style: CSSStyleDeclaration) => {
+  var paddingX =
+    parseFloatEmpty(style.paddingLeft ?? 0) +
+    parseFloatEmpty(style.paddingRight ?? 0);
+  var borderX =
+    parseFloatEmpty(style.borderLeftWidth ?? 0) +
+    parseFloatEmpty(style.borderRightWidth ?? 0);
+  return widht - paddingX - borderX;
+};
+
 const ondragstart = () => {
   return false;
 };
@@ -92,5 +109,6 @@ const computedCursor = computed(() => (dragging.value ? "grabbing" : "grab"));
   cursor: v-bind("computedCursor") !important;
 }
 </style>
+<!-- TODO: refactor -->
 <!-- TODO: work with not fixed height -->
 <!-- TODO: create Droppable -->
