@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import DragAndDrop from "./components/DragAndDrop.vue";
+import Draggable from "./components/Draggable.vue";
 var date = new Date();
 </script>
 
 <template>
   <transition-group name="subsection" tag="ul">
-    <DragAndDrop
+    <Draggable
       draggable-id="1"
       enable-drag
       :onDropChange="(_) => {}"
@@ -13,8 +13,8 @@ var date = new Date();
       style="width: 100px; height: 100px; color: white; background-color: red"
     >
       1
-    </DragAndDrop>
-    <DragAndDrop
+    </Draggable>
+    <Draggable
       draggable-id="1"
       enable-drag
       :onDropChange="(_) => {}"
@@ -22,7 +22,7 @@ var date = new Date();
       style="width: 100px; height: 100px; color: white; background-color: blue"
     >
       2
-    </DragAndDrop>
+    </Draggable>
   </transition-group>
 </template>
 
