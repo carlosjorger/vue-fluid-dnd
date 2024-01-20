@@ -120,9 +120,7 @@ const computedCursor = computed(() => (dragging.value ? "grabbing" : "grab"));
 <style>
 .draggable {
   position: initial;
-}
-.draggable:hover {
-  cursor: v-bind("computedCursor") !important;
+  cursor: v-bind("computedCursor");
 }
 </style>
 <!-- TODO: refactor -->
