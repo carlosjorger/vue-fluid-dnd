@@ -3,7 +3,7 @@ import Draggable from "./components/Draggable.vue";
 </script>
 
 <template>
-  <ul style="width: 80%">
+  <div style="width: 80%; display: flex; flex-direction: row; gap: 10px">
     <Draggable
       draggable-id="1"
       enable-drag
@@ -14,6 +14,7 @@ import Draggable from "./components/Draggable.vue";
         background-color: red;
         width: 90px;
         margin-bottom: 10px;
+        height: 100px;
       "
     >
       1
@@ -21,18 +22,18 @@ import Draggable from "./components/Draggable.vue";
     <Draggable
       draggable-id="1"
       enable-drag
-      :onDropChange="(_) => {}"
+      :onDropChange="() => {}"
       tag="div"
       style="color: white; background-color: blue; width: 120px"
     >
       2
     </Draggable>
-  </ul>
+  </div>
   <ul style="width: 80%">
     <Draggable
       draggable-id="1"
       enable-drag
-      :onDropChange="(_) => {}"
+      :onDropChange="() => {}"
       tag="div"
       style="color: white; background-color: red; padding: 20px 0; margin: 5px"
     >
@@ -41,7 +42,7 @@ import Draggable from "./components/Draggable.vue";
     <Draggable
       draggable-id="1"
       enable-drag
-      :onDropChange="(_) => {}"
+      :onDropChange="() => {}"
       tag="div"
       style="color: white; background-color: blue; padding: 20px 0; margin: 5px"
     >

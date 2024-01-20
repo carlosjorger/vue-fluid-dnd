@@ -40,8 +40,8 @@ const onmousemove = function (event: MouseEvent, element: HTMLElement) {
 };
 const onmousedown = function (event: DragEvent) {
   const element = event.target as HTMLElement;
-  const { top, left, x, y } = element.getBoundingClientRect();
-  const { offsetX, offsetY } = event;
+  const { top, left } = element.getBoundingClientRect();
+  const { offsetX, offsetY, x, y } = event;
   if (dragging.value) {
     removeDraggingStyles(element);
   }
@@ -81,30 +81,37 @@ const removeDraggingStyles = (element: HTMLElement) => {
   element.style.transition = "transform 0.3s ease";
 };
 const setDraggingStyles = (element: HTMLElement) => {
-  const { width } = element.getBoundingClientRect();
+  const { width, height } = element.getBoundingClientRect();
   element.style.position = "absolute";
   element.style.zIndex = "1000";
   element.style.transition = "";
   element.style.top = `${position.value.top}px`;
   element.style.left = `${position.value.left}px`;
   element.style.width = `${updateWidht(width, element.style)}px`;
+  element.style.height = `${updateHeight(height, element.style)}px`;
 };
 const parseFloatEmpty = (value: string) => {
-  if (value.trim().length == 0) {
+  if (!value || value.trim().length == 0) {
     return 0;
   }
   return parseFloat(value);
 };
 const updateWidht = (widht: number, style: CSSStyleDeclaration) => {
   var paddingX =
-    parseFloatEmpty(style.paddingLeft ?? 0) +
-    parseFloatEmpty(style.paddingRight ?? 0);
+    parseFloatEmpty(style.paddingLeft) + parseFloatEmpty(style.paddingRight);
   var borderX =
-    parseFloatEmpty(style.borderLeftWidth ?? 0) +
-    parseFloatEmpty(style.borderRightWidth ?? 0);
+    parseFloatEmpty(style.borderLeftWidth) +
+    parseFloatEmpty(style.borderRightWidth);
   return widht - paddingX - borderX;
 };
-
+const updateHeight = (widht: number, style: CSSStyleDeclaration) => {
+  var paddingY =
+    parseFloatEmpty(style.paddingTop) + parseFloatEmpty(style.paddingBottom);
+  var borderY =
+    parseFloatEmpty(style.borderTopWidth) +
+    parseFloatEmpty(style.borderBottomWidth);
+  return widht - paddingY - borderY;
+};
 const ondragstart = () => {
   return false;
 };
@@ -119,5 +126,4 @@ const computedCursor = computed(() => (dragging.value ? "grabbing" : "grab"));
 }
 </style>
 <!-- TODO: refactor -->
-<!-- TODO: work with not fixed height -->
 <!-- TODO: create Droppable -->
