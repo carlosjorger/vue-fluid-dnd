@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Draggable from "./components/Draggable.vue";
-var date = new Date();
 </script>
 
 <template>

@@ -20,10 +20,10 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "@components/*": ["./components/*"],
-      "@composables/*": ["./composables/*"]
+      "@/*": ["./src/*", "./dist/*", ""],
+      "@components/*": ["./src/components/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],

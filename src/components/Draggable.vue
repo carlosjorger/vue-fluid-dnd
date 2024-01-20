@@ -1,40 +1,35 @@
 <template>
   <component
     :is="tag"
-    :style="style"
     class="draggable"
     @mousedown="onmousedown($event)"
     @dragstart="ondragstart()"
-    @mouseup="onmouseup($event)"
+    ref="draggable"
   >
     <slot></slot>
   </component>
 </template>
 <script setup lang="ts">
-//TODO: add dragOver functionality https://medium.com/codex/drag-n-drop-with-vanilla-javascript-75f9c396ecd
-import { computed, ref } from "vue";
-type StyleCSS = {
-  position?: string;
-  top?: string;
-  left?: string;
-  transform?: string;
-  width?: string;
-};
-const { style } = defineProps<{
+import { computed, onMounted, ref } from "vue";
+
+defineProps<{
   draggableId: string;
   enableDrag: boolean;
   tag: string;
-  style: StyleCSS;
 }>();
+const draggable = ref<HTMLElement>();
+const style = ref("");
 const position = ref({ top: 0, left: 0 });
-const offset = ref({ X: 0, Y: 0 });
+const offset = ref({ offsetX: 0, offsetY: 0 });
 const dragging = ref(false);
-
+onMounted(() => {
+  style.value = draggable.value?.style.cssText ?? "";
+});
 const setTransform = (element: HTMLElement, pageX: number, pageY: number) => {
   const { height } = element.getBoundingClientRect();
   element.style.transform = `translate( ${
-    pageX - position.value.left - offset.value.X
-  }px, ${pageY - position.value.top - offset.value.Y - height / 2}px)`;
+    pageX - position.value.left - offset.value.offsetX
+  }px, ${pageY - position.value.top - offset.value.offsetY - height / 2}px)`;
 };
 
 const onmousemove = function (event: MouseEvent, element: HTMLElement) {
@@ -45,39 +40,54 @@ const onmousemove = function (event: MouseEvent, element: HTMLElement) {
 };
 const onmousedown = function (event: DragEvent) {
   const element = event.target as HTMLElement;
-  const { top, left, width } = element.getBoundingClientRect();
+  const { top, left, x, y } = element.getBoundingClientRect();
+  const { offsetX, offsetY } = event;
+  if (dragging.value) {
+    removeDraggingStyles(element);
+  }
   dragging.value = true;
-  element.style.position = "absolute";
-  element.style.zIndex = "1000";
-  position.value.top = top;
-  position.value.left = left;
-
-  offset.value.X = event.offsetX;
-  offset.value.Y = event.offsetY;
-
-  element.style.transition = "";
-  element.style.top = `${position.value.top}px`;
-  element.style.left = `${position.value.left}px`;
-  element.style.width = `${updateWidht(width, element.style)}px`;
-  setTransform(element, event.x, event.y);
+  position.value = { top, left };
+  offset.value = { offsetX, offsetY };
+  setDraggingStyles(element);
+  setTransform(element, x, y);
 
   document.addEventListener("mousemove", (event: MouseEvent) => {
     onmousemove(event, element);
   });
+  if (draggable.value) {
+    assignOnmouseup((event: MouseEvent) => {
+      onmouseup(event);
+      assignOnmouseup(null);
+    });
+  }
 };
-const onmouseup = (event: DragEvent) => {
+const assignOnmouseup = (
+  onmouseupFunc: ((event: MouseEvent) => void) | null
+) => {
+  if (draggable.value) {
+    draggable.value.onmouseup = onmouseupFunc;
+  }
+};
+const onmouseup = (event: MouseEvent) => {
   dragging.value = false;
   const element = event.target as HTMLElement;
-  element.style.position = style.position ?? "";
-  element.style.top = style.top ?? "";
-  element.style.left = style.left ?? "";
-  element.style.transform = style.transform ?? "";
-  element.style.width = style.width ?? "";
-
-  element.style.transition = "transform 0.3s ease";
+  removeDraggingStyles(element);
   document.removeEventListener("mousemove", (event: MouseEvent) => {
     onmousemove(event, element);
   });
+};
+const removeDraggingStyles = (element: HTMLElement) => {
+  element.style.cssText = style.value;
+  element.style.transition = "transform 0.3s ease";
+};
+const setDraggingStyles = (element: HTMLElement) => {
+  const { width } = element.getBoundingClientRect();
+  element.style.position = "absolute";
+  element.style.zIndex = "1000";
+  element.style.transition = "";
+  element.style.top = `${position.value.top}px`;
+  element.style.left = `${position.value.left}px`;
+  element.style.width = `${updateWidht(width, element.style)}px`;
 };
 const parseFloatEmpty = (value: string) => {
   if (value.trim().length == 0) {
