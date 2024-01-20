@@ -1,3 +1,3 @@
-import DatePicker from "./components/DatePicker.vue";
+import Draggable from "./components/Draggable.vue";
 //TODO: add test and examples
-export { DatePicker };
+export { Draggable };

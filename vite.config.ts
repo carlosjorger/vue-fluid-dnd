@@ -15,8 +15,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
-      name: "VueChronoPicker",
-      fileName: "vue-chrono-picker",
+      name: "Vue3JuiceDnd",
+      fileName: "vue3-juice-dnd",
     },
     rollupOptions: {
       external: ["vue"],

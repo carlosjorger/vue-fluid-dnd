@@ -1,16 +1,34 @@
 <script setup lang="ts">
-import { DatePicker } from "vue-chrono-picker";
+import Draggable from "vue3-juice-dnd";
 defineProps<{ msg: string }>();
-
-let date = new Date();
 </script>
 
 <template>
-  <h1>{{ msg }}</h1>
-
-  <div class="card">
-    <DatePicker v-model="date" />
-  </div>
+  <ul style="width: 80%">
+    <Draggable
+      draggable-id="1"
+      enable-drag
+      :onDropChange="() => {}"
+      tag="div"
+      style="
+        color: white;
+        background-color: red;
+        width: 90px;
+        margin-bottom: 10px;
+      "
+    >
+      1
+    </Draggable>
+    <Draggable
+      draggable-id="1"
+      enable-drag
+      :onDropChange="() => {}"
+      tag="div"
+      style="color: white; background-color: blue; width: 120px"
+    >
+      2
+    </Draggable>
+  </ul>
 </template>
 
 <style scoped>

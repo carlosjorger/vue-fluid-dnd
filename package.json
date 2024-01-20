@@ -1,18 +1,18 @@
 {
-  "name": "vue-chrono-picker",
-  "version": "0.0.3",
+  "name": "vue3-juice-dnd",
+  "version": "0.0.1",
   "type": "module",
   "files": [
     "dist",
     "src/components/"
   ],
-  "main": "./dist/vue-chrono-picker.umd.cjs",
-  "module": "./dist/vue-chrono-picker.js",
+  "main": "./dist/vue3-juice-dnd.umd.cjs",
+  "module": "./dist/vue3-juice-dnd.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/vue-chrono-picker.js",
-      "require": "./dist/vue-chrono-picker.umd.cjs"
+      "import": "./dist/vue3-juice-dnd.js",
+      "require": "./dist/vue3-juice-dnd.umd.cjs"
     },
     "./dist/style.css": {
       "import": "./dist/style.css",
