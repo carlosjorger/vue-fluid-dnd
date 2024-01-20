@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Draggable from "vue3-juice-dnd";
+import { Draggable } from "vue3-juice-dnd";
 defineProps<{ msg: string }>();
 </script>
 

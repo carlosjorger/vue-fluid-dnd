@@ -59,7 +59,6 @@ const onmousedown = function (event: DragEvent) {
   element.style.top = `${position.value.top}px`;
   element.style.left = `${position.value.left}px`;
   element.style.width = `${updateWidht(width, element.style)}px`;
-  console.log(element.style.width);
   setTransform(element, event.x, event.y);
 
   document.addEventListener("mousemove", (event: MouseEvent) => {
