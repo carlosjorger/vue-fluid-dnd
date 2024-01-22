@@ -10,4 +10,3 @@ defineProps<{
 }>();
 </script>
 <!-- TODO: keep working in Droppable -->
-<!-- TODO: add transform:translate(vertical) the others draggable below one being dragged -->

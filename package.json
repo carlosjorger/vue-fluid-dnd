@@ -35,6 +35,7 @@
   ],
   "author": "Carlos Jorge",
   "dependencies": {
+    "mitt": "^3.0.1",
     "vue": "^3.3.11"
   },
   "peerDependencies": {

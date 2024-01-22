@@ -30,7 +30,16 @@ import Droppable from "./components/Droppable.vue";
       2
     </Draggable>
   </div>
-  <Droppable tag="ul" droppable-id="2" style="width: 80%">
+  <Droppable
+    tag="ul"
+    droppable-id="2"
+    style="
+      width: 80%;
+      background-color: darkgray;
+      display: inline-block;
+      overflow: hidden;
+    "
+  >
     <Draggable
       draggable-id="1"
       enable-drag
