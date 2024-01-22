@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import eventBus from "@/utils/EventBus";
-const { draggableId } = defineProps<{
+const { draggableId, tag } = defineProps<{
   draggableId: string;
   enableDrag: boolean;
   tag: string;
@@ -23,6 +23,7 @@ const style = ref("");
 const position = ref({ top: 0, left: 0 });
 const offset = ref({ offsetX: 0, offsetY: 0 });
 const dragging = ref(false);
+const index = ref(0);
 onMounted(() => {
   style.value = draggable.value?.style.cssText ?? "";
   eventBus.on(`drag_${draggableId}`, (height: number) => {
@@ -31,6 +32,13 @@ onMounted(() => {
   eventBus.on(`drop_${draggableId}`, () => {
     moveHeight(0);
   });
+  const element = draggable.value;
+  if (element) {
+    index.value = ([] as HTMLElement[]).indexOf.call(
+      element.parentNode?.children,
+      element
+    );
+  }
 });
 const setTransform = (element: HTMLElement, pageX: number, pageY: number) => {
   element.style.transform = `translate( ${
@@ -55,6 +63,7 @@ const onmousedown = (event: DragEvent) => {
   position.value = { top, left };
   offset.value = { offsetX, offsetY };
   emitDragEventToSiblings(element);
+  fixParentHeight();
   setDraggingStyles(element);
   setTransform(element, x, y);
 
@@ -68,6 +77,15 @@ const onmousedown = (event: DragEvent) => {
     });
   }
 };
+const fixParentHeight = () => {
+  const element = draggable.value as HTMLElement;
+  const parent = element.parentNode;
+  const parentElement = parent as HTMLElement;
+  if (parentElement) {
+    const { height } = parentElement.getBoundingClientRect();
+    parentElement.style.height = `${height}px`;
+  }
+};
 const emitDragEventToSiblings = (element: HTMLElement) => {
   emitEventToSiblings(element, "drag");
 };
@@ -75,13 +93,23 @@ const emitDropEventToSiblings = (element: HTMLElement) => {
   emitEventToSiblings(element, "drop");
 };
 const emitEventToSiblings = (element: HTMLElement, event: string) => {
-  const { height } = element.getBoundingClientRect();
+  let { height } = element.getBoundingClientRect();
 
   let sibling = element.nextSibling;
+  const brother = sibling as HTMLElement;
+  if (!(sibling instanceof HTMLElement)) {
+    return;
+  }
+  const brotherMarginTop = parseFloatEmpty(brother.style.marginTop);
+  const marginBottom = parseFloatEmpty(element.style.marginBottom);
+  if (brotherMarginTop <= marginBottom) {
+    height += brotherMarginTop;
+  }
   while (sibling) {
     var element = sibling as HTMLElement;
     if (sibling instanceof HTMLElement) {
       const siblingDraggableId = sibling.getAttribute("draggable-id");
+
       eventBus.emit(`${event}_${siblingDraggableId}`, height);
     }
     sibling = sibling.nextSibling;
@@ -114,8 +142,8 @@ const setDraggingStyles = (element: HTMLElement) => {
   element.style.transition = "";
   element.style.top = `${position.value.top}px`;
   element.style.left = `${position.value.left}px`;
-  element.style.width = `${updateWidht(width, element.style)}px`;
-  element.style.height = `${updateHeight(height, element.style)}px`;
+  element.style.width = `${width}px`;
+  element.style.height = `${height}px`;
 };
 const moveHeight = (height: number) => {
   if (draggable.value) {
@@ -128,22 +156,6 @@ const parseFloatEmpty = (value: string) => {
   }
   return parseFloat(value);
 };
-const updateWidht = (widht: number, style: CSSStyleDeclaration) => {
-  var paddingX =
-    parseFloatEmpty(style.paddingLeft) + parseFloatEmpty(style.paddingRight);
-  var borderX =
-    parseFloatEmpty(style.borderLeftWidth) +
-    parseFloatEmpty(style.borderRightWidth);
-  return widht - paddingX - borderX;
-};
-const updateHeight = (widht: number, style: CSSStyleDeclaration) => {
-  var paddingY =
-    parseFloatEmpty(style.paddingTop) + parseFloatEmpty(style.paddingBottom);
-  var borderY =
-    parseFloatEmpty(style.borderTopWidth) +
-    parseFloatEmpty(style.borderBottomWidth);
-  return widht - paddingY - borderY;
-};
 const ondragstart = () => {
   return false;
 };
@@ -153,6 +165,7 @@ const computedCursor = computed(() => (dragging.value ? "grabbing" : "grab"));
 .draggable {
   position: initial;
   cursor: v-bind("computedCursor");
+  box-sizing: border-box;
 }
 </style>
 <!-- TODO: refactor -->
