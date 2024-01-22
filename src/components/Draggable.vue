@@ -13,6 +13,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import eventBus from "@/utils/EventBus";
+const DRAG_EVENT = "drag";
+const DROP_EVENT = "drop";
 const { draggableId, tag } = defineProps<{
   draggableId: string;
   enableDrag: boolean;
@@ -26,10 +28,10 @@ const dragging = ref(false);
 const index = ref(0);
 onMounted(() => {
   style.value = draggable.value?.style.cssText ?? "";
-  eventBus.on(`drag_${draggableId}`, (height: number) => {
+  eventBus.on(`${DRAG_EVENT}_${draggableId}`, (height: number) => {
     moveHeight(height);
   });
-  eventBus.on(`drop_${draggableId}`, () => {
+  eventBus.on(`${DROP_EVENT}_${draggableId}`, () => {
     moveHeight(0);
   });
   const element = draggable.value;
@@ -87,10 +89,10 @@ const fixParentHeight = () => {
   }
 };
 const emitDragEventToSiblings = (element: HTMLElement) => {
-  emitEventToSiblings(element, "drag");
+  emitEventToSiblings(element, DRAG_EVENT);
 };
 const emitDropEventToSiblings = (element: HTMLElement) => {
-  emitEventToSiblings(element, "drop");
+  emitEventToSiblings(element, DROP_EVENT);
 };
 const emitEventToSiblings = (element: HTMLElement, event: string) => {
   let { height } = element.getBoundingClientRect();
@@ -133,7 +135,10 @@ const onmouseup = (event: MouseEvent) => {
 };
 const removeDraggingStyles = (element: HTMLElement) => {
   element.style.cssText = style.value;
-  element.style.transition = "transform 0.3s ease";
+  element.style.transition = "transform 300 ease";
+  setTimeout(() => {
+    element.style.transition = "";
+  }, 300);
 };
 const setDraggingStyles = (element: HTMLElement) => {
   const { width, height } = element.getBoundingClientRect();
