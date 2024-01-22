@@ -1,24 +1,12 @@
-<template>
-  <component
-    :is="tag"
-    class="draggable"
-    @mousedown="onmousedown($event)"
-    @dragstart="ondragstart()"
-    ref="draggable"
-    :draggable-id="draggableId"
-  >
-    <slot></slot>
-  </component>
-</template>
+<template><slot :provider="provider"></slot></template>
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import eventBus from "@/utils/EventBus";
 const DRAG_EVENT = "drag";
 const DROP_EVENT = "drop";
-const { draggableId, tag } = defineProps<{
+const { draggableId } = defineProps<{
   draggableId: string;
   enableDrag: boolean;
-  tag: string;
 }>();
 const draggable = ref<HTMLElement>();
 const style = ref("");
@@ -27,7 +15,8 @@ const offset = ref({ offsetX: 0, offsetY: 0 });
 const dragging = ref(false);
 const index = ref(0);
 onMounted(() => {
-  style.value = draggable.value?.style.cssText ?? "";
+  provider.value.draggableId = draggableId;
+  // TODO: calculate de dragable_id
   eventBus.on(`${DRAG_EVENT}_${draggableId}`, (height: number) => {
     moveHeight(height);
   });
@@ -54,8 +43,10 @@ const onmousemove = function (event: MouseEvent, element: HTMLElement) {
   }
   setTransform(element, event.x, event.y);
 };
-const onmousedown = (event: DragEvent) => {
+const onmousedown = (event: MouseEvent) => {
   const element = event.target as HTMLElement;
+  draggable.value = element;
+  style.value = element.style.cssText;
   const { top, left } = element.getBoundingClientRect();
   const { offsetX, offsetY, x, y } = event;
   if (dragging.value) {
@@ -65,22 +56,30 @@ const onmousedown = (event: DragEvent) => {
   position.value = { top, left };
   offset.value = { offsetX, offsetY };
   emitDragEventToSiblings(element);
-  fixParentHeight();
+  fixParentHeight(element);
   setDraggingStyles(element);
   setTransform(element, x, y);
 
   document.addEventListener("mousemove", (event: MouseEvent) => {
     onmousemove(event, element);
   });
-  if (draggable.value) {
+  if (element) {
     assignOnmouseup((event: MouseEvent) => {
       onmouseup(event);
       assignOnmouseup(null);
     });
   }
 };
-const fixParentHeight = () => {
-  const element = draggable.value as HTMLElement;
+const ondragstart = () => {
+  return false;
+};
+const provider = ref({
+  draggableId: "",
+  mousedown: onmousedown,
+  class: "draggable",
+  dragstart: ondragstart,
+});
+const fixParentHeight = (element: HTMLElement) => {
   const parent = element.parentNode;
   const parentElement = parent as HTMLElement;
   if (parentElement) {
@@ -95,28 +94,37 @@ const emitDropEventToSiblings = (element: HTMLElement) => {
   emitEventToSiblings(element, DROP_EVENT);
 };
 const emitEventToSiblings = (element: HTMLElement, event: string) => {
+  let tranlation = { height: 0, widht: 0 };
   let { height } = element.getBoundingClientRect();
 
-  let sibling = element.nextSibling;
+  let sibling = element.nextElementSibling;
   const brother = sibling as HTMLElement;
   if (!(sibling instanceof HTMLElement)) {
     return;
   }
+  // console.log(
+  //   element.getBoundingClientRect().top - brother.getBoundingClientRect().top,
+  //   height
+  // );
   const brotherMarginTop = parseFloatEmpty(brother.style.marginTop);
   const marginBottom = parseFloatEmpty(element.style.marginBottom);
+  const marginTop = parseFloatEmpty(element.style.marginTop);
   if (brotherMarginTop <= marginBottom) {
-    height += brotherMarginTop;
+    tranlation.height = height + marginTop + marginBottom - brotherMarginTop;
+  } else {
+    tranlation.height = height + marginTop;
   }
   while (sibling) {
     var element = sibling as HTMLElement;
     if (sibling instanceof HTMLElement) {
       const siblingDraggableId = sibling.getAttribute("draggable-id");
 
-      eventBus.emit(`${event}_${siblingDraggableId}`, height);
+      eventBus.emit(`${event}_${siblingDraggableId}`, tranlation.height);
     }
-    sibling = sibling.nextSibling;
+    sibling = sibling.nextElementSibling;
   }
 };
+
 const assignOnmouseup = (
   onmouseupFunc: ((event: MouseEvent) => void) | null
 ) => {
@@ -161,9 +169,7 @@ const parseFloatEmpty = (value: string) => {
   }
   return parseFloat(value);
 };
-const ondragstart = () => {
-  return false;
-};
+
 const computedCursor = computed(() => (dragging.value ? "grabbing" : "grab"));
 </script>
 <style>

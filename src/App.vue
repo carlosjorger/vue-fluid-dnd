@@ -5,29 +5,21 @@ import Droppable from "./components/Droppable.vue";
 
 <template>
   <div style="width: 80%; display: flex; flex-direction: row; gap: 10px">
-    <Draggable
-      draggable-id="1"
-      enable-drag
-      :onDropChange="(_) => {}"
-      tag="div"
-      style="
-        color: white;
-        background-color: red;
-        width: 90px;
-        margin-bottom: 10px;
-        height: 100px;
-      "
-    >
-      1
+    <Draggable draggable-id="1" enable-drag :onDropChange="(_) => {}">
+      <div
+        style="
+          color: white;
+          background-color: red;
+          width: 90px;
+          margin-bottom: 10px;
+          height: 100px;
+        "
+      >
+        1
+      </div>
     </Draggable>
-    <Draggable
-      draggable-id="1"
-      enable-drag
-      :onDropChange="() => {}"
-      tag="div"
-      style="color: white; background-color: blue; width: 120px"
-    >
-      2
+    <Draggable draggable-id="1" enable-drag :onDropChange="() => {}">
+      <div style="color: white; background-color: blue; width: 120px">2</div>
     </Draggable>
   </div>
   <Droppable
@@ -38,39 +30,68 @@ import Droppable from "./components/Droppable.vue";
       background-color: darkgray;
       display: inline-block;
       overflow: hidden;
+      display: block;
     "
   >
     <Draggable
       draggable-id="1"
       enable-drag
       :onDropChange="() => {}"
-      tag="div"
-      style="color: white; background-color: red; padding: 20px 0; margin: 5px"
-    >
-      1
+      v-slot="{ provider }"
+      ><div
+        @mousedown="provider.mousedown($event)"
+        :class="provider.class"
+        :draggable-id="provider.draggableId"
+        style="
+          color: white;
+          background-color: red;
+          padding: 20px 0;
+          margin: 23px 0 12px;
+        "
+      >
+        1
+      </div>
     </Draggable>
     <Draggable
       draggable-id="2"
       enable-drag
       :onDropChange="() => {}"
-      tag="div"
-      style="color: white; background-color: blue; padding: 20px 0; margin: 5px"
+      v-slot="{ provider }"
     >
-      2
+      <div
+        @mousedown="provider.mousedown($event)"
+        :class="provider.class"
+        :draggable-id="provider.draggableId"
+        style="
+          color: white;
+          background-color: blue;
+          padding: 20px 0;
+          margin: 12px;
+          margin-right: 300px;
+        "
+      >
+        2
+      </div>
     </Draggable>
     <Draggable
       draggable-id="3"
       enable-drag
       :onDropChange="() => {}"
-      tag="div"
-      style="
-        color: white;
-        background-color: green;
-        padding: 20px 0;
-        margin: 5px;
-      "
-    >
-      3
+      v-slot="{ provider }"
+      ><div
+        @mousedown="provider.mousedown($event)"
+        :class="provider.class"
+        :draggable-id="provider.draggableId"
+        style="
+          color: white;
+          background-color: green;
+          padding: 26px 0;
+          margin: 26px;
+          margin-left: 100px;
+        "
+      >
+        3
+      </div>
     </Draggable>
   </Droppable>
 </template>
