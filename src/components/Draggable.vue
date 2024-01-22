@@ -38,7 +38,7 @@ const onmousemove = function (event: MouseEvent, element: HTMLElement) {
   }
   setTransform(element, event.x, event.y);
 };
-const onmousedown = function (event: DragEvent) {
+const onmousedown = (event: DragEvent) => {
   const element = event.target as HTMLElement;
   const { top, left } = element.getBoundingClientRect();
   const { offsetX, offsetY, x, y } = event;
@@ -124,4 +124,3 @@ const computedCursor = computed(() => (dragging.value ? "grabbing" : "grab"));
 }
 </style>
 <!-- TODO: refactor -->
-<!-- TODO: create Droppable -->

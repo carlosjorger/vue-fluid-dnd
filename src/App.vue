@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Draggable from "./components/Draggable.vue";
+import Droppable from "./components/Droppable.vue";
 </script>
 
 <template>
@@ -29,7 +30,7 @@ import Draggable from "./components/Draggable.vue";
       2
     </Draggable>
   </div>
-  <ul style="width: 80%">
+  <Droppable tag="ul" droppable-id="2" style="width: 80%">
     <Draggable
       draggable-id="1"
       enable-drag
@@ -40,7 +41,7 @@ import Draggable from "./components/Draggable.vue";
       1
     </Draggable>
     <Draggable
-      draggable-id="1"
+      draggable-id="2"
       enable-drag
       :onDropChange="() => {}"
       tag="div"
@@ -48,5 +49,19 @@ import Draggable from "./components/Draggable.vue";
     >
       2
     </Draggable>
-  </ul>
+    <Draggable
+      draggable-id="3"
+      enable-drag
+      :onDropChange="() => {}"
+      tag="div"
+      style="
+        color: white;
+        background-color: green;
+        padding: 20px 0;
+        margin: 5px;
+      "
+    >
+      3
+    </Draggable>
+  </Droppable>
 </template>
