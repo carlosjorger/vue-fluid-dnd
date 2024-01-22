@@ -8,6 +8,8 @@ const { draggableId } = defineProps<{
   draggableId: string;
   enableDrag: boolean;
 }>();
+// TODO: try to remove draggable
+// TODO. fix cursor position
 const draggable = ref<HTMLElement>();
 const style = ref("");
 const position = ref({ top: 0, left: 0 });
@@ -16,13 +18,18 @@ const dragging = ref(false);
 const index = ref(0);
 onMounted(() => {
   provider.value.draggableId = draggableId;
-  // TODO: calculate de dragable_id
-  eventBus.on(`${DRAG_EVENT}_${draggableId}`, (height: number) => {
-    moveHeight(height);
-  });
-  eventBus.on(`${DROP_EVENT}_${draggableId}`, () => {
-    moveHeight(0);
-  });
+  eventBus.on(
+    `${DRAG_EVENT}_${draggableId}`,
+    ({ element, height }: { element: HTMLElement; height: number }) => {
+      moveHeight(element, height);
+    }
+  );
+  eventBus.on(
+    `${DROP_EVENT}_${draggableId}`,
+    ({ element }: { element: HTMLElement }) => {
+      moveHeight(element, 0);
+    }
+  );
   const element = draggable.value;
   if (element) {
     index.value = ([] as HTMLElement[]).indexOf.call(
@@ -119,7 +126,10 @@ const emitEventToSiblings = (element: HTMLElement, event: string) => {
     if (sibling instanceof HTMLElement) {
       const siblingDraggableId = sibling.getAttribute("draggable-id");
 
-      eventBus.emit(`${event}_${siblingDraggableId}`, tranlation.height);
+      eventBus.emit(`${event}_${siblingDraggableId}`, {
+        element: sibling,
+        height: tranlation.height,
+      });
     }
     sibling = sibling.nextElementSibling;
   }
@@ -158,9 +168,9 @@ const setDraggingStyles = (element: HTMLElement) => {
   element.style.width = `${width}px`;
   element.style.height = `${height}px`;
 };
-const moveHeight = (height: number) => {
-  if (draggable.value) {
-    draggable.value.style.transform = `translate( 0, ${height}px)`;
+const moveHeight = (element: HTMLElement, height: number) => {
+  if (element) {
+    element.style.transform = `translate( 0, ${height}px)`;
   }
 };
 const parseFloatEmpty = (value: string) => {
