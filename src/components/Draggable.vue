@@ -49,9 +49,9 @@ const onmousemove = function (event: MouseEvent, element: HTMLElement) {
 const onmousedown = (event: MouseEvent) => {
   const element = event.target as HTMLElement;
   style.value = element.style.cssText;
-  const { top, left, height, width } = element.getBoundingClientRect();
-  const { offsetX, offsetY, x, y } = event;
-
+  const { width, height } = element.getBoundingClientRect();
+  const { offsetX, offsetY, x, y, pageY, pageX } = event;
+  const { marginTop, marginLeft } = element.style;
   if (dragging.value) {
     removeDraggingStyles(element);
   }
@@ -60,11 +60,8 @@ const onmousedown = (event: MouseEvent) => {
   emitDragEventToSiblings(element);
   fixParentHeight(element);
   position.value = {
-    top:
-      event.pageY -
-      element.offsetHeight / 2 -
-      parseFloatEmpty(element.style.marginTop),
-    left: event.pageX - width / 2 - parseFloatEmpty(element.style.marginLeft),
+    top: pageY - height / 2 - parseFloatEmpty(marginTop),
+    left: pageX - width / 2 - parseFloatEmpty(marginLeft),
   };
   setDraggingStyles(element);
   setTransform(element, x, y);
@@ -115,12 +112,21 @@ const emitEventToSiblings = (element: HTMLElement, event: "drag" | "drop") => {
   const brotherMarginTop = parseFloatEmpty(brother.style.marginTop);
   const marginBottom = parseFloatEmpty(element.style.marginBottom);
   const marginTop = parseFloatEmpty(element.style.marginTop);
+  let bottom = marginBottom;
   if (brotherMarginTop <= marginBottom) {
-    tranlation.height = height + marginTop + marginBottom - brotherMarginTop;
-  } else {
-    //TODO: fix tranlation.height calculation
-    tranlation.height = height + marginTop;
+    bottom -= brotherMarginTop;
   }
+  let top = marginTop;
+  const previousElement = element.previousElementSibling as HTMLElement;
+  if (previousElement) {
+    const previousMarginBottom = parseFloatEmpty(
+      previousElement.style.marginBottom
+    );
+    if (previousMarginBottom >= marginTop) {
+      top = previousMarginBottom - marginTop;
+    }
+  }
+  tranlation.height = height + top + bottom;
   while (sibling) {
     var element = sibling as HTMLElement;
     if (sibling instanceof HTMLElement) {
