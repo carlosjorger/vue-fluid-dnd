@@ -49,6 +49,7 @@ const onmousemove = function (event: MouseEvent, element: HTMLElement) {
 const onmousedown = (event: MouseEvent) => {
   const element = event.target as HTMLElement;
   style.value = element.style.cssText;
+  setBorderBoxStyle(element);
   const { width, height } = element.getBoundingClientRect();
   const { offsetX, offsetY, x, y, pageY, pageX } = event;
   const { marginTop, marginLeft } = element.style;
@@ -108,6 +109,7 @@ const emitEventToSiblings = (element: HTMLElement, event: "drag" | "drop") => {
   if (!(sibling instanceof HTMLElement)) {
     return;
   }
+  setBorderBoxStyle(brother);
 
   const brotherMarginTop = parseFloatEmpty(brother.style.marginTop);
   const marginBottom = parseFloatEmpty(element.style.marginBottom);
@@ -119,6 +121,8 @@ const emitEventToSiblings = (element: HTMLElement, event: "drag" | "drop") => {
   let top = marginTop;
   const previousElement = element.previousElementSibling as HTMLElement;
   if (previousElement) {
+    setBorderBoxStyle(previousElement);
+
     const previousMarginBottom = parseFloatEmpty(
       previousElement.style.marginBottom
     );
@@ -129,6 +133,7 @@ const emitEventToSiblings = (element: HTMLElement, event: "drag" | "drop") => {
   tranlation.height = height + top + bottom;
   while (sibling) {
     var element = sibling as HTMLElement;
+    setBorderBoxStyle(element);
     if (sibling instanceof HTMLElement) {
       const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
       eventBus.emit(event, {
@@ -173,6 +178,9 @@ const setDraggingStyles = (element: HTMLElement) => {
   element.style.width = `${width}px`;
   element.style.height = `${height}px`;
 };
+const setBorderBoxStyle = (element: HTMLElement) => {
+  element.style.boxSizing = "border-box";
+};
 const moveHeight = (element: HTMLElement, height: number) => {
   if (element) {
     element.style.transform = `translate( 0, ${height}px)`;
@@ -189,9 +197,7 @@ const computedCursor = computed(() => (dragging.value ? "grabbing" : "grab"));
 </script>
 <style>
 .draggable {
-  position: initial;
   cursor: v-bind("computedCursor");
-  box-sizing: border-box;
 }
 </style>
 <!-- TODO: refactor -->

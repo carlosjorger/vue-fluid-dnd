@@ -5,8 +5,11 @@ import Droppable from "./components/Droppable.vue";
 
 <template>
   <div style="width: 80%; display: flex; flex-direction: row; gap: 10px">
-    <Draggable draggable-id="1" enable-drag>
+    <Draggable draggable-id="1" enable-drag v-slot="{ provider }">
       <div
+        @mousedown="provider.mousedown($event)"
+        :class="provider.class"
+        :draggable-id="provider.draggableId"
         style="
           color: white;
           background-color: red;
@@ -18,8 +21,15 @@ import Droppable from "./components/Droppable.vue";
         1
       </div>
     </Draggable>
-    <Draggable draggable-id="1" enable-drag>
-      <div style="color: white; background-color: blue; width: 120px">2</div>
+    <Draggable draggable-id="1" enable-drag v-slot="{ provider }">
+      <div
+        @mousedown="provider.mousedown($event)"
+        :class="provider.class"
+        :draggable-id="provider.draggableId"
+        style="color: white; background-color: blue; width: 120px"
+      >
+        2
+      </div>
     </Draggable>
   </div>
   <Droppable
