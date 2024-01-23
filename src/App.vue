@@ -5,7 +5,7 @@ import Droppable from "./components/Droppable.vue";
 
 <template>
   <div style="width: 80%; display: flex; flex-direction: row; gap: 10px">
-    <Draggable draggable-id="1" enable-drag :onDropChange="(_) => {}">
+    <Draggable draggable-id="1" enable-drag>
       <div
         style="
           color: white;
@@ -18,7 +18,7 @@ import Droppable from "./components/Droppable.vue";
         1
       </div>
     </Draggable>
-    <Draggable draggable-id="1" enable-drag :onDropChange="() => {}">
+    <Draggable draggable-id="1" enable-drag>
       <div style="color: white; background-color: blue; width: 120px">2</div>
     </Draggable>
   </div>
@@ -33,11 +33,7 @@ import Droppable from "./components/Droppable.vue";
       display: block;
     "
   >
-    <Draggable
-      draggable-id="1"
-      enable-drag
-      :onDropChange="() => {}"
-      v-slot="{ provider }"
+    <Draggable draggable-id="1" enable-drag v-slot="{ provider }"
       ><div
         @mousedown="provider.mousedown($event)"
         :class="provider.class"
@@ -52,12 +48,7 @@ import Droppable from "./components/Droppable.vue";
         1
       </div>
     </Draggable>
-    <Draggable
-      draggable-id="2"
-      enable-drag
-      :onDropChange="() => {}"
-      v-slot="{ provider }"
-    >
+    <Draggable draggable-id="2" enable-drag v-slot="{ provider }">
       <div
         @mousedown="provider.mousedown($event)"
         :class="provider.class"
@@ -73,11 +64,7 @@ import Droppable from "./components/Droppable.vue";
         2
       </div>
     </Draggable>
-    <Draggable
-      draggable-id="3"
-      enable-drag
-      :onDropChange="() => {}"
-      v-slot="{ provider }"
+    <Draggable draggable-id="3" enable-drag v-slot="{ provider }"
       ><div
         @mousedown="provider.mousedown($event)"
         :class="provider.class"
