@@ -42,7 +42,7 @@ import Droppable from "./components/Droppable.vue";
           color: white;
           background-color: red;
           padding: 20px 0;
-          margin: 23px 0 12px;
+          margin: 23px 0;
         "
       >
         1

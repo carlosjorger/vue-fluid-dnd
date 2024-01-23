@@ -10,7 +10,6 @@ const { draggableId } = defineProps<{
   enableDrag: boolean;
 }>();
 
-// TODO. fix cursor position
 const style = ref("");
 const position = ref({ top: 0, left: 0 });
 const offset = ref({ offsetX: 0, offsetY: 0 });
@@ -29,8 +28,16 @@ onMounted(() => {
 });
 const setTransform = (element: HTMLElement, pageX: number, pageY: number) => {
   element.style.transform = `translate( ${
-    pageX - position.value.left - offset.value.offsetX
-  }px, ${pageY - position.value.top - offset.value.offsetY}px)`;
+    pageX -
+    position.value.left -
+    offset.value.offsetX -
+    parseFloatEmpty(element.style.marginLeft)
+  }px, ${
+    pageY -
+    position.value.top -
+    offset.value.offsetY -
+    parseFloatEmpty(element.style.marginTop)
+  }px)`;
 };
 
 const onmousemove = function (event: MouseEvent, element: HTMLElement) {
@@ -42,16 +49,23 @@ const onmousemove = function (event: MouseEvent, element: HTMLElement) {
 const onmousedown = (event: MouseEvent) => {
   const element = event.target as HTMLElement;
   style.value = element.style.cssText;
-  const { top, left } = element.getBoundingClientRect();
+  const { top, left, height, width } = element.getBoundingClientRect();
   const { offsetX, offsetY, x, y } = event;
+
   if (dragging.value) {
     removeDraggingStyles(element);
   }
   dragging.value = true;
-  position.value = { top, left };
   offset.value = { offsetX, offsetY };
   emitDragEventToSiblings(element);
   fixParentHeight(element);
+  position.value = {
+    top:
+      event.pageY -
+      element.offsetHeight / 2 -
+      parseFloatEmpty(element.style.marginTop),
+    left: event.pageX - width / 2 - parseFloatEmpty(element.style.marginLeft),
+  };
   setDraggingStyles(element);
   setTransform(element, x, y);
 
@@ -97,16 +111,14 @@ const emitEventToSiblings = (element: HTMLElement, event: "drag" | "drop") => {
   if (!(sibling instanceof HTMLElement)) {
     return;
   }
-  // console.log(
-  //   element.getBoundingClientRect().top - brother.getBoundingClientRect().top,
-  //   height
-  // );
+
   const brotherMarginTop = parseFloatEmpty(brother.style.marginTop);
   const marginBottom = parseFloatEmpty(element.style.marginBottom);
   const marginTop = parseFloatEmpty(element.style.marginTop);
   if (brotherMarginTop <= marginBottom) {
     tranlation.height = height + marginTop + marginBottom - brotherMarginTop;
   } else {
+    //TODO: fix tranlation.height calculation
     tranlation.height = height + marginTop;
   }
   while (sibling) {
@@ -147,7 +159,7 @@ const removeDraggingStyles = (element: HTMLElement) => {
 };
 const setDraggingStyles = (element: HTMLElement) => {
   const { width, height } = element.getBoundingClientRect();
-  element.style.position = "fixed";
+  element.style.position = "absolute";
   element.style.zIndex = "1000";
   element.style.transition = "";
   element.style.top = `${position.value.top}px`;
