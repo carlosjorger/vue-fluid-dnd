@@ -10,14 +10,11 @@ const { draggableId } = defineProps<{
   enableDrag: boolean;
 }>();
 
-// TODO: try to remove draggable
 // TODO. fix cursor position
-const draggable = ref<HTMLElement>();
 const style = ref("");
 const position = ref({ top: 0, left: 0 });
 const offset = ref({ offsetX: 0, offsetY: 0 });
 const dragging = ref(false);
-const index = ref(0);
 onMounted(() => {
   provider.value.draggableId = draggableId;
   eventBus.on("drag", (param) => {
@@ -29,13 +26,6 @@ onMounted(() => {
   eventBus.on("drop", ({ element }: { element: HTMLElement }) => {
     moveHeight(element, 0);
   });
-  const element = draggable.value;
-  if (element) {
-    index.value = ([] as HTMLElement[]).indexOf.call(
-      element.parentNode?.children,
-      element
-    );
-  }
 });
 const setTransform = (element: HTMLElement, pageX: number, pageY: number) => {
   element.style.transform = `translate( ${
@@ -51,7 +41,6 @@ const onmousemove = function (event: MouseEvent, element: HTMLElement) {
 };
 const onmousedown = (event: MouseEvent) => {
   const element = event.target as HTMLElement;
-  draggable.value = element;
   style.value = element.style.cssText;
   const { top, left } = element.getBoundingClientRect();
   const { offsetX, offsetY, x, y } = event;
@@ -70,9 +59,9 @@ const onmousedown = (event: MouseEvent) => {
     onmousemove(event, element);
   });
   if (element) {
-    assignOnmouseup((event: MouseEvent) => {
+    assignOnmouseup(element, (event: MouseEvent) => {
       onmouseup(event);
-      assignOnmouseup(null);
+      assignOnmouseup(element, null);
     });
   }
 };
@@ -135,11 +124,10 @@ const emitEventToSiblings = (element: HTMLElement, event: "drag" | "drop") => {
 };
 
 const assignOnmouseup = (
+  element: HTMLElement,
   onmouseupFunc: ((event: MouseEvent) => void) | null
 ) => {
-  if (draggable.value) {
-    draggable.value.onmouseup = onmouseupFunc;
-  }
+  element.onmouseup = onmouseupFunc;
 };
 const onmouseup = (event: MouseEvent) => {
   dragging.value = false;
