@@ -1,13 +1,6 @@
 <template><slot :set-ref="setSlotRef"></slot></template>
 <script setup lang="ts">
-import {
-  ComponentPublicInstance,
-  computed,
-  onMounted,
-  ref,
-  useSlots,
-  watch,
-} from "vue";
+import { ComponentPublicInstance, computed, onMounted, ref, watch } from "vue";
 import eventBus from "@/utils/EventBus";
 
 const { draggableId } = defineProps<{
@@ -25,7 +18,6 @@ const position = ref({ top: 0, left: 0 });
 const offset = ref({ offsetX: 0, offsetY: 0 });
 const dragging = ref(false);
 let childRef = ref<HTMLElement>();
-const slots = useSlots();
 
 onMounted(() => {
   eventBus.on("drag", (param) => {
@@ -37,16 +29,11 @@ onMounted(() => {
   eventBus.on("drop", ({ element }: { element: HTMLElement }) => {
     moveHeight(element, 0);
   });
-  if (!slots.default) {
-    return;
-  }
 });
 const setSlotRef = <_>(el: RefElement<_>) => {
   childRef.value = el as HTMLElement;
 };
-watch(childRef, (element) => {
-  setSlotRefElementParams(element);
-});
+
 const setSlotRefElementParams = (element: HTMLElement | undefined) => {
   if (element) {
     element.classList.add("draggable");
@@ -214,6 +201,10 @@ const parseFloatEmpty = (value: string) => {
 };
 
 const computedCursor = computed(() => (dragging.value ? "grabbing" : "grab"));
+
+watch(childRef, (element) => {
+  setSlotRefElementParams(element);
+});
 </script>
 <style>
 .draggable {
@@ -221,4 +212,5 @@ const computedCursor = computed(() => (dragging.value ? "grabbing" : "grab"));
 }
 </style>
 <!-- TODO: refactor -->
-<!-- TODO: add transform:translate(vertical) the others draggable below one being dragged -->
+<!-- TODO: add horizontal dragging functionality -->
+<!-- TODO: see all the cases with diferents margins -->
