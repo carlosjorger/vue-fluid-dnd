@@ -5,11 +5,9 @@ import Droppable from "./components/Droppable.vue";
 
 <template>
   <div style="width: 80%; display: flex; flex-direction: row; gap: 10px">
-    <Draggable draggable-id="1" enable-drag v-slot="{ provider }">
+    <Draggable draggable-id="1" enable-drag v-slot="{ setRef }">
       <div
-        @mousedown="provider.mousedown($event)"
-        :class="provider.class"
-        :draggable-id="provider.draggableId"
+        :ref="setRef"
         style="
           color: white;
           background-color: red;
@@ -21,11 +19,9 @@ import Droppable from "./components/Droppable.vue";
         1
       </div>
     </Draggable>
-    <Draggable draggable-id="1" enable-drag v-slot="{ provider }">
+    <Draggable draggable-id="1" enable-drag v-slot="{ setRef }">
       <div
-        @mousedown="provider.mousedown($event)"
-        :class="provider.class"
-        :draggable-id="provider.draggableId"
+        :ref="setRef"
         style="color: white; background-color: blue; width: 120px"
       >
         2
@@ -43,11 +39,9 @@ import Droppable from "./components/Droppable.vue";
       display: block;
     "
   >
-    <Draggable draggable-id="1" enable-drag v-slot="{ provider }"
+    <Draggable draggable-id="1" enable-drag v-slot="{ setRef }"
       ><div
-        @mousedown="provider.mousedown($event)"
-        :class="provider.class"
-        :draggable-id="provider.draggableId"
+        :ref="setRef"
         style="
           color: white;
           background-color: red;
@@ -58,11 +52,9 @@ import Droppable from "./components/Droppable.vue";
         1
       </div>
     </Draggable>
-    <Draggable draggable-id="2" enable-drag v-slot="{ provider }">
+    <Draggable draggable-id="2" enable-drag v-slot="{ setRef }">
       <div
-        @mousedown="provider.mousedown($event)"
-        :class="provider.class"
-        :draggable-id="provider.draggableId"
+        :ref="setRef"
         style="
           color: white;
           background-color: blue;
@@ -74,11 +66,9 @@ import Droppable from "./components/Droppable.vue";
         2
       </div>
     </Draggable>
-    <Draggable draggable-id="3" enable-drag v-slot="{ provider }"
+    <Draggable draggable-id="3" enable-drag v-slot="{ setRef }"
       ><div
-        @mousedown="provider.mousedown($event)"
-        :class="provider.class"
-        :draggable-id="provider.draggableId"
+        :ref="setRef"
         style="
           color: white;
           background-color: green;

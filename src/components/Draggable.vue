@@ -1,21 +1,33 @@
-<template><slot :provider="provider"></slot></template>
+<template><slot :set-ref="setSlotRef"></slot></template>
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import {
+  ComponentPublicInstance,
+  computed,
+  onMounted,
+  ref,
+  useSlots,
+  watch,
+} from "vue";
 import eventBus from "@/utils/EventBus";
 
-const DRAG_EVENT = "drag";
-const DROP_EVENT = "drop";
 const { draggableId } = defineProps<{
   draggableId: string;
   enableDrag: boolean;
 }>();
 
+type RefElement<T> = Element | ComponentPublicInstance<T> | null;
+
+const DRAG_EVENT = "drag";
+const DROP_EVENT = "drop";
+
 const style = ref("");
 const position = ref({ top: 0, left: 0 });
 const offset = ref({ offsetX: 0, offsetY: 0 });
 const dragging = ref(false);
+let childRef = ref<HTMLElement>();
+const slots = useSlots();
+
 onMounted(() => {
-  provider.value.draggableId = draggableId;
   eventBus.on("drag", (param) => {
     const { element, height, draggableIdEvent } = param;
     if (draggableId == draggableIdEvent) {
@@ -25,7 +37,23 @@ onMounted(() => {
   eventBus.on("drop", ({ element }: { element: HTMLElement }) => {
     moveHeight(element, 0);
   });
+  if (!slots.default) {
+    return;
+  }
 });
+const setSlotRef = <_>(el: RefElement<_>) => {
+  childRef.value = el as HTMLElement;
+};
+watch(childRef, (element) => {
+  setSlotRefElementParams(element);
+});
+const setSlotRefElementParams = (element: HTMLElement | undefined) => {
+  if (element) {
+    element.classList.add("draggable");
+    element.onmousedown = onmousedown;
+    element.setAttribute("draggable-id", draggableId);
+  }
+};
 const setTransform = (element: HTMLElement, pageX: number, pageY: number) => {
   element.style.transform = `translate( ${
     pageX -
@@ -77,15 +105,7 @@ const onmousedown = (event: MouseEvent) => {
     });
   }
 };
-const ondragstart = () => {
-  return false;
-};
-const provider = ref({
-  draggableId: "",
-  mousedown: onmousedown,
-  class: "draggable",
-  dragstart: ondragstart,
-});
+
 const fixParentHeight = (element: HTMLElement) => {
   const parent = element.parentNode;
   const parentElement = parent as HTMLElement;
@@ -183,7 +203,7 @@ const setBorderBoxStyle = (element: HTMLElement) => {
 };
 const moveHeight = (element: HTMLElement, height: number) => {
   if (element) {
-    element.style.transform = `translate( 0, ${height}px)`;
+    element.style.transform = `translate(0, ${height}px)`;
   }
 };
 const parseFloatEmpty = (value: string) => {
