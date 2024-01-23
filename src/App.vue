@@ -29,7 +29,7 @@ import Droppable from "./components/Droppable.vue";
     </Draggable>
   </div>
   <Droppable
-    tag="ul"
+    tag="div"
     droppable-id="2"
     style="
       width: 80%;
@@ -78,6 +78,20 @@ import Droppable from "./components/Droppable.vue";
         "
       >
         3
+      </div>
+    </Draggable>
+    <Draggable draggable-id="3" enable-drag v-slot="{ setRef }"
+      ><div
+        :ref="setRef"
+        style="
+          color: white;
+          background-color: wheat;
+          padding: 26px 0;
+          margin: 20px 0;
+          margin-right: 100px;
+        "
+      >
+        4
       </div>
     </Draggable>
   </Droppable>

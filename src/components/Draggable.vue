@@ -116,8 +116,6 @@ const emitEventToSiblings = (element: HTMLElement, event: "drag" | "drop") => {
   if (!(sibling instanceof HTMLElement)) {
     return;
   }
-  setBorderBoxStyle(brother);
-
   const brotherMarginTop = parseFloatEmpty(brother.style.marginTop);
   const marginBottom = parseFloatEmpty(element.style.marginBottom);
   const marginTop = parseFloatEmpty(element.style.marginTop);
@@ -128,8 +126,6 @@ const emitEventToSiblings = (element: HTMLElement, event: "drag" | "drop") => {
   let top = marginTop;
   const previousElement = element.previousElementSibling as HTMLElement;
   if (previousElement) {
-    setBorderBoxStyle(previousElement);
-
     const previousMarginBottom = parseFloatEmpty(
       previousElement.style.marginBottom
     );
@@ -140,7 +136,6 @@ const emitEventToSiblings = (element: HTMLElement, event: "drag" | "drop") => {
   tranlation.height = height + top + bottom;
   while (sibling) {
     var element = sibling as HTMLElement;
-    setBorderBoxStyle(element);
     if (sibling instanceof HTMLElement) {
       const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
       eventBus.emit(event, {
@@ -213,4 +208,3 @@ watch(childRef, (element) => {
 </style>
 <!-- TODO: refactor -->
 <!-- TODO: add horizontal dragging functionality -->
-<!-- TODO: see all the cases with diferents margins -->
