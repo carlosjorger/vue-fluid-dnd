@@ -2,12 +2,14 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import eventBus from "@/utils/EventBus";
+
 const DRAG_EVENT = "drag";
 const DROP_EVENT = "drop";
 const { draggableId } = defineProps<{
   draggableId: string;
   enableDrag: boolean;
 }>();
+
 // TODO: try to remove draggable
 // TODO. fix cursor position
 const draggable = ref<HTMLElement>();
@@ -18,18 +20,15 @@ const dragging = ref(false);
 const index = ref(0);
 onMounted(() => {
   provider.value.draggableId = draggableId;
-  eventBus.on(
-    `${DRAG_EVENT}_${draggableId}`,
-    ({ element, height }: { element: HTMLElement; height: number }) => {
+  eventBus.on("drag", (param) => {
+    const { element, height, draggableIdEvent } = param;
+    if (draggableId == draggableIdEvent) {
       moveHeight(element, height);
     }
-  );
-  eventBus.on(
-    `${DROP_EVENT}_${draggableId}`,
-    ({ element }: { element: HTMLElement }) => {
-      moveHeight(element, 0);
-    }
-  );
+  });
+  eventBus.on("drop", ({ element }: { element: HTMLElement }) => {
+    moveHeight(element, 0);
+  });
   const element = draggable.value;
   if (element) {
     index.value = ([] as HTMLElement[]).indexOf.call(
@@ -100,7 +99,7 @@ const emitDragEventToSiblings = (element: HTMLElement) => {
 const emitDropEventToSiblings = (element: HTMLElement) => {
   emitEventToSiblings(element, DROP_EVENT);
 };
-const emitEventToSiblings = (element: HTMLElement, event: string) => {
+const emitEventToSiblings = (element: HTMLElement, event: "drag" | "drop") => {
   let tranlation = { height: 0, widht: 0 };
   let { height } = element.getBoundingClientRect();
 
@@ -124,11 +123,11 @@ const emitEventToSiblings = (element: HTMLElement, event: string) => {
   while (sibling) {
     var element = sibling as HTMLElement;
     if (sibling instanceof HTMLElement) {
-      const siblingDraggableId = sibling.getAttribute("draggable-id");
-
-      eventBus.emit(`${event}_${siblingDraggableId}`, {
+      const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
+      eventBus.emit(event, {
         element: sibling,
         height: tranlation.height,
+        draggableIdEvent: siblingDraggableId,
       });
     }
     sibling = sibling.nextElementSibling;
