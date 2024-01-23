@@ -63,14 +63,15 @@ const onmousemove = function (event: MouseEvent, element: HTMLElement) {
 };
 const onmousedown = (event: MouseEvent) => {
   const element = event.target as HTMLElement;
+  if (dragging.value) {
+    removeDraggingStyles(element);
+    return;
+  }
   style.value = element.style.cssText;
-  setBorderBoxStyle(element);
   const { width, height } = element.getBoundingClientRect();
   const { offsetX, offsetY, x, y, pageY, pageX } = event;
   const { marginTop, marginLeft } = element.style;
-  if (dragging.value) {
-    removeDraggingStyles(element);
-  }
+  setBorderBoxStyle(element);
   dragging.value = true;
   offset.value = { offsetX, offsetY };
   emitDragEventToSiblings(element);
@@ -208,3 +209,4 @@ watch(childRef, (element) => {
 </style>
 <!-- TODO: refactor -->
 <!-- TODO: add horizontal dragging functionality -->
+<!-- TODO: fix drop outside windows -->
