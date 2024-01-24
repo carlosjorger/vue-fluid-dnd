@@ -80,7 +80,6 @@ const onmousedown = (event: MouseEvent) => {
   const { width, height } = element.getBoundingClientRect();
   const { offsetX, offsetY, x, y, pageY, pageX } = event;
   const { marginTop, marginLeft } = element.style;
-  setBorderBoxStyle(element);
   dragging.value = true;
   offset.value = { offsetX, offsetY };
   emitDragEventToSiblings(element);
@@ -90,6 +89,7 @@ const onmousedown = (event: MouseEvent) => {
     left: pageX - width / 2 - parseFloatEmpty(marginLeft),
   };
   setDraggingStyles(element);
+  setBorderBoxStyle(element);
   setTransform(element, x, y);
 
   document.addEventListener("mousemove", (event: MouseEvent) => {
@@ -147,6 +147,7 @@ const emitEventToSiblings = (element: HTMLElement, event: "drag" | "drop") => {
     sibling = sibling.nextElementSibling;
   }
 };
+// TODO: refactor both function calculateHeightWhileDragging and calculateWidthWhileDragging
 const calculateHeightWhileDragging = (
   current: HTMLElement,
   brother: HTMLElement
@@ -237,9 +238,11 @@ const onmouseup = (event: MouseEvent) => {
 };
 const removeDraggingStyles = (element: HTMLElement) => {
   element.style.cssText = style.value;
-  element.style.transition = "transform 300 ease";
+  element.style.zIndex = "1000";
+  element.style.transition = "transform 300ms ease-out";
   setTimeout(() => {
     element.style.transition = "";
+    element.style.zIndex = "";
   }, 300);
 };
 const setDraggingStyles = (element: HTMLElement) => {
@@ -278,5 +281,6 @@ watch(childRef, (element) => {
   cursor: v-bind("computedCursor");
 }
 </style>
+<!-- TODO: test with percent width and height -->
 <!-- TODO: refactor -->
 <!-- TODO: fix drop outside windows -->
