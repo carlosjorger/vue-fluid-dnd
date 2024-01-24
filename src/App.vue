@@ -27,9 +27,9 @@ import Droppable from "./components/Droppable.vue";
           style="
             color: white;
             background-color: blue;
-            padding: 40px;
+            padding: 30px;
             margin: 12px;
-            margin-right: 40px;
+            margin-right: 30px;
           "
         >
           2
@@ -47,6 +47,20 @@ import Droppable from "./components/Droppable.vue";
           "
         >
           3
+        </div>
+      </Draggable>
+      <Draggable draggable-id="h3" enable-drag v-slot="{ setRef }">
+        <div
+          :ref="setRef"
+          style="
+            color: white;
+            background-color: chocolate;
+            padding: 10px;
+            margin: 8px;
+            width: 7%;
+          "
+        >
+          4
         </div>
       </Draggable>
     </div>
@@ -108,13 +122,26 @@ import Droppable from "./components/Droppable.vue";
             :ref="setRef"
             style="
               color: white;
+              background-color: brown;
+              padding: 26px 0;
+              margin: 27px;
+            "
+          >
+            4
+          </div>
+        </Draggable>
+        <Draggable draggable-id="3" enable-drag v-slot="{ setRef }"
+          ><div
+            :ref="setRef"
+            style="
+              color: white;
               background-color: wheat;
               padding: 26px 0;
               margin: 20px 0;
               margin-right: 100px;
             "
           >
-            4
+            5
           </div>
         </Draggable>
       </div>
@@ -182,6 +209,7 @@ import Droppable from "./components/Droppable.vue";
               padding: 26px 0;
               margin: 20px 0;
               margin-right: 100px;
+              width: 30%;
             "
           >
             4

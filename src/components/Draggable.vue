@@ -158,23 +158,21 @@ const calculateHeightWhileDragging = (
   const currentMarginTop = parseFloatEmpty(current.style.marginTop);
   let bottom = currentMarginBottom;
   let top = currentMarginTop;
+  let rest = brotherMarginTop;
   const gap = computeGapPixels(current.parentElement as HTMLElement, "rowGap");
   if (gap > 0) {
     return height + top + bottom + gap;
   }
-  if (brotherMarginTop <= currentMarginBottom) {
-    bottom -= brotherMarginTop;
-  }
+  bottom = Math.max(brotherMarginTop, currentMarginBottom);
   const previousElement = current.previousElementSibling as HTMLElement;
   if (previousElement) {
     const previousMarginBottom = parseFloatEmpty(
       previousElement.style.marginBottom
     );
-    if (previousMarginBottom >= currentMarginTop) {
-      top = previousMarginBottom - currentMarginTop;
-    }
+    top = Math.max(previousMarginBottom, currentMarginTop);
+    rest = Math.max(rest, previousMarginBottom);
   }
-  return height + top + bottom;
+  return height + top + bottom - rest;
 };
 const calculateWidthWhileDragging = (
   current: HTMLElement,
