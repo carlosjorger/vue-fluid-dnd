@@ -32,16 +32,16 @@ onMounted(() => {
   eventBus.on("drag", (param) => {
     const { element, height, width, draggableIdEvent } = param;
     if (draggableId == draggableIdEvent) {
-      moveHeight(element, height, width);
+      moveTranslate(element, height, width);
     }
   });
   eventBus.on("drop", ({ element }: { element: HTMLElement }) => {
-    moveHeight(element, 0, 0);
+    moveTranslate(element, 0, 0);
   });
 });
+
 const setSlotRef = <_>(el: RefElement<_>) => {
   childRef.value = el as HTMLElement;
-  style.value = childRef.value.style.cssText;
 };
 
 const setSlotRefElementParams = (element: HTMLElement | undefined) => {
@@ -77,6 +77,7 @@ const onmousedown = (event: MouseEvent) => {
     removeDraggingStyles(element);
     return;
   }
+  style.value = element.style.cssText;
   const { width, height } = element.getBoundingClientRect();
   const { offsetX, offsetY, x, y, pageY, pageX } = event;
   const { marginTop, marginLeft } = element.style;
@@ -84,6 +85,7 @@ const onmousedown = (event: MouseEvent) => {
   offset.value = { offsetX, offsetY };
   emitDragEventToSiblings(element);
   fixParentHeight(element);
+
   position.value = {
     top: pageY - height / 2 - parseFloatEmpty(marginTop),
     left: pageX - width / 2 - parseFloatEmpty(marginLeft),
@@ -230,25 +232,24 @@ const assignOnmouseup = (
 const onmouseup = (event: MouseEvent) => {
   dragging.value = false;
   const element = event.target as HTMLElement;
-  emitDropEventToSiblings(element);
   removeDraggingStyles(element);
   document.removeEventListener("mousemove", (event: MouseEvent) => {
     onmousemove(event, element);
   });
 };
 const removeDraggingStyles = (element: HTMLElement) => {
-  element.style.cssText = style.value;
-  element.style.zIndex = "1000";
   element.style.transition = "transform 300ms ease-out";
+  moveTranslate(element, 0, 0);
+  // TODO: remove offset from top and left
   setTimeout(() => {
-    element.style.transition = "";
-    element.style.zIndex = "";
+    element.style.cssText = style.value;
+    emitDropEventToSiblings(element);
   }, 300);
 };
 const setDraggingStyles = (element: HTMLElement) => {
   const { width, height } = element.getBoundingClientRect();
   element.style.position = "absolute";
-  element.style.zIndex = "1000";
+  element.style.zIndex = "5000";
   element.style.transition = "";
   element.style.top = `${position.value.top}px`;
   element.style.left = `${position.value.left}px`;
@@ -258,10 +259,11 @@ const setDraggingStyles = (element: HTMLElement) => {
 const setBorderBoxStyle = (element: HTMLElement) => {
   element.style.boxSizing = "border-box";
 };
-const moveHeight = (element: HTMLElement, height: number, width: number) => {
-  if (element) {
-    element.style.transform = `translate(${width}px,${height}px)`;
+const moveTranslate = (element: HTMLElement, height: number, width: number) => {
+  if (!element) {
+    return;
   }
+  element.style.transform = `translate(${width}px,${height}px)`;
 };
 const parseFloatEmpty = (value: string) => {
   if (!value || value.trim().length == 0 || value == "normal") {

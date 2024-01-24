@@ -126,15 +126,7 @@ import Droppable from "./components/Droppable.vue";
   </Droppable>
   <div style="display: flex; flex-direction: row; column-gap: 10px">
     <Droppable droppable-id="3" direction="vertical">
-      <div
-        style="
-          width: 40%;
-          background-color: darkgray;
-          display: inline-block;
-          overflow: hidden;
-          display: block;
-        "
-      >
+      <div style="width: 40%; background-color: darkgray; display: block">
         <Draggable draggable-id="1" enable-drag v-slot="{ setRef }"
           ><div
             :ref="setRef"
