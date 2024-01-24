@@ -41,6 +41,7 @@ onMounted(() => {
 });
 const setSlotRef = <_>(el: RefElement<_>) => {
   childRef.value = el as HTMLElement;
+  style.value = childRef.value.style.cssText;
 };
 
 const setSlotRefElementParams = (element: HTMLElement | undefined) => {
@@ -76,7 +77,6 @@ const onmousedown = (event: MouseEvent) => {
     removeDraggingStyles(element);
     return;
   }
-  style.value = element.style.cssText;
   const { width, height } = element.getBoundingClientRect();
   const { offsetX, offsetY, x, y, pageY, pageX } = event;
   const { marginTop, marginLeft } = element.style;
@@ -107,8 +107,9 @@ const fixParentHeight = (element: HTMLElement) => {
   const parent = element.parentNode;
   const parentElement = parent as HTMLElement;
   if (parentElement) {
-    const { height } = parentElement.getBoundingClientRect();
+    const { height, width } = parentElement.getBoundingClientRect();
     parentElement.style.height = `${height}px`;
+    parentElement.style.width = `${width}px`;
   }
 };
 const emitDragEventToSiblings = (element: HTMLElement) => {
@@ -147,64 +148,65 @@ const emitEventToSiblings = (element: HTMLElement, event: "drag" | "drop") => {
     sibling = sibling.nextElementSibling;
   }
 };
-// TODO: refactor both function calculateHeightWhileDragging and calculateWidthWhileDragging
 const calculateHeightWhileDragging = (
   current: HTMLElement,
   brother: HTMLElement
 ) => {
   let { height } = current.getBoundingClientRect();
-  const brotherMarginTop = parseFloatEmpty(brother.style.marginTop);
-  const currentMarginBottom = parseFloatEmpty(current.style.marginBottom);
-  const currentMarginTop = parseFloatEmpty(current.style.marginTop);
-  let bottom = currentMarginBottom;
-  let top = currentMarginTop;
-  let rest = brotherMarginTop;
-  const gap = computeGapPixels(current.parentElement as HTMLElement, "rowGap");
-  if (gap > 0) {
-    return height + top + bottom + gap;
-  }
-  bottom = Math.max(brotherMarginTop, currentMarginBottom);
-  const previousElement = current.previousElementSibling as HTMLElement;
-  if (previousElement) {
-    const previousMarginBottom = parseFloatEmpty(
-      previousElement.style.marginBottom
-    );
-    top = Math.max(previousMarginBottom, currentMarginTop);
-    rest = Math.max(rest, previousMarginBottom);
-  }
-  return height + top + bottom - rest;
+  return calculateWhileDragging(
+    current,
+    brother,
+    "marginTop",
+    "marginBottom",
+    height,
+    "rowGap"
+  );
 };
+
 const calculateWidthWhileDragging = (
   current: HTMLElement,
   brother: HTMLElement
 ) => {
   let { width } = current.getBoundingClientRect();
-  const brotherMarginLeft = parseFloatEmpty(brother.style.marginLeft);
-  const currentMarginRight = parseFloatEmpty(current.style.marginRight);
-  const currentMarginLeft = parseFloatEmpty(current.style.marginLeft);
-  let right = currentMarginRight;
-  let left = currentMarginLeft;
-  const gap = computeGapPixels(
-    current.parentElement as HTMLElement,
+  return calculateWhileDragging(
+    current,
+    brother,
+    "marginLeft",
+    "marginRight",
+    width,
     "columnGap"
   );
-  if (gap > 0) {
-    return width + left + right + gap;
+};
+const calculateWhileDragging = (
+  current: HTMLElement,
+  brother: HTMLElement,
+  beforeMargin: "marginTop" | "marginLeft",
+  afterMargin: "marginBottom" | "marginRight",
+  space: number,
+  gapStyle: "columnGap" | "rowGap"
+) => {
+  const brotherBeforeMargin = parseFloatEmpty(brother.style[beforeMargin]);
+  const currentAfterMargin = parseFloatEmpty(current.style[afterMargin]);
+  const currentBeforeMargin = parseFloatEmpty(current.style[beforeMargin]);
+  let afterSpace = currentAfterMargin;
+  let beforeScace = currentBeforeMargin;
+  let rest = brotherBeforeMargin;
+  let gap = 0;
+  const parentElement = current.parentElement as HTMLElement;
+  gap = computeGapPixels(parentElement, gapStyle);
+  if (gap > 0 || parentElement.style.display === "flex") {
+    return space + beforeScace + afterSpace + gap;
   }
-  if (brotherMarginLeft <= currentMarginRight) {
-    right -= brotherMarginLeft;
-  }
-
+  afterSpace = Math.max(brotherBeforeMargin, currentAfterMargin);
   const previousElement = current.previousElementSibling as HTMLElement;
   if (previousElement) {
-    const previousMarginRight = parseFloatEmpty(
-      previousElement.style.marginRight
+    const previousAfterMargin = parseFloatEmpty(
+      previousElement.style[afterMargin]
     );
-    if (previousMarginRight >= currentMarginLeft) {
-      left = previousMarginRight - currentMarginLeft;
-    }
+    beforeScace = Math.max(previousAfterMargin, currentBeforeMargin);
+    rest = Math.max(rest, previousAfterMargin);
   }
-  return width + left + right + gap;
+  return space + beforeScace + afterSpace - rest;
 };
 const computeGapPixels = (
   element: HTMLElement,
@@ -279,6 +281,6 @@ watch(childRef, (element) => {
   cursor: v-bind("computedCursor");
 }
 </style>
-<!-- TODO: test with percent width and height -->
-<!-- TODO: refactor -->
 <!-- TODO: fix drop outside windows -->
+<!-- TODO: create utils for HtmlElement -->
+<!-- TODO: refactor -->

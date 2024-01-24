@@ -65,8 +65,67 @@ import Droppable from "./components/Droppable.vue";
       </Draggable>
     </div>
   </Droppable>
+  <Droppable droppable-id="1" direction="horizontal">
+    <div style="width: 80%; display: flex; flex-direction: row">
+      <Draggable draggable-id="h1" enable-drag v-slot="{ setRef }">
+        <div
+          :ref="setRef"
+          style="
+            color: white;
+            background-color: red;
+            width: 50px;
+            margin: 23px 0;
+          "
+        >
+          1
+        </div>
+      </Draggable>
+      <Draggable draggable-id="h2" enable-drag v-slot="{ setRef }">
+        <div
+          :ref="setRef"
+          style="
+            color: white;
+            background-color: blue;
+            padding: 30px;
+            margin: 12px;
+            margin-right: 30px;
+          "
+        >
+          2
+        </div>
+      </Draggable>
+      <Draggable draggable-id="h3" enable-drag v-slot="{ setRef }">
+        <div
+          :ref="setRef"
+          style="
+            color: white;
+            background-color: blueviolet;
+            padding: 10px;
+            margin: 8px;
+            height: 70px;
+          "
+        >
+          3
+        </div>
+      </Draggable>
+      <Draggable draggable-id="h3" enable-drag v-slot="{ setRef }">
+        <div
+          :ref="setRef"
+          style="
+            color: white;
+            background-color: chocolate;
+            padding: 10px;
+            margin: 8px;
+            width: 7%;
+          "
+        >
+          4
+        </div>
+      </Draggable>
+    </div>
+  </Droppable>
   <div style="display: flex; flex-direction: row; column-gap: 10px">
-    <Droppable droppable-id="2" direction="vertical">
+    <Droppable droppable-id="3" direction="vertical">
       <div
         style="
           width: 40%;
@@ -146,7 +205,7 @@ import Droppable from "./components/Droppable.vue";
         </Draggable>
       </div>
     </Droppable>
-    <Droppable droppable-id="3" direction="vertical">
+    <Droppable droppable-id="4" direction="vertical">
       <div
         style="
           width: 40%;
