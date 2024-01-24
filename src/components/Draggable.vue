@@ -32,7 +32,6 @@ onMounted(() => {
   eventBus.on("drag", (param) => {
     const { element, height, width, draggableIdEvent } = param;
     if (draggableId == draggableIdEvent) {
-      console.log(element, height, width);
       moveHeight(element, height, width);
     }
   });
@@ -157,10 +156,14 @@ const calculateHeightWhileDragging = (
   const currentMarginBottom = parseFloatEmpty(current.style.marginBottom);
   const currentMarginTop = parseFloatEmpty(current.style.marginTop);
   let bottom = currentMarginBottom;
+  let top = currentMarginTop;
+  const gap = computeGapPixels(current.parentElement as HTMLElement, "rowGap");
+  if (gap > 0) {
+    return height + top + bottom + gap;
+  }
   if (brotherMarginTop <= currentMarginBottom) {
     bottom -= brotherMarginTop;
   }
-  let top = currentMarginTop;
   const previousElement = current.previousElementSibling as HTMLElement;
   if (previousElement) {
     const previousMarginBottom = parseFloatEmpty(
@@ -181,10 +184,17 @@ const calculateWidthWhileDragging = (
   const currentMarginRight = parseFloatEmpty(current.style.marginRight);
   const currentMarginLeft = parseFloatEmpty(current.style.marginLeft);
   let right = currentMarginRight;
+  let left = currentMarginLeft;
+  const gap = computeGapPixels(
+    current.parentElement as HTMLElement,
+    "columnGap"
+  );
+  if (gap > 0) {
+    return width + left + right + gap;
+  }
   if (brotherMarginLeft <= currentMarginRight) {
     right -= brotherMarginLeft;
   }
-  let left = currentMarginLeft;
 
   const previousElement = current.previousElementSibling as HTMLElement;
   if (previousElement) {
@@ -195,7 +205,20 @@ const calculateWidthWhileDragging = (
       left = previousMarginRight - currentMarginLeft;
     }
   }
-  return width + left + right;
+  return width + left + right + gap;
+};
+const computeGapPixels = (
+  element: HTMLElement,
+  gapType: "columnGap" | "rowGap"
+) => {
+  const gap = getComputedStyle(element as HTMLElement)[gapType];
+  if (gap.match("%")) {
+    const gap_percent = parseFloatEmpty(gap.replace("%", ""));
+    const { width } = element.getBoundingClientRect();
+    return width * (gap_percent / 100);
+  }
+  const gap_px = parseFloatEmpty(gap.replace("px", ""));
+  return gap_px;
 };
 const assignOnmouseup = (
   element: HTMLElement,
@@ -238,7 +261,7 @@ const moveHeight = (element: HTMLElement, height: number, width: number) => {
   }
 };
 const parseFloatEmpty = (value: string) => {
-  if (!value || value.trim().length == 0) {
+  if (!value || value.trim().length == 0 || value == "normal") {
     return 0;
   }
   return parseFloat(value);
@@ -255,6 +278,5 @@ watch(childRef, (element) => {
   cursor: v-bind("computedCursor");
 }
 </style>
-<!-- TODO: add gap support -->
 <!-- TODO: refactor -->
 <!-- TODO: fix drop outside windows -->

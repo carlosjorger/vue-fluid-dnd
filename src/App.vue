@@ -4,8 +4,10 @@ import Droppable from "./components/Droppable.vue";
 </script>
 
 <template>
-  <Droppable droppable-id="3" direction="horizontal">
-    <div style="width: 80%; display: flex; flex-direction: row">
+  <Droppable droppable-id="1" direction="horizontal">
+    <div
+      style="width: 80%; display: flex; flex-direction: row; column-gap: 10%"
+    >
       <Draggable draggable-id="h1" enable-drag v-slot="{ setRef }">
         <div
           :ref="setRef"
@@ -27,80 +29,165 @@ import Droppable from "./components/Droppable.vue";
             background-color: blue;
             padding: 40px;
             margin: 12px;
-            margin-right: 100px;
+            margin-right: 40px;
           "
         >
           2
         </div>
       </Draggable>
-    </div>
-  </Droppable>
-
-  <Droppable droppable-id="2" direction="vertical">
-    <div
-      style="
-        width: 80%;
-        background-color: darkgray;
-        display: inline-block;
-        overflow: hidden;
-        display: block;
-      "
-    >
-      <Draggable draggable-id="1" enable-drag v-slot="{ setRef }"
-        ><div
-          :ref="setRef"
-          style="
-            color: white;
-            background-color: red;
-            padding: 20px 0;
-            margin: 23px 0;
-          "
-        >
-          1
-        </div>
-      </Draggable>
-      <Draggable draggable-id="2" enable-drag v-slot="{ setRef }">
+      <Draggable draggable-id="h3" enable-drag v-slot="{ setRef }">
         <div
           :ref="setRef"
           style="
             color: white;
-            background-color: blue;
-            padding: 20px 0;
-            margin: 12px;
-            margin-right: 300px;
-          "
-        >
-          2
-        </div>
-      </Draggable>
-      <Draggable draggable-id="3" enable-drag v-slot="{ setRef }"
-        ><div
-          :ref="setRef"
-          style="
-            color: white;
-            background-color: green;
-            padding: 26px 0;
-            margin: 26px;
-            margin-left: 100px;
+            background-color: blueviolet;
+            padding: 40px;
+            margin: 8px;
+            height: 60px;
           "
         >
           3
         </div>
       </Draggable>
-      <Draggable draggable-id="3" enable-drag v-slot="{ setRef }"
-        ><div
-          :ref="setRef"
-          style="
-            color: white;
-            background-color: wheat;
-            padding: 26px 0;
-            margin: 20px 0;
-            margin-right: 100px;
-          "
-        >
-          4
-        </div>
-      </Draggable>
     </div>
   </Droppable>
+  <div style="display: flex; flex-direction: row; column-gap: 10px">
+    <Droppable droppable-id="2" direction="vertical">
+      <div
+        style="
+          width: 40%;
+          background-color: darkgray;
+          display: inline-block;
+          overflow: hidden;
+          display: block;
+        "
+      >
+        <Draggable draggable-id="1" enable-drag v-slot="{ setRef }"
+          ><div
+            :ref="setRef"
+            style="
+              color: white;
+              background-color: red;
+              padding: 20px 0;
+              margin: 23px 0;
+            "
+          >
+            1
+          </div>
+        </Draggable>
+        <Draggable draggable-id="2" enable-drag v-slot="{ setRef }">
+          <div
+            :ref="setRef"
+            style="
+              color: white;
+              background-color: blue;
+              padding: 20px 0;
+              margin: 12px;
+              margin-right: 120px;
+            "
+          >
+            2
+          </div>
+        </Draggable>
+        <Draggable draggable-id="3" enable-drag v-slot="{ setRef }"
+          ><div
+            :ref="setRef"
+            style="
+              color: white;
+              background-color: green;
+              padding: 26px 0;
+              margin: 26px;
+              margin-left: 100px;
+            "
+          >
+            3
+          </div>
+        </Draggable>
+        <Draggable draggable-id="3" enable-drag v-slot="{ setRef }"
+          ><div
+            :ref="setRef"
+            style="
+              color: white;
+              background-color: wheat;
+              padding: 26px 0;
+              margin: 20px 0;
+              margin-right: 100px;
+            "
+          >
+            4
+          </div>
+        </Draggable>
+      </div>
+    </Droppable>
+    <Droppable droppable-id="3" direction="vertical">
+      <div
+        style="
+          width: 40%;
+          background-color: darkgray;
+          display: inline-block;
+          overflow: hidden;
+          display: block;
+          display: flex;
+          flex-direction: column;
+          gap: 5px;
+        "
+      >
+        <Draggable draggable-id="1" enable-drag v-slot="{ setRef }"
+          ><div
+            :ref="setRef"
+            style="
+              color: white;
+              background-color: red;
+              padding: 20px 0;
+              margin: 23px 0;
+            "
+          >
+            1
+          </div>
+        </Draggable>
+        <Draggable draggable-id="2" enable-drag v-slot="{ setRef }">
+          <div
+            :ref="setRef"
+            style="
+              color: white;
+              background-color: blue;
+              padding: 20px 0;
+              margin: 12px;
+              margin-right: 120px;
+            "
+          >
+            2
+          </div>
+        </Draggable>
+        <Draggable draggable-id="3" enable-drag v-slot="{ setRef }"
+          ><div
+            :ref="setRef"
+            style="
+              color: white;
+              background-color: green;
+              padding: 26px 0;
+              margin: 26px;
+              margin-left: 100px;
+            "
+          >
+            3
+          </div>
+        </Draggable>
+        <Draggable draggable-id="3" enable-drag v-slot="{ setRef }"
+          ><div
+            :ref="setRef"
+            style="
+              color: white;
+              background-color: wheat;
+              padding: 26px 0;
+              margin: 20px 0;
+              margin-right: 100px;
+            "
+          >
+            4
+          </div>
+        </Draggable>
+      </div>
+    </Droppable>
+  </div>
 </template>
