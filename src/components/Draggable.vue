@@ -1,7 +1,15 @@
 <template><slot :set-ref="setSlotRef"></slot></template>
 <script setup lang="ts">
-import { ComponentPublicInstance, computed, onMounted, ref, watch } from "vue";
+import {
+  ComponentPublicInstance,
+  computed,
+  inject,
+  onMounted,
+  ref,
+  watch,
+} from "vue";
 import eventBus from "@/utils/EventBus";
+import { Direction } from "../../index.ts";
 
 const { draggableId } = defineProps<{
   draggableId: string;
@@ -18,6 +26,7 @@ const position = ref({ top: 0, left: 0 });
 const offset = ref({ offsetX: 0, offsetY: 0 });
 const dragging = ref(false);
 let childRef = ref<HTMLElement>();
+const direction = inject<Direction>("direction");
 
 onMounted(() => {
   eventBus.on("drag", (param) => {
@@ -117,6 +126,10 @@ const emitEventToSiblings = (element: HTMLElement, event: "drag" | "drop") => {
   if (!(sibling instanceof HTMLElement)) {
     return;
   }
+  // TODO: add horizontal dragging functionality
+  if (!direction) {
+    return;
+  }
   const brotherMarginTop = parseFloatEmpty(brother.style.marginTop);
   const marginBottom = parseFloatEmpty(element.style.marginBottom);
   const marginTop = parseFloatEmpty(element.style.marginTop);
@@ -208,5 +221,4 @@ watch(childRef, (element) => {
 }
 </style>
 <!-- TODO: refactor -->
-<!-- TODO: add horizontal dragging functionality -->
 <!-- TODO: fix drop outside windows -->

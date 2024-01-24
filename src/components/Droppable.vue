@@ -1,12 +1,15 @@
 <template>
-  <component :is="tag">
-    <slot></slot>
-  </component>
+  <slot></slot>
 </template>
 <script setup lang="ts">
-defineProps<{
+import { provide } from "vue";
+import { Direction } from "../../index.ts";
+
+const { direction } = defineProps<{
   droppableId: string;
-  tag: string;
+  direction: Direction;
 }>();
+
+provide("direction", direction);
 </script>
 <!-- TODO: keep working in Droppable -->
