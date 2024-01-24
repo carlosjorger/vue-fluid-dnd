@@ -5,25 +5,30 @@ import Droppable from "./components/Droppable.vue";
 
 <template>
   <Droppable droppable-id="3" direction="horizontal">
-    <div style="width: 80%; display: flex; flex-direction: row; gap: 10px">
-      <Draggable draggable-id="1" enable-drag v-slot="{ setRef }">
+    <div style="width: 80%; display: flex; flex-direction: row">
+      <Draggable draggable-id="h1" enable-drag v-slot="{ setRef }">
         <div
           :ref="setRef"
           style="
             color: white;
             background-color: red;
-            width: 90px;
-            margin-bottom: 10px;
-            height: 100px;
+            width: 50px;
+            margin: 23px 0;
           "
         >
           1
         </div>
       </Draggable>
-      <Draggable draggable-id="1" enable-drag v-slot="{ setRef }">
+      <Draggable draggable-id="h2" enable-drag v-slot="{ setRef }">
         <div
           :ref="setRef"
-          style="color: white; background-color: blue; width: 120px"
+          style="
+            color: white;
+            background-color: blue;
+            padding: 40px;
+            margin: 12px;
+            margin-right: 100px;
+          "
         >
           2
         </div>

@@ -30,13 +30,14 @@ const direction = inject<Direction>("direction");
 
 onMounted(() => {
   eventBus.on("drag", (param) => {
-    const { element, height, draggableIdEvent } = param;
+    const { element, height, width, draggableIdEvent } = param;
     if (draggableId == draggableIdEvent) {
-      moveHeight(element, height);
+      console.log(element, height, width);
+      moveHeight(element, height, width);
     }
   });
   eventBus.on("drop", ({ element }: { element: HTMLElement }) => {
-    moveHeight(element, 0);
+    moveHeight(element, 0, 0);
   });
 });
 const setSlotRef = <_>(el: RefElement<_>) => {
@@ -119,49 +120,83 @@ const emitDropEventToSiblings = (element: HTMLElement) => {
 };
 const emitEventToSiblings = (element: HTMLElement, event: "drag" | "drop") => {
   let tranlation = { height: 0, widht: 0 };
-  let { height } = element.getBoundingClientRect();
 
   let sibling = element.nextElementSibling;
   const brother = sibling as HTMLElement;
   if (!(sibling instanceof HTMLElement)) {
     return;
   }
-  // TODO: add horizontal dragging functionality
   if (!direction) {
     return;
   }
-  const brotherMarginTop = parseFloatEmpty(brother.style.marginTop);
-  const marginBottom = parseFloatEmpty(element.style.marginBottom);
-  const marginTop = parseFloatEmpty(element.style.marginTop);
-  let bottom = marginBottom;
-  if (brotherMarginTop <= marginBottom) {
-    bottom -= brotherMarginTop;
+  if (direction === "vertical") {
+    tranlation.height = calculateHeightWhileDragging(element, brother);
+  } else if (direction === "horizontal") {
+    tranlation.widht = calculateWidthWhileDragging(element, brother);
   }
-  let top = marginTop;
-  const previousElement = element.previousElementSibling as HTMLElement;
-  if (previousElement) {
-    const previousMarginBottom = parseFloatEmpty(
-      previousElement.style.marginBottom
-    );
-    if (previousMarginBottom >= marginTop) {
-      top = previousMarginBottom - marginTop;
-    }
-  }
-  tranlation.height = height + top + bottom;
   while (sibling) {
     var element = sibling as HTMLElement;
     if (sibling instanceof HTMLElement) {
       const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
       eventBus.emit(event, {
         element: sibling,
-        height: tranlation.height,
         draggableIdEvent: siblingDraggableId,
+        height: tranlation.height,
+        width: tranlation.widht,
       });
     }
     sibling = sibling.nextElementSibling;
   }
 };
+const calculateHeightWhileDragging = (
+  current: HTMLElement,
+  brother: HTMLElement
+) => {
+  let { height } = current.getBoundingClientRect();
+  const brotherMarginTop = parseFloatEmpty(brother.style.marginTop);
+  const currentMarginBottom = parseFloatEmpty(current.style.marginBottom);
+  const currentMarginTop = parseFloatEmpty(current.style.marginTop);
+  let bottom = currentMarginBottom;
+  if (brotherMarginTop <= currentMarginBottom) {
+    bottom -= brotherMarginTop;
+  }
+  let top = currentMarginTop;
+  const previousElement = current.previousElementSibling as HTMLElement;
+  if (previousElement) {
+    const previousMarginBottom = parseFloatEmpty(
+      previousElement.style.marginBottom
+    );
+    if (previousMarginBottom >= currentMarginTop) {
+      top = previousMarginBottom - currentMarginTop;
+    }
+  }
+  return height + top + bottom;
+};
+const calculateWidthWhileDragging = (
+  current: HTMLElement,
+  brother: HTMLElement
+) => {
+  let { width } = current.getBoundingClientRect();
+  const brotherMarginLeft = parseFloatEmpty(brother.style.marginLeft);
+  const currentMarginRight = parseFloatEmpty(current.style.marginRight);
+  const currentMarginLeft = parseFloatEmpty(current.style.marginLeft);
+  let right = currentMarginRight;
+  if (brotherMarginLeft <= currentMarginRight) {
+    right -= brotherMarginLeft;
+  }
+  let left = currentMarginLeft;
 
+  const previousElement = current.previousElementSibling as HTMLElement;
+  if (previousElement) {
+    const previousMarginRight = parseFloatEmpty(
+      previousElement.style.marginRight
+    );
+    if (previousMarginRight >= currentMarginLeft) {
+      left = previousMarginRight - currentMarginLeft;
+    }
+  }
+  return width + left + right;
+};
 const assignOnmouseup = (
   element: HTMLElement,
   onmouseupFunc: ((event: MouseEvent) => void) | null
@@ -197,9 +232,9 @@ const setDraggingStyles = (element: HTMLElement) => {
 const setBorderBoxStyle = (element: HTMLElement) => {
   element.style.boxSizing = "border-box";
 };
-const moveHeight = (element: HTMLElement, height: number) => {
+const moveHeight = (element: HTMLElement, height: number, width: number) => {
   if (element) {
-    element.style.transform = `translate(0, ${height}px)`;
+    element.style.transform = `translate(${width}px,${height}px)`;
   }
 };
 const parseFloatEmpty = (value: string) => {
@@ -220,5 +255,6 @@ watch(childRef, (element) => {
   cursor: v-bind("computedCursor");
 }
 </style>
+<!-- TODO: add gap support -->
 <!-- TODO: refactor -->
 <!-- TODO: fix drop outside windows -->
