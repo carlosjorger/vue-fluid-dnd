@@ -27,7 +27,7 @@ const offset = ref({ offsetX: 0, offsetY: 0 });
 const dragging = ref(false);
 let childRef = ref<HTMLElement>();
 const direction = inject<Direction>("direction");
-
+const translate = ref({ x: 0, y: 0 });
 onMounted(() => {
   eventBus.on("drag", (param) => {
     const { element, height, width, draggableIdEvent } = param;
@@ -56,23 +56,25 @@ const setTransform = (element: HTMLElement, pageX: number, pageY: number) => {
   const { innerWidth, innerHeight } = window;
   const elementXPosittion = pageX - offset.value.offsetX;
   const elementYPosition = pageY - offset.value.offsetY;
+
   if (
-    elementXPosittion < -width / 2 ||
-    elementXPosittion > innerWidth - width / 2 ||
-    elementYPosition < -height / 2 ||
-    elementYPosition > innerHeight - height / 2
+    elementXPosittion >= -width / 2 &&
+    elementXPosittion <= innerWidth - width / 2
   ) {
-    return;
+    translate.value.x =
+      elementXPosittion -
+      position.value.left -
+      parseFloatEmpty(element.style.marginLeft);
   }
-  element.style.transform = `translate( ${
-    elementXPosittion -
-    position.value.left -
-    parseFloatEmpty(element.style.marginLeft)
-  }px, ${
-    elementYPosition -
-    position.value.top -
-    parseFloatEmpty(element.style.marginTop)
-  }px)`;
+  if (
+    elementYPosition >= -height / 2 &&
+    elementYPosition <= innerHeight - height / 2
+  ) {
+    translate.value.y =
+      elementYPosition -
+      position.value.top -
+      parseFloatEmpty(element.style.marginTop);
+  }
 };
 
 const onmousemove = function (event: MouseEvent, element: HTMLElement) {
@@ -296,6 +298,15 @@ watch(
     if (childRef.value) {
       childRef.value.style.top = `${newPosition.top}px`;
       childRef.value.style.left = `${newPosition.left}px`;
+    }
+  },
+  { deep: true }
+);
+watch(
+  translate,
+  (newTranslate) => {
+    if (childRef.value) {
+      childRef.value.style.transform = `translate( ${newTranslate.x}px, ${newTranslate.y}px)`;
     }
   },
   { deep: true }
