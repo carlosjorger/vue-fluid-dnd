@@ -25,9 +25,10 @@ const style = ref("");
 const position = ref({ top: 0, left: 0 });
 const offset = ref({ offsetX: 0, offsetY: 0 });
 const dragging = ref(false);
-let childRef = ref<HTMLElement>();
 const direction = inject<Direction>("direction");
 const translate = ref({ x: 0, y: 0 });
+const scroll = ref({ scrollLeft: 0, scrollTop: 0 });
+let childRef = ref<HTMLElement>();
 onMounted(() => {
   eventBus.on("drag", (param) => {
     const { element, height, width, draggableIdEvent } = param;
@@ -85,6 +86,7 @@ const onmousemove = function (event: MouseEvent, element: HTMLElement) {
 };
 const onmousedown = (event: MouseEvent) => {
   const element = event.target as HTMLElement;
+  scroll.value = getScroll(element.parentElement);
   if (dragging.value) {
     removeDraggingStyles(event, element);
     return;
@@ -115,7 +117,13 @@ const onmousedown = (event: MouseEvent) => {
     });
   }
 };
-
+const getScroll = (element: HTMLElement | undefined | null) => {
+  if (element) {
+    const { scrollLeft, scrollTop } = element;
+    return { scrollLeft, scrollTop };
+  }
+  return { scrollLeft: 0, scrollTop: 0 };
+};
 const fixParentHeight = (element: HTMLElement) => {
   const parent = element.parentNode;
   const parentElement = parent as HTMLElement;
@@ -253,10 +261,20 @@ const removeDraggingStyles = (event: MouseEvent, element: HTMLElement) => {
   const { pageY, y, pageX, x } = event;
   const { width, height } = element.getBoundingClientRect();
   element.style.transition = `transform ${duration}ms ease-out`;
+
+  const { scrollTop, scrollLeft } = getScroll(element.parentElement);
   moveTranslate(
     element,
-    pageY - y - offset.value.offsetY + height / 2,
-    pageX - x - offset.value.offsetX + width / 2
+    pageY -
+      y -
+      offset.value.offsetY +
+      height / 2 +
+      (scroll.value.scrollTop - scrollTop),
+    pageX -
+      x -
+      offset.value.offsetX +
+      width / 2 +
+      (scroll.value.scrollLeft - scrollLeft)
   );
   setTimeout(() => {
     element.style.cssText = style.value;
@@ -319,4 +337,5 @@ watch(
 }
 </style>
 <!-- TODO: create utils for HtmlElement -->
+<!-- TODO: create swap animation while dragging -->
 <!-- TODO: refactor -->
