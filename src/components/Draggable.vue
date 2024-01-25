@@ -10,7 +10,17 @@ import {
 } from "vue";
 import eventBus from "@/utils/EventBus";
 import { Direction } from "../../index.ts";
-
+import {
+  setBorderBoxStyle,
+  fixSizeStyle,
+  moveTranslate,
+  assignOnmouseup,
+} from "@/utils/SetStyles";
+import {
+  getScroll,
+  parseFloatEmpty,
+  computeGapPixels,
+} from "@/utils/GetStyles";
 const { draggableId } = defineProps<{
   draggableId: string;
   enableDrag: boolean;
@@ -98,7 +108,7 @@ const onmousedown = (event: MouseEvent) => {
   dragging.value = true;
   offset.value = { offsetX, offsetY };
   emitDragEventToSiblings(element);
-  fixParentHeight(element);
+  fixSizeStyle(element.parentElement);
   position.value = {
     top: y - height / 2 - parseFloatEmpty(marginTop),
     left: x - width / 2 - parseFloatEmpty(marginLeft),
@@ -117,22 +127,7 @@ const onmousedown = (event: MouseEvent) => {
     });
   }
 };
-const getScroll = (element: HTMLElement | undefined | null) => {
-  if (element) {
-    const { scrollLeft, scrollTop } = element;
-    return { scrollLeft, scrollTop };
-  }
-  return { scrollLeft: 0, scrollTop: 0 };
-};
-const fixParentHeight = (element: HTMLElement) => {
-  const parent = element.parentNode;
-  const parentElement = parent as HTMLElement;
-  if (parentElement) {
-    const { height, width } = parentElement.getBoundingClientRect();
-    parentElement.style.height = `${height}px`;
-    parentElement.style.width = `${width}px`;
-  }
-};
+
 const emitDragEventToSiblings = (element: HTMLElement) => {
   emitEventToSiblings(element, DRAG_EVENT);
 };
@@ -229,25 +224,6 @@ const calculateWhileDragging = (
   }
   return space + beforeScace + afterSpace - rest;
 };
-const computeGapPixels = (
-  element: HTMLElement,
-  gapType: "columnGap" | "rowGap"
-) => {
-  const gap = getComputedStyle(element as HTMLElement)[gapType];
-  if (gap.match("%")) {
-    const gap_percent = parseFloatEmpty(gap.replace("%", ""));
-    const { width } = element.getBoundingClientRect();
-    return width * (gap_percent / 100);
-  }
-  const gap_px = parseFloatEmpty(gap.replace("px", ""));
-  return gap_px;
-};
-const assignOnmouseup = (
-  element: HTMLElement,
-  onmouseupFunc: ((event: MouseEvent) => void) | null
-) => {
-  element.onmouseup = onmouseupFunc;
-};
 const onmouseup = (event: MouseEvent) => {
   dragging.value = false;
   const element = event.target as HTMLElement;
@@ -283,27 +259,10 @@ const removeDraggingStyles = (event: MouseEvent, element: HTMLElement) => {
 };
 
 const setDraggingStyles = (element: HTMLElement) => {
-  const { width, height } = element.getBoundingClientRect();
+  fixSizeStyle(element);
   element.style.position = "absolute";
   element.style.zIndex = "5000";
   element.style.transition = "";
-  element.style.width = `${width}px`;
-  element.style.height = `${height}px`;
-};
-const setBorderBoxStyle = (element: HTMLElement) => {
-  element.style.boxSizing = "border-box";
-};
-const moveTranslate = (element: HTMLElement, height: number, width: number) => {
-  if (!element) {
-    return;
-  }
-  element.style.transform = `translate(${width}px,${height}px)`;
-};
-const parseFloatEmpty = (value: string) => {
-  if (!value || value.trim().length == 0 || value == "normal") {
-    return 0;
-  }
-  return parseFloat(value);
 };
 
 const computedCursor = computed(() => (dragging.value ? "grabbing" : "grab"));
@@ -336,6 +295,5 @@ watch(
   cursor: v-bind("computedCursor");
 }
 </style>
-<!-- TODO: create utils for HtmlElement -->
 <!-- TODO: create swap animation while dragging -->
 <!-- TODO: refactor -->
