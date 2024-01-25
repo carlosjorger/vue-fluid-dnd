@@ -81,12 +81,12 @@ const onmousemove = function (event: MouseEvent, element: HTMLElement) {
   if (!dragging.value) {
     return;
   }
-  setTransform(element, event.x, event.y);
+  setTransform(element, event.pageX, event.pageY);
 };
 const onmousedown = (event: MouseEvent) => {
   const element = event.target as HTMLElement;
   if (dragging.value) {
-    removeDraggingStyles(element);
+    removeDraggingStyles(event, element);
     return;
   }
   style.value = element.style.cssText;
@@ -98,12 +98,12 @@ const onmousedown = (event: MouseEvent) => {
   emitDragEventToSiblings(element);
   fixParentHeight(element);
   position.value = {
-    top: pageY - height / 2 - parseFloatEmpty(marginTop),
-    left: pageX - width / 2 - parseFloatEmpty(marginLeft),
+    top: y - height / 2 - parseFloatEmpty(marginTop),
+    left: x - width / 2 - parseFloatEmpty(marginLeft),
   };
   setDraggingStyles(element);
   setBorderBoxStyle(element);
-  setTransform(element, x, y);
+  setTransform(element, pageX, pageY);
 
   document.addEventListener("mousemove", (event: MouseEvent) => {
     onmousemove(event, element);
@@ -243,26 +243,27 @@ const assignOnmouseup = (
 const onmouseup = (event: MouseEvent) => {
   dragging.value = false;
   const element = event.target as HTMLElement;
-  removeDraggingStyles(element);
+  removeDraggingStyles(event, element);
   document.removeEventListener("mousemove", (event: MouseEvent) => {
     onmousemove(event, element);
   });
 };
-const removeDraggingStyles = (element: HTMLElement) => {
+const removeDraggingStyles = (event: MouseEvent, element: HTMLElement) => {
   const duration = 300;
+  const { pageY, y, pageX, x } = event;
+  const { width, height } = element.getBoundingClientRect();
   element.style.transition = `transform ${duration}ms ease-out`;
-  moveTranslate(element, 0, 0);
-  centerPosition(element);
+  moveTranslate(
+    element,
+    pageY - y - offset.value.offsetY + height / 2,
+    pageX - x - offset.value.offsetX + width / 2
+  );
   setTimeout(() => {
     element.style.cssText = style.value;
     emitDropEventToSiblings(element);
   }, duration);
 };
-const centerPosition = (element: HTMLElement) => {
-  const { height, width } = element.getBoundingClientRect();
-  position.value.left -= offset.value.offsetX - width / 2;
-  position.value.top -= offset.value.offsetY - height / 2;
-};
+
 const setDraggingStyles = (element: HTMLElement) => {
   const { width, height } = element.getBoundingClientRect();
   element.style.position = "absolute";
