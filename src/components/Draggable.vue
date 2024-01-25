@@ -52,15 +52,25 @@ const setSlotRefElementParams = (element: HTMLElement | undefined) => {
   }
 };
 const setTransform = (element: HTMLElement, pageX: number, pageY: number) => {
+  const { width, height } = element.getBoundingClientRect();
+  const { innerWidth, innerHeight } = window;
+  const elementXPosittion = pageX - offset.value.offsetX;
+  const elementYPosition = pageY - offset.value.offsetY;
+  if (
+    elementXPosittion < -width / 2 ||
+    elementXPosittion > innerWidth - width / 2 ||
+    elementYPosition < -height / 2 ||
+    elementYPosition > innerHeight - height / 2
+  ) {
+    return;
+  }
   element.style.transform = `translate( ${
-    pageX -
+    elementXPosittion -
     position.value.left -
-    offset.value.offsetX -
     parseFloatEmpty(element.style.marginLeft)
   }px, ${
-    pageY -
+    elementYPosition -
     position.value.top -
-    offset.value.offsetY -
     parseFloatEmpty(element.style.marginTop)
   }px)`;
 };
@@ -296,6 +306,5 @@ watch(
   cursor: v-bind("computedCursor");
 }
 </style>
-<!-- TODO: fix drop outside windows -->
 <!-- TODO: create utils for HtmlElement -->
 <!-- TODO: refactor -->
