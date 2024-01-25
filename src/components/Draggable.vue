@@ -85,7 +85,6 @@ const onmousedown = (event: MouseEvent) => {
   offset.value = { offsetX, offsetY };
   emitDragEventToSiblings(element);
   fixParentHeight(element);
-
   position.value = {
     top: pageY - height / 2 - parseFloatEmpty(marginTop),
     left: pageX - width / 2 - parseFloatEmpty(marginLeft),
@@ -238,21 +237,25 @@ const onmouseup = (event: MouseEvent) => {
   });
 };
 const removeDraggingStyles = (element: HTMLElement) => {
-  element.style.transition = "transform 300ms ease-out";
+  const duration = 300;
+  element.style.transition = `transform ${duration}ms ease-out`;
   moveTranslate(element, 0, 0);
-  // TODO: remove offset from top and left
+  centerPosition(element);
   setTimeout(() => {
     element.style.cssText = style.value;
     emitDropEventToSiblings(element);
-  }, 300);
+  }, duration);
+};
+const centerPosition = (element: HTMLElement) => {
+  const { height, width } = element.getBoundingClientRect();
+  position.value.left -= offset.value.offsetX - width / 2;
+  position.value.top -= offset.value.offsetY - height / 2;
 };
 const setDraggingStyles = (element: HTMLElement) => {
   const { width, height } = element.getBoundingClientRect();
   element.style.position = "absolute";
   element.style.zIndex = "5000";
   element.style.transition = "";
-  element.style.top = `${position.value.top}px`;
-  element.style.left = `${position.value.left}px`;
   element.style.width = `${width}px`;
   element.style.height = `${height}px`;
 };
@@ -277,6 +280,16 @@ const computedCursor = computed(() => (dragging.value ? "grabbing" : "grab"));
 watch(childRef, (element) => {
   setSlotRefElementParams(element);
 });
+watch(
+  position,
+  (newPosition) => {
+    if (childRef.value) {
+      childRef.value.style.top = `${newPosition.top}px`;
+      childRef.value.style.left = `${newPosition.left}px`;
+    }
+  },
+  { deep: true }
+);
 </script>
 <style>
 .draggable {
