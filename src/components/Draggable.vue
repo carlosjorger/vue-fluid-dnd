@@ -93,6 +93,7 @@ const onmousemove = function (event: MouseEvent, element: HTMLElement) {
     return;
   }
   setTransform(element, event.pageX, event.pageY);
+  emitEventToSiblings(element, DRAG_EVENT);
 };
 const handlerMousemove = (event: MouseEvent) => {
   if (childRef.value) {
@@ -141,7 +142,7 @@ const emitDropEventToSiblings = (element: HTMLElement) => {
   emitEventToSiblings(element, DROP_EVENT);
 };
 const emitEventToSiblings = (element: HTMLElement, event: "drag" | "drop") => {
-  let tranlation = { height: 0, widht: 0 };
+  let tranlation = { height: 0, width: 0 };
 
   let sibling = element.nextElementSibling;
   const brother = sibling as HTMLElement;
@@ -154,21 +155,65 @@ const emitEventToSiblings = (element: HTMLElement, event: "drag" | "drop") => {
   if (direction === "vertical") {
     tranlation.height = calculateHeightWhileDragging(element, brother);
   } else if (direction === "horizontal") {
-    tranlation.widht = calculateWidthWhileDragging(element, brother);
+    tranlation.width = calculateWidthWhileDragging(element, brother);
   }
+  const currentElementRect = element.getBoundingClientRect();
+
   while (sibling) {
     var element = sibling as HTMLElement;
     if (sibling instanceof HTMLElement) {
       const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
+      const siblingHTMLElement = sibling as HTMLElement;
+      const siblingElementRect = siblingHTMLElement.getBoundingClientRect();
+      const intersectionY = intersection(
+        {
+          x1: currentElementRect.top,
+          x2: currentElementRect.top + currentElementRect.height,
+        },
+        {
+          x1: siblingElementRect.top,
+          x2: siblingElementRect.top + siblingElementRect.height,
+        }
+      );
+      const intersectionX = intersection(
+        {
+          x1: currentElementRect.left,
+          x2: currentElementRect.left + currentElementRect.width,
+        },
+        {
+          x1: siblingElementRect.left,
+          x2: siblingElementRect.left + siblingElementRect.width,
+        }
+      );
+      const hasIntersection =
+        intersectionY >=
+          Math.min(currentElementRect.height, siblingElementRect.height) / 2 &&
+        intersectionX >=
+          Math.min(currentElementRect.width, siblingElementRect.width) / 2;
+      console.log(hasIntersection);
       eventBus.emit(event, {
         element: sibling,
         draggableIdEvent: siblingDraggableId,
-        height: tranlation.height,
-        width: tranlation.widht,
+        ...tranlation,
       });
     }
     sibling = sibling.nextElementSibling;
   }
+};
+const intersection = (
+  firstInterval: { x1: number; x2: number },
+  secondInterval: { x1: number; x2: number }
+): number => {
+  if (firstInterval.x1 > secondInterval.x1) {
+    return intersection(secondInterval, firstInterval);
+  }
+  if (firstInterval.x2 < secondInterval.x1) {
+    return 0;
+  }
+  if (firstInterval.x2 >= secondInterval.x2) {
+    return firstInterval.x2 - firstInterval.x1;
+  }
+  return firstInterval.x2 - secondInterval.x1;
 };
 const calculateHeightWhileDragging = (
   current: HTMLElement,
