@@ -214,7 +214,7 @@ import Droppable from "./components/Droppable.vue";
             :ref="setRef"
             style="
               color: white;
-              background-color: wheat;
+              background-color: crimson;
               padding: 26px 0;
               margin: 20px 0;
               margin-right: 100px;

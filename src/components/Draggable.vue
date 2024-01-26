@@ -70,7 +70,7 @@ const setTransform = (element: HTMLElement, pageX: number, pageY: number) => {
 
   if (
     elementXPosittion >= -width / 2 &&
-    elementXPosittion <= innerWidth - width / 2
+    elementXPosittion <= innerWidth + width / 2
   ) {
     translate.value.x =
       elementXPosittion -
@@ -79,7 +79,7 @@ const setTransform = (element: HTMLElement, pageX: number, pageY: number) => {
   }
   if (
     elementYPosition >= -height / 2 &&
-    elementYPosition <= innerHeight - height / 2
+    elementYPosition <= innerHeight + height / 2
   ) {
     translate.value.y =
       elementYPosition -
@@ -295,5 +295,6 @@ watch(
   cursor: v-bind("computedCursor");
 }
 </style>
+<!-- TODO: fix bug when element is dropped outside the windows -->
 <!-- TODO: create swap animation while dragging -->
 <!-- TODO: refactor -->
