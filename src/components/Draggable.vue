@@ -94,11 +94,18 @@ const onmousemove = function (event: MouseEvent, element: HTMLElement) {
   }
   setTransform(element, event.pageX, event.pageY);
 };
+const handlerMousemove = (event: MouseEvent) => {
+  if (childRef.value) {
+    onmousemove(event, childRef.value);
+  }
+};
 const onmousedown = (event: MouseEvent) => {
   const element = event.target as HTMLElement;
   scroll.value = getScroll(element.parentElement);
+
   if (dragging.value) {
-    removeDraggingStyles(event, element);
+    onDropDraggingEvent(event);
+    document.removeEventListener("mousemove", handlerMousemove, false);
     return;
   }
   style.value = element.style.cssText;
@@ -117,12 +124,11 @@ const onmousedown = (event: MouseEvent) => {
   setBorderBoxStyle(element);
   setTransform(element, pageX, pageY);
 
-  document.addEventListener("mousemove", (event: MouseEvent) => {
-    onmousemove(event, element);
-  });
+  document.addEventListener("mousemove", handlerMousemove);
   if (element) {
     assignOnmouseup(element, (event: MouseEvent) => {
       onmouseup(event);
+      document.removeEventListener("mousemove", handlerMousemove);
       assignOnmouseup(element, null);
     });
   }
@@ -225,12 +231,12 @@ const calculateWhileDragging = (
   return space + beforeScace + afterSpace - rest;
 };
 const onmouseup = (event: MouseEvent) => {
+  onDropDraggingEvent(event);
+};
+const onDropDraggingEvent = (event: MouseEvent) => {
   dragging.value = false;
   const element = event.target as HTMLElement;
   removeDraggingStyles(event, element);
-  document.removeEventListener("mousemove", (event: MouseEvent) => {
-    onmousemove(event, element);
-  });
 };
 const removeDraggingStyles = (event: MouseEvent, element: HTMLElement) => {
   const duration = 300;
@@ -295,6 +301,5 @@ watch(
   cursor: v-bind("computedCursor");
 }
 </style>
-<!-- TODO: fix bug when element is dropped outside the windows -->
 <!-- TODO: create swap animation while dragging -->
 <!-- TODO: refactor -->
