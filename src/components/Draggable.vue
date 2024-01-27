@@ -28,7 +28,8 @@ const { draggableId } = defineProps<{
 }>();
 
 type RefElement<T> = Element | ComponentPublicInstance<T> | null;
-type DragEvent = "drag" | "drop" | "startDrag" | "startDrop";
+type DraggingEvent = "drag" | "startDrag";
+type DragEvent = DraggingEvent | "drop" | "startDrop";
 type VerticalDirection = "up" | "down" | "quiet";
 type HorizontalDirection = "left" | "right" | "quiet";
 type MouseDirection = {
@@ -193,22 +194,24 @@ const emitEventToSiblings = (
   mouseDirection: MouseDirection
 ) => {
   let tranlation = { height: 0, width: 0 };
-  let sibling = element.nextElementSibling;
-  const brother = sibling as HTMLElement;
-  if (sibling instanceof HTMLElement) {
-    tranlation = calculateInitialTranslation(element, brother, event);
-  }
+  tranlation = calculateInitialTranslation(element, event);
+
   const isOutside = draggableIsOutside(element);
-  const { top: currentTop, height: currentHeight } =
+  let { top: currentTop, height: currentHeight } =
     element.getBoundingClientRect();
   const siblings = getSiblings(element);
+  const dropping = event === DROP_EVENT || event === START_DROP_EVENT;
+  if (dropping) {
+    currentTop = position.value.top + translate.value.y;
+  }
   for (const sibling of siblings) {
     const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
     if (!isOutside) {
       if (direction === "vertical") {
         const { top: siblingTop, height: siblingHeight } =
           sibling.getBoundingClientRect();
-
+        if (dropping) {
+        }
         if (
           mouseDirection.vertical == "down" &&
           currentTop + currentHeight > siblingTop + siblingHeight / 2
@@ -223,7 +226,11 @@ const emitEventToSiblings = (
         }
       }
     }
-    if (direction === "vertical" && mouseDirection.vertical == "quiet") {
+    if (
+      direction === "vertical" &&
+      mouseDirection.vertical == "quiet" &&
+      !dropping
+    ) {
       continue;
     }
     eventBus.emit(event, {
@@ -278,7 +285,6 @@ const previousSiblings = (current: HTMLElement) => {
 };
 const calculateInitialTranslation = (
   current: HTMLElement,
-  brother: HTMLElement,
   event: DragEvent
 ) => {
   let height = 0;
@@ -287,9 +293,9 @@ const calculateInitialTranslation = (
     return { height, width };
   }
   if (direction === "vertical") {
-    height = calculateHeightWhileDragging(current, brother);
+    height = calculateHeightWhileDragging(current);
   } else if (direction === "horizontal") {
-    width = calculateWidthWhileDragging(current, brother);
+    width = calculateWidthWhileDragging(current);
   }
   const intersection = draggableIsOutside(current);
   if (intersection && event == "drag") {
@@ -351,14 +357,10 @@ const intersection = (
   }
   return firstInterval.x2 - secondInterval.x1;
 };
-const calculateHeightWhileDragging = (
-  current: HTMLElement,
-  brother: HTMLElement
-) => {
+const calculateHeightWhileDragging = (current: HTMLElement) => {
   let { height } = current.getBoundingClientRect();
   return calculateWhileDragging(
     current,
-    brother,
     "marginTop",
     "marginBottom",
     height,
@@ -366,14 +368,10 @@ const calculateHeightWhileDragging = (
   );
 };
 
-const calculateWidthWhileDragging = (
-  current: HTMLElement,
-  brother: HTMLElement
-) => {
+const calculateWidthWhileDragging = (current: HTMLElement) => {
   let { width } = current.getBoundingClientRect();
   return calculateWhileDragging(
     current,
-    brother,
     "marginLeft",
     "marginRight",
     width,
@@ -382,7 +380,6 @@ const calculateWidthWhileDragging = (
 };
 const calculateWhileDragging = (
   current: HTMLElement,
-  brother: HTMLElement,
   beforeMargin: "marginTop" | "marginLeft",
   afterMargin: "marginBottom" | "marginRight",
   space: number,
@@ -430,27 +427,27 @@ const removeDraggingStyles = (event: MouseEvent, element: HTMLElement) => {
   setTranistion(element, duration);
 
   const { scrollTop, scrollLeft } = getScroll(element.parentElement);
-  moveTranslate(
-    element,
-    pageY -
-      y -
-      offset.value.offsetY +
-      height / 2 +
-      (scroll.value.scrollTop - scrollTop),
+  translate.value.x =
     pageX -
-      x -
-      offset.value.offsetX +
-      width / 2 +
-      (scroll.value.scrollLeft - scrollLeft)
-  );
+    x -
+    offset.value.offsetX +
+    width / 2 +
+    (scroll.value.scrollLeft - scrollLeft);
+  translate.value.y =
+    pageY -
+    y -
+    offset.value.offsetY +
+    height / 2 +
+    (scroll.value.scrollTop - scrollTop);
+
   emitEventToSiblings(element, START_DROP_EVENT, {
-    vertical: "down",
-    horizontal: "right",
+    vertical: "quiet",
+    horizontal: "quiet",
   });
   setTimeout(() => {
     emitEventToSiblings(element, DROP_EVENT, {
-      vertical: "down",
-      horizontal: "right",
+      vertical: "quiet",
+      horizontal: "quiet",
     });
     element.style.cssText = style.value;
   }, duration);
@@ -493,4 +490,6 @@ watch(
   cursor: v-bind("computedCursor");
 }
 </style>
+<!-- TODO: fix animation if dropped -->
+<!-- TODO: Add animation to row direction droppable -->
 <!-- TODO: refactor -->
