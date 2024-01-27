@@ -27,3 +27,10 @@ export const assignOnmouseup = (
 ) => {
   element.onmouseup = onmouseupFunc;
 };
+export const setTranistion = (
+  element: HTMLElement,
+  duration: number,
+  timingFunction: string = "ease-out"
+) => {
+  element.style.transition = `transform ${duration}ms ${timingFunction}`;
+};

@@ -15,6 +15,7 @@ import {
   fixSizeStyle,
   moveTranslate,
   assignOnmouseup,
+  setTranistion,
 } from "@/utils/SetStyles";
 import {
   getScroll,
@@ -27,8 +28,10 @@ const { draggableId } = defineProps<{
 }>();
 
 type RefElement<T> = Element | ComponentPublicInstance<T> | null;
+type DragEvent = "drag" | "drop" | "startDrag" | "startDrop";
 const START_DRAG_EVENT = "startDrag";
 const DRAG_EVENT = "drag";
+const START_DROP_EVENT = "startDrop";
 const DROP_EVENT = "drop";
 
 const style = ref("");
@@ -42,24 +45,31 @@ const duration = 300;
 
 let childRef = ref<HTMLElement>();
 onMounted(() => {
-  eventBus.on(DRAG_EVENT, (param) => {
-    const { element, height, width, draggableIdEvent } = param;
+  eventBus.on(DRAG_EVENT, ({ element, height, width, draggableIdEvent }) => {
     if (draggableId == draggableIdEvent) {
       moveTranslate(element, height, width);
-      element.style.transition = `transform ${duration}ms ease-out`;
+      setTranistion(element, duration);
     }
   });
-  eventBus.on(START_DRAG_EVENT, (param) => {
-    const { element, height, width, draggableIdEvent } = param;
-    if (draggableId == draggableIdEvent) {
-      moveTranslate(element, height, width);
+  eventBus.on(
+    START_DRAG_EVENT,
+    ({ element, height, width, draggableIdEvent }) => {
+      if (draggableId == draggableIdEvent) {
+        moveTranslate(element, height, width);
+      }
     }
-  });
+  );
+  eventBus.on(
+    START_DROP_EVENT,
+    ({ element, height, width, draggableIdEvent }) => {
+      if (draggableId == draggableIdEvent) {
+        moveTranslate(element, height, width);
+      }
+    }
+  );
   eventBus.on(DROP_EVENT, ({ element }: { element: HTMLElement }) => {
+    element.style.transition = ``;
     moveTranslate(element, 0, 0);
-    setTimeout(() => {
-      element.style.transition = ``;
-    }, duration);
   });
 });
 
@@ -146,10 +156,7 @@ const onmousedown = (event: MouseEvent) => {
     });
   }
 };
-const emitEventToSiblings = (
-  element: HTMLElement,
-  event: "drag" | "drop" | "startDrag"
-) => {
+const emitEventToSiblings = (element: HTMLElement, event: DragEvent) => {
   let tranlation = { height: 0, width: 0 };
 
   let sibling = element.nextElementSibling;
@@ -237,7 +244,7 @@ const intersection = (
 const calculateHeightWhileDragging = (
   current: HTMLElement,
   brother: HTMLElement,
-  event: "drag" | "drop" | "startDrag"
+  event: DragEvent
 ) => {
   let { height } = current.getBoundingClientRect();
   return calculateWhileDragging(
@@ -254,7 +261,7 @@ const calculateHeightWhileDragging = (
 const calculateWidthWhileDragging = (
   current: HTMLElement,
   brother: HTMLElement,
-  event: "drag" | "drop" | "startDrag"
+  event: DragEvent
 ) => {
   let { width } = current.getBoundingClientRect();
   return calculateWhileDragging(
@@ -274,7 +281,7 @@ const calculateWhileDragging = (
   afterMargin: "marginBottom" | "marginRight",
   space: number,
   gapStyle: "columnGap" | "rowGap",
-  event: "drag" | "drop" | "startDrag"
+  event: DragEvent
 ) => {
   const brotherBeforeMargin = parseFloatEmpty(brother.style[beforeMargin]);
   const currentAfterMargin = parseFloatEmpty(current.style[afterMargin]);
@@ -319,7 +326,7 @@ const onDropDraggingEvent = (event: MouseEvent) => {
 const removeDraggingStyles = (event: MouseEvent, element: HTMLElement) => {
   const { pageY, y, pageX, x } = event;
   const { width, height } = element.getBoundingClientRect();
-  element.style.transition = `transform ${duration}ms ease-out`;
+  setTranistion(element, duration);
 
   const { scrollTop, scrollLeft } = getScroll(element.parentElement);
   moveTranslate(
@@ -335,6 +342,7 @@ const removeDraggingStyles = (event: MouseEvent, element: HTMLElement) => {
       width / 2 +
       (scroll.value.scrollLeft - scrollLeft)
   );
+  emitEventToSiblings(element, START_DROP_EVENT);
   setTimeout(() => {
     emitEventToSiblings(element, DROP_EVENT);
     element.style.cssText = style.value;
@@ -378,6 +386,5 @@ watch(
   cursor: v-bind("computedCursor");
 }
 </style>
-<!-- TODO: fix animation when element is dropped -->
 <!-- TODO: create swap animation while dragging -->
 <!-- TODO: refactor -->

@@ -6,6 +6,12 @@ type Events = {
     width: number;
     draggableIdEvent: string;
   };
+  startDrop: {
+    element: HTMLElement;
+    height: number;
+    width: number;
+    draggableIdEvent: string;
+  };
   drop: {
     element: HTMLElement;
     height: number;
