@@ -27,7 +27,7 @@ const { draggableId } = defineProps<{
 }>();
 
 type RefElement<T> = Element | ComponentPublicInstance<T> | null;
-
+const START_DRAG_EVENT = "startDrag";
 const DRAG_EVENT = "drag";
 const DROP_EVENT = "drop";
 
@@ -42,14 +42,20 @@ const duration = 300;
 
 let childRef = ref<HTMLElement>();
 onMounted(() => {
-  eventBus.on("drag", (param) => {
+  eventBus.on(DRAG_EVENT, (param) => {
     const { element, height, width, draggableIdEvent } = param;
     if (draggableId == draggableIdEvent) {
       moveTranslate(element, height, width);
       element.style.transition = `transform ${duration}ms ease-out`;
     }
   });
-  eventBus.on("drop", ({ element }: { element: HTMLElement }) => {
+  eventBus.on(START_DRAG_EVENT, (param) => {
+    const { element, height, width, draggableIdEvent } = param;
+    if (draggableId == draggableIdEvent) {
+      moveTranslate(element, height, width);
+    }
+  });
+  eventBus.on(DROP_EVENT, ({ element }: { element: HTMLElement }) => {
     moveTranslate(element, 0, 0);
     setTimeout(() => {
       element.style.transition = ``;
@@ -121,7 +127,7 @@ const onmousedown = (event: MouseEvent) => {
   const { marginTop, marginLeft } = element.style;
   dragging.value = true;
   offset.value = { offsetX, offsetY };
-  emitDragEventToSiblings(element);
+  emitEventToSiblings(element, START_DRAG_EVENT);
   fixSizeStyle(element.parentElement);
   position.value = {
     top: y - height / 2 - parseFloatEmpty(marginTop),
@@ -140,14 +146,10 @@ const onmousedown = (event: MouseEvent) => {
     });
   }
 };
-
-const emitDragEventToSiblings = (element: HTMLElement) => {
-  emitEventToSiblings(element, DRAG_EVENT);
-};
-const emitDropEventToSiblings = (element: HTMLElement) => {
-  emitEventToSiblings(element, DROP_EVENT);
-};
-const emitEventToSiblings = (element: HTMLElement, event: "drag" | "drop") => {
+const emitEventToSiblings = (
+  element: HTMLElement,
+  event: "drag" | "drop" | "startDrag"
+) => {
   let tranlation = { height: 0, width: 0 };
 
   let sibling = element.nextElementSibling;
@@ -235,7 +237,7 @@ const intersection = (
 const calculateHeightWhileDragging = (
   current: HTMLElement,
   brother: HTMLElement,
-  event: "drag" | "drop"
+  event: "drag" | "drop" | "startDrag"
 ) => {
   let { height } = current.getBoundingClientRect();
   return calculateWhileDragging(
@@ -252,7 +254,7 @@ const calculateHeightWhileDragging = (
 const calculateWidthWhileDragging = (
   current: HTMLElement,
   brother: HTMLElement,
-  event: "drag" | "drop"
+  event: "drag" | "drop" | "startDrag"
 ) => {
   let { width } = current.getBoundingClientRect();
   return calculateWhileDragging(
@@ -272,7 +274,7 @@ const calculateWhileDragging = (
   afterMargin: "marginBottom" | "marginRight",
   space: number,
   gapStyle: "columnGap" | "rowGap",
-  event: "drag" | "drop"
+  event: "drag" | "drop" | "startDrag"
 ) => {
   const brotherBeforeMargin = parseFloatEmpty(brother.style[beforeMargin]);
   const currentAfterMargin = parseFloatEmpty(current.style[afterMargin]);
@@ -334,7 +336,7 @@ const removeDraggingStyles = (event: MouseEvent, element: HTMLElement) => {
       (scroll.value.scrollLeft - scrollLeft)
   );
   setTimeout(() => {
-    emitDropEventToSiblings(element);
+    emitEventToSiblings(element, DROP_EVENT);
     element.style.cssText = style.value;
   }, duration);
 };
@@ -376,7 +378,6 @@ watch(
   cursor: v-bind("computedCursor");
 }
 </style>
-<!-- TODO: fix animation when element is grabbed -->
 <!-- TODO: fix animation when element is dropped -->
 <!-- TODO: create swap animation while dragging -->
 <!-- TODO: refactor -->

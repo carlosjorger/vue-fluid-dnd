@@ -12,5 +12,11 @@ type Events = {
     width: number;
     draggableIdEvent: string;
   };
+  startDrag: {
+    element: HTMLElement;
+    height: number;
+    width: number;
+    draggableIdEvent: string;
+  };
 };
 export default mitt<Events>();
