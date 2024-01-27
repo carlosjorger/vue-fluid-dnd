@@ -48,14 +48,14 @@ const dragging = ref(false);
 const direction = inject<Direction>("direction");
 const translate = ref({ x: 0, y: 0 });
 const scroll = ref({ scrollLeft: 0, scrollTop: 0 });
-const duration = 300;
+const duration = 200;
 
 let childRef = ref<HTMLElement>();
 onMounted(() => {
   eventBus.on(DRAG_EVENT, ({ element, height, width, draggableIdEvent }) => {
     if (draggableId == draggableIdEvent) {
       moveTranslate(element, height, width);
-      setTranistion(element, duration);
+      setTranistion(element, duration, "ease-in-out");
     }
   });
   eventBus.on(
