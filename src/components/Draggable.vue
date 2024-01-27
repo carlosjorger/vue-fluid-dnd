@@ -164,36 +164,61 @@ const emitEventToSiblings = (element: HTMLElement, event: DragEvent) => {
   if (!(sibling instanceof HTMLElement)) {
     return;
   }
+  tranlation = calculateInitialTranslation(element, brother, event);
+  const siblings = getSiblings(element);
+  for (const sibling of siblings) {
+    const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
+    // const siblingHTMLElement = sibling as HTMLElement;
+
+    // console.log(
+    //   hasIntersection(
+    //     currentElementRect,
+    //     siblingHTMLElement.getBoundingClientRect()
+    //   )
+    // );
+    eventBus.emit(event, {
+      element: sibling,
+      draggableIdEvent: siblingDraggableId,
+      ...tranlation,
+    });
+  }
+};
+const getSiblings = (current: HTMLElement) => {
+  const siblings = [] as HTMLElement[];
+  let sibling = current as Element | null;
+  while (sibling) {
+    sibling = sibling.nextElementSibling;
+    if (sibling instanceof HTMLElement) {
+      siblings.push(sibling as HTMLElement);
+    }
+  }
+  return siblings.toReversed();
+};
+const calculateInitialTranslation = (
+  current: HTMLElement,
+  brother: HTMLElement,
+  event: DragEvent
+) => {
+  let height = 0;
+  let width = 0;
   if (!direction) {
-    return;
+    return { height, width };
   }
   if (direction === "vertical") {
-    tranlation.height = calculateHeightWhileDragging(element, brother, event);
+    height = calculateHeightWhileDragging(current, brother);
   } else if (direction === "horizontal") {
-    tranlation.width = calculateWidthWhileDragging(element, brother, event);
+    width = calculateWidthWhileDragging(current, brother);
   }
-  // const currentElementRect = element.getBoundingClientRect();
-
-  while (sibling) {
-    var element = sibling as HTMLElement;
-    if (sibling instanceof HTMLElement) {
-      const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
-      // const siblingHTMLElement = sibling as HTMLElement;
-
-      // console.log(
-      //   hasIntersection(
-      //     currentElementRect,
-      //     siblingHTMLElement.getBoundingClientRect()
-      //   )
-      // );
-      eventBus.emit(event, {
-        element: sibling,
-        draggableIdEvent: siblingDraggableId,
-        ...tranlation,
-      });
-    }
-    sibling = sibling.nextElementSibling;
+  const parentElement = current.parentElement as HTMLElement;
+  const intersection = !hasIntersection(
+    current.getBoundingClientRect(),
+    parentElement.getBoundingClientRect()
+  );
+  if (intersection && event == "drag") {
+    height = 0;
+    width = 0;
   }
+  return { height, width };
 };
 const hasIntersection = (element1: DOMRect, element2: DOMRect) => {
   const element1ElementRect = element1;
@@ -243,8 +268,7 @@ const intersection = (
 };
 const calculateHeightWhileDragging = (
   current: HTMLElement,
-  brother: HTMLElement,
-  event: DragEvent
+  brother: HTMLElement
 ) => {
   let { height } = current.getBoundingClientRect();
   return calculateWhileDragging(
@@ -253,15 +277,13 @@ const calculateHeightWhileDragging = (
     "marginTop",
     "marginBottom",
     height,
-    "rowGap",
-    event
+    "rowGap"
   );
 };
 
 const calculateWidthWhileDragging = (
   current: HTMLElement,
-  brother: HTMLElement,
-  event: DragEvent
+  brother: HTMLElement
 ) => {
   let { width } = current.getBoundingClientRect();
   return calculateWhileDragging(
@@ -270,8 +292,7 @@ const calculateWidthWhileDragging = (
     "marginLeft",
     "marginRight",
     width,
-    "columnGap",
-    event
+    "columnGap"
   );
 };
 const calculateWhileDragging = (
@@ -280,8 +301,7 @@ const calculateWhileDragging = (
   beforeMargin: "marginTop" | "marginLeft",
   afterMargin: "marginBottom" | "marginRight",
   space: number,
-  gapStyle: "columnGap" | "rowGap",
-  event: DragEvent
+  gapStyle: "columnGap" | "rowGap"
 ) => {
   const brotherBeforeMargin = parseFloatEmpty(brother.style[beforeMargin]);
   const currentAfterMargin = parseFloatEmpty(current.style[afterMargin]);
@@ -291,15 +311,7 @@ const calculateWhileDragging = (
   let rest = brotherBeforeMargin;
   let gap = 0;
   const parentElement = current.parentElement as HTMLElement;
-  if (
-    !hasIntersection(
-      current.getBoundingClientRect(),
-      parentElement.getBoundingClientRect()
-    ) &&
-    event == "drag"
-  ) {
-    return 0;
-  }
+
   gap = computeGapPixels(parentElement, gapStyle);
   if (gap > 0 || parentElement.style.display === "flex") {
     return space + beforeScace + afterSpace + gap;
