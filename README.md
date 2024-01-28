@@ -4,6 +4,13 @@
 
 **Juicy** and **versatil** drag and drop for lists with Vue.
 
+## ✨ Features
+
+- ✅ **Easy to install**.
+- ✅ **Fully customizable**.
+- ✅ **Work with horizontal and vertical list**.
+- 🔲 **Fully tested, typed and reliable**.
+
 ## 🚀 Getting Started
 
 1. **Install Superkey:**
@@ -27,5 +34,3 @@ ultra install vue3-juice-dnd
 If you're interested in contributing to Fvue3-juice-dnd JS, please read our contributing docs before submitting a pull request [CONTRIBUTING](./CONTRIBUTING.md).
 
 <!-- TODO: add code example -->
-
-<!-- TODO: add TODOS -->
