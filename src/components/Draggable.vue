@@ -189,29 +189,46 @@ const onmousedown = (event: MouseEvent) => {
   }
 };
 const emitEventToSiblings = (
-  element: HTMLElement,
+  draggedElement: HTMLElement,
   event: DragEvent,
   mouseDirection: MouseDirection
 ) => {
   let tranlation = { height: 0, width: 0 };
-  tranlation = calculateInitialTranslation(element, event);
-
-  const isOutside = draggableIsOutside(element);
-  let { top: currentTop, height: currentHeight } =
-    element.getBoundingClientRect();
-  const siblings = getSiblings(element);
+  tranlation = calculateInitialTranslation(draggedElement, event);
+  const { siblings, elementPosition } = getSiblings(draggedElement);
   const dropping = event === DROP_EVENT || event === START_DROP_EVENT;
-  if (dropping) {
-    currentTop = position.value.top + translate.value.y;
+  if (!dropping) {
+    emitDraggingEventToSiblings(
+      draggedElement,
+      event,
+      mouseDirection,
+      siblings,
+      tranlation
+    );
+  } else {
+    emitDroppingEventToSiblings(event, siblings, elementPosition, tranlation);
   }
+};
+
+const emitDraggingEventToSiblings = (
+  draggedElement: HTMLElement,
+  event: DragEvent,
+  mouseDirection: MouseDirection,
+  siblings: HTMLElement[],
+  tranlation: {
+    height: number;
+    width: number;
+  }
+) => {
+  const isOutside = draggableIsOutside(draggedElement);
+  let { top: currentTop, height: currentHeight } =
+    draggedElement.getBoundingClientRect();
   for (const sibling of siblings) {
     const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
     if (!isOutside) {
       if (direction === "vertical") {
         const { top: siblingTop, height: siblingHeight } =
           sibling.getBoundingClientRect();
-        if (dropping) {
-        }
         if (
           mouseDirection.vertical == "down" &&
           currentTop + currentHeight > siblingTop + siblingHeight / 2
@@ -226,11 +243,7 @@ const emitEventToSiblings = (
         }
       }
     }
-    if (
-      direction === "vertical" &&
-      mouseDirection.vertical == "quiet" &&
-      !dropping
-    ) {
+    if (direction === "vertical" && mouseDirection.vertical == "quiet") {
       continue;
     }
     eventBus.emit(event, {
@@ -240,28 +253,39 @@ const emitEventToSiblings = (
     });
   }
 };
-// const getSiblingByDirection = (
-//   current: HTMLElement,
-//   mouseDirection: MouseDirection
-// ) => {
-//   if (direction === "vertical") {
-//     if (mouseDirection.vertical == "down") {
-//       return current.nextElementSibling;
-//     } else if (mouseDirection.vertical == "up") {
-//       return current.previousElementSibling;
-//     }
-//   } else if (direction === "horizontal") {
-//     if (mouseDirection.horizontal == "right") {
-//       return current.nextElementSibling;
-//     } else if (mouseDirection.horizontal == "left") {
-//       return current.previousElementSibling;
-//     }
-//   }
-// };
-const getSiblings = (current: HTMLElement) => {
-  return [...nextSiblings(current), ...previousSiblings(current)];
+const emitDroppingEventToSiblings = (
+  event: DragEvent,
+  siblings: HTMLElement[],
+  elementPosition: number,
+  tranlation: {
+    height: number;
+    width: number;
+  }
+) => {
+  elementPosition = siblings.length - elementPosition;
+  for (const [index, sibling] of siblings.entries()) {
+    const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
+    if (elementPosition <= index) {
+      tranlation = { height: 0, width: 0 };
+    }
+    eventBus.emit(event, {
+      element: sibling,
+      draggableIdEvent: siblingDraggableId,
+      ...tranlation,
+    });
+  }
 };
-const nextSiblings = (current: HTMLElement) => {
+
+const getSiblings = (current: HTMLElement) => {
+  const nextSiblings = nextSiblingsFromElement(current);
+  const { previousSiblings, elementPosition } =
+    previousSiblingsFromElement(current);
+  return {
+    siblings: [...nextSiblings, ...previousSiblings],
+    elementPosition,
+  };
+};
+const nextSiblingsFromElement = (current: HTMLElement) => {
   const siblings = [] as HTMLElement[];
   let sibling = current as Element | null;
   while (sibling) {
@@ -272,7 +296,7 @@ const nextSiblings = (current: HTMLElement) => {
   }
   return siblings.toReversed();
 };
-const previousSiblings = (current: HTMLElement) => {
+const previousSiblingsFromElement = (current: HTMLElement) => {
   const siblings = [] as HTMLElement[];
   let previousSibling = current as Element | null;
   while (previousSibling) {
@@ -281,7 +305,10 @@ const previousSiblings = (current: HTMLElement) => {
       siblings.push(previousSibling as HTMLElement);
     }
   }
-  return siblings;
+  return {
+    previousSiblings: siblings,
+    elementPosition: siblings.length,
+  };
 };
 const calculateInitialTranslation = (
   current: HTMLElement,
@@ -490,6 +517,5 @@ watch(
   cursor: v-bind("computedCursor");
 }
 </style>
-<!-- TODO: fix animation if dropped -->
 <!-- TODO: Add animation to row direction droppable -->
 <!-- TODO: refactor -->
