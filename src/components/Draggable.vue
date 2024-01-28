@@ -21,6 +21,7 @@ import {
   getScroll,
   parseFloatEmpty,
   computeGapPixels,
+  hasIntersection,
 } from "@/utils/GetStyles";
 const { draggableId } = defineProps<{
   draggableId: string;
@@ -191,7 +192,10 @@ const onmousedown = (event: MouseEvent) => {
 const emitEventToSiblings = (
   draggedElement: HTMLElement,
   event: DragEvent,
-  mouseDirection: MouseDirection
+  mouseDirection: MouseDirection = {
+    vertical: "quiet",
+    horizontal: "quiet",
+  }
 ) => {
   let tranlation = { height: 0, width: 0 };
   tranlation = calculateInitialTranslation(draggedElement, event);
@@ -215,13 +219,13 @@ const emitDraggingEventToSiblings = (
   event: DragEvent,
   mouseDirection: MouseDirection,
   siblings: HTMLElement[],
-  tranlation: {
+  translation: {
     height: number;
     width: number;
   }
 ) => {
   const isOutside = draggableIsOutside(draggedElement);
-  let {
+  const {
     top: currentTop,
     height: currentHeight,
     left: currentLeft,
@@ -237,32 +241,26 @@ const emitDraggingEventToSiblings = (
         width: siblingWidth,
       } = sibling.getBoundingClientRect();
       if (direction === "vertical") {
-        if (
-          mouseDirection.vertical == "down" &&
-          currentTop + currentHeight > siblingTop + siblingHeight / 2
-        ) {
-          tranlation = { height: 0, width: 0 };
-        }
-        if (
-          mouseDirection.vertical == "up" &&
-          currentTop > siblingTop + siblingHeight / 2
-        ) {
-          tranlation = { height: 0, width: 0 };
-        }
+        translation = canChangeDraggable(
+          () => mouseDirection.vertical === "down",
+          () => mouseDirection.vertical === "up",
+          currentTop,
+          currentHeight,
+          siblingTop,
+          siblingHeight,
+          translation
+        );
       }
       if (direction === "horizontal") {
-        if (
-          mouseDirection.horizontal == "right" &&
-          currentLeft + currentWidth > siblingLeft + siblingWidth / 2
-        ) {
-          tranlation = { height: 0, width: 0 };
-        }
-        if (
-          mouseDirection.horizontal == "left" &&
-          currentLeft > siblingLeft + siblingWidth / 2
-        ) {
-          tranlation = { height: 0, width: 0 };
-        }
+        translation = canChangeDraggable(
+          () => mouseDirection.horizontal === "right",
+          () => mouseDirection.horizontal === "left",
+          currentLeft,
+          currentWidth,
+          siblingLeft,
+          siblingWidth,
+          translation
+        );
       }
     }
     if (
@@ -274,9 +272,30 @@ const emitDraggingEventToSiblings = (
     eventBus.emit(event, {
       element: sibling,
       draggableIdEvent: siblingDraggableId,
-      ...tranlation,
+      ...translation,
     });
   }
+};
+const canChangeDraggable = (
+  isGoingFoward: () => boolean,
+  isGoingBackwards: () => boolean,
+  currentPosition: number,
+  currentSize: number,
+  siblingPosition: number,
+  siblingSize: number,
+  translation: {
+    height: number;
+    width: number;
+  }
+) => {
+  const siblingMiddle = siblingPosition + siblingSize / 2;
+  if (
+    (isGoingFoward() && currentPosition + currentSize > siblingMiddle) ||
+    (isGoingBackwards() && currentPosition > siblingMiddle)
+  ) {
+    return { height: 0, width: 0 };
+  }
+  return translation;
 };
 const emitDroppingEventToSiblings = (
   event: DragEvent,
@@ -358,57 +377,9 @@ const calculateInitialTranslation = (
 };
 const draggableIsOutside = (draggable: HTMLElement) => {
   const parentElement = draggable.parentElement as HTMLElement;
-  return !hasIntersection(
-    draggable.getBoundingClientRect(),
-    parentElement.getBoundingClientRect()
-  );
+  return !hasIntersection(draggable, parentElement);
 };
-const hasIntersection = (element1: DOMRect, element2: DOMRect) => {
-  const element1ElementRect = element1;
-  const element2ElementRect = element2;
 
-  const intersectionY = intersection(
-    {
-      x1: element1ElementRect.top,
-      x2: element1ElementRect.top + element1ElementRect.height,
-    },
-    {
-      x1: element2ElementRect.top,
-      x2: element2ElementRect.top + element2ElementRect.height,
-    }
-  );
-  const intersectionX = intersection(
-    {
-      x1: element1ElementRect.left,
-      x2: element1ElementRect.left + element1ElementRect.width,
-    },
-    {
-      x1: element2ElementRect.left,
-      x2: element2ElementRect.left + element2ElementRect.width,
-    }
-  );
-  return (
-    intersectionY >=
-      Math.min(element1ElementRect.height, element2ElementRect.height) / 2 &&
-    intersectionX >=
-      Math.min(element1ElementRect.width, element2ElementRect.width) / 2
-  );
-};
-const intersection = (
-  firstInterval: { x1: number; x2: number },
-  secondInterval: { x1: number; x2: number }
-): number => {
-  if (firstInterval.x1 > secondInterval.x1) {
-    return intersection(secondInterval, firstInterval);
-  }
-  if (firstInterval.x2 < secondInterval.x1) {
-    return 0;
-  }
-  if (firstInterval.x2 >= secondInterval.x2) {
-    return firstInterval.x2 - firstInterval.x1;
-  }
-  return firstInterval.x2 - secondInterval.x1;
-};
 const calculateHeightWhileDragging = (current: HTMLElement) => {
   let { height } = current.getBoundingClientRect();
   return calculateWhileDragging(
@@ -492,15 +463,9 @@ const removeDraggingStyles = (event: MouseEvent, element: HTMLElement) => {
     height / 2 +
     (scroll.value.scrollTop - scrollTop);
 
-  emitEventToSiblings(element, START_DROP_EVENT, {
-    vertical: "quiet",
-    horizontal: "quiet",
-  });
+  emitEventToSiblings(element, START_DROP_EVENT);
   setTimeout(() => {
-    emitEventToSiblings(element, DROP_EVENT, {
-      vertical: "quiet",
-      horizontal: "quiet",
-    });
+    emitEventToSiblings(element, DROP_EVENT);
     element.style.cssText = style.value;
   }, duration);
 };
