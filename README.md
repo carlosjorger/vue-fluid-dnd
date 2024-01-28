@@ -22,27 +22,10 @@ pnpm i vue3-juice-dnd
 ultra install vue3-juice-dnd
 ```
 
-<!-- TODO: add code example -->
-
 ## 🤝 Contributing
 
-1. [Fork](https://github.com/carlosjorger/vue3-juice-dnd/fork) and clone the repository:
+If you're interested in contributing to Fvue3-juice-dnd JS, please read our contributing docs before submitting a pull request [CONTRIBUTING](./CONTRIBUTING.md).
 
-```bash
-git clone git@github.com:your-username/vue3-juice-dnd.git
-```
+<!-- TODO: add code example -->
 
-2. Install dependencies:
-
-```bash
-npm install
-# or
-yarn install
-# or
-ultra install
-# or
-pnpm install
-```
-
-- Open [http://localhost:5173](http://localhost:3000) with your browser to see app.
 <!-- TODO: add TODOS -->
