@@ -221,14 +221,22 @@ const emitDraggingEventToSiblings = (
   }
 ) => {
   const isOutside = draggableIsOutside(draggedElement);
-  let { top: currentTop, height: currentHeight } =
-    draggedElement.getBoundingClientRect();
+  let {
+    top: currentTop,
+    height: currentHeight,
+    left: currentLeft,
+    width: currentWidth,
+  } = draggedElement.getBoundingClientRect();
   for (const sibling of siblings) {
     const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
     if (!isOutside) {
+      const {
+        top: siblingTop,
+        height: siblingHeight,
+        left: siblingLeft,
+        width: siblingWidth,
+      } = sibling.getBoundingClientRect();
       if (direction === "vertical") {
-        const { top: siblingTop, height: siblingHeight } =
-          sibling.getBoundingClientRect();
         if (
           mouseDirection.vertical == "down" &&
           currentTop + currentHeight > siblingTop + siblingHeight / 2
@@ -242,8 +250,25 @@ const emitDraggingEventToSiblings = (
           tranlation = { height: 0, width: 0 };
         }
       }
+      if (direction === "horizontal") {
+        if (
+          mouseDirection.horizontal == "right" &&
+          currentLeft + currentWidth > siblingLeft + siblingWidth / 2
+        ) {
+          tranlation = { height: 0, width: 0 };
+        }
+        if (
+          mouseDirection.horizontal == "left" &&
+          currentLeft > siblingLeft + siblingWidth / 2
+        ) {
+          tranlation = { height: 0, width: 0 };
+        }
+      }
     }
-    if (direction === "vertical" && mouseDirection.vertical == "quiet") {
+    if (
+      (direction === "vertical" && mouseDirection.vertical == "quiet") ||
+      (direction === "horizontal" && mouseDirection.horizontal == "quiet")
+    ) {
       continue;
     }
     eventBus.emit(event, {
@@ -517,5 +542,4 @@ watch(
   cursor: v-bind("computedCursor");
 }
 </style>
-<!-- TODO: Add animation to row direction droppable -->
 <!-- TODO: refactor -->
