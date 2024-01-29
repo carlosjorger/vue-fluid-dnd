@@ -89,7 +89,14 @@ onMounted(() => {
     }) => {
       if (draggableId == draggableIdEvent && droppableId === droppableIdEvent) {
         moveTranslate(childRef.value, height, width);
-        if (onDrop && targetIndex === index) {
+        if (!onDrop) {
+          return;
+        }
+        if (sourceIndex === targetIndex) {
+          return;
+        }
+        removeTranslateWhitoutTransition();
+        if (targetIndex === index) {
           onDrop(
             {
               index: sourceIndex,
@@ -103,13 +110,15 @@ onMounted(() => {
     }
   );
   eventBus.on(DROP_EVENT, () => {
-    if (childRef.value) {
-      childRef.value.style.transition = ``;
-    }
-    moveTranslate(childRef.value, 0, 0);
+    removeTranslateWhitoutTransition();
   });
 });
-
+const removeTranslateWhitoutTransition = () => {
+  if (childRef.value) {
+    childRef.value.style.transition = ``;
+  }
+  moveTranslate(childRef.value, 0, 0);
+};
 const setSlotRef = <_>(el: RefElement<_>) => {
   childRef.value = el as HTMLElement;
 };
@@ -580,5 +589,5 @@ watch(
   cursor: v-bind("computedCursor");
 }
 </style>
-<!-- TODO: fix animation after dropping elements -->
+<!-- TODO: fix animation of the current dragged element after drop it -->
 <!-- TODO: refactor -->
