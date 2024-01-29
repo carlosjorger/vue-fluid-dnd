@@ -11,6 +11,8 @@ type Events = {
     width: number;
     draggableIdEvent: string;
     droppableId: string | undefined;
+    sourceIndex: number;
+    targetIndex: number;
   };
   drop: {
     height: number;

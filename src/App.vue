@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { Ref, ref } from "vue";
 import Draggable from "./components/Draggable.vue";
 import Droppable from "./components/Droppable.vue";
-
-const list = [
+import { dropDraggingElementsBetween } from "@/utils/DropMethods";
+const list = ref([
   {
     "draggable-id": "1",
     number: 1,
@@ -27,9 +28,10 @@ const list = [
     style:
       "color: white; background-color: wheat; padding: 40px 0; margin: 20px 0; margin-right: 100px; width: 30%;",
   },
-];
-const onDrop = (source, destination) => {
-  console.log(source, destination);
+]);
+
+const onDrop = (source: { index: number }, destination: { index: number }) => {
+  dropDraggingElementsBetween(list, source, destination);
 };
 </script>
 

@@ -55,6 +55,8 @@ const scroll = ref({ scrollLeft: 0, scrollTop: 0 });
 const duration = 200;
 
 let childRef = ref<HTMLElement>();
+const actualIndex = ref(index);
+// TODO: improve mitter
 onMounted(() => {
   eventBus.on(
     DRAG_EVENT,
@@ -75,18 +77,23 @@ onMounted(() => {
   );
   eventBus.on(
     START_DROP_EVENT,
-    ({ height, width, draggableIdEvent, droppableId: droppableIdEvent }) => {
+    ({
+      height,
+      width,
+      draggableIdEvent,
+      droppableId: droppableIdEvent,
+      sourceIndex,
+      targetIndex,
+    }) => {
       if (draggableId == draggableIdEvent && droppableId === droppableIdEvent) {
         moveTranslate(childRef.value, height, width);
-        if (onDrop) {
+        if (onDrop && targetIndex === index) {
           onDrop(
             {
-              draggableId,
-              index,
+              index: sourceIndex,
             },
             {
-              draggableId,
-              index,
+              index: targetIndex,
             }
           );
         }
@@ -251,7 +258,7 @@ const emitDraggingEventToSiblings = (
     left: currentLeft,
     width: currentWidth,
   } = draggedElement.getBoundingClientRect();
-  for (const sibling of siblings) {
+  for (const [index, sibling] of siblings.entries()) {
     const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
     if (!isOutside) {
       const {
@@ -289,7 +296,22 @@ const emitDraggingEventToSiblings = (
     ) {
       continue;
     }
+    const siblingRealIndex = siblings.length - index;
+    updateActualIndexBaseOnTranslation(translation, siblingRealIndex);
     emitEventBus(event, translation, siblingDraggableId);
+  }
+};
+const updateActualIndexBaseOnTranslation = (
+  translation: {
+    height: number;
+    width: number;
+  },
+  siblingIndex: number
+) => {
+  if (translation.height == 0) {
+    actualIndex.value = Math.max(actualIndex.value, siblingIndex);
+  } else {
+    actualIndex.value = Math.min(actualIndex.value, siblingIndex - 1);
   }
 };
 const canChangeDraggable = (
@@ -322,13 +344,19 @@ const emitDroppingEventToSiblings = (
     width: number;
   }
 ) => {
-  elementPosition = siblings.length - elementPosition;
+  const elementInvertPosition = siblings.length - elementPosition;
   for (const [index, sibling] of siblings.entries()) {
     const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
-    if (elementPosition <= index) {
+    if (elementInvertPosition <= index) {
       translation = { height: 0, width: 0 };
     }
-    emitEventBus(event, translation, siblingDraggableId);
+    emitEventBus(
+      event,
+      translation,
+      siblingDraggableId,
+      elementPosition,
+      actualIndex.value
+    );
   }
 };
 const emitEventBus = (
@@ -337,13 +365,29 @@ const emitEventBus = (
     height: number;
     width: number;
   },
-  draggableIdEvent: string
+  draggableIdEvent: string,
+  sourceIndex?: number,
+  targetIndex?: number
 ) => {
-  eventBus.emit(event, {
-    droppableId,
-    draggableIdEvent,
-    ...tranlation,
-  });
+  if (
+    event === START_DROP_EVENT &&
+    sourceIndex !== undefined &&
+    targetIndex !== undefined
+  ) {
+    eventBus.emit(event, {
+      droppableId,
+      draggableIdEvent,
+      ...tranlation,
+      sourceIndex,
+      targetIndex,
+    });
+  } else {
+    eventBus.emit(event, {
+      droppableId,
+      draggableIdEvent,
+      ...tranlation,
+    });
+  }
 };
 const getSiblings = (current: HTMLElement) => {
   const nextSiblings = nextSiblingsFromElement(current);
@@ -471,7 +515,10 @@ const onDropDraggingEvent = (event: MouseEvent) => {
   emitEventToSiblings(element, START_DROP_EVENT);
   setTimeout(() => {
     emitEventToSiblings(element, DROP_EVENT);
-    element.style.cssText = style.value;
+    element.style.position = "";
+    element.style.zIndex = "";
+    element.style.transform = "";
+    element.style.transition = "";
   }, duration);
 };
 const removeDraggingStyles = (event: MouseEvent, element: HTMLElement) => {
@@ -531,4 +578,5 @@ watch(
   cursor: v-bind("computedCursor");
 }
 </style>
+<!-- TODO: fix animation after dropping elements -->
 <!-- TODO: refactor -->
