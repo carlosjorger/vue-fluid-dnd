@@ -28,9 +28,11 @@ export const assignOnmouseup = (
   element.onmouseup = onmouseupFunc;
 };
 export const setTranistion = (
-  element: HTMLElement,
+  element: HTMLElement | undefined,
   duration: number,
   timingFunction: string = "ease-out"
 ) => {
-  element.style.transition = `transform ${duration}ms ${timingFunction}`;
+  if (element) {
+    element.style.transition = `transform ${duration}ms ${timingFunction}`;
+  }
 };

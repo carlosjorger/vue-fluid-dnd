@@ -1,28 +1,28 @@
 import mitt from "mitt";
 type Events = {
   drag: {
-    element: HTMLElement;
     height: number;
     width: number;
     draggableIdEvent: string;
+    droppableId: string | undefined;
   };
   startDrop: {
-    element: HTMLElement;
     height: number;
     width: number;
     draggableIdEvent: string;
+    droppableId: string | undefined;
   };
   drop: {
-    element: HTMLElement;
     height: number;
     width: number;
     draggableIdEvent: string;
+    droppableId: string | undefined;
   };
   startDrag: {
-    element: HTMLElement;
     height: number;
     width: number;
     draggableIdEvent: string;
+    droppableId: string | undefined;
   };
 };
 export default mitt<Events>();

@@ -9,7 +9,7 @@ import {
   watch,
 } from "vue";
 import eventBus from "@/utils/EventBus";
-import { Direction } from "../../index.ts";
+import { Direction, Draggable } from "../../index.ts";
 import {
   setBorderBoxStyle,
   fixSizeStyle,
@@ -23,9 +23,9 @@ import {
   computeGapPixels,
   hasIntersection,
 } from "@/utils/GetStyles";
-const { draggableId } = defineProps<{
+const { draggableId, index } = defineProps<{
   draggableId: string;
-  enableDrag: boolean;
+  index: number;
 }>();
 
 type RefElement<T> = Element | ComponentPublicInstance<T> | null;
@@ -47,37 +47,57 @@ const position = ref({ top: 0, left: 0 });
 const offset = ref({ offsetX: 0, offsetY: 0 });
 const dragging = ref(false);
 const direction = inject<Direction>("direction");
+const onDrop =
+  inject<(source: Draggable, destination: Draggable) => void>("onDrop");
+const droppableId = inject<string>("droppableId");
 const translate = ref({ x: 0, y: 0 });
 const scroll = ref({ scrollLeft: 0, scrollTop: 0 });
 const duration = 200;
 
 let childRef = ref<HTMLElement>();
 onMounted(() => {
-  eventBus.on(DRAG_EVENT, ({ element, height, width, draggableIdEvent }) => {
-    if (draggableId == draggableIdEvent) {
-      moveTranslate(element, height, width);
-      setTranistion(element, duration, "ease-in-out");
+  eventBus.on(
+    DRAG_EVENT,
+    ({ height, width, draggableIdEvent, droppableId: droppableIdEvent }) => {
+      if (draggableId == draggableIdEvent && droppableId === droppableIdEvent) {
+        moveTranslate(childRef.value, height, width);
+        setTranistion(childRef.value, duration, "ease-in-out");
+      }
     }
-  });
+  );
   eventBus.on(
     START_DRAG_EVENT,
-    ({ element, height, width, draggableIdEvent }) => {
-      if (draggableId == draggableIdEvent) {
-        moveTranslate(element, height, width);
+    ({ height, width, draggableIdEvent, droppableId: droppableIdEvent }) => {
+      if (draggableId == draggableIdEvent && droppableId === droppableIdEvent) {
+        moveTranslate(childRef.value, height, width);
       }
     }
   );
   eventBus.on(
     START_DROP_EVENT,
-    ({ element, height, width, draggableIdEvent }) => {
-      if (draggableId == draggableIdEvent) {
-        moveTranslate(element, height, width);
+    ({ height, width, draggableIdEvent, droppableId: droppableIdEvent }) => {
+      if (draggableId == draggableIdEvent && droppableId === droppableIdEvent) {
+        moveTranslate(childRef.value, height, width);
+        if (onDrop) {
+          onDrop(
+            {
+              draggableId,
+              index,
+            },
+            {
+              draggableId,
+              index,
+            }
+          );
+        }
       }
     }
   );
-  eventBus.on(DROP_EVENT, ({ element }: { element: HTMLElement }) => {
-    element.style.transition = ``;
-    moveTranslate(element, 0, 0);
+  eventBus.on(DROP_EVENT, () => {
+    if (childRef.value) {
+      childRef.value.style.transition = ``;
+    }
+    moveTranslate(childRef.value, 0, 0);
   });
 });
 
@@ -269,11 +289,7 @@ const emitDraggingEventToSiblings = (
     ) {
       continue;
     }
-    eventBus.emit(event, {
-      element: sibling,
-      draggableIdEvent: siblingDraggableId,
-      ...translation,
-    });
+    emitEventBus(event, translation, siblingDraggableId);
   }
 };
 const canChangeDraggable = (
@@ -301,7 +317,7 @@ const emitDroppingEventToSiblings = (
   event: DragEvent,
   siblings: HTMLElement[],
   elementPosition: number,
-  tranlation: {
+  translation: {
     height: number;
     width: number;
   }
@@ -310,16 +326,25 @@ const emitDroppingEventToSiblings = (
   for (const [index, sibling] of siblings.entries()) {
     const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
     if (elementPosition <= index) {
-      tranlation = { height: 0, width: 0 };
+      translation = { height: 0, width: 0 };
     }
-    eventBus.emit(event, {
-      element: sibling,
-      draggableIdEvent: siblingDraggableId,
-      ...tranlation,
-    });
+    emitEventBus(event, translation, siblingDraggableId);
   }
 };
-
+const emitEventBus = (
+  event: DragEvent,
+  tranlation: {
+    height: number;
+    width: number;
+  },
+  draggableIdEvent: string
+) => {
+  eventBus.emit(event, {
+    droppableId,
+    draggableIdEvent,
+    ...tranlation,
+  });
+};
 const getSiblings = (current: HTMLElement) => {
   const nextSiblings = nextSiblingsFromElement(current);
   const { previousSiblings, elementPosition } =
@@ -443,6 +468,11 @@ const onDropDraggingEvent = (event: MouseEvent) => {
   dragging.value = false;
   const element = event.target as HTMLElement;
   removeDraggingStyles(event, element);
+  emitEventToSiblings(element, START_DROP_EVENT);
+  setTimeout(() => {
+    emitEventToSiblings(element, DROP_EVENT);
+    element.style.cssText = style.value;
+  }, duration);
 };
 const removeDraggingStyles = (event: MouseEvent, element: HTMLElement) => {
   const { pageY, y, pageX, x } = event;
@@ -462,12 +492,6 @@ const removeDraggingStyles = (event: MouseEvent, element: HTMLElement) => {
     offset.value.offsetY +
     height / 2 +
     (scroll.value.scrollTop - scrollTop);
-
-  emitEventToSiblings(element, START_DROP_EVENT);
-  setTimeout(() => {
-    emitEventToSiblings(element, DROP_EVENT);
-    element.style.cssText = style.value;
-  }, duration);
 };
 
 const setDraggingStyles = (element: HTMLElement) => {
