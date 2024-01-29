@@ -3,11 +3,11 @@
 </template>
 <script setup lang="ts">
 import { provide } from "vue";
-import { Direction, Draggable } from "../../index.ts";
+import { Direction, DraggableElement } from "../../index.ts";
 const { droppableId, direction, onDrop } = defineProps<{
   droppableId: string;
   direction: Direction;
-  onDrop: (source: Draggable, destination: Draggable) => void;
+  onDrop: (source: DraggableElement, destination: DraggableElement) => void;
 }>();
 
 provide("direction", direction);

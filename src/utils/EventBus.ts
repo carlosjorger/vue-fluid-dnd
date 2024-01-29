@@ -13,6 +13,7 @@ type Events = {
     droppableId: string | undefined;
     sourceIndex: number;
     targetIndex: number;
+    element: HTMLElement;
   };
   drop: {
     height: number;

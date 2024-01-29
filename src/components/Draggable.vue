@@ -86,6 +86,7 @@ onMounted(() => {
       droppableId: droppableIdEvent,
       sourceIndex,
       targetIndex,
+      element,
     }) => {
       if (draggableId == draggableIdEvent && droppableId === droppableIdEvent) {
         moveTranslate(childRef.value, height, width);
@@ -97,14 +98,29 @@ onMounted(() => {
         }
         removeTranslateWhitoutTransition();
         if (targetIndex === index) {
-          onDrop(
-            {
-              index: sourceIndex,
-            },
-            {
-              index: targetIndex,
-            }
-          );
+          if (childRef.value) {
+            // const { top, height } = childRef.value.getBoundingClientRect();
+            // moveTranslate(element, height + top, 0);
+            // console.log(top, height, element.style.transform, element);
+            onDrop(
+              {
+                index: sourceIndex,
+              },
+              {
+                index: targetIndex,
+              }
+            );
+            // setTimeout(() => {
+            //   onDrop(
+            //     {
+            //       index: sourceIndex,
+            //     },
+            //     {
+            //       index: targetIndex,
+            //     }
+            //   );
+            // }, duration);
+          }
         }
       }
     }
@@ -202,7 +218,7 @@ const onmousedown = (event: MouseEvent) => {
   style.value = element.style.cssText;
   const { width, height } = element.getBoundingClientRect();
   const { offsetX, offsetY, x, y, pageY, pageX } = event;
-  const { marginTop, marginLeft } = element.style;
+  // const { marginTop, marginLeft } = element.style;
   dragging.value = true;
   offset.value = { offsetX, offsetY };
   emitEventToSiblings(element, START_DRAG_EVENT, {
@@ -211,9 +227,10 @@ const onmousedown = (event: MouseEvent) => {
   });
   fixSizeStyle(element.parentElement);
   position.value = {
-    top: y - height / 2 - parseFloatEmpty(marginTop),
-    left: x - width / 2 - parseFloatEmpty(marginLeft),
+    top: y - offsetY + height / 2,
+    left: x - offsetX + width / 2,
   };
+  // console.log(position.value.left, x);
   setDraggingStyles(element);
   setBorderBoxStyle(element);
   setTransform(element, pageX, pageY);
@@ -319,10 +336,18 @@ const updateActualIndexBaseOnTranslation = (
   },
   siblingIndex: number
 ) => {
-  if (translation.height == 0) {
-    actualIndex.value = Math.max(actualIndex.value, siblingIndex);
+  if (direction === "vertical") {
+    if (translation.height == 0) {
+      actualIndex.value = Math.max(actualIndex.value, siblingIndex);
+    } else {
+      actualIndex.value = Math.min(actualIndex.value, siblingIndex - 1);
+    }
   } else {
-    actualIndex.value = Math.min(actualIndex.value, siblingIndex - 1);
+    if (translation.width == 0) {
+      actualIndex.value = Math.max(actualIndex.value, siblingIndex);
+    } else {
+      actualIndex.value = Math.min(actualIndex.value, siblingIndex - 1);
+    }
   }
 };
 const canChangeDraggable = (
@@ -383,7 +408,8 @@ const emitEventBus = (
   if (
     event === START_DROP_EVENT &&
     sourceIndex !== undefined &&
-    targetIndex !== undefined
+    targetIndex !== undefined &&
+    childRef.value
   ) {
     eventBus.emit(event, {
       droppableId,
@@ -391,6 +417,7 @@ const emitEventBus = (
       ...tranlation,
       sourceIndex,
       targetIndex,
+      element: childRef.value,
     });
   } else {
     eventBus.emit(event, {
@@ -538,18 +565,19 @@ const removeDraggingStyles = (event: MouseEvent, element: HTMLElement) => {
   setTranistion(element, duration);
 
   const { scrollTop, scrollLeft } = getScroll(element.parentElement);
-  translate.value.x =
-    pageX -
-    x -
-    offset.value.offsetX +
-    width / 2 +
-    (scroll.value.scrollLeft - scrollLeft);
-  translate.value.y =
+  moveTranslate(
+    element,
     pageY -
-    y -
-    offset.value.offsetY +
-    height / 2 +
-    (scroll.value.scrollTop - scrollTop);
+      y -
+      offset.value.offsetY +
+      height / 2 +
+      (scroll.value.scrollTop - scrollTop),
+    pageX -
+      x -
+      offset.value.offsetX +
+      width / 2 +
+      (scroll.value.scrollLeft - scrollLeft)
+  );
 };
 
 const setDraggingStyles = (element: HTMLElement) => {
@@ -589,5 +617,6 @@ watch(
   cursor: v-bind("computedCursor");
 }
 </style>
+<!-- pick only one postion on top and left -->
 <!-- TODO: fix animation of the current dragged element after drop it -->
 <!-- TODO: refactor -->
