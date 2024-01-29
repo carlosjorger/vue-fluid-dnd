@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { Ref, ref } from "vue";
+import { ref } from "vue";
 import Draggable from "./components/Draggable.vue";
 import Droppable from "./components/Droppable.vue";
-import { dropDraggingElementsBetween } from "@/utils/DropMethods";
+import { dropDraggingElementsBetween } from "./utils/DropMethods";
+import { DraggableElement } from "../index";
+
 const list = ref([
   {
     "draggable-id": "1",
@@ -29,14 +31,17 @@ const list = ref([
       "color: white; background-color: wheat; padding: 40px 0; margin: 20px 0; margin-right: 100px; width: 30%;",
   },
 ]);
-
-const onDrop = (source: { index: number }, destination: { index: number }) => {
+const defaultOnDrop = (
+  source: DraggableElement,
+  destination: DraggableElement
+) => {};
+const onDrop = (source: DraggableElement, destination: DraggableElement) => {
   dropDraggingElementsBetween(list, source, destination);
 };
 </script>
 
 <template>
-  <Droppable droppable-id="1" direction="horizontal" :onDrop="onDrop">
+  <Droppable droppable-id="1" direction="horizontal" :onDrop="defaultOnDrop">
     <div
       style="width: 80%; display: flex; flex-direction: row; column-gap: 10%"
     >
@@ -97,7 +102,7 @@ const onDrop = (source: { index: number }, destination: { index: number }) => {
       </Draggable>
     </div>
   </Droppable>
-  <Droppable droppable-id="2" direction="horizontal" :onDrop="onDrop">
+  <Droppable droppable-id="2" direction="horizontal" :onDrop="defaultOnDrop">
     <div style="width: 30%; overflow: auto; display: flex; flex-direction: row">
       <Draggable draggable-id="h1" :index="0" v-slot="{ setRef }">
         <div
@@ -185,7 +190,7 @@ const onDrop = (source: { index: number }, destination: { index: number }) => {
     </div>
   </Droppable>
   <div style="display: flex; flex-direction: row; column-gap: 10px">
-    <Droppable droppable-id="3" direction="vertical" :onDrop="onDrop">
+    <Droppable droppable-id="3" direction="vertical" :onDrop="defaultOnDrop">
       <div style="width: 40%; background-color: darkgray; display: block">
         <Draggable draggable-id="1" :index="0" v-slot="{ setRef }"
           ><div

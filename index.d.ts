@@ -1,4 +1,4 @@
 export type Direction = "horizontal" | "vertical";
-export type Draggable =
+export type DraggableElement =
   | { index: number; draggableId: string }
   | { index: number };

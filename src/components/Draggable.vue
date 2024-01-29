@@ -9,7 +9,7 @@ import {
   watch,
 } from "vue";
 import eventBus from "@/utils/EventBus";
-import { Direction, Draggable } from "../../index.ts";
+import { Direction, DraggableElement } from "../../index.ts";
 import {
   setBorderBoxStyle,
   fixSizeStyle,
@@ -48,7 +48,9 @@ const offset = ref({ offsetX: 0, offsetY: 0 });
 const dragging = ref(false);
 const direction = inject<Direction>("direction");
 const onDrop =
-  inject<(source: Draggable, destination: Draggable) => void>("onDrop");
+  inject<(source: DraggableElement, destination: DraggableElement) => void>(
+    "onDrop"
+  );
 const droppableId = inject<string>("droppableId");
 const translate = ref({ x: 0, y: 0 });
 const scroll = ref({ scrollLeft: 0, scrollTop: 0 });
