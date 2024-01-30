@@ -77,21 +77,45 @@ export const hasIntersection = (
 };
 
 export const calculateRangeWhileDragging = (
-  beforeMargin: "marginTop" | "marginLeft",
-  afterMargin: "marginBottom" | "marginRight",
-  space: "width" | "height",
+  beforeMarginProp: "marginTop" | "marginLeft",
+  afterMarginProp: "marginBottom" | "marginRight",
+  spaceProp: "width" | "height",
   gapStyle: "columnGap" | "rowGap",
   siblings: HTMLElement[],
   sourceIndex: number,
   targetIndex: number
 ) => {
-  let spaceCalc = 0;
-  const current = siblings[sourceIndex];
-  const target = siblings[targetIndex];
-  const siblingsBetween = siblings.slice(sourceIndex + 1, targetIndex + 1);
-  console.log(
-    spaceWithMargins(beforeMargin, afterMargin, space, siblingsBetween)
+  const indexOrder = sourceIndex < targetIndex;
+
+  const [firstIndex, secondIndex] = [sourceIndex, targetIndex].sort();
+  const firstElement = siblings[firstIndex];
+  const secondElement = siblings[secondIndex];
+  const siblingsBetween = siblings.slice(firstIndex + 1, secondIndex + 1);
+  const { beforeMargin, space, afterMargin } = spaceWithMargins(
+    beforeMarginProp,
+    afterMarginProp,
+    spaceProp,
+    siblingsBetween
   );
+  const afterMarginCalc = Math.max(
+    afterMargin,
+    parseFloatEmpty(secondElement.style[afterMarginProp])
+  );
+  const beforeMarginCalc = Math.max(
+    beforeMargin,
+    parseFloatEmpty(firstElement.style[beforeMarginProp])
+  );
+  const spaceBetween = afterMarginCalc + space + beforeMarginCalc;
+  const spaceBetweenWithoutElement = Math.max(
+    afterMarginCalc,
+    beforeMarginCalc
+  );
+  let spaceCalc = spaceBetween - spaceBetweenWithoutElement;
+  if (indexOrder) {
+    return spaceCalc;
+  } else {
+    return -spaceCalc;
+  }
 };
 const spaceWithMargins = (
   beforeMargin: "marginTop" | "marginLeft",
@@ -109,6 +133,7 @@ const spaceWithMargins = (
   const beforeMarginCalc = parseFloatEmpty(siblings[0].style[beforeMargin]);
   let afterMarginCalc = 0;
   let spaceCalc = 0;
+  console.log(siblings[0].getAttribute("draggable-id"));
   for (const sibling of siblings) {
     const siblingSpace = sibling.getBoundingClientRect()[space];
     afterMarginCalc = Math.max(
@@ -120,7 +145,7 @@ const spaceWithMargins = (
   }
   return {
     beforeMargin: beforeMarginCalc,
-    space: spaceCalc,
+    space: spaceCalc - beforeMarginCalc,
     afterMargin: afterMarginCalc,
   };
 };
