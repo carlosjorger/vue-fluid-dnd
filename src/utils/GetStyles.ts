@@ -75,3 +75,52 @@ export const hasIntersection = (
       Math.min(element1ElementRect.width, element2ElementRect.width) / 2
   );
 };
+
+export const calculateRangeWhileDragging = (
+  beforeMargin: "marginTop" | "marginLeft",
+  afterMargin: "marginBottom" | "marginRight",
+  space: "width" | "height",
+  gapStyle: "columnGap" | "rowGap",
+  siblings: HTMLElement[],
+  sourceIndex: number,
+  targetIndex: number
+) => {
+  let spaceCalc = 0;
+  const current = siblings[sourceIndex];
+  const target = siblings[targetIndex];
+  const siblingsBetween = siblings.slice(sourceIndex + 1, targetIndex + 1);
+  console.log(
+    spaceWithMargins(beforeMargin, afterMargin, space, siblingsBetween)
+  );
+};
+const spaceWithMargins = (
+  beforeMargin: "marginTop" | "marginLeft",
+  afterMargin: "marginBottom" | "marginRight",
+  space: "width" | "height",
+  siblings: HTMLElement[]
+) => {
+  if (siblings.length == 0) {
+    return {
+      beforeMargin: 0,
+      space: 0,
+      afterMargin: 0,
+    };
+  }
+  const beforeMarginCalc = parseFloatEmpty(siblings[0].style[beforeMargin]);
+  let afterMarginCalc = 0;
+  let spaceCalc = 0;
+  for (const sibling of siblings) {
+    const siblingSpace = sibling.getBoundingClientRect()[space];
+    afterMarginCalc = Math.max(
+      afterMarginCalc,
+      parseFloatEmpty(sibling.style[beforeMargin])
+    );
+    spaceCalc += afterMarginCalc + siblingSpace;
+    afterMarginCalc = parseFloatEmpty(sibling.style[afterMargin]);
+  }
+  return {
+    beforeMargin: beforeMarginCalc,
+    space: spaceCalc,
+    afterMargin: afterMarginCalc,
+  };
+};
