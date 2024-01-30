@@ -86,7 +86,6 @@ onMounted(() => {
       droppableId: droppableIdEvent,
       sourceIndex,
       targetIndex,
-      element,
     }) => {
       if (draggableId == draggableIdEvent && droppableId === droppableIdEvent) {
         moveTranslate(childRef.value, height, width);
@@ -101,24 +100,24 @@ onMounted(() => {
           if (childRef.value) {
             // moveTranslate(element, height + top, 0);
             // console.log(top, height, element.style.transform, element);
-            onDrop(
-              {
-                index: sourceIndex,
-              },
-              {
-                index: targetIndex,
-              }
-            );
-            // setTimeout(() => {
-            //   onDrop(
-            //     {
-            //       index: sourceIndex,
-            //     },
-            //     {
-            //       index: targetIndex,
-            //     }
-            //   );
-            // }, duration);
+            // onDrop(
+            //   {
+            //     index: sourceIndex,
+            //   },
+            //   {
+            //     index: targetIndex,
+            //   }
+            // );
+            setTimeout(() => {
+              onDrop(
+                {
+                  index: sourceIndex,
+                },
+                {
+                  index: targetIndex,
+                }
+              );
+            }, duration);
           }
         }
       }
@@ -515,14 +514,14 @@ const calculateWhileDragging = (
 ) => {
   const currentAfterMargin = parseFloatEmpty(current.style[afterMargin]);
   const currentBeforeMargin = parseFloatEmpty(current.style[beforeMargin]);
-  let brotherBeforeMargin = 0;
+  let nextBeforeMargin = 0;
   const nextElement = current.nextElementSibling as HTMLElement;
   if (nextElement) {
-    brotherBeforeMargin = parseFloatEmpty(nextElement.style[beforeMargin]);
+    nextBeforeMargin = parseFloatEmpty(nextElement.style[beforeMargin]);
   }
   let afterSpace = currentAfterMargin;
   let beforeScace = currentBeforeMargin;
-  let rest = brotherBeforeMargin;
+  let rest = nextBeforeMargin;
   let gap = 0;
   const parentElement = current.parentElement as HTMLElement;
 
@@ -530,7 +529,45 @@ const calculateWhileDragging = (
   if (gap > 0 || parentElement.style.display === "flex") {
     return space + beforeScace + afterSpace + gap;
   }
-  afterSpace = Math.max(brotherBeforeMargin, currentAfterMargin);
+  afterSpace = Math.max(nextBeforeMargin, currentAfterMargin);
+  const previousElement = current.previousElementSibling as HTMLElement;
+  if (previousElement) {
+    const previousAfterMargin = parseFloatEmpty(
+      previousElement.style[afterMargin]
+    );
+    beforeScace = Math.max(previousAfterMargin, currentBeforeMargin);
+    rest = Math.max(rest, previousAfterMargin);
+  }
+  return space + beforeScace + afterSpace - rest;
+};
+const calculateRangeWhileDragging = (
+  current: HTMLElement,
+  beforeMargin: "marginTop" | "marginLeft",
+  afterMargin: "marginBottom" | "marginRight",
+  space: number,
+  gapStyle: "columnGap" | "rowGap",
+  siblings: HTMLElement[],
+  sourceIndex: number,
+  targetIndex: number
+) => {
+  const currentAfterMargin = parseFloatEmpty(current.style[afterMargin]);
+  const currentBeforeMargin = parseFloatEmpty(current.style[beforeMargin]);
+  let nextBeforeMargin = 0;
+  const nextElement = current.nextElementSibling as HTMLElement;
+  if (nextElement) {
+    nextBeforeMargin = parseFloatEmpty(nextElement.style[beforeMargin]);
+  }
+  let afterSpace = currentAfterMargin;
+  let beforeScace = currentBeforeMargin;
+  let rest = nextBeforeMargin;
+  let gap = 0;
+  const parentElement = current.parentElement as HTMLElement;
+
+  gap = computeGapPixels(parentElement, gapStyle);
+  if (gap > 0 || parentElement.style.display === "flex") {
+    return space + beforeScace + afterSpace + gap;
+  }
+  afterSpace = Math.max(nextBeforeMargin, currentAfterMargin);
   const previousElement = current.previousElementSibling as HTMLElement;
   if (previousElement) {
     const previousAfterMargin = parseFloatEmpty(

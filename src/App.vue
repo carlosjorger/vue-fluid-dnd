@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { Ref, ref } from "vue";
 import Draggable from "./components/Draggable.vue";
 import Droppable from "./components/Droppable.vue";
 import { dropDraggingElementsBetween } from "./utils/DropMethods";
 import { DraggableElement } from "../index";
-
-const list = ref([
+const list1 = ref([
   {
     "draggable-id": "1",
     number: 1,
@@ -30,13 +29,54 @@ const list = ref([
     style:
       "color: white; background-color: wheat; padding: 40px 0; margin: 20px 0; margin-right: 100px; width: 30%;",
   },
+  {
+    "draggable-id": "5",
+    number: 5,
+    style:
+      "color: white; background-color: crimson; padding: 26px 0; margin: 20px 0; margin-right: 100px;",
+  },
+]);
+
+const list2 = ref([
+  {
+    "draggable-id": "1",
+    number: 1,
+    style:
+      "color: white; background-color: red; padding: 20px 0; margin: 23px 0;",
+  },
+  {
+    "draggable-id": "2",
+    number: 2,
+    style:
+      "color: white; background-color: blue; padding: 20px 0; margin: 12px; margin-right: 120px;",
+  },
+  {
+    "draggable-id": "3",
+    number: 3,
+    style:
+      "color: white; background-color: green; padding: 26px 0; margin: 26px; margin-left: 100px;",
+  },
+  {
+    "draggable-id": "4",
+    number: 4,
+    style:
+      "color: white; background-color: brown; padding: 26px 0; margin: 27px;",
+  },
 ]);
 const defaultOnDrop = (
   source: DraggableElement,
   destination: DraggableElement
 ) => {};
-const onDrop = (source: DraggableElement, destination: DraggableElement) => {
-  dropDraggingElementsBetween(list, source, destination);
+const onDrop = (
+  list: {
+    "draggable-id": string;
+    number: number;
+    style: string;
+  }[]
+) => {
+  return (source: DraggableElement, destination: DraggableElement) => {
+    dropDraggingElementsBetween(ref(list), source, destination);
+  };
 };
 </script>
 
@@ -190,79 +230,18 @@ const onDrop = (source: DraggableElement, destination: DraggableElement) => {
     </div>
   </Droppable>
   <div style="display: flex; flex-direction: row; column-gap: 10px">
-    <Droppable droppable-id="3" direction="vertical" :onDrop="defaultOnDrop">
+    <Droppable droppable-id="3" direction="vertical" :onDrop="onDrop(list1)">
       <div style="width: 40%; background-color: darkgray; display: block">
-        <Draggable draggable-id="1" :index="0" v-slot="{ setRef }"
-          ><div
-            :ref="setRef"
-            style="
-              color: white;
-              background-color: red;
-              padding: 20px 0;
-              margin: 23px 0;
-            "
-          >
-            1
-          </div>
-        </Draggable>
-        <Draggable draggable-id="2" :index="1" v-slot="{ setRef }">
-          <div
-            :ref="setRef"
-            style="
-              color: white;
-              background-color: blue;
-              padding: 20px 0;
-              margin: 12px;
-              margin-right: 120px;
-            "
-          >
-            2
-          </div>
-        </Draggable>
-        <Draggable draggable-id="3" :index="2" v-slot="{ setRef }"
-          ><div
-            :ref="setRef"
-            style="
-              color: white;
-              background-color: green;
-              padding: 26px 0;
-              margin: 26px;
-              margin-left: 100px;
-            "
-          >
-            3
-          </div>
-        </Draggable>
-        <Draggable draggable-id="4" :index="3" v-slot="{ setRef }"
-          ><div
-            :ref="setRef"
-            style="
-              color: white;
-              background-color: brown;
-              padding: 26px 0;
-              margin: 27px;
-            "
-          >
-            4
-          </div>
-        </Draggable>
-        <Draggable draggable-id="5" :index="4" v-slot="{ setRef }"
-          ><div
-            :ref="setRef"
-            style="
-              color: white;
-              background-color: crimson;
-              padding: 26px 0;
-              margin: 20px 0;
-              margin-right: 100px;
-            "
-          >
-            5
-          </div>
+        <Draggable
+          v-for="(element, index) in list1"
+          v-slot="{ setRef }"
+          :draggable-id="element['draggable-id']"
+          :index="index"
+          ><div :ref="setRef" :style="element.style">{{ element.number }}</div>
         </Draggable>
       </div>
     </Droppable>
-    <Droppable droppable-id="4" direction="vertical" :onDrop="onDrop">
+    <Droppable droppable-id="4" direction="vertical" :onDrop="onDrop(list2)">
       <div
         style="
           width: 40%;
@@ -276,7 +255,7 @@ const onDrop = (source: DraggableElement, destination: DraggableElement) => {
         "
       >
         <Draggable
-          v-for="(element, index) in list"
+          v-for="(element, index) in list2"
           v-slot="{ setRef }"
           :draggable-id="element['draggable-id']"
           :index="index"
