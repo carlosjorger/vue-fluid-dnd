@@ -99,7 +99,6 @@ onMounted(() => {
         removeTranslateWhitoutTransition();
         if (targetIndex === index) {
           if (childRef.value) {
-            // const { top, height } = childRef.value.getBoundingClientRect();
             // moveTranslate(element, height + top, 0);
             // console.log(top, height, element.style.transform, element);
             onDrop(
@@ -216,9 +215,8 @@ const onmousedown = (event: MouseEvent) => {
     return;
   }
   style.value = element.style.cssText;
-  const { width, height } = element.getBoundingClientRect();
   const { offsetX, offsetY, x, y, pageY, pageX } = event;
-  // const { marginTop, marginLeft } = element.style;
+  const { marginTop, marginLeft } = element.style;
   dragging.value = true;
   offset.value = { offsetX, offsetY };
   emitEventToSiblings(element, START_DRAG_EVENT, {
@@ -227,10 +225,10 @@ const onmousedown = (event: MouseEvent) => {
   });
   fixSizeStyle(element.parentElement);
   position.value = {
-    top: y - offsetY + height / 2,
-    left: x - offsetX + width / 2,
+    top: y - offset.value.offsetY - parseFloatEmpty(marginTop),
+    left: x - offset.value.offsetX - parseFloatEmpty(marginLeft),
   };
-  // console.log(position.value.left, x);
+
   setDraggingStyles(element);
   setBorderBoxStyle(element);
   setTransform(element, pageX, pageY);
@@ -560,24 +558,8 @@ const onDropDraggingEvent = (event: MouseEvent) => {
   }, duration);
 };
 const removeDraggingStyles = (event: MouseEvent, element: HTMLElement) => {
-  const { pageY, y, pageX, x } = event;
-  const { width, height } = element.getBoundingClientRect();
   setTranistion(element, duration);
-
-  const { scrollTop, scrollLeft } = getScroll(element.parentElement);
-  moveTranslate(
-    element,
-    pageY -
-      y -
-      offset.value.offsetY +
-      height / 2 +
-      (scroll.value.scrollTop - scrollTop),
-    pageX -
-      x -
-      offset.value.offsetX +
-      width / 2 +
-      (scroll.value.scrollLeft - scrollLeft)
-  );
+  moveTranslate(element, 0, 0);
 };
 
 const setDraggingStyles = (element: HTMLElement) => {
@@ -617,6 +599,5 @@ watch(
   cursor: v-bind("computedCursor");
 }
 </style>
-<!-- pick only one postion on top and left -->
 <!-- TODO: fix animation of the current dragged element after drop it -->
 <!-- TODO: refactor -->
