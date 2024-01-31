@@ -85,37 +85,71 @@ export const calculateRangeWhileDragging = (
   sourceIndex: number,
   targetIndex: number
 ) => {
-  const indexOrder = sourceIndex < targetIndex;
+  const isDraggedFoward = sourceIndex < targetIndex;
 
   const [firstIndex, secondIndex] = [sourceIndex, targetIndex].sort();
-  const firstElement = siblings[firstIndex];
-  const secondElement = siblings[secondIndex];
-  const siblingsBetween = siblings.slice(firstIndex + 1, secondIndex + 1);
+  const sourceElement = siblings[sourceIndex];
+  const targetElement = siblings[targetIndex];
+  const siblingsBetween = isDraggedFoward
+    ? siblings.slice(firstIndex + 1, secondIndex + 1)
+    : siblings.slice(firstIndex, secondIndex);
   const { beforeMargin, space, afterMargin } = spaceWithMargins(
     beforeMarginProp,
     afterMarginProp,
     spaceProp,
     siblingsBetween
   );
-  const afterMarginCalc = Math.max(
-    afterMargin,
-    parseFloatEmpty(secondElement.style[afterMarginProp])
+
+  const {
+    beforeMargin: beforeMarginOutside,
+    afterMargin: afterMarginOutside,
+    spaceBeforeDraggedElement,
+  } = getBeforeAfterMarginBaseOnDraggedDirection(
+    beforeMarginProp,
+    afterMarginProp,
+    sourceElement,
+    targetElement.previousElementSibling,
+    isDraggedFoward
   );
-  const beforeMarginCalc = Math.max(
-    beforeMargin,
-    parseFloatEmpty(firstElement.style[beforeMarginProp])
-  );
+
+  const beforeMarginCalc = Math.max(beforeMargin, afterMarginOutside);
+  const afterMarginCalc = Math.max(afterMargin, beforeMarginOutside);
   const spaceBetween = afterMarginCalc + space + beforeMarginCalc;
-  const spaceBetweenWithoutElement = Math.max(
-    afterMarginCalc,
-    beforeMarginCalc
-  );
-  let spaceCalc = spaceBetween - spaceBetweenWithoutElement;
-  if (indexOrder) {
+
+  let spaceCalc = spaceBetween - spaceBeforeDraggedElement;
+  if (isDraggedFoward) {
     return spaceCalc;
   } else {
     return -spaceCalc;
   }
+};
+const getBeforeAfterMarginBaseOnDraggedDirection = (
+  beforeMarginProp: "marginTop" | "marginLeft",
+  afterMarginProp: "marginBottom" | "marginRight",
+  draggedElement: HTMLElement,
+  previousElement: Element | null,
+  isDraggedFoward: boolean
+) => {
+  let beforeMargin = 0;
+  let afterMargin = 0;
+  let spaceBeforeDraggedElement = 0;
+  if (isDraggedFoward) {
+    afterMargin = geMargintStyleByProperty(
+      draggedElement.previousElementSibling,
+      afterMarginProp
+    );
+    beforeMargin = geMargintStyleByProperty(draggedElement, beforeMarginProp);
+    spaceBeforeDraggedElement = Math.max(afterMargin, beforeMargin);
+  } else {
+    afterMargin = geMargintStyleByProperty(previousElement, afterMarginProp);
+    beforeMargin = geMargintStyleByProperty(draggedElement, beforeMarginProp);
+    spaceBeforeDraggedElement = Math.max(beforeMargin, afterMargin);
+  }
+  return {
+    afterMargin,
+    beforeMargin,
+    spaceBeforeDraggedElement,
+  };
 };
 const spaceWithMargins = (
   beforeMargin: "marginTop" | "marginLeft",
@@ -133,7 +167,6 @@ const spaceWithMargins = (
   const beforeMarginCalc = parseFloatEmpty(siblings[0].style[beforeMargin]);
   let afterMarginCalc = 0;
   let spaceCalc = 0;
-  console.log(siblings[0].getAttribute("draggable-id"));
   for (const sibling of siblings) {
     const siblingSpace = sibling.getBoundingClientRect()[space];
     afterMarginCalc = Math.max(
@@ -148,4 +181,13 @@ const spaceWithMargins = (
     space: spaceCalc - beforeMarginCalc,
     afterMargin: afterMarginCalc,
   };
+};
+const geMargintStyleByProperty = (
+  element: HTMLElement | Element | undefined | null,
+  property: "marginTop" | "marginLeft" | "marginBottom" | "marginRight"
+) => {
+  if (element && element instanceof HTMLElement) {
+    return parseFloatEmpty(element.style[property]);
+  }
+  return 0;
 };

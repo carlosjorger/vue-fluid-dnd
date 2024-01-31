@@ -100,16 +100,28 @@ test("check calculateRangeWhileDragging replacing an element with another one fu
     0,
     3
   );
+  expect(heightTranslate).toBe(308);
 });
-test("check calculateRangeWhileDragging replacing an element with the next one", () => {
+test("check calculateRangeWhileDragging replacing an element with another one before", () => {
   const heightTranslate = calculateRangeWhileDragging(
     "marginTop",
     "marginBottom",
     "height",
     "rowGap",
     draggablesList,
-    1,
-    2
+    3,
+    0
   );
-  console.log(heightTranslate);
 });
+// test("check calculateRangeWhileDragging replacing an element with the next one", () => {
+//   const heightTranslate = calculateRangeWhileDragging(
+//     "marginTop",
+//     "marginBottom",
+//     "height",
+//     "rowGap",
+//     draggablesList,
+//     1,
+//     2
+//   );
+//   console.log(heightTranslate);
+// });
