@@ -113,7 +113,7 @@ onMounted(() => {
                   index: targetIndex,
                 }
               );
-            }, 3000);
+            }, 1000);
           }
         }
       }
@@ -210,7 +210,7 @@ const onmousedown = (event: MouseEvent) => {
     return;
   }
   style.value = element.style.cssText;
-  const { offsetX, offsetY, x, y, pageY, pageX } = event;
+  const { offsetX, offsetY, pageY, pageX } = event;
   const { marginTop, marginLeft } = element.style;
   dragging.value = true;
   offset.value = { offsetX, offsetY };
@@ -219,12 +219,11 @@ const onmousedown = (event: MouseEvent) => {
     horizontal: "right",
   });
   fixSizeStyle(element.parentElement);
-  // TODO: fix position after deopping
+
   position.value = {
-    top: y - offset.value.offsetY - parseFloatEmpty(marginTop),
-    left: x - offset.value.offsetX - parseFloatEmpty(marginLeft),
+    top: pageY - offset.value.offsetY - parseFloatEmpty(marginTop),
+    left: pageX - offset.value.offsetX - parseFloatEmpty(marginLeft),
   };
-  console.log(position.value);
   setDraggingStyles(element);
   setBorderBoxStyle(element);
   setTransform(element, pageX, pageY);
