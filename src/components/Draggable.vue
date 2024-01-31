@@ -98,13 +98,13 @@ onMounted(() => {
         if (sourceIndex === targetIndex) {
           return;
         }
-        removeTranslateWhitoutTransition();
         if (targetIndex === index) {
           if (childRef.value) {
             moveTranslate(element, sourceElementTranlation.height, 0);
-            console.log(sourceElementTranlation, sourceIndex, targetIndex);
-
             setTimeout(() => {
+              eventBus.emit(DROP_EVENT, {
+                droppableId,
+              });
               onDrop(
                 {
                   index: sourceIndex,
@@ -113,7 +113,7 @@ onMounted(() => {
                   index: targetIndex,
                 }
               );
-            }, 1000);
+            }, 2000);
           }
         }
       }
@@ -382,11 +382,12 @@ const emitDroppingEventToSiblings = (
 ) => {
   const allSiblings = siblings.toReversed();
   allSiblings.splice(elementPosition, 0, draggedElement);
-  const elementInvertPosition = siblings.length - elementPosition;
   for (const [index, sibling] of siblings.entries()) {
     const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
-    if (elementInvertPosition <= index) {
-      translation = { height: 0, width: 0 };
+    let newTranslation = translation;
+    // TODO: send translation correctly
+    if (actualIndex.value - 1 >= index) {
+      newTranslation = { height: 0, width: 0 };
     }
     const heightTranslate = calculateRangeWhileDragging(
       "marginTop",
@@ -399,7 +400,7 @@ const emitDroppingEventToSiblings = (
     );
     emitEventBus(
       event,
-      translation,
+      newTranslation,
       siblingDraggableId,
       elementPosition,
       actualIndex.value,
@@ -571,7 +572,7 @@ const onmouseup = (event: MouseEvent) => {
 const onDropDraggingEvent = (event: MouseEvent) => {
   dragging.value = false;
   const element = event.target as HTMLElement;
-  removeDraggingStyles(event, element);
+  removeDraggingStyles(element);
   emitEventToSiblings(element, START_DROP_EVENT);
   // setTimeout(() => {
   //   emitEventToSiblings(element, DROP_EVENT);
@@ -581,7 +582,7 @@ const onDropDraggingEvent = (event: MouseEvent) => {
   //   element.style.transition = "";
   // }, duration);
 };
-const removeDraggingStyles = (event: MouseEvent, element: HTMLElement) => {
+const removeDraggingStyles = (element: HTMLElement) => {
   setTranistion(element, duration);
   moveTranslate(element, 0, 0);
 };

@@ -20,9 +20,6 @@ type Events = {
     };
   };
   drop: {
-    height: number;
-    width: number;
-    draggableIdEvent: string;
     droppableId: string | undefined;
   };
   startDrag: {
