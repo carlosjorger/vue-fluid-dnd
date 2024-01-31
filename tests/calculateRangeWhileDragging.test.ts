@@ -9,11 +9,8 @@ listWithoutGaps.innerHTML = `<div style="background-color: darkgray; display: bl
                                 color: white; 
                                 background-color: red; 
                                 padding: 20px 0px; 
-                                margin: 23px 0px; 
-                                height: 63.9986px; 
-                                width: 413.956px; 
-                                box-sizing: border-box; 
-                                top: 157px; left: 129px;"
+                                margin: 23px 0px;
+                                box-sizing: border-box; "
                             >
                                 1
                             </div>
@@ -123,5 +120,4 @@ test("check calculateRangeWhileDragging replacing an element with another one be
 //     1,
 //     2
 //   );
-//   console.log(heightTranslate);
 // });

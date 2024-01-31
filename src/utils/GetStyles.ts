@@ -108,7 +108,7 @@ export const calculateRangeWhileDragging = (
     beforeMarginProp,
     afterMarginProp,
     sourceElement,
-    targetElement.previousElementSibling,
+    targetElement?.previousElementSibling,
     isDraggedFoward
   );
 
