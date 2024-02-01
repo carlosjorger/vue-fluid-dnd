@@ -193,17 +193,18 @@ const spaceWithMargins = (
       afterMargin: 0,
     };
   }
-  const beforeMarginCalc = parseFloatEmpty(siblings[0].style[beforeMargin]);
+
+  const beforeMarginCalc = getMarginStyleByProperty(siblings[0], beforeMargin);
   let afterMarginCalc = 0;
   let spaceCalc = 0;
   for (const sibling of siblings) {
     const siblingSpace = sibling.getBoundingClientRect()[space];
     afterMarginCalc = Math.max(
       afterMarginCalc,
-      parseFloatEmpty(sibling.style[beforeMargin])
+      getMarginStyleByProperty(sibling, beforeMargin)
     );
     spaceCalc += afterMarginCalc + siblingSpace;
-    afterMarginCalc = parseFloatEmpty(sibling.style[afterMargin]);
+    afterMarginCalc = getMarginStyleByProperty(sibling, afterMargin);
   }
   return {
     beforeMargin: beforeMarginCalc,
@@ -216,7 +217,7 @@ export const getMarginStyleByProperty = (
   property: BeforeMargin | AfterMargin
 ) => {
   if (element && element instanceof HTMLElement) {
-    return parseFloatEmpty(element.style[property]);
+    return parseFloatEmpty(window.getComputedStyle(element)[property]);
   }
   return 0;
 };
@@ -277,7 +278,8 @@ const calculateWhileDragging = (
   const parentElement = current.parentElement as HTMLElement;
 
   gap = computeGapPixels(parentElement, gapStyle);
-  if (gap > 0 || parentElement.style.display === "flex") {
+  const display = window.getComputedStyle(parentElement).display;
+  if (gap > 0 || display === "flex") {
     return space + beforeScace + afterSpace + gap;
   }
   afterSpace = Math.max(nextBeforeMargin, currentAfterMargin);

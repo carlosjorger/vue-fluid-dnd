@@ -242,18 +242,7 @@ const onDrop = (
       </div>
     </Droppable>
     <Droppable droppable-id="4" direction="vertical" :onDrop="onDrop(list2)">
-      <div
-        style="
-          width: 40%;
-          background-color: darkgray;
-          display: inline-block;
-          overflow: hidden;
-          display: block;
-          display: flex;
-          flex-direction: column;
-          gap: 5px;
-        "
-      >
+      <div class="droppable-gaps">
         <Draggable
           v-for="(element, index) in list2"
           v-slot="{ setRef }"
@@ -265,3 +254,15 @@ const onDrop = (
     </Droppable>
   </div>
 </template>
+<style>
+.droppable-gaps {
+  width: 40%;
+  background-color: darkgray;
+  display: inline-block;
+  overflow: hidden;
+  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+</style>

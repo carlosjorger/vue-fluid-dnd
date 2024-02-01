@@ -582,5 +582,6 @@ watch(
   cursor: v-bind("computedCursor");
 }
 </style>
+<!-- TODO: fix when is dropped in the same position -->
 <!-- TODO: fix when is dropped outside element go to last index -->
 <!-- TODO: refactor -->
