@@ -19,7 +19,7 @@ import {
 } from "@/utils/SetStyles";
 import {
   getScroll,
-  parseFloatEmpty,
+  getMarginStyleByProperty,
   computeGapPixels,
   hasIntersection,
   calculateRangeWhileDragging,
@@ -158,7 +158,7 @@ const setTransform = (
     const newTranslateX =
       elementXPosittion -
       position.value.left -
-      parseFloatEmpty(element.style.marginLeft);
+      getMarginStyleByProperty(element, "marginLeft");
     if (translate.value.x > newTranslateX) {
       horizontal = "left";
     } else if (translate.value.x < newTranslateX) {
@@ -175,7 +175,7 @@ const setTransform = (
     const newTranslateY =
       elementYPosition -
       position.value.top -
-      parseFloatEmpty(element.style.marginTop);
+      getMarginStyleByProperty(element, "marginTop");
     if (translate.value.y > newTranslateY) {
       vertical = "up";
     } else if (translate.value.y < newTranslateY) {
@@ -211,7 +211,6 @@ const onmousedown = (event: MouseEvent) => {
   }
   style.value = element.style.cssText;
   const { offsetX, offsetY, pageY, pageX } = event;
-  const { marginTop, marginLeft } = element.style;
   dragging.value = true;
   offset.value = { offsetX, offsetY };
   emitEventToSiblings(element, START_DRAG_EVENT, {
@@ -220,8 +219,14 @@ const onmousedown = (event: MouseEvent) => {
   });
   fixSizeStyle(element.parentElement);
   position.value = {
-    top: pageY - offset.value.offsetY - parseFloatEmpty(marginTop),
-    left: pageX - offset.value.offsetX - parseFloatEmpty(marginLeft),
+    top:
+      pageY -
+      offset.value.offsetY -
+      getMarginStyleByProperty(element, "marginTop"),
+    left:
+      pageX -
+      offset.value.offsetX -
+      getMarginStyleByProperty(element, "marginLeft"),
   };
   setDraggingStyles(element);
   setBorderBoxStyle(element);
@@ -535,13 +540,13 @@ const calculateWhileDragging = (
   space: number,
   gapStyle: "columnGap" | "rowGap"
 ) => {
-  const currentAfterMargin = parseFloatEmpty(current.style[afterMargin]);
-  const currentBeforeMargin = parseFloatEmpty(current.style[beforeMargin]);
-  let nextBeforeMargin = 0;
+  //TODO: add support to passing nextElement and previousElement
+
+  const currentAfterMargin = getMarginStyleByProperty(current, afterMargin);
+  const currentBeforeMargin = getMarginStyleByProperty(current, beforeMargin);
   const nextElement = current.nextElementSibling as HTMLElement;
-  if (nextElement) {
-    nextBeforeMargin = parseFloatEmpty(nextElement.style[beforeMargin]);
-  }
+  let nextBeforeMargin = getMarginStyleByProperty(nextElement, beforeMargin);
+
   let afterSpace = currentAfterMargin;
   let beforeScace = currentBeforeMargin;
   let rest = nextBeforeMargin;
@@ -555,8 +560,9 @@ const calculateWhileDragging = (
   afterSpace = Math.max(nextBeforeMargin, currentAfterMargin);
   const previousElement = current.previousElementSibling as HTMLElement;
   if (previousElement) {
-    const previousAfterMargin = parseFloatEmpty(
-      previousElement.style[afterMargin]
+    const previousAfterMargin = getMarginStyleByProperty(
+      previousElement,
+      afterMargin
     );
     beforeScace = Math.max(previousAfterMargin, currentBeforeMargin);
     rest = Math.max(rest, previousAfterMargin);

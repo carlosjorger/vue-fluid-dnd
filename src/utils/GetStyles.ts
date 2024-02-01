@@ -134,15 +134,15 @@ const getBeforeAfterMarginBaseOnDraggedDirection = (
   let afterMargin = 0;
   let spaceBeforeDraggedElement = 0;
   if (isDraggedFoward) {
-    afterMargin = geMargintStyleByProperty(
+    afterMargin = getMarginStyleByProperty(
       draggedElement.previousElementSibling,
       afterMarginProp
     );
-    beforeMargin = geMargintStyleByProperty(draggedElement, beforeMarginProp);
+    beforeMargin = getMarginStyleByProperty(draggedElement, beforeMarginProp);
     spaceBeforeDraggedElement = Math.max(afterMargin, beforeMargin);
   } else {
-    afterMargin = geMargintStyleByProperty(previousElement, afterMarginProp);
-    beforeMargin = geMargintStyleByProperty(draggedElement, beforeMarginProp);
+    afterMargin = getMarginStyleByProperty(previousElement, afterMarginProp);
+    beforeMargin = getMarginStyleByProperty(draggedElement, beforeMarginProp);
     spaceBeforeDraggedElement = Math.max(beforeMargin, afterMargin);
   }
   return {
@@ -182,7 +182,7 @@ const spaceWithMargins = (
     afterMargin: afterMarginCalc,
   };
 };
-const geMargintStyleByProperty = (
+export const getMarginStyleByProperty = (
   element: HTMLElement | Element | undefined | null,
   property: "marginTop" | "marginLeft" | "marginBottom" | "marginRight"
 ) => {
