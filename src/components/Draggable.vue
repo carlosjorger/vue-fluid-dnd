@@ -9,7 +9,13 @@ import {
   watch,
 } from "vue";
 import eventBus from "@/utils/EventBus";
-import { Direction, DraggableElement } from "../../index.ts";
+import {
+  Direction,
+  DraggableElement,
+  BeforeMargin,
+  AfterMargin,
+  GapStyle,
+} from "../../index.ts";
 import {
   setBorderBoxStyle,
   fixSizeStyle,
@@ -535,10 +541,10 @@ const calculateWidthWhileDragging = (current: HTMLElement) => {
 };
 const calculateWhileDragging = (
   current: HTMLElement,
-  beforeMargin: "marginTop" | "marginLeft",
-  afterMargin: "marginBottom" | "marginRight",
+  beforeMargin: BeforeMargin,
+  afterMargin: AfterMargin,
   space: number,
-  gapStyle: "columnGap" | "rowGap"
+  gapStyle: GapStyle
 ) => {
   //TODO: add support to passing nextElement and previousElement
 

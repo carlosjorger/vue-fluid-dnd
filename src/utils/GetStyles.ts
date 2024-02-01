@@ -1,3 +1,4 @@
+import { BeforeMargin, AfterMargin, GapStyle } from "../../index";
 export const getScroll = (element: HTMLElement | undefined | null) => {
   if (element) {
     const { scrollLeft, scrollTop } = element;
@@ -11,10 +12,7 @@ export const parseFloatEmpty = (value: string) => {
   }
   return parseFloat(value);
 };
-export const computeGapPixels = (
-  element: HTMLElement,
-  gapType: "columnGap" | "rowGap"
-) => {
+export const computeGapPixels = (element: HTMLElement, gapType: GapStyle) => {
   const gap = getComputedStyle(element as HTMLElement)[gapType];
   if (gap.match("%")) {
     const gap_percent = parseFloatEmpty(gap.replace("%", ""));
@@ -77,10 +75,10 @@ export const hasIntersection = (
 };
 
 export const calculateRangeWhileDragging = (
-  beforeMarginProp: "marginTop" | "marginLeft",
-  afterMarginProp: "marginBottom" | "marginRight",
+  beforeMarginProp: BeforeMargin,
+  afterMarginProp: AfterMargin,
   spaceProp: "width" | "height",
-  gapStyle: "columnGap" | "rowGap",
+  gapStyle: GapStyle,
   siblings: HTMLElement[],
   sourceIndex: number,
   targetIndex: number
@@ -124,8 +122,8 @@ export const calculateRangeWhileDragging = (
   }
 };
 const getBeforeAfterMarginBaseOnDraggedDirection = (
-  beforeMarginProp: "marginTop" | "marginLeft",
-  afterMarginProp: "marginBottom" | "marginRight",
+  beforeMarginProp: BeforeMargin,
+  afterMarginProp: AfterMargin,
   draggedElement: HTMLElement,
   previousElement: Element | null,
   isDraggedFoward: boolean
@@ -152,8 +150,8 @@ const getBeforeAfterMarginBaseOnDraggedDirection = (
   };
 };
 const spaceWithMargins = (
-  beforeMargin: "marginTop" | "marginLeft",
-  afterMargin: "marginBottom" | "marginRight",
+  beforeMargin: BeforeMargin,
+  afterMargin: AfterMargin,
   space: "width" | "height",
   siblings: HTMLElement[]
 ) => {
@@ -184,7 +182,7 @@ const spaceWithMargins = (
 };
 export const getMarginStyleByProperty = (
   element: HTMLElement | Element | undefined | null,
-  property: "marginTop" | "marginLeft" | "marginBottom" | "marginRight"
+  property: BeforeMargin | AfterMargin
 ) => {
   if (element && element instanceof HTMLElement) {
     return parseFloatEmpty(element.style[property]);
