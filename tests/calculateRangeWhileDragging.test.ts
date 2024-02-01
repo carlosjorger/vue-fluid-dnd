@@ -110,6 +110,7 @@ test("check calculateRangeWhileDragging replacing an element with another one be
     0
   );
 });
+// TODO: test calculateRangeWhileDragging with gaps
 // test("check calculateRangeWhileDragging replacing an element with the next one", () => {
 //   const heightTranslate = calculateRangeWhileDragging(
 //     "marginTop",
