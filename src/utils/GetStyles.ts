@@ -1,4 +1,4 @@
-import { BeforeMargin, AfterMargin, GapStyle } from "../../index";
+import { BeforeMargin, AfterMargin, GapStyle, Direction } from "../../index";
 export const getScroll = (element: HTMLElement | undefined | null) => {
   if (element) {
     const { scrollLeft, scrollTop } = element;
@@ -72,6 +72,37 @@ export const hasIntersection = (
     intersectionX >=
       Math.min(element1ElementRect.width, element2ElementRect.width) / 2
   );
+};
+export const calculateRangeWhileDraggingByDirection = (
+  siblings: HTMLElement[],
+  sourceIndex: number,
+  targetIndex: number,
+  direction: Direction | undefined
+) => {
+  let height = 0;
+  let width = 0;
+  if (direction === "vertical") {
+    height = calculateRangeWhileDragging(
+      "marginTop",
+      "marginBottom",
+      "height",
+      "rowGap",
+      siblings,
+      sourceIndex,
+      targetIndex
+    );
+  } else if (direction === "horizontal") {
+    width = calculateRangeWhileDragging(
+      "marginLeft",
+      "marginRight",
+      "width",
+      "columnGap",
+      siblings,
+      sourceIndex,
+      targetIndex
+    );
+  }
+  return { width, height };
 };
 
 export const calculateRangeWhileDragging = (
@@ -188,4 +219,76 @@ export const getMarginStyleByProperty = (
     return parseFloatEmpty(element.style[property]);
   }
   return 0;
+};
+export const calculateWhileDraggingByDirection = (
+  current: HTMLElement,
+  previousElement: Element | null,
+  nextElement: Element | null,
+  direction: Direction | undefined
+) => {
+  let height = 0;
+  let width = 0;
+  let { height: elementHeight, width: elementWidth } =
+    current.getBoundingClientRect();
+  if (direction === "vertical") {
+    height = calculateWhileDragging(
+      current,
+      "marginTop",
+      "marginBottom",
+      elementHeight,
+      "rowGap",
+      previousElement,
+      nextElement
+    );
+  } else if (direction === "horizontal") {
+    width = calculateWhileDragging(
+      current,
+      "marginLeft",
+      "marginRight",
+      elementWidth,
+      "columnGap",
+      previousElement,
+      nextElement
+    );
+  }
+  return { width, height };
+};
+const calculateWhileDragging = (
+  current: HTMLElement,
+  beforeMargin: BeforeMargin,
+  afterMargin: AfterMargin,
+  space: number,
+  gapStyle: GapStyle,
+  previousElement: Element | null,
+  nextElement: Element | null
+) => {
+  const currentAfterMargin = getMarginStyleByProperty(current, afterMargin);
+  const currentBeforeMargin = getMarginStyleByProperty(current, beforeMargin);
+  const nextHTMLElement = nextElement as HTMLElement;
+  let nextBeforeMargin = getMarginStyleByProperty(
+    nextHTMLElement,
+    beforeMargin
+  );
+
+  let afterSpace = currentAfterMargin;
+  let beforeScace = currentBeforeMargin;
+  let rest = nextBeforeMargin;
+  let gap = 0;
+  const parentElement = current.parentElement as HTMLElement;
+
+  gap = computeGapPixels(parentElement, gapStyle);
+  if (gap > 0 || parentElement.style.display === "flex") {
+    return space + beforeScace + afterSpace + gap;
+  }
+  afterSpace = Math.max(nextBeforeMargin, currentAfterMargin);
+  const previousHTMLElement = previousElement as HTMLElement;
+  if (previousHTMLElement) {
+    const previousAfterMargin = getMarginStyleByProperty(
+      previousHTMLElement,
+      afterMargin
+    );
+    beforeScace = Math.max(previousAfterMargin, currentBeforeMargin);
+    rest = Math.max(rest, previousAfterMargin);
+  }
+  return space + beforeScace + afterSpace - rest;
 };

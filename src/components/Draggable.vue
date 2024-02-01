@@ -9,13 +9,7 @@ import {
   watch,
 } from "vue";
 import eventBus from "@/utils/EventBus";
-import {
-  Direction,
-  DraggableElement,
-  BeforeMargin,
-  AfterMargin,
-  GapStyle,
-} from "../../index.ts";
+import { Direction, DraggableElement } from "../../index.ts";
 import {
   setBorderBoxStyle,
   fixSizeStyle,
@@ -26,9 +20,9 @@ import {
 import {
   getScroll,
   getMarginStyleByProperty,
-  computeGapPixels,
   hasIntersection,
-  calculateRangeWhileDragging,
+  calculateWhileDraggingByDirection,
+  calculateRangeWhileDraggingByDirection,
 } from "@/utils/GetStyles";
 const { draggableId, index } = defineProps<{
   draggableId: string;
@@ -419,14 +413,11 @@ const emitDroppingEventToSiblings = (
     if (actualIndex.value - 1 >= index) {
       newTranslation = { height: 0, width: 0 };
     }
-    const heightTranslate = calculateRangeWhileDragging(
-      "marginTop",
-      "marginBottom",
-      "height",
-      "rowGap",
+    const draggableTranslation = calculateRangeWhileDraggingByDirection(
       allSiblings,
       elementPosition,
-      actualIndex.value
+      actualIndex.value,
+      direction
     );
     emitEventBus(
       event,
@@ -434,10 +425,7 @@ const emitDroppingEventToSiblings = (
       siblingDraggableId,
       elementPosition,
       actualIndex.value,
-      {
-        height: heightTranslate,
-        width: 0,
-      }
+      draggableTranslation
     );
   }
 };
@@ -519,20 +507,12 @@ const calculateInitialTranslation = (
   previousElement = current.previousElementSibling,
   nextElement = current.nextElementSibling
 ) => {
-  let height = 0;
-  let width = 0;
-  if (!direction) {
-    return { height, width };
-  }
-  if (direction === "vertical") {
-    height = calculateHeightWhileDragging(
-      current,
-      previousElement,
-      nextElement
-    );
-  } else if (direction === "horizontal") {
-    width = calculateWidthWhileDragging(current, previousElement, nextElement);
-  }
+  let { height, width } = calculateWhileDraggingByDirection(
+    current,
+    previousElement,
+    nextElement,
+    direction
+  );
   const intersection = draggableIsOutside(current);
   if (intersection && event == "drag") {
     height = 0;
@@ -543,79 +523,6 @@ const calculateInitialTranslation = (
 const draggableIsOutside = (draggable: HTMLElement) => {
   const parentElement = draggable.parentElement as HTMLElement;
   return !hasIntersection(draggable, parentElement);
-};
-
-const calculateHeightWhileDragging = (
-  current: HTMLElement,
-  previousElement: Element | null,
-  nextElement: Element | null
-) => {
-  let { height } = current.getBoundingClientRect();
-  return calculateWhileDragging(
-    current,
-    "marginTop",
-    "marginBottom",
-    height,
-    "rowGap",
-    previousElement,
-    nextElement
-  );
-};
-
-const calculateWidthWhileDragging = (
-  current: HTMLElement,
-  previousElement: Element | null,
-  nextElement: Element | null
-) => {
-  let { width } = current.getBoundingClientRect();
-  return calculateWhileDragging(
-    current,
-    "marginLeft",
-    "marginRight",
-    width,
-    "columnGap",
-    previousElement,
-    nextElement
-  );
-};
-const calculateWhileDragging = (
-  current: HTMLElement,
-  beforeMargin: BeforeMargin,
-  afterMargin: AfterMargin,
-  space: number,
-  gapStyle: GapStyle,
-  previousElement: Element | null,
-  nextElement: Element | null
-) => {
-  const currentAfterMargin = getMarginStyleByProperty(current, afterMargin);
-  const currentBeforeMargin = getMarginStyleByProperty(current, beforeMargin);
-  const nextHTMLElement = nextElement as HTMLElement;
-  let nextBeforeMargin = getMarginStyleByProperty(
-    nextHTMLElement,
-    beforeMargin
-  );
-
-  let afterSpace = currentAfterMargin;
-  let beforeScace = currentBeforeMargin;
-  let rest = nextBeforeMargin;
-  let gap = 0;
-  const parentElement = current.parentElement as HTMLElement;
-
-  gap = computeGapPixels(parentElement, gapStyle);
-  if (gap > 0 || parentElement.style.display === "flex") {
-    return space + beforeScace + afterSpace + gap;
-  }
-  afterSpace = Math.max(nextBeforeMargin, currentAfterMargin);
-  const previousHTMLElement = previousElement as HTMLElement;
-  if (previousHTMLElement) {
-    const previousAfterMargin = getMarginStyleByProperty(
-      previousHTMLElement,
-      afterMargin
-    );
-    beforeScace = Math.max(previousAfterMargin, currentBeforeMargin);
-    rest = Math.max(rest, previousAfterMargin);
-  }
-  return space + beforeScace + afterSpace - rest;
 };
 
 const onmouseup = (event: MouseEvent) => {
