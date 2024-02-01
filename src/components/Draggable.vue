@@ -219,7 +219,6 @@ const onmousedown = (event: MouseEvent) => {
     horizontal: "right",
   });
   fixSizeStyle(element.parentElement);
-
   position.value = {
     top: pageY - offset.value.offsetY - parseFloatEmpty(marginTop),
     left: pageX - offset.value.offsetX - parseFloatEmpty(marginLeft),
@@ -382,10 +381,9 @@ const emitDroppingEventToSiblings = (
 ) => {
   const allSiblings = siblings.toReversed();
   allSiblings.splice(elementPosition, 0, draggedElement);
-  for (const [index, sibling] of siblings.entries()) {
+  for (const [index, sibling] of siblings.toReversed().entries()) {
     const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
     let newTranslation = translation;
-    // TODO: send translation correctly
     if (actualIndex.value - 1 >= index) {
       newTranslation = { height: 0, width: 0 };
     }
