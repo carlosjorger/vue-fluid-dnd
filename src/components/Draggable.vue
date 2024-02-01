@@ -494,7 +494,9 @@ const previousSiblingsFromElement = (current: HTMLElement) => {
 };
 const calculateInitialTranslation = (
   current: HTMLElement,
-  event: DragEvent
+  event: DragEvent,
+  previousElement = current.previousElementSibling,
+  nextElement = current.nextElementSibling
 ) => {
   let height = 0;
   let width = 0;
@@ -502,9 +504,13 @@ const calculateInitialTranslation = (
     return { height, width };
   }
   if (direction === "vertical") {
-    height = calculateHeightWhileDragging(current);
+    height = calculateHeightWhileDragging(
+      current,
+      previousElement,
+      nextElement
+    );
   } else if (direction === "horizontal") {
-    width = calculateWidthWhileDragging(current);
+    width = calculateWidthWhileDragging(current, previousElement, nextElement);
   }
   const intersection = draggableIsOutside(current);
   if (intersection && event == "drag") {
@@ -518,25 +524,37 @@ const draggableIsOutside = (draggable: HTMLElement) => {
   return !hasIntersection(draggable, parentElement);
 };
 
-const calculateHeightWhileDragging = (current: HTMLElement) => {
+const calculateHeightWhileDragging = (
+  current: HTMLElement,
+  previousElement: Element | null,
+  nextElement: Element | null
+) => {
   let { height } = current.getBoundingClientRect();
   return calculateWhileDragging(
     current,
     "marginTop",
     "marginBottom",
     height,
-    "rowGap"
+    "rowGap",
+    previousElement,
+    nextElement
   );
 };
 
-const calculateWidthWhileDragging = (current: HTMLElement) => {
+const calculateWidthWhileDragging = (
+  current: HTMLElement,
+  previousElement: Element | null,
+  nextElement: Element | null
+) => {
   let { width } = current.getBoundingClientRect();
   return calculateWhileDragging(
     current,
     "marginLeft",
     "marginRight",
     width,
-    "columnGap"
+    "columnGap",
+    previousElement,
+    nextElement
   );
 };
 const calculateWhileDragging = (
@@ -544,14 +562,19 @@ const calculateWhileDragging = (
   beforeMargin: BeforeMargin,
   afterMargin: AfterMargin,
   space: number,
-  gapStyle: GapStyle
+  gapStyle: GapStyle,
+  previousElement: Element | null,
+  nextElement: Element | null
 ) => {
   //TODO: add support to passing nextElement and previousElement
 
   const currentAfterMargin = getMarginStyleByProperty(current, afterMargin);
   const currentBeforeMargin = getMarginStyleByProperty(current, beforeMargin);
-  const nextElement = current.nextElementSibling as HTMLElement;
-  let nextBeforeMargin = getMarginStyleByProperty(nextElement, beforeMargin);
+  const nextHTMLElement = nextElement as HTMLElement;
+  let nextBeforeMargin = getMarginStyleByProperty(
+    nextHTMLElement,
+    beforeMargin
+  );
 
   let afterSpace = currentAfterMargin;
   let beforeScace = currentBeforeMargin;
@@ -564,10 +587,10 @@ const calculateWhileDragging = (
     return space + beforeScace + afterSpace + gap;
   }
   afterSpace = Math.max(nextBeforeMargin, currentAfterMargin);
-  const previousElement = current.previousElementSibling as HTMLElement;
-  if (previousElement) {
+  const previousHTMLElement = previousElement as HTMLElement;
+  if (previousHTMLElement) {
     const previousAfterMargin = getMarginStyleByProperty(
-      previousElement,
+      previousHTMLElement,
       afterMargin
     );
     beforeScace = Math.max(previousAfterMargin, currentBeforeMargin);
