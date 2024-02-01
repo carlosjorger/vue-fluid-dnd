@@ -106,7 +106,11 @@ onMounted(() => {
         }
         if (targetIndex === index) {
           if (childRef.value) {
-            moveTranslate(element, sourceElementTranlation.height, 0);
+            moveTranslate(
+              element,
+              sourceElementTranlation.height,
+              sourceElementTranlation.width
+            );
             setTimeout(() => {
               eventBus.emit(DROP_EVENT, {
                 droppableId,
@@ -119,14 +123,16 @@ onMounted(() => {
                   index: targetIndex,
                 }
               );
-            }, 2000);
+            }, duration);
           }
         }
       }
     }
   );
-  eventBus.on(DROP_EVENT, () => {
-    removeTranslateWhitoutTransition();
+  eventBus.on(DROP_EVENT, ({ droppableId: droppableIdEvent }) => {
+    if (droppableIdEvent === droppableId) {
+      removeTranslateWhitoutTransition();
+    }
   });
 });
 const removeTranslateWhitoutTransition = () => {
@@ -392,6 +398,21 @@ const emitDroppingEventToSiblings = (
 ) => {
   const allSiblings = siblings.toReversed();
   allSiblings.splice(elementPosition, 0, draggedElement);
+  if (elementPosition <= actualIndex.value) {
+    translation = calculateInitialTranslation(
+      draggedElement,
+      event,
+      allSiblings[actualIndex.value],
+      allSiblings[actualIndex.value + 1]
+    );
+  } else {
+    translation = calculateInitialTranslation(
+      draggedElement,
+      event,
+      allSiblings[actualIndex.value - 1],
+      allSiblings[actualIndex.value]
+    );
+  }
   for (const [index, sibling] of siblings.toReversed().entries()) {
     const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
     let newTranslation = translation;
@@ -566,8 +587,6 @@ const calculateWhileDragging = (
   previousElement: Element | null,
   nextElement: Element | null
 ) => {
-  //TODO: add support to passing nextElement and previousElement
-
   const currentAfterMargin = getMarginStyleByProperty(current, afterMargin);
   const currentBeforeMargin = getMarginStyleByProperty(current, beforeMargin);
   const nextHTMLElement = nextElement as HTMLElement;
@@ -607,13 +626,12 @@ const onDropDraggingEvent = (event: MouseEvent) => {
   const element = event.target as HTMLElement;
   removeDraggingStyles(element);
   emitEventToSiblings(element, START_DROP_EVENT);
-  // setTimeout(() => {
-  //   emitEventToSiblings(element, DROP_EVENT);
-  //   element.style.position = "";
-  //   element.style.zIndex = "";
-  //   element.style.transform = "";
-  //   element.style.transition = "";
-  // }, duration);
+  setTimeout(() => {
+    element.style.position = "";
+    element.style.zIndex = "";
+    element.style.transform = "";
+    element.style.transition = "";
+  }, duration);
 };
 const removeDraggingStyles = (element: HTMLElement) => {
   setTranistion(element, duration);
@@ -657,5 +675,4 @@ watch(
   cursor: v-bind("computedCursor");
 }
 </style>
-<!-- TODO: fix animation of the current dragged element after drop it -->
 <!-- TODO: refactor -->
