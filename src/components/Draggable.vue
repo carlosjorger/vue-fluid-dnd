@@ -395,38 +395,43 @@ const emitDroppingEventToSiblings = (
 ) => {
   const allSiblings = siblings.toReversed();
   allSiblings.splice(elementPosition, 0, draggedElement);
-  if (elementPosition < actualIndex.value) {
+
+  const isOutside = draggableIsOutside(draggedElement);
+
+  const targetIndex = isOutside ? elementPosition : actualIndex.value;
+
+  if (elementPosition < targetIndex) {
     translation = calculateInitialTranslation(
       draggedElement,
       event,
-      allSiblings[actualIndex.value],
-      allSiblings[actualIndex.value + 1]
+      allSiblings[targetIndex],
+      allSiblings[targetIndex + 1]
     );
-  } else if (elementPosition > actualIndex.value) {
+  } else if (elementPosition > targetIndex) {
     translation = calculateInitialTranslation(
       draggedElement,
       event,
-      allSiblings[actualIndex.value - 1],
-      allSiblings[actualIndex.value]
+      allSiblings[targetIndex - 1],
+      allSiblings[targetIndex]
     );
   } else {
     translation = calculateInitialTranslation(
       draggedElement,
       event,
-      allSiblings[actualIndex.value - 1],
-      allSiblings[actualIndex.value + 1]
+      allSiblings[targetIndex - 1],
+      allSiblings[targetIndex + 1]
     );
   }
   for (const [index, sibling] of siblings.toReversed().entries()) {
     const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
     let newTranslation = translation;
-    if (actualIndex.value - 1 >= index) {
+    if (targetIndex - 1 >= index) {
       newTranslation = { height: 0, width: 0 };
     }
     const draggableTranslation = calculateRangeWhileDraggingByDirection(
       allSiblings,
       elementPosition,
-      actualIndex.value,
+      targetIndex,
       direction
     );
     emitEventBus(
@@ -434,7 +439,7 @@ const emitDroppingEventToSiblings = (
       newTranslation,
       siblingDraggableId,
       elementPosition,
-      actualIndex.value,
+      targetIndex,
       draggableTranslation
     );
   }
@@ -592,5 +597,5 @@ watch(
   cursor: v-bind("computedCursor");
 }
 </style>
-<!-- TODO: fix when is dropped outside element go to last index -->
+<!-- TODO: fix dragged calculateRangeWhileDragging from 3 to 0 index -->
 <!-- TODO: refactor -->
