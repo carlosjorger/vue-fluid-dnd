@@ -96,9 +96,12 @@ onMounted(() => {
           return;
         }
         if (sourceIndex === targetIndex) {
-          return;
-        }
-        if (targetIndex === index) {
+          setTimeout(() => {
+            eventBus.emit(DROP_EVENT, {
+              droppableId,
+            });
+          }, duration);
+        } else if (targetIndex === index) {
           if (childRef.value) {
             moveTranslate(
               element,
@@ -392,19 +395,26 @@ const emitDroppingEventToSiblings = (
 ) => {
   const allSiblings = siblings.toReversed();
   allSiblings.splice(elementPosition, 0, draggedElement);
-  if (elementPosition <= actualIndex.value) {
+  if (elementPosition < actualIndex.value) {
     translation = calculateInitialTranslation(
       draggedElement,
       event,
       allSiblings[actualIndex.value],
       allSiblings[actualIndex.value + 1]
     );
-  } else {
+  } else if (elementPosition > actualIndex.value) {
     translation = calculateInitialTranslation(
       draggedElement,
       event,
       allSiblings[actualIndex.value - 1],
       allSiblings[actualIndex.value]
+    );
+  } else {
+    translation = calculateInitialTranslation(
+      draggedElement,
+      event,
+      allSiblings[actualIndex.value - 1],
+      allSiblings[actualIndex.value + 1]
     );
   }
   for (const [index, sibling] of siblings.toReversed().entries()) {
@@ -582,6 +592,5 @@ watch(
   cursor: v-bind("computedCursor");
 }
 </style>
-<!-- TODO: fix when is dropped in the same position -->
 <!-- TODO: fix when is dropped outside element go to last index -->
 <!-- TODO: refactor -->
