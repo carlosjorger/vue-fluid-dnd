@@ -553,6 +553,7 @@ const removeDraggingStyles = (element: HTMLElement) => {
 
 const setDraggingStyles = (element: HTMLElement) => {
   fixSizeStyle(element);
+  // TODO: use fixed instead
   element.style.position = "absolute";
   element.style.zIndex = "5000";
   element.style.transition = "";
@@ -582,7 +583,5 @@ watch(
 );
 </script>
 <style></style>
-<!-- TODO: finish the case of gaps -->
 <!-- TODO: finish the case of columnar list -->
-<!-- TODO: remove flashing of elements -->
 <!-- TODO: refactor -->

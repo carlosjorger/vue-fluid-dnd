@@ -14,4 +14,4 @@ provide("direction", direction);
 provide("droppableId", droppableId);
 provide("onDrop", onDrop);
 </script>
-<!-- TODO: keep working in Droppable -->
+<!-- TODO: create and default onDrop and use dropDraggingElementsBetween if is passed a list -->

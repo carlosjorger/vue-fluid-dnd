@@ -260,7 +260,6 @@ const onDrop = (
   background-color: darkgray;
   display: inline-block;
   overflow: hidden;
-  display: block;
   display: flex;
   flex-direction: column;
   gap: 5px;
