@@ -1,13 +1,6 @@
 <template><slot :set-ref="setSlotRef"></slot></template>
 <script setup lang="ts">
-import {
-  ComponentPublicInstance,
-  computed,
-  inject,
-  onMounted,
-  ref,
-  watch,
-} from "vue";
+import { ComponentPublicInstance, inject, onMounted, ref, watch } from "vue";
 import eventBus from "@/utils/EventBus";
 import { Direction, DraggableElement } from "../../index.ts";
 import {
@@ -140,6 +133,9 @@ const removeTranslateWhitoutTransition = () => {
 };
 const setSlotRef = <_>(el: RefElement<_>) => {
   childRef.value = el as HTMLElement;
+  if (childRef.value) {
+    childRef.value.style.cursor = "grab";
+  }
 };
 
 const setSlotRefElementParams = (element: HTMLElement | undefined) => {
@@ -218,6 +214,7 @@ const onmousedown = (event: MouseEvent) => {
     document.removeEventListener("mousemove", handlerMousemove, false);
     return;
   }
+  element.style.cursor = "grabbing";
   style.value = element.style.cssText;
   const { offsetX, offsetY, pageY, pageX } = event;
   dragging.value = true;
@@ -546,6 +543,7 @@ const onDropDraggingEvent = (event: MouseEvent) => {
     element.style.zIndex = "";
     element.style.transform = "";
     element.style.transition = "";
+    element.style.cursor = "grab";
   }, duration);
 };
 const removeDraggingStyles = (element: HTMLElement) => {
@@ -559,8 +557,6 @@ const setDraggingStyles = (element: HTMLElement) => {
   element.style.zIndex = "5000";
   element.style.transition = "";
 };
-
-const computedCursor = computed(() => (dragging.value ? "grabbing" : "grab"));
 
 watch(childRef, (element) => {
   setSlotRefElementParams(element);
@@ -585,10 +581,8 @@ watch(
   { deep: true }
 );
 </script>
-<style>
-.draggable {
-  cursor: v-bind("computedCursor");
-}
-</style>
-<!-- TODO: fix dragged calculateRangeWhileDragging from 3 to 0 index -->
+<style></style>
+<!-- TODO: finish the case of gaps -->
+<!-- TODO: finish the case of columnar list -->
+<!-- TODO: remove flashing of elements -->
 <!-- TODO: refactor -->
