@@ -400,28 +400,21 @@ const emitDroppingEventToSiblings = (
 
   const targetIndex = isOutside ? elementPosition : actualIndex.value;
 
+  let previousElement = allSiblings[targetIndex - 1];
+  let nextElement = allSiblings[targetIndex + 1];
   if (elementPosition < targetIndex) {
-    translation = calculateInitialTranslation(
-      draggedElement,
-      event,
-      allSiblings[targetIndex],
-      allSiblings[targetIndex + 1]
-    );
+    previousElement = allSiblings[targetIndex];
+    nextElement = allSiblings[targetIndex + 1];
   } else if (elementPosition > targetIndex) {
-    translation = calculateInitialTranslation(
-      draggedElement,
-      event,
-      allSiblings[targetIndex - 1],
-      allSiblings[targetIndex]
-    );
-  } else {
-    translation = calculateInitialTranslation(
-      draggedElement,
-      event,
-      allSiblings[targetIndex - 1],
-      allSiblings[targetIndex + 1]
-    );
+    previousElement = allSiblings[targetIndex - 1];
+    nextElement = allSiblings[targetIndex];
   }
+  translation = calculateInitialTranslation(
+    draggedElement,
+    event,
+    previousElement ?? null,
+    nextElement ?? null
+  );
   for (const [index, sibling] of siblings.toReversed().entries()) {
     const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
     let newTranslation = translation;

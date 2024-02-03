@@ -265,11 +265,8 @@ const calculateWhileDragging = (
 ) => {
   const currentAfterMargin = getMarginStyleByProperty(current, afterMargin);
   const currentBeforeMargin = getMarginStyleByProperty(current, beforeMargin);
-  const nextHTMLElement = nextElement as HTMLElement;
-  let nextBeforeMargin = getMarginStyleByProperty(
-    nextHTMLElement,
-    beforeMargin
-  );
+
+  let nextBeforeMargin = getMarginStyleByProperty(nextElement, beforeMargin);
 
   let afterSpace = currentAfterMargin;
   let beforeScace = currentBeforeMargin;
@@ -283,10 +280,9 @@ const calculateWhileDragging = (
     return space + beforeScace + afterSpace + gap;
   }
   afterSpace = Math.max(nextBeforeMargin, currentAfterMargin);
-  const previousHTMLElement = previousElement as HTMLElement;
-  if (previousHTMLElement) {
+  if (previousElement) {
     const previousAfterMargin = getMarginStyleByProperty(
-      previousHTMLElement,
+      previousElement,
       afterMargin
     );
     beforeScace = Math.max(previousAfterMargin, currentBeforeMargin);
