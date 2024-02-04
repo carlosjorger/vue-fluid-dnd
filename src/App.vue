@@ -28,7 +28,44 @@ const colList1 = ref([
       "color: white; background-color: chocolate; padding: 10px; margin: 8px; width: 7%;",
   },
 ]);
-// TODO: create colList2
+const colList2 = ref([
+  {
+    "draggable-id": "h1",
+    number: 1,
+    style:
+      "color: white; background-color: red; padding: 30px; margin: 23px 0;",
+  },
+  {
+    "draggable-id": "h2",
+    number: 2,
+    style:
+      "color: white; background-color: blue; padding: 30px; margin: 12px; margin-right: 30px;",
+  },
+  {
+    "draggable-id": "h3",
+    number: 3,
+    style:
+      "color: white; background-color: blueviolet; padding: 10px; margin: 8px; height: 70px;",
+  },
+  {
+    "draggable-id": "h4",
+    number: 4,
+    style:
+      "color: white; background-color: chocolate; padding: 10px; margin: 8px; width: 7%;",
+  },
+  {
+    "draggable-id": "h5",
+    number: 5,
+    style:
+      "color: white; background-color: chocolate; padding: 10px; margin-left: 40px; width: 7%;",
+  },
+  {
+    "draggable-id": "h6",
+    number: 6,
+    style:
+      "color: white; background-color: chocolate; padding: 10px; margin-left: 40px; width: 7%;",
+  },
+]);
 const list1 = ref([
   {
     "draggable-id": "1",
@@ -104,90 +141,14 @@ const list2 = ref([
       </Draggable>
     </div>
   </Droppable>
-  <Droppable droppable-id="2" direction="horizontal">
-    <div style="width: 30%; overflow: auto; display: flex; flex-direction: row">
-      <Draggable draggable-id="h1" :index="0" v-slot="{ setRef }">
-        <div
-          :ref="setRef"
-          style="
-            color: white;
-            background-color: red;
-            padding: 30px;
-            margin: 23px 0;
-          "
-        >
-          1
-        </div>
-      </Draggable>
-      <Draggable draggable-id="h2" :index="1" v-slot="{ setRef }">
-        <div
-          :ref="setRef"
-          style="
-            color: white;
-            background-color: blue;
-            padding: 30px;
-            margin: 12px;
-            margin-right: 30px;
-          "
-        >
-          2
-        </div>
-      </Draggable>
-      <Draggable draggable-id="h3" :index="2" v-slot="{ setRef }">
-        <div
-          :ref="setRef"
-          style="
-            color: white;
-            background-color: blueviolet;
-            padding: 10px;
-            margin: 8px;
-            height: 70px;
-          "
-        >
-          3
-        </div>
-      </Draggable>
-      <Draggable draggable-id="h4" :index="3" v-slot="{ setRef }">
-        <div
-          :ref="setRef"
-          style="
-            color: white;
-            background-color: chocolate;
-            padding: 10px;
-            margin: 8px;
-            width: 7%;
-          "
-        >
-          4
-        </div>
-      </Draggable>
-      <Draggable draggable-id="h5" :index="4" v-slot="{ setRef }">
-        <div
-          :ref="setRef"
-          style="
-            color: white;
-            background-color: chocolate;
-            padding: 10px;
-            margin-left: 40px;
-            width: 7%;
-          "
-        >
-          5
-        </div>
-      </Draggable>
-      <Draggable draggable-id="h6" :index="5" v-slot="{ setRef }">
-        <div
-          :ref="setRef"
-          style="
-            color: white;
-            background-color: chocolate;
-            padding: 10px;
-            margin-left: 40px;
-            width: 7%;
-          "
-        >
-          6
-        </div>
+  <Droppable droppable-id="2" direction="horizontal" :items="colList2">
+    <div style="display: flex; flex-direction: row">
+      <Draggable
+        v-for="(element, index) in colList2"
+        v-slot="{ setRef }"
+        :draggable-id="element['draggable-id']"
+        :index="index"
+        ><div :ref="setRef" :style="element.style">{{ element.number }}</div>
       </Draggable>
     </div>
   </Droppable>
