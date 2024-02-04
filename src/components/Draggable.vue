@@ -52,7 +52,7 @@ const duration = 200;
 
 let childRef = ref<HTMLElement>();
 const actualIndex = ref(index);
-// TODO: improve mitter
+// TODO: improve mitter https://dev.to/razi91/event-bus-with-vue-3-and-typescript-2a6l
 onMounted(() => {
   eventBus.on(
     DRAG_EVENT,
