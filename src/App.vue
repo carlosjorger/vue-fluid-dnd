@@ -1,9 +1,34 @@
 <script setup lang="ts">
-import { Ref, ref } from "vue";
+import { ref } from "vue";
 import Draggable from "./components/Draggable.vue";
 import Droppable from "./components/Droppable.vue";
-import { dropDraggingElementsBetween } from "./utils/DropMethods";
-import { DraggableElement } from "../index";
+
+const colList1 = ref([
+  {
+    "draggable-id": "h1",
+    number: 1,
+    style: "color: white; background-color: red; width: 50px; margin: 23px 0;",
+  },
+  {
+    "draggable-id": "h2",
+    number: 2,
+    style:
+      "color: white; background-color: blue; padding: 30px; margin: 12px; margin-right: 30px;",
+  },
+  {
+    "draggable-id": "h3",
+    number: 3,
+    style:
+      "color: white; background-color: blueviolet; padding: 10px; margin: 8px; height: 70px;",
+  },
+  {
+    "draggable-id": "h4",
+    number: 4,
+    style:
+      "color: white; background-color: chocolate; padding: 10px; margin: 8px; width: 7%;",
+  },
+]);
+// TODO: create colList2
 const list1 = ref([
   {
     "draggable-id": "1",
@@ -66,64 +91,16 @@ const list2 = ref([
 </script>
 
 <template>
-  <Droppable droppable-id="1" direction="horizontal">
+  <Droppable droppable-id="1" direction="horizontal" :items="colList1">
     <div
       style="width: 80%; display: flex; flex-direction: row; column-gap: 10%"
     >
-      <Draggable draggable-id="h1" :index="0" v-slot="{ setRef }">
-        <div
-          :ref="setRef"
-          style="
-            color: white;
-            background-color: red;
-            width: 50px;
-            margin: 23px 0;
-          "
-        >
-          1
-        </div>
-      </Draggable>
-      <Draggable draggable-id="h2" :index="1" v-slot="{ setRef }">
-        <div
-          :ref="setRef"
-          style="
-            color: white;
-            background-color: blue;
-            padding: 30px;
-            margin: 12px;
-            margin-right: 30px;
-          "
-        >
-          2
-        </div>
-      </Draggable>
-      <Draggable draggable-id="h3" :index="2" v-slot="{ setRef }">
-        <div
-          :ref="setRef"
-          style="
-            color: white;
-            background-color: blueviolet;
-            padding: 10px;
-            margin: 8px;
-            height: 70px;
-          "
-        >
-          3
-        </div>
-      </Draggable>
-      <Draggable draggable-id="h4" :index="3" v-slot="{ setRef }">
-        <div
-          :ref="setRef"
-          style="
-            color: white;
-            background-color: chocolate;
-            padding: 10px;
-            margin: 8px;
-            width: 7%;
-          "
-        >
-          4
-        </div>
+      <Draggable
+        v-for="(element, index) in colList1"
+        v-slot="{ setRef }"
+        :draggable-id="element['draggable-id']"
+        :index="index"
+        ><div :ref="setRef" :style="element.style">{{ element.number }}</div>
       </Draggable>
     </div>
   </Droppable>
