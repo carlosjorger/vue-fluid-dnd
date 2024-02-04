@@ -63,25 +63,10 @@ const list2 = ref([
       "color: white; background-color: brown; padding: 26px 0; margin: 27px;",
   },
 ]);
-const defaultOnDrop = (
-  source: DraggableElement,
-  destination: DraggableElement
-) => {};
-const onDrop = (
-  list: {
-    "draggable-id": string;
-    number: number;
-    style: string;
-  }[]
-) => {
-  return (source: DraggableElement, destination: DraggableElement) => {
-    dropDraggingElementsBetween(ref(list), source, destination);
-  };
-};
 </script>
 
 <template>
-  <Droppable droppable-id="1" direction="horizontal" :onDrop="defaultOnDrop">
+  <Droppable droppable-id="1" direction="horizontal">
     <div
       style="width: 80%; display: flex; flex-direction: row; column-gap: 10%"
     >
@@ -142,7 +127,7 @@ const onDrop = (
       </Draggable>
     </div>
   </Droppable>
-  <Droppable droppable-id="2" direction="horizontal" :onDrop="defaultOnDrop">
+  <Droppable droppable-id="2" direction="horizontal">
     <div style="width: 30%; overflow: auto; display: flex; flex-direction: row">
       <Draggable draggable-id="h1" :index="0" v-slot="{ setRef }">
         <div
@@ -230,7 +215,7 @@ const onDrop = (
     </div>
   </Droppable>
   <div style="display: flex; flex-direction: row; column-gap: 10px">
-    <Droppable droppable-id="3" direction="vertical" :onDrop="onDrop(list1)">
+    <Droppable droppable-id="3" direction="vertical" :items="list1">
       <div style="width: 40%; background-color: darkgray; display: block">
         <Draggable
           v-for="(element, index) in list1"
@@ -241,7 +226,7 @@ const onDrop = (
         </Draggable>
       </div>
     </Droppable>
-    <Droppable droppable-id="4" direction="vertical" :onDrop="onDrop(list2)">
+    <Droppable droppable-id="4" direction="vertical" :items="list2">
       <div class="droppable-gaps">
         <Draggable
           v-for="(element, index) in list2"

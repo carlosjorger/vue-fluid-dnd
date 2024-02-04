@@ -1,17 +1,29 @@
 <template>
   <slot></slot>
 </template>
-<script setup lang="ts">
-import { provide } from "vue";
+<script setup lang="ts" generic="T">
+import { provide, ref, computed } from "vue";
 import { Direction, DraggableElement } from "../../index.ts";
-const { droppableId, direction, onDrop } = defineProps<{
+import { dropDraggingElementsBetween } from "../utils/DropMethods";
+
+const { droppableId, direction, onDrop, items } = defineProps<{
   droppableId: string;
   direction: Direction;
-  onDrop: (source: DraggableElement, destination: DraggableElement) => void;
+  onDrop?: (source: DraggableElement, destination: DraggableElement) => void;
+  items?: T[];
 }>();
-
+const currentOnDrop = computed(() => {
+  if (items) {
+    return (source: DraggableElement, destination: DraggableElement) => {
+      dropDraggingElementsBetween(ref(items), source, destination);
+    };
+  }
+  if (onDrop) {
+    return onDrop;
+  }
+  return () => {};
+});
 provide("direction", direction);
 provide("droppableId", droppableId);
-provide("onDrop", onDrop);
+provide("onDrop", currentOnDrop.value);
 </script>
-<!-- TODO: create and default onDrop and use dropDraggingElementsBetween if is passed a list -->
