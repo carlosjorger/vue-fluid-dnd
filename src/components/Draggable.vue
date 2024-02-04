@@ -582,6 +582,4 @@ watch(
   { deep: true }
 );
 </script>
-<style></style>
-<!-- TODO: finish the case of columnar list -->
 <!-- TODO: refactor -->

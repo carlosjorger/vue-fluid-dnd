@@ -124,14 +124,16 @@ export const calculateRangeWhileDragging = (
     : siblings.slice(firstIndex, secondIndex);
 
   const parentElement = sourceElement.parentElement as HTMLElement;
-  const gap = computeGapPixels(parentElement, gapStyle);
+
+  const { gap, hasGaps } = gapAndDisplayInformation(parentElement, gapStyle);
 
   const { beforeMargin, space, afterMargin } = spaceWithMargins(
     beforeMarginProp,
     afterMarginProp,
     spaceProp,
     siblingsBetween,
-    gap
+    gap,
+    hasGaps
   );
   const {
     beforeMargin: beforeMarginOutside,
@@ -143,7 +145,7 @@ export const calculateRangeWhileDragging = (
     sourceElement,
     targetElement?.previousElementSibling,
     isDraggedFoward,
-    gap
+    hasGaps
   );
   let beforeMarginCalc = Math.max(beforeMargin, afterMarginOutside);
   let afterMarginCalc = Math.max(afterMargin, beforeMarginOutside);
@@ -163,7 +165,7 @@ const getBeforeAfterMarginBaseOnDraggedDirection = (
   draggedElement: HTMLElement,
   previousElement: Element | null,
   isDraggedFoward: boolean,
-  gap: number
+  hasGaps: boolean
 ) => {
   if (isDraggedFoward) {
     return getBeforeAfterMargin(
@@ -171,7 +173,7 @@ const getBeforeAfterMarginBaseOnDraggedDirection = (
       afterMarginProp,
       draggedElement.previousElementSibling,
       draggedElement,
-      gap
+      hasGaps
     );
   } else {
     return getBeforeAfterMargin(
@@ -179,7 +181,7 @@ const getBeforeAfterMarginBaseOnDraggedDirection = (
       afterMarginProp,
       previousElement,
       draggedElement,
-      gap
+      hasGaps
     );
   }
 };
@@ -188,9 +190,9 @@ const getBeforeAfterMargin = (
   afterMarginProp: AfterMargin,
   previousElement: HTMLElement | Element | null,
   nextElement: HTMLElement | Element | null,
-  gap: number
+  hasGaps: boolean
 ) => {
-  if (gap > 0) {
+  if (hasGaps) {
     return {
       afterMargin: 0,
       beforeMargin: 0,
@@ -215,7 +217,8 @@ const spaceWithMargins = (
   afterMargin: AfterMargin,
   space: "width" | "height",
   siblings: HTMLElement[],
-  gap: number
+  gap: number,
+  hasGaps: boolean
 ) => {
   if (siblings.length == 0) {
     return {
@@ -231,11 +234,11 @@ const spaceWithMargins = (
   for (let index = 0; index < siblings.length; index++) {
     const sibling = siblings[index];
     const siblingSpace = sibling.getBoundingClientRect()[space];
-    if (gap > 0) {
+    if (hasGaps) {
       afterMarginCalc =
         afterMarginCalc + getMarginStyleByProperty(sibling, beforeMargin);
     }
-    if (gap > 0 && index > 0) {
+    if (hasGaps && index > 0) {
       afterMarginCalc += gap;
     } else {
       afterMarginCalc = Math.max(
@@ -295,6 +298,15 @@ export const calculateWhileDraggingByDirection = (
   }
   return { width, height };
 };
+const gapAndDisplayInformation = (element: HTMLElement, gapStyle: GapStyle) => {
+  const gap = computeGapPixels(element, gapStyle);
+  const display = window.getComputedStyle(element).display;
+  const hasGaps = gap > 0 || display === "flex";
+  return {
+    gap,
+    hasGaps,
+  };
+};
 const calculateWhileDragging = (
   current: HTMLElement,
   beforeMargin: BeforeMargin,
@@ -312,13 +324,11 @@ const calculateWhileDragging = (
   let afterSpace = currentAfterMargin;
   let beforeScace = currentBeforeMargin;
   let rest = nextBeforeMargin;
-  let gap = 0;
   const parentElement = current.parentElement as HTMLElement;
 
-  gap = computeGapPixels(parentElement, gapStyle);
+  const { gap, hasGaps } = gapAndDisplayInformation(parentElement, gapStyle);
 
-  const display = window.getComputedStyle(parentElement).display;
-  if (gap > 0 || display === "flex") {
+  if (hasGaps) {
     return space + beforeScace + afterSpace + gap;
   }
   afterSpace = Math.max(nextBeforeMargin, currentAfterMargin);
