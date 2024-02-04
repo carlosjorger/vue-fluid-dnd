@@ -142,7 +142,7 @@ const list2 = ref([
     </div>
   </Droppable>
   <Droppable droppable-id="2" direction="horizontal" :items="colList2">
-    <div style="display: flex; flex-direction: row">
+    <div style="width: 30%; overflow: auto; display: flex; flex-direction: row">
       <Draggable
         v-for="(element, index) in colList2"
         v-slot="{ setRef }"

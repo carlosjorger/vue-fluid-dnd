@@ -154,6 +154,8 @@ const setTransform = (
   const { innerWidth, innerHeight } = window;
   const elementXPosittion = pageX - offset.value.offsetX;
   const elementYPosition = pageY - offset.value.offsetY;
+  const { scrollX, scrollY } = window;
+
   let vertical: VerticalDirection = "up";
   let horizontal: HorizontalDirection = "left";
   if (
@@ -163,7 +165,8 @@ const setTransform = (
     const newTranslateX =
       elementXPosittion -
       position.value.left -
-      getMarginStyleByProperty(element, "marginLeft");
+      getMarginStyleByProperty(element, "marginLeft") -
+      scrollX;
     if (translate.value.x > newTranslateX) {
       horizontal = "left";
     } else if (translate.value.x < newTranslateX) {
@@ -180,7 +183,8 @@ const setTransform = (
     const newTranslateY =
       elementYPosition -
       position.value.top -
-      getMarginStyleByProperty(element, "marginTop");
+      getMarginStyleByProperty(element, "marginTop") -
+      scrollY;
     if (translate.value.y > newTranslateY) {
       vertical = "up";
     } else if (translate.value.y < newTranslateY) {
@@ -228,11 +232,13 @@ const onmousedown = (event: MouseEvent) => {
     top:
       pageY -
       offset.value.offsetY -
-      getMarginStyleByProperty(element, "marginTop"),
+      getMarginStyleByProperty(element, "marginTop") -
+      window.scrollY,
     left:
       pageX -
       offset.value.offsetX -
-      getMarginStyleByProperty(element, "marginLeft"),
+      getMarginStyleByProperty(element, "marginLeft") -
+      window.scrollX,
   };
   setDraggingStyles(element);
   setBorderBoxStyle(element);
@@ -553,8 +559,7 @@ const removeDraggingStyles = (element: HTMLElement) => {
 
 const setDraggingStyles = (element: HTMLElement) => {
   fixSizeStyle(element);
-  // TODO: use fixed instead
-  element.style.position = "absolute";
+  element.style.position = "fixed";
   element.style.zIndex = "5000";
   element.style.transition = "";
 };
@@ -583,3 +588,4 @@ watch(
 );
 </script>
 <!-- TODO: refactor -->
+<!-- TODO: implement auto scroll functionality-->

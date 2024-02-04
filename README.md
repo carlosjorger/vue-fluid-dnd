@@ -10,6 +10,7 @@
 - ✅ **Fully customizable**.
 - ✅ **Work with horizontal and vertical list**.
 - 🔲 **Fully tested, typed and reliable**.
+- 🔲 **Nice documentation and examples**.
 
 ## 🚀 Getting Started
 
