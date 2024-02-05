@@ -351,18 +351,13 @@ const updateActualIndexBaseOnTranslation = (
   },
   siblingIndex: number
 ) => {
-  if (direction === "vertical") {
-    if (translation.height == 0) {
-      actualIndex.value = Math.max(actualIndex.value, siblingIndex);
-    } else {
-      actualIndex.value = Math.min(actualIndex.value, siblingIndex - 1);
-    }
+  if (
+    (direction === "vertical" && translation.height == 0) ||
+    (direction === "horizontal" && translation.width == 0)
+  ) {
+    actualIndex.value = Math.max(actualIndex.value, siblingIndex);
   } else {
-    if (translation.width == 0) {
-      actualIndex.value = Math.max(actualIndex.value, siblingIndex);
-    } else {
-      actualIndex.value = Math.min(actualIndex.value, siblingIndex - 1);
-    }
+    actualIndex.value = Math.min(actualIndex.value, siblingIndex - 1);
   }
 };
 const canChangeDraggable = (
@@ -587,5 +582,6 @@ watch(
   { deep: true }
 );
 </script>
+<!-- TODO: remove magic strings -->
 <!-- TODO: refactor -->
 <!-- TODO: implement auto scroll functionality-->

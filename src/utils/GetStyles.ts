@@ -77,7 +77,7 @@ export const calculateRangeWhileDraggingByDirection = (
   siblings: HTMLElement[],
   sourceIndex: number,
   targetIndex: number,
-  direction: Direction | undefined
+  direction?: Direction
 ) => {
   let height = 0;
   let width = 0;
@@ -269,7 +269,7 @@ export const calculateWhileDraggingByDirection = (
   current: HTMLElement,
   previousElement: Element | null,
   nextElement: Element | null,
-  direction: Direction | undefined
+  direction?: Direction
 ) => {
   let height = 0;
   let width = 0;

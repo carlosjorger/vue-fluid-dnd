@@ -4,13 +4,13 @@ type Events = {
     height: number;
     width: number;
     draggableIdEvent: string;
-    droppableId: string | undefined;
+    droppableId?: string;
   };
   startDrop: {
     height: number;
     width: number;
     draggableIdEvent: string;
-    droppableId: string | undefined;
+    droppableId?: string;
     sourceIndex: number;
     targetIndex: number;
     element: HTMLElement;
@@ -20,13 +20,13 @@ type Events = {
     };
   };
   drop: {
-    droppableId: string | undefined;
+    droppableId?: string;
   };
   startDrag: {
     height: number;
     width: number;
     draggableIdEvent: string;
-    droppableId: string | undefined;
+    droppableId?: string;
   };
 };
 export default mitt<Events>();
