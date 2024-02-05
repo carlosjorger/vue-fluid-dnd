@@ -2,7 +2,7 @@
 
 ## 👋 Introduction
 
-**Juicy** and **versatil** drag and drop for lists with Vue.
+**Juicy**, **smooth** and **versatil** drag and drop for lists with Vue.
 
 ## ✨ Features
 
@@ -14,7 +14,7 @@
 
 ## 🚀 Getting Started
 
-1. **Install Superkey:**
+1. **Install vue3-juice-dnd:**
 
    ```bash
    # with npm:
