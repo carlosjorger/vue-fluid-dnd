@@ -21,20 +21,23 @@ const { draggableId, index } = defineProps<{
   draggableId: string;
   index: number;
 }>();
-
+const DRAGGABLE_ID_ATTR = "draggable-id";
+const MOUSEMOVE_EVENT = "mousemove";
+const DRAG_EVENT = "drag";
+const START_DRAG_EVENT = "startDrag";
+const START_DROP_EVENT = "startDrop";
+const DROP_EVENT = "drop";
+const GRAB_CURSOR = "grab";
+const GRABBING_CURSOR = "grabbing";
 type RefElement<T> = Element | ComponentPublicInstance<T> | null;
-type DraggingEvent = "drag" | "startDrag";
-type DragEvent = DraggingEvent | "drop" | "startDrop";
-type VerticalDirection = "up" | "down" | "quiet";
+type DraggingEvent = typeof DRAG_EVENT | typeof START_DRAG_EVENT;
+type DragEvent = DraggingEvent | typeof DROP_EVENT | typeof START_DROP_EVENT;
+type VerticalDirection = "top" | "down" | "quiet";
 type HorizontalDirection = "left" | "right" | "quiet";
 type MouseDirection = {
   vertical: VerticalDirection;
   horizontal: HorizontalDirection;
 };
-const START_DRAG_EVENT = "startDrag";
-const DRAG_EVENT = "drag";
-const START_DROP_EVENT = "startDrop";
-const DROP_EVENT = "drop";
 
 const style = ref("");
 const position = ref({ top: 0, left: 0 });
@@ -95,26 +98,24 @@ onMounted(() => {
             });
           }, duration);
         } else if (targetIndex === index) {
-          if (childRef.value) {
-            moveTranslate(
-              element,
-              sourceElementTranlation.height,
-              sourceElementTranlation.width
+          moveTranslate(
+            element,
+            sourceElementTranlation.height,
+            sourceElementTranlation.width
+          );
+          setTimeout(() => {
+            eventBus.emit(DROP_EVENT, {
+              droppableId,
+            });
+            onDrop(
+              {
+                index: sourceIndex,
+              },
+              {
+                index: targetIndex,
+              }
             );
-            setTimeout(() => {
-              eventBus.emit(DROP_EVENT, {
-                droppableId,
-              });
-              onDrop(
-                {
-                  index: sourceIndex,
-                },
-                {
-                  index: targetIndex,
-                }
-              );
-            }, duration);
-          }
+          }, duration);
         }
       }
     }
@@ -134,7 +135,7 @@ const removeTranslateWhitoutTransition = () => {
 const setSlotRef = <_>(el: RefElement<_>) => {
   childRef.value = el as HTMLElement;
   if (childRef.value) {
-    childRef.value.style.cursor = "grab";
+    childRef.value.style.cursor = GRAB_CURSOR;
   }
 };
 
@@ -142,7 +143,7 @@ const setSlotRefElementParams = (element: HTMLElement | undefined) => {
   if (element) {
     element.classList.add("draggable");
     element.onmousedown = onmousedown;
-    element.setAttribute("draggable-id", draggableId);
+    element.setAttribute(DRAGGABLE_ID_ATTR, draggableId);
   }
 };
 const setTransform = (
@@ -156,7 +157,7 @@ const setTransform = (
   const elementYPosition = pageY - offset.value.offsetY;
   const { scrollX, scrollY } = window;
 
-  let vertical: VerticalDirection = "up";
+  let vertical: VerticalDirection = "top";
   let horizontal: HorizontalDirection = "left";
   if (
     elementXPosittion >= -width / 2 &&
@@ -186,7 +187,7 @@ const setTransform = (
       getMarginStyleByProperty(element, "marginTop") -
       scrollY;
     if (translate.value.y > newTranslateY) {
-      vertical = "up";
+      vertical = "top";
     } else if (translate.value.y < newTranslateY) {
       vertical = "down";
     } else {
@@ -215,12 +216,13 @@ const onmousedown = (event: MouseEvent) => {
 
   if (dragging.value) {
     onDropDraggingEvent(event);
-    document.removeEventListener("mousemove", handlerMousemove, false);
+    document.removeEventListener(MOUSEMOVE_EVENT, handlerMousemove, false);
     return;
   }
-  element.style.cursor = "grabbing";
+  element.style.cursor = GRABBING_CURSOR;
   style.value = element.style.cssText;
   const { offsetX, offsetY, pageY, pageX } = event;
+  const { scrollY, scrollX } = window;
   dragging.value = true;
   offset.value = { offsetX, offsetY };
   emitEventToSiblings(element, START_DRAG_EVENT, {
@@ -233,22 +235,22 @@ const onmousedown = (event: MouseEvent) => {
       pageY -
       offset.value.offsetY -
       getMarginStyleByProperty(element, "marginTop") -
-      window.scrollY,
+      scrollY,
     left:
       pageX -
       offset.value.offsetX -
       getMarginStyleByProperty(element, "marginLeft") -
-      window.scrollX,
+      scrollX,
   };
   setDraggingStyles(element);
   setBorderBoxStyle(element);
   setTransform(element, pageX, pageY);
 
-  document.addEventListener("mousemove", handlerMousemove);
+  document.addEventListener(MOUSEMOVE_EVENT, handlerMousemove);
   if (element) {
     assignOnmouseup(element, (event: MouseEvent) => {
       onmouseup(event);
-      document.removeEventListener("mousemove", handlerMousemove);
+      document.removeEventListener(MOUSEMOVE_EVENT, handlerMousemove);
       assignOnmouseup(element, null);
     });
   }
@@ -302,7 +304,7 @@ const emitDraggingEventToSiblings = (
     width: currentWidth,
   } = draggedElement.getBoundingClientRect();
   for (const [index, sibling] of siblings.entries()) {
-    const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
+    const siblingDraggableId = sibling.getAttribute(DRAGGABLE_ID_ATTR) ?? "";
     if (!isOutside) {
       const {
         top: siblingTop,
@@ -313,7 +315,7 @@ const emitDraggingEventToSiblings = (
       if (direction === "vertical") {
         translation = canChangeDraggable(
           () => mouseDirection.vertical === "down",
-          () => mouseDirection.vertical === "up",
+          () => mouseDirection.vertical === "top",
           currentTop,
           currentHeight,
           siblingTop,
@@ -392,6 +394,7 @@ const emitDroppingEventToSiblings = (
   }
 ) => {
   const allSiblings = siblings.toReversed();
+
   allSiblings.splice(elementPosition, 0, draggedElement);
 
   const isOutside = draggableIsOutside(draggedElement);
@@ -414,7 +417,7 @@ const emitDroppingEventToSiblings = (
     nextElement ?? null
   );
   for (const [index, sibling] of siblings.toReversed().entries()) {
-    const siblingDraggableId = sibling.getAttribute("draggable-id") ?? "";
+    const siblingDraggableId = sibling.getAttribute(DRAGGABLE_ID_ATTR) ?? "";
     let newTranslation = translation;
     if (targetIndex - 1 >= index) {
       newTranslation = { height: 0, width: 0 };
@@ -520,7 +523,7 @@ const calculateInitialTranslation = (
     direction
   );
   const intersection = draggableIsOutside(current);
-  if (intersection && event == "drag") {
+  if (intersection && event == DRAG_EVENT) {
     height = 0;
     width = 0;
   }
@@ -544,7 +547,7 @@ const onDropDraggingEvent = (event: MouseEvent) => {
     element.style.zIndex = "";
     element.style.transform = "";
     element.style.transition = "";
-    element.style.cursor = "grab";
+    element.style.cursor = GRAB_CURSOR;
   }, duration);
 };
 const removeDraggingStyles = (element: HTMLElement) => {
@@ -582,6 +585,6 @@ watch(
   { deep: true }
 );
 </script>
-<!-- TODO: remove magic strings -->
 <!-- TODO: refactor -->
+<!-- TODO: remove flashing of elements -->
 <!-- TODO: implement auto scroll functionality-->
