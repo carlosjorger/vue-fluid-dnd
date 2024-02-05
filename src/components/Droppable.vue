@@ -5,6 +5,7 @@
 import { provide, ref, computed } from "vue";
 import { Direction, DraggableElement } from "../../index.ts";
 import { dropDraggingElementsBetween } from "@/utils/DropMethods";
+import { LocalEventBus, createEventBus } from "@/utils/EventBus";
 
 const { droppableId, direction, onDrop, items } = defineProps<{
   droppableId: string;
@@ -23,6 +24,10 @@ const currentOnDrop = computed(() => {
   }
   return () => {};
 });
+
+const localBus = createEventBus();
+
+provide(LocalEventBus, localBus);
 provide("direction", direction);
 provide("droppableId", droppableId);
 provide("onDrop", currentOnDrop.value);

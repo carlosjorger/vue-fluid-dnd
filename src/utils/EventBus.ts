@@ -1,5 +1,5 @@
 import mitt, { Emitter } from "mitt";
-import { onUnmounted } from "vue";
+import { InjectionKey, inject, onUnmounted } from "vue";
 type Events = {
   drag: {
     height: number;
@@ -35,25 +35,27 @@ type EventHandlers<T extends Record<string, unknown>> = {
   [K in keyof T]: (event: T[K]) => void;
 };
 
-function useMittEvents<T extends Record<string, unknown>>(
-  mitt: Emitter<T>,
+export function useMittEvents<T extends Record<string, unknown>>(
+  mitt: Emitter<T> | undefined,
   handlers: EventHandlers<T>
 ) {
+  if (mitt === undefined) {
+    throw new Error("No event bus found within this context");
+  }
   for (const key of Object.keys(handlers)) {
     mitt.on(key, handlers[key]);
   }
   function cleanup() {
     for (const key of Object.keys(handlers)) {
-      mitt.off(key, handlers[key]);
+      mitt?.off(key, handlers[key]);
     }
   }
   onUnmounted(cleanup);
   return cleanup;
 }
 
-function wrapEventBus<T extends Record<string, unknown>>(mitt: Emitter<T>) {
-  return (ev: EventHandlers<T>) => useMittEvents(mitt, ev);
-}
-
-export const eventBus = mitt<Events>();
-export const useMyEvents = wrapEventBus(eventBus);
+export const LocalEventBus: InjectionKey<Emitter<Events>> =
+  Symbol("myEventBus");
+export const createEventBus = () => {
+  return mitt<Events>();
+};

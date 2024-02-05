@@ -1,7 +1,7 @@
 <template><slot :set-ref="setSlotRef"></slot></template>
 <script setup lang="ts">
 import { ComponentPublicInstance, inject, onMounted, ref, watch } from "vue";
-import { eventBus, useMyEvents } from "@/utils/EventBus";
+import { LocalEventBus, useMittEvents } from "@/utils/EventBus";
 import { Direction, DraggableElement } from "../../index.ts";
 import {
   setBorderBoxStyle,
@@ -55,9 +55,9 @@ const duration = 200;
 
 let childRef = ref<HTMLElement>();
 const actualIndex = ref(index);
-// TODO: improve mitter https://dev.to/razi91/event-bus-with-vue-3-and-typescript-2a6l
+const eventBus = inject(LocalEventBus);
 onMounted(() => {
-  useMyEvents({
+  useMittEvents(eventBus, {
     drag: ({
       height,
       width,
@@ -86,7 +86,7 @@ onMounted(() => {
         }
         if (sourceIndex === targetIndex) {
           setTimeout(() => {
-            eventBus.emit(DROP_EVENT, {
+            eventBus?.emit(DROP_EVENT, {
               droppableId,
             });
           }, duration);
@@ -97,7 +97,7 @@ onMounted(() => {
             sourceElementTranlation.width
           );
           setTimeout(() => {
-            eventBus.emit(DROP_EVENT, {
+            eventBus?.emit(DROP_EVENT, {
               droppableId,
             });
             onDrop(
@@ -462,7 +462,7 @@ const emitEventBus = (
     sourceElementTranlation !== undefined &&
     childRef.value
   ) {
-    eventBus.emit(event, {
+    eventBus?.emit(event, {
       droppableId,
       draggableIdEvent,
       ...tranlation,
@@ -472,7 +472,7 @@ const emitEventBus = (
       sourceElementTranlation,
     });
   } else {
-    eventBus.emit(event, {
+    eventBus?.emit(event, {
       droppableId,
       draggableIdEvent,
       ...tranlation,
