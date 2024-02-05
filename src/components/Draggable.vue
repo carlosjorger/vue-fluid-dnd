@@ -1,7 +1,7 @@
 <template><slot :set-ref="setSlotRef"></slot></template>
 <script setup lang="ts">
 import { ComponentPublicInstance, inject, onMounted, ref, watch } from "vue";
-import eventBus from "@/utils/EventBus";
+import { eventBus, useMyEvents } from "@/utils/EventBus";
 import { Direction, DraggableElement } from "../../index.ts";
 import {
   setBorderBoxStyle,
@@ -57,26 +57,19 @@ let childRef = ref<HTMLElement>();
 const actualIndex = ref(index);
 // TODO: improve mitter https://dev.to/razi91/event-bus-with-vue-3-and-typescript-2a6l
 onMounted(() => {
-  eventBus.on(
-    DRAG_EVENT,
-    ({ height, width, draggableIdEvent, droppableId: droppableIdEvent }) => {
+  useMyEvents({
+    drag: ({
+      height,
+      width,
+      draggableIdEvent,
+      droppableId: droppableIdEvent,
+    }) => {
       if (draggableId == draggableIdEvent && droppableId === droppableIdEvent) {
         moveTranslate(childRef.value, height, width);
         setTranistion(childRef.value, duration, "ease-in-out");
       }
-    }
-  );
-  eventBus.on(
-    START_DRAG_EVENT,
-    ({ height, width, draggableIdEvent, droppableId: droppableIdEvent }) => {
-      if (draggableId == draggableIdEvent && droppableId === droppableIdEvent) {
-        moveTranslate(childRef.value, height, width);
-      }
-    }
-  );
-  eventBus.on(
-    START_DROP_EVENT,
-    ({
+    },
+    startDrop: ({
       height,
       width,
       draggableIdEvent,
@@ -118,12 +111,22 @@ onMounted(() => {
           }, duration);
         }
       }
-    }
-  );
-  eventBus.on(DROP_EVENT, ({ droppableId: droppableIdEvent }) => {
-    if (droppableIdEvent === droppableId) {
-      removeTranslateWhitoutTransition();
-    }
+    },
+    drop: ({ droppableId: droppableIdEvent }) => {
+      if (droppableIdEvent === droppableId) {
+        removeTranslateWhitoutTransition();
+      }
+    },
+    startDrag: ({
+      height,
+      width,
+      draggableIdEvent,
+      droppableId: droppableIdEvent,
+    }) => {
+      if (draggableId == draggableIdEvent && droppableId === droppableIdEvent) {
+        moveTranslate(childRef.value, height, width);
+      }
+    },
   });
 });
 const removeTranslateWhitoutTransition = () => {

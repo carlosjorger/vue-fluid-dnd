@@ -1,4 +1,5 @@
-import mitt from "mitt";
+import mitt, { Emitter } from "mitt";
+import { onUnmounted } from "vue";
 type Events = {
   drag: {
     height: number;
@@ -29,4 +30,30 @@ type Events = {
     droppableId?: string;
   };
 };
-export default mitt<Events>();
+
+type EventHandlers<T extends Record<string, unknown>> = {
+  [K in keyof T]: (event: T[K]) => void;
+};
+
+function useMittEvents<T extends Record<string, unknown>>(
+  mitt: Emitter<T>,
+  handlers: EventHandlers<T>
+) {
+  for (const key of Object.keys(handlers)) {
+    mitt.on(key, handlers[key]);
+  }
+  function cleanup() {
+    for (const key of Object.keys(handlers)) {
+      mitt.off(key, handlers[key]);
+    }
+  }
+  onUnmounted(cleanup);
+  return cleanup;
+}
+
+function wrapEventBus<T extends Record<string, unknown>>(mitt: Emitter<T>) {
+  return (ev: EventHandlers<T>) => useMittEvents(mitt, ev);
+}
+
+export const eventBus = mitt<Events>();
+export const useMyEvents = wrapEventBus(eventBus);
