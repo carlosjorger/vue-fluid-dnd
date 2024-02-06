@@ -1,46 +1,31 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Draggable, Droppable } from "vue3-juice-dnd";
-const list = ref([
-  {
-    "draggable-id": "d1",
-    backgroundColor: "red",
-  },
-  {
-    "draggable-id": "d2",
-    backgroundColor: "yellow",
-  },
-  {
-    "draggable-id": "d3",
-    backgroundColor: "blue",
-  },
-]);
+const list = ref([1, 2, 3]);
 </script>
 <template>
   <Droppable droppable-id="1" direction="vertical" :items="list">
-    <div style="display: block; padding: 10px">
+    <ul class="number-list">
       <Draggable
         v-for="(element, index) in list"
         v-slot="{ setRef }"
-        :draggable-id="element['draggable-id']"
+        :draggable-id="element.toString()"
         :index="index"
       >
-        <div
-          class="ball"
-          :ref="setRef"
-          :style="{ 'background-color': element.backgroundColor }"
-        ></div>
+        <li class="number" :ref="setRef">{{ element }}</li>
       </Draggable>
-    </div>
+    </ul>
   </Droppable>
 </template>
 
 <style>
-.ball {
-  border-color: white;
-  height: 80px;
-  width: 80px;
-  border-radius: 50%;
-  margin: 2rem !important;
+.number {
+  margin: 10px !important;
+  border-style: solid;
+  padding-left: 5px;
+}
+.number-list {
+  display: block;
+  padding: 10px;
 }
 </style>

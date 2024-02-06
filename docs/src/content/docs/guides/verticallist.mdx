@@ -3,6 +3,49 @@ title: Single vertical list
 description: A guide to use vue3-juice-dnd.
 ---
 
+## Basic example
+
+Basic example of a list of number:
+
 import SingleVerticalList from "../../../components/SingleVerticalList.vue";
+import { Code } from "@astrojs/starlight/components";
 
 <SingleVerticalList client:load />
+
+export const compositionApiCode = `
+<script setup lang="ts">
+import { ref } from "vue";
+import { Draggable, Droppable } from "vue3-juice-dnd";
+const list = ref([1, 2, 3]);
+</script>
+<template>
+  <Droppable droppable-id="1" direction="vertical" :items="list">
+    <ul class="number-list">
+      <Draggable
+        v-for="(element, index) in list"
+        v-slot="{ setRef }"
+        :draggable-id="element.toString()"
+        :index="index"
+      >
+        <li class="number" :ref="setRef">{{ element }}</li>
+      </Draggable>
+    </ul>
+  </Droppable>
+</template>
+
+<style>
+.number {
+  margin: 10px !important;
+  border-style: solid;
+  padding-left: 5px;
+}
+.number-list {
+  display: block;
+  padding: 10px;
+}
+</style>`;
+
+<details>
+  <summary>Code Example</summary>
+  <Code code={compositionApiCode} lang="vue" />
+</details>
