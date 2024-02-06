@@ -1,5 +1,5 @@
 import mitt, { Emitter } from "mitt";
-import { InjectionKey, inject, onUnmounted } from "vue";
+import { InjectionKey, onUnmounted } from "vue";
 type Events = {
   drag: {
     height: number;
