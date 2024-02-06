@@ -1,6 +1,6 @@
 {
   "name": "vue3-juice-dnd",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "type": "module",
   "files": [
     "dist",
@@ -23,9 +23,8 @@
   "typings": "./dist/index.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "vite build && vue-tsc --emitDeclarationOnly",
     "preview": "vite preview",
-    "install-package-examples": "cd examples\\with-vite-vue-typescript && pnpm i \"../../\"",
     "test": "vitest"
   },
   "keywords": [

@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import { ComponentPublicInstance, inject, onMounted, ref, watch } from "vue";
 import { LocalEventBus, useMittEvents } from "@/utils/EventBus";
-import { Direction, DraggableElement } from "../../index.ts";
+import { Direction, DraggableElement } from "../../index";
 import {
   setBorderBoxStyle,
   fixSizeStyle,

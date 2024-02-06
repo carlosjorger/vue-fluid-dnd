@@ -3,7 +3,7 @@
 </template>
 <script setup lang="ts" generic="T">
 import { provide, ref, computed } from "vue";
-import { Direction, DraggableElement } from "../../index.ts";
+import { Direction, DraggableElement } from "../../index";
 import { dropDraggingElementsBetween } from "@/utils/DropMethods";
 import { LocalEventBus, createEventBus } from "@/utils/EventBus";
 
