@@ -1,6 +1,8 @@
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 // TODO: create guide sidar
+import vue from "@astrojs/vue";
+
 // https://astro.build/config
 export default defineConfig({
   integrations: [
@@ -14,14 +16,30 @@ export default defineConfig({
           label: "Introduction",
           items: [
             // Each item here is one entry in the navigation menu.
-            { label: "Getting Started", link: "/guides/introduction/" },
+            {
+              label: "Getting Started",
+              link: "/introduction/introduction/",
+            },
+          ],
+        },
+        {
+          label: "Guide",
+          items: [
+            // Each item here is one entry in the navigation menu.
+            {
+              label: "Single vertical list",
+              link: "/guides/verticallist/",
+            },
           ],
         },
         {
           label: "Reference",
-          autogenerate: { directory: "reference" },
+          autogenerate: {
+            directory: "reference",
+          },
         },
       ],
     }),
+    vue(),
   ],
 });
