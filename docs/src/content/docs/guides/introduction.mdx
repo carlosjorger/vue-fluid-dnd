@@ -1,0 +1,69 @@
+---
+title: Getting Started
+description: A guide to install vue3-juice-dnd.
+---
+
+import { Tabs, TabItem, Code } from "@astrojs/starlight/components";
+
+### Installation
+
+Install vue3-juice-dnd using your preferred package manager:
+
+```bash
+# with npm:
+npm i vue3-juice-dnd
+
+# with yarn:
+yarn add vue3-juice-dnd
+
+# with pnpm:
+pnpm i vue3-juice-dnd
+```
+
+### Usage
+
+#### Usage on global
+
+Setup components on the main file:
+
+export const globalUsage = `
+import { createApp } from "vue";
+import App from './App.vue';
+
+import { Draggable, Droppable } from 'vue3-juice-dnd';
+
+const app = createApp(App);
+
+app.component('Droppable', Droppable);
+app.component('Draggable', Draggable);
+
+app.mount('#app');`;
+
+<Code code={globalUsage} lang="js" />
+
+#### Usage on local
+
+Import components on .vue files:
+
+export const optionApiCode = `
+<script>
+  import { Draggable, Droppable } from 'vue3-juice-dnd';
+  export default {
+    components: { Draggable, Droppable },
+  }
+
+</script>`;
+export const compositionApiCode = `
+<script>
+  import { Draggable, Droppable } from 'vue3-juice-dnd';
+
+</script>`;
+
+<Tabs>
+  <TabItem label="Options API">
+    <Code code={optionApiCode} lang="vue" />
+  </TabItem>
+  <TabItem label="Composition API">
+    <Code code={compositionApiCode} lang="vue" />
+  </TabItem>
+</Tabs>

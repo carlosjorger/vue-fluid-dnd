@@ -1,6 +1,6 @@
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
-
+// TODO: create guide sidar
 // https://astro.build/config
 export default defineConfig({
   integrations: [
@@ -11,10 +11,10 @@ export default defineConfig({
       },
       sidebar: [
         {
-          label: "Guides",
+          label: "Introduction",
           items: [
             // Each item here is one entry in the navigation menu.
-            { label: "Example Guide", link: "/guides/example/" },
+            { label: "Getting Started", link: "/guides/introduction/" },
           ],
         },
         {
