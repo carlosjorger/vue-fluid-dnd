@@ -1,13 +1,3 @@
-<template>
-  <h1>A</h1>
-  <div>
-    <div
-      class="ball"
-      v-for="(element, index) in list"
-      :style="{ 'background-color': element.backgroundColor }"
-    ></div>
-  </div>
-</template>
 <script setup lang="ts">
 import { ref } from "vue";
 import { Draggable, Droppable } from "vue3-juice-dnd";
@@ -26,12 +16,31 @@ const list = ref([
   },
 ]);
 </script>
+<template>
+  <Droppable droppable-id="1" direction="vertical" :items="list">
+    <div style="display: block; padding: 10px">
+      <Draggable
+        v-for="(element, index) in list"
+        v-slot="{ setRef }"
+        :draggable-id="element['draggable-id']"
+        :index="index"
+      >
+        <div
+          class="ball"
+          :ref="setRef"
+          :style="{ 'background-color': element.backgroundColor }"
+        ></div>
+      </Draggable>
+    </div>
+  </Droppable>
+</template>
+
 <style>
 .ball {
   border-color: white;
-  margin-top: 10px;
-  height: 50px;
-  width: 50px;
+  height: 80px;
+  width: 80px;
   border-radius: 50%;
+  margin: 2rem !important;
 }
 </style>
