@@ -1,4 +1,10 @@
-import { BeforeMargin, AfterMargin, GapStyle, Direction } from "../../index";
+import {
+  BeforeMargin,
+  AfterMargin,
+  GapStyle,
+  Direction,
+  BorderWidth,
+} from "../../index";
 export const getScroll = (element: HTMLElement | undefined | null) => {
   if (element) {
     const { scrollLeft, scrollTop } = element;
@@ -255,6 +261,15 @@ const spaceWithMargins = (
     space: spaceCalc - beforeMarginCalc,
     afterMargin: afterMarginCalc,
   };
+};
+export const getBorderWidthProperty = (
+  element: HTMLElement | Element | undefined | null,
+  property: BorderWidth
+) => {
+  if (element && element instanceof HTMLElement) {
+    return parseFloatEmpty(getComputedStyle(element)[property]);
+  }
+  return 0;
 };
 export const getMarginStyleByProperty = (
   element: HTMLElement | Element | undefined | null,

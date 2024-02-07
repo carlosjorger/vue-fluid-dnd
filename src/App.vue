@@ -155,13 +155,13 @@ const numbers = ref([1, 2, 3, 4, 5]);
   </Droppable>
 
   <Droppable droppable-id="5" direction="vertical" :items="numbers">
-    <ul style="display: block">
+    <ul style="display: block; width: 50%">
       <Draggable
         v-for="(element, index) in numbers"
         v-slot="{ setRef }"
         :draggable-id="'number-' + element.toString()"
         :index="index"
-        ><li :ref="setRef" style="padding-left: 5px">
+        ><li :ref="setRef" class="number">
           {{ element }}
         </li>
       </Draggable>
@@ -201,5 +201,11 @@ const numbers = ref([1, 2, 3, 4, 5]);
   display: flex;
   flex-direction: column;
   gap: 5px;
+}
+.number {
+  padding-left: 5px;
+  text-align: start;
+  border-style: solid;
+  border-width: 0.8rem;
 }
 </style>

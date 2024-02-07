@@ -5,3 +5,4 @@ export type DraggableElement =
 export type BeforeMargin = "marginTop" | "marginLeft";
 export type AfterMargin = "marginBottom" | "marginRight";
 export type GapStyle = "columnGap" | "rowGap";
+export type BorderWidth = "borderTopWidth" | "borderLeftWidth";

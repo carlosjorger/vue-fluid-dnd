@@ -16,6 +16,7 @@ import {
   hasIntersection,
   calculateWhileDraggingByDirection,
   calculateRangeWhileDraggingByDirection,
+  getBorderWidthProperty,
 } from "@/utils/GetStyles";
 const { draggableId, index } = defineProps<{
   draggableId: string;
@@ -169,9 +170,11 @@ const setTransform = (
     elementXPosittion >= -width / 2 &&
     elementXPosittion <= innerWidth + width / 2
   ) {
+    const borderLeft = getBorderWidthProperty(element, "borderLeftWidth");
     const newTranslateX =
       elementXPosittion -
       position.value.left -
+      borderLeft -
       getMarginStyleByProperty(element, "marginLeft") -
       scrollX;
     if (translate.value.x > newTranslateX) {
@@ -187,9 +190,11 @@ const setTransform = (
     elementYPosition >= -height / 2 &&
     elementYPosition <= innerHeight + height / 2
   ) {
+    const borderTop = getBorderWidthProperty(element, "borderTopWidth");
     const newTranslateY =
       elementYPosition -
       position.value.top -
+      borderTop -
       getMarginStyleByProperty(element, "marginTop") -
       scrollY;
     if (translate.value.y > newTranslateY) {
@@ -236,16 +241,22 @@ const onmousedown = (event: MouseEvent) => {
     horizontal: "right",
   });
   fixSizeStyle(element.parentElement);
+
+  const borderLeft = getBorderWidthProperty(element, "borderLeftWidth");
+  const borderTop = getBorderWidthProperty(element, "borderTopWidth");
+
   position.value = {
     top:
       pageY -
       offset.value.offsetY -
       getMarginStyleByProperty(element, "marginTop") -
+      borderTop -
       scrollY,
     left:
       pageX -
       offset.value.offsetX -
       getMarginStyleByProperty(element, "marginLeft") -
+      borderLeft -
       scrollX,
   };
   setDraggingStyles(element);
