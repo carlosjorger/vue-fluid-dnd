@@ -10,7 +10,9 @@ Basic example of a list of number:
 import SingleVerticalList from "../../../components/SingleVerticalList.vue";
 import { Code } from "@astrojs/starlight/components";
 
-<SingleVerticalList client:load />
+<div class="ml-2">
+  <SingleVerticalList client:load />
+</div>
 
 export const compositionApiCode = `
 <script setup lang="ts">
@@ -35,9 +37,9 @@ const list = ref([1, 2, 3]);
 
 <style>
 .number {
-  margin: 10px !important;
   border-style: solid;
   padding-left: 5px;
+  margin-top: 0.25rem;
 }
 .number-list {
   display: block;
@@ -45,7 +47,11 @@ const list = ref([1, 2, 3]);
 }
 </style>`;
 
-<details>
-  <summary>Code Example</summary>
+{/* class="overflow-hidden max-h-16 transition-[max-height] duration-300 ease-out" */}
+
+<details open>
+  <summary>
+    <label class="ml-2">Code example</label>
+  </summary>
   <Code code={compositionApiCode} lang="vue" />
 </details>

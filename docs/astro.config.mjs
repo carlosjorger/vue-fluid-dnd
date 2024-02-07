@@ -3,6 +3,8 @@ import starlight from "@astrojs/starlight";
 // TODO: create guide sidar
 import vue from "@astrojs/vue";
 
+import tailwind from "@astrojs/tailwind";
+
 // https://astro.build/config
 export default defineConfig({
   integrations: [
@@ -39,7 +41,12 @@ export default defineConfig({
           },
         },
       ],
+      customCss: [
+        // Path to your Tailwind base styles:
+        "./src/tailwind.css",
+      ],
     }),
     vue(),
+    tailwind({ applyBaseStyles: false }),
   ],
 });

@@ -22,9 +22,10 @@ const list = ref([1, 2, 3]);
 .number {
   border-style: solid;
   padding-left: 5px;
+  margin-top: 0.25rem;
 }
 .number-list {
   display: block;
-  padding: 10px;
+  padding-inline: 10px;
 }
 </style>
