@@ -125,6 +125,7 @@ const list2 = ref([
       "color: white; background-color: brown; padding: 26px 0; margin: 27px;",
   },
 ]);
+const numbers = ref([1, 2, 3, 4, 5]);
 </script>
 
 <template>
@@ -151,6 +152,20 @@ const list2 = ref([
         ><div :ref="setRef" :style="element.style">{{ element.number }}</div>
       </Draggable>
     </div>
+  </Droppable>
+
+  <Droppable droppable-id="5" direction="vertical" :items="numbers">
+    <ul style="display: block">
+      <Draggable
+        v-for="(element, index) in numbers"
+        v-slot="{ setRef }"
+        :draggable-id="'number-' + element.toString()"
+        :index="index"
+        ><li :ref="setRef" style="padding-left: 5px">
+          {{ element }}
+        </li>
+      </Draggable>
+    </ul>
   </Droppable>
   <div style="display: flex; flex-direction: row; column-gap: 10px">
     <Droppable droppable-id="3" direction="vertical" :items="list1">

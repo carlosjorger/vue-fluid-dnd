@@ -32,3 +32,8 @@ provide("direction", direction);
 provide("droppableId", droppableId);
 provide("onDrop", currentOnDrop.value);
 </script>
+<style>
+.droppable {
+  box-sizing: border-box !important;
+}
+</style>

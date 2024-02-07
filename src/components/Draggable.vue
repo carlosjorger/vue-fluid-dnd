@@ -148,6 +148,9 @@ const setSlotRefElementParams = (element: HTMLElement | undefined) => {
     element.onmousedown = onmousedown;
     element.setAttribute(DRAGGABLE_ID_ATTR, draggableId);
   }
+  if (element?.parentElement) {
+    element?.parentElement.classList.add("droppable");
+  }
 };
 const setTransform = (
   element: HTMLElement,
@@ -550,6 +553,8 @@ const onDropDraggingEvent = (event: MouseEvent) => {
     element.style.zIndex = "";
     element.style.transform = "";
     element.style.transition = "";
+    element.style.top = "";
+    element.style.left = "";
     element.style.cursor = GRAB_CURSOR;
   }, duration);
 };
@@ -588,6 +593,11 @@ watch(
   { deep: true }
 );
 </script>
+<style>
+.draggable {
+  box-sizing: border-box !important;
+}
+</style>
 <!-- TODO: fix when the margin is inherit from a class -->
 <!-- example: 
   .sl-markdown-content li + li:not(:where(.not-content *)){

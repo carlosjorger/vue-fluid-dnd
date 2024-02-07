@@ -6,7 +6,6 @@ export const fixSizeStyle = (element: HTMLElement | undefined | null) => {
     return;
   }
   const { height, width } = element.getBoundingClientRect();
-
   element.style.height = `${height}px`;
   element.style.width = `${width}px`;
 };
