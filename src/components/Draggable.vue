@@ -167,8 +167,8 @@ const setTransform = (
   let vertical: VerticalDirection = "top";
   let horizontal: HorizontalDirection = "left";
   if (
-    elementXPosittion >= -width / 2 &&
-    elementXPosittion <= innerWidth + width / 2
+    elementXPosittion >= scrollX - width / 2 &&
+    elementXPosittion <= scrollX + innerWidth
   ) {
     const borderLeft = getBorderWidthProperty(element, "borderLeftWidth");
     const newTranslateX =
@@ -187,8 +187,8 @@ const setTransform = (
     translate.value.x = newTranslateX;
   }
   if (
-    elementYPosition >= -height / 2 &&
-    elementYPosition <= innerHeight + height / 2
+    elementYPosition >= scrollY - height / 2 &&
+    elementYPosition <= scrollY + innerHeight
   ) {
     const borderTop = getBorderWidthProperty(element, "borderTopWidth");
     const newTranslateY =
