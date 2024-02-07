@@ -609,11 +609,6 @@ watch(
   box-sizing: border-box !important;
 }
 </style>
-<!-- TODO: fix when the margin is inherit from a class -->
-<!-- example: 
-  .sl-markdown-content li + li:not(:where(.not-content *)){
-    margin-top: 1rem;
-  } -->
 <!-- TODO: refactor -->
 <!-- TODO: remove flashing of elements -->
 <!-- TODO: implement auto scroll functionality-->

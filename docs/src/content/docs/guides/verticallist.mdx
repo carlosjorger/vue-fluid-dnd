@@ -3,23 +3,66 @@ title: Single vertical list
 description: A guide to use vue3-juice-dnd.
 ---
 
-## Basic example
-
-Basic example of a list of number:
-
 import SingleVerticalList from "../../../components/SingleVerticalList.vue";
 import { Code } from "@astrojs/starlight/components";
 
-<div class="ml-2">
-  <SingleVerticalList client:load />
-</div>
+{/* TODO: keep working on verticallist page */}
 
-export const compositionApiCode = `
-<script setup lang="ts">
+## Basic example
+
+First create a list of numbers:
+
+export const listOfNumbers = `<script setup lang="ts">
 import { ref } from "vue";
 import { Draggable, Droppable } from "vue3-juice-dnd";
 const list = ref([1, 2, 3]);
-</script>
+</script>`;
+
+<Code code={listOfNumbers} lang="vue" />
+
+For each number we're going to create a list of numbers:
+
+export const listOfNumbersHTML = `
+<template>
+  <ul class="number-list">
+    <li class="number">{{ element }}</li>
+  </ul>
+</template>
+<style>
+  .number {
+    border-style: solid;
+    padding-left: 5px;
+    margin-top: 0.25rem;
+    border-width: 2px;
+  }
+  .number-list {
+    display: block;
+    padding: 10px;
+  }
+</style>
+`;
+
+<Code code={listOfNumbersHTML} lang="vue" />
+
+First we create a Droppable component that need an unique id (droppable-id), direction of the list (direction) and the list to sort (items):
+
+export const highlightsDroppable = ["droppable-id", "direction", "items"];
+
+export const listOfNumbersDroppable = `
+<template>
+  <Droppable droppable-id="1" direction="vertical" :items="list">
+    <ul class="number-list">
+      <li class="number">{{ element }}</li>
+    </ul>
+  </Droppable>
+</template>
+`;
+
+<Code code={listOfNumbersDroppable} lang="vue" mark={highlightsDroppable} />
+
+For each li element we'll create a Draggable component and set a reference from li element to Draggable (setRef), a index that is the position index from the list and unique id (draggable-id) :
+
+export const listOfNumbersDraggable = `
 <template>
   <Droppable droppable-id="1" direction="vertical" :items="list">
     <ul class="number-list">
@@ -33,25 +76,14 @@ const list = ref([1, 2, 3]);
       </Draggable>
     </ul>
   </Droppable>
-</template>
+</template>`;
 
-<style>
-.number {
-  border-style: solid;
-  padding-left: 5px;
-  margin-top: 0.25rem;
-}
-.number-list {
-  display: block;
-  padding: 10px;
-}
-</style>`;
+export const highlightsDraggable = ["setRef", "draggable-i", ":index"];
 
-{/* class="overflow-hidden max-h-16 transition-[max-height] duration-300 ease-out" */}
+<Code code={listOfNumbersDraggable} lang="vue" mark={highlightsDraggable} />
 
-<details open>
-  <summary>
-    <label class="ml-2">Code example</label>
-  </summary>
-  <Code code={compositionApiCode} lang="vue" />
-</details>
+This is the result:
+
+<div class="ml-2">
+  <SingleVerticalList client:load />
+</div>
