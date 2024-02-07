@@ -20,7 +20,6 @@ const list = ref([1, 2, 3]);
 
 <style>
 .number {
-  margin: 10px !important;
   border-style: solid;
   padding-left: 5px;
 }
