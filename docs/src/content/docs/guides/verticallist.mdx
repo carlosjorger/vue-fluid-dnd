@@ -6,11 +6,10 @@ description: A guide to use vue3-juice-dnd.
 import SingleVerticalList from "../../../components/SingleVerticalList.vue";
 import { Code } from "@astrojs/starlight/components";
 
-{/* TODO: keep working on verticallist page */}
+### List of number example
 
-## Basic example
-
-First create a list of numbers:
+To showing how to use **Vue3JuiceDnD** for sorting a single list.
+First, we're going to create a list of numbers:
 
 export const listOfNumbers = `<script setup lang="ts">
 import { ref } from "vue";
@@ -20,7 +19,7 @@ const list = ref([1, 2, 3]);
 
 <Code code={listOfNumbers} lang="vue" />
 
-For each number we're going to create a list of numbers:
+Next, create a list of numbers on vue template:
 
 export const listOfNumbersHTML = `
 <template>
@@ -44,7 +43,9 @@ export const listOfNumbersHTML = `
 
 <Code code={listOfNumbersHTML} lang="vue" />
 
-First we create a Droppable component that need an unique id (droppable-id), direction of the list (direction) and the list to sort (items):
+### Adding Droppable component
+
+First, we define a **`Droppable`** component that represent a list of **`Draggable`** elements, it needs an unique id (`droppable-id`), direction of the list (`direction`) and the list to sort (`items`):
 
 export const highlightsDroppable = ["droppable-id", "direction", "items"];
 
@@ -60,7 +61,9 @@ export const listOfNumbersDroppable = `
 
 <Code code={listOfNumbersDroppable} lang="vue" mark={highlightsDroppable} />
 
-For each li element we'll create a Draggable component and set a reference from li element to Draggable (setRef), a index that is the position index from the list and unique id (draggable-id) :
+### Adding Draggable component
+
+For each `<li>` element we'll create a **`Draggable`** component and add a reference from `<li>` element to Draggable (`setRef`), a `index` that is the position index from the list and an unique id (`draggable-id`) :
 
 export const listOfNumbersDraggable = `
 <template>
@@ -82,8 +85,10 @@ export const highlightsDraggable = ["setRef", "draggable-i", ":index"];
 
 <Code code={listOfNumbersDraggable} lang="vue" mark={highlightsDraggable} />
 
+### Preview
+
 This is the result:
 
-<div class="ml-2">
+<div class="p-8 bg-[var(--sl-color-gray-6)]">
   <SingleVerticalList client:load />
 </div>

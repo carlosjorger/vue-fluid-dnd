@@ -24,6 +24,7 @@ const list = ref([1, 2, 3]);
   padding-left: 5px;
   margin-top: 0.25rem;
   border-width: 2px;
+  border-color: var(--sl-color-gray-1);
 }
 .number-list {
   display: block;
