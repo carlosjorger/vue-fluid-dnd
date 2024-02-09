@@ -283,28 +283,16 @@ export const calculateWhileDraggingByDirection = (
 ) => {
   let height = 0;
   let width = 0;
-  let { height: elementHeight, width: elementWidth } =
-    current.getBoundingClientRect();
+  const drag = calculateWhileDragging(
+    direction,
+    current,
+    previousElement,
+    nextElement
+  );
   if (direction === "vertical") {
-    height = calculateWhileDragging(
-      current,
-      "marginTop",
-      "marginBottom",
-      elementHeight,
-      "rowGap",
-      previousElement,
-      nextElement
-    );
+    height = drag;
   } else if (direction === "horizontal") {
-    width = calculateWhileDragging(
-      current,
-      "marginLeft",
-      "marginRight",
-      elementWidth,
-      "columnGap",
-      previousElement,
-      nextElement
-    );
+    width = drag;
   }
   return { width, height };
 };
@@ -318,14 +306,18 @@ const gapAndDisplayInformation = (element: HTMLElement, gapStyle: GapStyle) => {
   };
 };
 const calculateWhileDragging = (
+  direction: Direction | undefined,
   current: HTMLElement,
-  beforeMargin: BeforeMargin,
-  afterMargin: AfterMargin,
-  space: number,
-  gapStyle: GapStyle,
   previousElement: Element | null,
   nextElement: Element | null
 ) => {
+  if (!direction) {
+    return 0;
+  }
+  const directionProps = getPropByDirection(direction);
+
+  const { afterMargin, beforeMargin } = directionProps;
+
   const currentAfterMargin = getMarginStyleByProperty(current, afterMargin);
   const currentBeforeMargin = getMarginStyleByProperty(current, beforeMargin);
 
@@ -336,8 +328,9 @@ const calculateWhileDragging = (
   let rest = nextBeforeMargin;
   const parentElement = current.parentElement as HTMLElement;
 
+  const gapStyle = directionProps.gap;
   const { gap, hasGaps } = gapAndDisplayInformation(parentElement, gapStyle);
-
+  const space = current.getBoundingClientRect()[directionProps.distance];
   if (hasGaps) {
     return space + beforeScace + afterSpace + gap;
   }

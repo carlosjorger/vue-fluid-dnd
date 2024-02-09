@@ -195,6 +195,7 @@ const setTransform = (
     positionProp: "left" | "top",
     defaultTransalation: number
   ): { direction: T; newTranslate: number } => {
+    // TODO: refactor using getPropByDirection
     const elementPosittion = page - offset;
     if (
       elementPosittion >= scroll - space / 2 &&
