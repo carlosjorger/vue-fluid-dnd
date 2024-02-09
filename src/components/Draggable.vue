@@ -166,6 +166,7 @@ const setTransform = (
 
   let vertical: VerticalDirection = "top";
   let horizontal: HorizontalDirection = "left";
+  // TODO: refactor this code
   if (
     elementXPosittion >= scrollX - width / 2 &&
     elementXPosittion <= scrollX + innerWidth
@@ -241,7 +242,7 @@ const onmousedown = (event: MouseEvent) => {
     horizontal: "right",
   });
   fixSizeStyle(element.parentElement);
-
+  // TODO: refactor this code
   const borderLeft = getBorderWidthProperty(element, "borderLeftWidth");
   const borderTop = getBorderWidthProperty(element, "borderTopWidth");
 
@@ -415,23 +416,25 @@ const emitDroppingEventToSiblings = (
   allSiblings.splice(elementPosition, 0, draggedElement);
 
   const isOutside = draggableIsOutside(draggedElement);
-
+  // TODO: refactor this code
   const targetIndex = isOutside ? elementPosition : actualIndex.value;
 
-  let previousElement = allSiblings[targetIndex - 1];
-  let nextElement = allSiblings[targetIndex + 1];
-  if (elementPosition < targetIndex) {
-    previousElement = allSiblings[targetIndex];
-    nextElement = allSiblings[targetIndex + 1];
-  } else if (elementPosition > targetIndex) {
-    previousElement = allSiblings[targetIndex - 1];
-    nextElement = allSiblings[targetIndex];
-  }
+  const getPreviousAndNextElementIndex = () => {
+    if (elementPosition < targetIndex) {
+      return [targetIndex, targetIndex + 1];
+    } else {
+      return [targetIndex - 1, targetIndex];
+    }
+  };
+  const [previousIndex, nextIndex] = getPreviousAndNextElementIndex();
+  const previousElement = allSiblings[previousIndex] ?? null;
+  const nextElement = allSiblings[nextIndex] ?? null;
+
   translation = calculateInitialTranslation(
     draggedElement,
     event,
-    previousElement ?? null,
-    nextElement ?? null
+    previousElement,
+    nextElement
   );
   for (const [index, sibling] of siblings.toReversed().entries()) {
     const siblingDraggableId = sibling.getAttribute(DRAGGABLE_ID_ATTR) ?? "";

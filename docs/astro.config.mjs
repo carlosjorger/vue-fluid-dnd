@@ -9,7 +9,7 @@ import tailwind from "@astrojs/tailwind";
 export default defineConfig({
   integrations: [
     starlight({
-      title: "vue3JuiceDnD",
+      title: "Vue3JuiceDnD",
       social: {
         github: "https://github.com/carlosjorger/vue3-juice-dnd",
       },
