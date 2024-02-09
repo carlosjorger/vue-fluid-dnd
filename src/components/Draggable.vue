@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import { ComponentPublicInstance, inject, onMounted, ref, watch } from "vue";
 import { LocalEventBus, useMittEvents } from "@/utils/EventBus";
-import { Direction, DraggableElement } from "../../index";
+import { BeforeMargin, Direction, DraggableElement } from "../../index";
 import {
   setBorderBoxStyle,
   fixSizeStyle,
@@ -160,53 +160,108 @@ const setTransform = (
 ): MouseDirection => {
   const { width, height } = element.getBoundingClientRect();
   const { innerWidth, innerHeight } = window;
-  const elementXPosittion = pageX - offset.value.offsetX;
-  const elementYPosition = pageY - offset.value.offsetY;
   const { scrollX, scrollY } = window;
 
-  let vertical: VerticalDirection = "top";
-  let horizontal: HorizontalDirection = "left";
+  let vertical: VerticalDirection = "quiet";
+  let horizontal: HorizontalDirection = "quiet";
   // TODO: refactor this code
-  if (
-    elementXPosittion >= scrollX - width / 2 &&
-    elementXPosittion <= scrollX + innerWidth
-  ) {
-    const borderLeft = getBorderWidthProperty(element, "borderLeftWidth");
-    const newTranslateX =
-      elementXPosittion -
-      position.value.left -
-      borderLeft -
-      getMarginStyleByProperty(element, "marginLeft") -
-      scrollX;
-    if (translate.value.x > newTranslateX) {
-      horizontal = "left";
-    } else if (translate.value.x < newTranslateX) {
-      horizontal = "right";
-    } else {
-      horizontal = "quiet";
+  const directionInfo = {
+    horizontal: {
+      before: "left" as HorizontalDirection,
+      after: "right" as HorizontalDirection,
+      quiet: "quiet" as HorizontalDirection,
+    },
+    vertical: {
+      before: "top" as VerticalDirection,
+      after: "down" as VerticalDirection,
+      quiet: "quiet" as VerticalDirection,
+    },
+  };
+  const getTranslateWihtDirection = <
+    T = VerticalDirection | HorizontalDirection
+  >(
+    direction: {
+      before: T;
+      after: T;
+      quiet: T;
+    },
+    page: number,
+    offset: number,
+    scroll: number,
+    space: number,
+    innerSpace: number,
+    boderProp: "borderLeftWidth" | "borderTopWidth",
+    marginProp: BeforeMargin,
+    positionProp: "left" | "top",
+    defaultTransalation: number
+  ): { direction: T; newTranslate: number } => {
+    const elementPosittion = page - offset;
+    if (
+      elementPosittion >= scroll - space / 2 &&
+      elementPosittion <= scroll + innerSpace
+    ) {
+      const border = getBorderWidthProperty(element, boderProp);
+      const newTranslate =
+        elementPosittion -
+        position.value[positionProp] -
+        border -
+        getMarginStyleByProperty(element, marginProp) -
+        scroll;
+
+      if (translate.value.x > newTranslate) {
+        return {
+          direction: direction.before,
+          newTranslate,
+        };
+      } else if (translate.value.x < newTranslate) {
+        return {
+          direction: direction.after,
+          newTranslate,
+        };
+      } else {
+        return {
+          direction: direction.quiet,
+          newTranslate,
+        };
+      }
     }
-    translate.value.x = newTranslateX;
-  }
-  if (
-    elementYPosition >= scrollY - height / 2 &&
-    elementYPosition <= scrollY + innerHeight
-  ) {
-    const borderTop = getBorderWidthProperty(element, "borderTopWidth");
-    const newTranslateY =
-      elementYPosition -
-      position.value.top -
-      borderTop -
-      getMarginStyleByProperty(element, "marginTop") -
-      scrollY;
-    if (translate.value.y > newTranslateY) {
-      vertical = "top";
-    } else if (translate.value.y < newTranslateY) {
-      vertical = "down";
-    } else {
-      vertical = "quiet";
-    }
-    translate.value.y = newTranslateY;
-  }
+    return {
+      direction: direction.quiet,
+      newTranslate: defaultTransalation,
+    };
+  };
+
+  const { direction: horizontalDirection, newTranslate: newTranslateX } =
+    getTranslateWihtDirection(
+      directionInfo["horizontal"],
+      pageX,
+      offset.value.offsetX,
+      scrollX,
+      width,
+      innerWidth,
+      "borderLeftWidth",
+      "marginLeft",
+      "left",
+      translate.value.x
+    );
+  horizontal = horizontalDirection;
+  translate.value.x = newTranslateX;
+
+  const { direction: verticalDirection, newTranslate: newTranslateY } =
+    getTranslateWihtDirection(
+      directionInfo["vertical"],
+      pageY,
+      offset.value.offsetY,
+      scrollY,
+      height,
+      innerHeight,
+      "borderTopWidth",
+      "marginTop",
+      "top",
+      translate.value.y
+    );
+  vertical = verticalDirection;
+  translate.value.y = newTranslateY;
   return { vertical, horizontal };
 };
 
