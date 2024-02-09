@@ -4,6 +4,7 @@ import {
   GapStyle,
   Direction,
   BorderWidth,
+  Distance,
 } from "../../index";
 export const getScroll = (element: HTMLElement | undefined | null) => {
   if (element) {
@@ -87,39 +88,30 @@ export const calculateRangeWhileDraggingByDirection = (
 ) => {
   let height = 0;
   let width = 0;
+  const range = calculateRangeWhileDragging(
+    direction,
+    siblings,
+    sourceIndex,
+    targetIndex
+  );
   if (direction === "vertical") {
-    height = calculateRangeWhileDragging(
-      "marginTop",
-      "marginBottom",
-      "height",
-      "rowGap",
-      siblings,
-      sourceIndex,
-      targetIndex
-    );
+    height = range;
   } else if (direction === "horizontal") {
-    width = calculateRangeWhileDragging(
-      "marginLeft",
-      "marginRight",
-      "width",
-      "columnGap",
-      siblings,
-      sourceIndex,
-      targetIndex
-    );
+    width = range;
   }
   return { width, height };
 };
 
 export const calculateRangeWhileDragging = (
-  beforeMarginProp: BeforeMargin,
-  afterMarginProp: AfterMargin,
-  spaceProp: "width" | "height",
-  gapStyle: GapStyle,
+  direction: Direction | undefined,
   siblings: HTMLElement[],
   sourceIndex: number,
   targetIndex: number
 ) => {
+  if (!direction) {
+    return 0;
+  }
+  const directionProps = getPropByDirection(direction);
   const isDraggedFoward = sourceIndex < targetIndex;
 
   const [firstIndex, secondIndex] = [sourceIndex, targetIndex].sort();
@@ -131,8 +123,11 @@ export const calculateRangeWhileDragging = (
 
   const parentElement = sourceElement.parentElement as HTMLElement;
 
+  const gapStyle = directionProps.gap;
   const { gap, hasGaps } = gapAndDisplayInformation(parentElement, gapStyle);
-
+  const beforeMarginProp = directionProps.beforeMargin;
+  const afterMarginProp = directionProps.afterMargin;
+  const spaceProp = directionProps.distance;
   const { beforeMargin, space, afterMargin } = spaceWithMargins(
     beforeMarginProp,
     afterMarginProp,
@@ -221,7 +216,7 @@ const getBeforeAfterMargin = (
 const spaceWithMargins = (
   beforeMargin: BeforeMargin,
   afterMargin: AfterMargin,
-  space: "width" | "height",
+  space: Distance,
   siblings: HTMLElement[],
   gap: number,
   hasGaps: boolean
@@ -356,4 +351,26 @@ const calculateWhileDragging = (
     rest = Math.max(rest, previousAfterMargin);
   }
   return space + beforeScace + afterSpace - rest;
+};
+
+export const getPropByDirection = (direction: Direction) => {
+  if (direction == "horizontal") {
+    return {
+      beforeMargin: "marginLeft" as BeforeMargin,
+      afterMargin: "marginRight" as AfterMargin,
+      borderBeforeWidth: "borderLeftWidth",
+      before: "left",
+      gap: "columnGap" as GapStyle,
+      distance: "width" as Distance,
+    };
+  } else {
+    return {
+      beforeMargin: "marginTop" as BeforeMargin,
+      afterMargin: "marginBottom" as AfterMargin,
+      borderBeforeWidth: "borderTopWidth",
+      before: "top",
+      gap: "rowGap" as GapStyle,
+      distance: "height" as Distance,
+    };
+  }
 };
