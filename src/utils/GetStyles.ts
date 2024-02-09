@@ -80,27 +80,6 @@ export const hasIntersection = (
       Math.min(element1ElementRect.width, element2ElementRect.width) / 2
   );
 };
-export const calculateRangeWhileDraggingByDirection = (
-  siblings: HTMLElement[],
-  sourceIndex: number,
-  targetIndex: number,
-  direction?: Direction
-) => {
-  let height = 0;
-  let width = 0;
-  const range = calculateRangeWhileDragging(
-    direction,
-    siblings,
-    sourceIndex,
-    targetIndex
-  );
-  if (direction === "vertical") {
-    height = range;
-  } else if (direction === "horizontal") {
-    width = range;
-  }
-  return { width, height };
-};
 
 export const calculateRangeWhileDragging = (
   direction: Direction | undefined,
@@ -108,8 +87,11 @@ export const calculateRangeWhileDragging = (
   sourceIndex: number,
   targetIndex: number
 ) => {
+  let height = 0;
+  let width = 0;
+
   if (!direction) {
-    return 0;
+    return { height, width };
   }
   const directionProps = getPropByDirection(direction);
   const isDraggedFoward = sourceIndex < targetIndex;
@@ -154,11 +136,13 @@ export const calculateRangeWhileDragging = (
   const spaceBetween = afterMarginCalc + space + beforeMarginCalc + gap;
 
   let spaceCalc = spaceBetween - spaceBeforeDraggedElement;
-  if (isDraggedFoward) {
-    return spaceCalc;
-  } else {
-    return -spaceCalc;
+  spaceCalc = isDraggedFoward ? spaceCalc : -spaceCalc;
+  if (direction === "vertical") {
+    height = spaceCalc;
+  } else if (direction === "horizontal") {
+    width = spaceCalc;
   }
+  return { height, width };
 };
 const getBeforeAfterMarginBaseOnDraggedDirection = (
   beforeMarginProp: BeforeMargin,
@@ -275,27 +259,6 @@ export const getMarginStyleByProperty = (
   }
   return 0;
 };
-export const calculateWhileDraggingByDirection = (
-  current: HTMLElement,
-  previousElement: Element | null,
-  nextElement: Element | null,
-  direction?: Direction
-) => {
-  let height = 0;
-  let width = 0;
-  const drag = calculateWhileDragging(
-    direction,
-    current,
-    previousElement,
-    nextElement
-  );
-  if (direction === "vertical") {
-    height = drag;
-  } else if (direction === "horizontal") {
-    width = drag;
-  }
-  return { width, height };
-};
 const gapAndDisplayInformation = (element: HTMLElement, gapStyle: GapStyle) => {
   const gap = computeGapPixels(element, gapStyle);
   const display = window.getComputedStyle(element).display;
@@ -305,14 +268,16 @@ const gapAndDisplayInformation = (element: HTMLElement, gapStyle: GapStyle) => {
     hasGaps,
   };
 };
-const calculateWhileDragging = (
+export const calculateWhileDragging = (
   direction: Direction | undefined,
   current: HTMLElement,
   previousElement: Element | null,
   nextElement: Element | null
 ) => {
+  let height = 0;
+  let width = 0;
   if (!direction) {
-    return 0;
+    return { width, height };
   }
   const directionProps = getPropByDirection(direction);
 
@@ -332,7 +297,10 @@ const calculateWhileDragging = (
   const { gap, hasGaps } = gapAndDisplayInformation(parentElement, gapStyle);
   const space = current.getBoundingClientRect()[directionProps.distance];
   if (hasGaps) {
-    return space + beforeScace + afterSpace + gap;
+    return getDistancesByDirection(
+      direction,
+      space + beforeScace + afterSpace + gap
+    );
   }
   afterSpace = Math.max(nextBeforeMargin, currentAfterMargin);
   if (previousElement) {
@@ -343,9 +311,18 @@ const calculateWhileDragging = (
     beforeScace = Math.max(previousAfterMargin, currentBeforeMargin);
     rest = Math.max(rest, previousAfterMargin);
   }
-  return space + beforeScace + afterSpace - rest;
+  return getDistancesByDirection(
+    direction,
+    space + beforeScace + afterSpace - rest
+  );
 };
-
+const getDistancesByDirection = (direction: Direction, value: number) => {
+  if (direction == "horizontal") {
+    return { width: value, height: 0 };
+  } else {
+    return { width: 0, height: value };
+  }
+};
 export const getPropByDirection = (direction: Direction) => {
   if (direction == "horizontal") {
     return {

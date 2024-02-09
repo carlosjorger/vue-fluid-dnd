@@ -14,9 +14,9 @@ import {
   getScroll,
   getMarginStyleByProperty,
   hasIntersection,
-  calculateWhileDraggingByDirection,
-  calculateRangeWhileDraggingByDirection,
   getBorderWidthProperty,
+  calculateRangeWhileDragging,
+  calculateWhileDragging,
 } from "@/utils/GetStyles";
 const { draggableId, index } = defineProps<{
   draggableId: string;
@@ -498,11 +498,11 @@ const emitDroppingEventToSiblings = (
     if (targetIndex - 1 >= index) {
       newTranslation = { height: 0, width: 0 };
     }
-    const draggableTranslation = calculateRangeWhileDraggingByDirection(
+    const draggableTranslation = calculateRangeWhileDragging(
+      direction,
       allSiblings,
       elementPosition,
-      targetIndex,
-      direction
+      targetIndex
     );
     emitEventBus(
       event,
@@ -592,11 +592,11 @@ const calculateInitialTranslation = (
   previousElement = current.previousElementSibling,
   nextElement = current.nextElementSibling
 ) => {
-  let { height, width } = calculateWhileDraggingByDirection(
+  let { height, width } = calculateWhileDragging(
+    direction,
     current,
     previousElement,
-    nextElement,
-    direction
+    nextElement
   );
   const intersection = draggableIsOutside(current);
   if (intersection && event == DRAG_EVENT) {
