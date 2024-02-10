@@ -41,9 +41,8 @@ type MouseDirection = {
   horizontal: HorizontalDirection;
 };
 
-const style = ref("");
 const position = ref({ top: 0, left: 0 });
-const offset = ref({ offsetX: 0, offsetY: 0 });
+const currentOffset = ref({ offsetX: 0, offsetY: 0 });
 const dragging = ref(false);
 const direction = inject<Direction>("direction");
 const onDrop =
@@ -181,21 +180,21 @@ const setTransform = (
     direction: Direction
   ): { direction: T; newTranslate: number } => {
     const directionValues = directionInfo[direction];
-    const directionProps = getPropByDirection(direction);
 
     const {
       beforeMargin,
       borderBeforeWidth,
       before,
-      offset: offsetProp,
+      offset,
       scroll,
       page,
       inner,
       distance,
       axis,
-    } = directionProps;
+    } = getPropByDirection(direction);
+
     const pageValue = event[page];
-    const elementPosittion = pageValue - offset.value[offsetProp];
+    const elementPosittion = pageValue - currentOffset.value[offset];
     const scrollValue = window[scroll];
     const innerDistance = window[inner];
     const distanceValue = elementBoundingClientRect[distance];
@@ -270,34 +269,31 @@ const onmousedown = (event: MouseEvent) => {
     return;
   }
   element.style.cursor = GRABBING_CURSOR;
-  style.value = element.style.cssText;
-  const { offsetX, offsetY, pageY, pageX } = event;
-  const { scrollY, scrollX } = window;
+  const { offsetX, offsetY } = event;
+  currentOffset.value = { offsetX, offsetY };
+
   dragging.value = true;
-  offset.value = { offsetX, offsetY };
   emitEventToSiblings(element, START_DRAG_EVENT, {
     vertical: "down",
     horizontal: "right",
   });
   fixSizeStyle(element.parentElement);
-  // TODO: refactor this code
-  const borderLeft = getBorderWidthProperty(element, "borderLeftWidth");
-  const borderTop = getBorderWidthProperty(element, "borderTopWidth");
-
-  position.value = {
-    top:
-      pageY -
-      offset.value.offsetY -
-      getMarginStyleByProperty(element, "marginTop") -
-      borderTop -
-      scrollY,
-    left:
-      pageX -
-      offset.value.offsetX -
-      getMarginStyleByProperty(element, "marginLeft") -
-      borderLeft -
-      scrollX,
+  const getPositionByDistance = (direction: Direction) => {
+    const { offset, beforeMargin, page, borderBeforeWidth, scroll } =
+      getPropByDirection(direction);
+    return (
+      event[page] -
+      currentOffset.value[offset] -
+      getMarginStyleByProperty(element, beforeMargin) -
+      getBorderWidthProperty(element, borderBeforeWidth) -
+      window[scroll]
+    );
   };
+  position.value = {
+    top: getPositionByDistance("vertical"),
+    left: getPositionByDistance("horizontal"),
+  };
+
   setDraggingStyles(element);
   setBorderBoxStyle(element);
   setTransform(element, event);
@@ -352,6 +348,7 @@ const emitDraggingEventToSiblings = (
     width: number;
   }
 ) => {
+  // TODO: refactor this function
   const isOutside = draggableIsOutside(draggedElement);
   const {
     top: currentTop,
