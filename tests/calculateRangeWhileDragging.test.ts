@@ -158,51 +158,39 @@ vi.spyOn(draggablesWithGapsList[3], "getBoundingClientRect").mockReturnValue(
 );
 test("check calculateRangeWhileDragging replacing an element with another one further ahead", () => {
   const heightTranslate = calculateRangeWhileDragging(
-    "marginTop",
-    "marginBottom",
-    "height",
-    "rowGap",
+    "vertical",
     draggablesList,
     0,
     3
   );
-  expect(heightTranslate).toBe(308);
+  expect(heightTranslate.height).toBe(308);
 });
 test("check calculateRangeWhileDragging replacing an element with another one before", () => {
   const heightTranslate = calculateRangeWhileDragging(
-    "marginTop",
-    "marginBottom",
-    "height",
-    "rowGap",
+    "vertical",
     draggablesList,
     3,
     0
   );
-  expect(heightTranslate).toBe(-282);
+  expect(heightTranslate.height).toBe(-282);
 });
 
 test("check calculateRangeWhileDragging replacing an element with another one further ahead with a list with gaps", () => {
   const heightTranslate = calculateRangeWhileDragging(
-    "marginTop",
-    "marginBottom",
-    "height",
-    "rowGap",
+    "vertical",
     draggablesWithGapsList,
     0,
     3
   );
-  expect(heightTranslate).toBe(361);
+  expect(heightTranslate.height).toBe(361);
 });
 
 test("check calculateRangeWhileDragging replacing an element with another one further ahead with a list with gaps", () => {
   const heightTranslate = calculateRangeWhileDragging(
-    "marginTop",
-    "marginBottom",
-    "height",
-    "rowGap",
+    "vertical",
     draggablesWithGapsList,
     1,
     3
   );
-  expect(heightTranslate).toBe(268);
+  expect(heightTranslate.height).toBe(268);
 });
