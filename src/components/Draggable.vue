@@ -439,6 +439,31 @@ const canChangeDraggable = (
   }
   return translation;
 };
+const getPreviousAndNextElement = (
+  draggedElement: HTMLElement,
+  elementPosition: number,
+  allSiblings: HTMLElement[]
+) => {
+  const isOutside = draggableIsOutside(draggedElement);
+
+  const targetIndex = isOutside ? elementPosition : actualIndex.value;
+
+  const getPreviousAndNextElementIndex = () => {
+    if (elementPosition < targetIndex) {
+      return [targetIndex, targetIndex + 1];
+    } else {
+      return [targetIndex - 1, targetIndex];
+    }
+  };
+  const [previousIndex, nextIndex] = getPreviousAndNextElementIndex();
+  const previousElement = allSiblings[previousIndex] ?? null;
+  const nextElement = allSiblings[nextIndex] ?? null;
+  return {
+    previousElement,
+    nextElement,
+    targetIndex,
+  };
+};
 const emitDroppingEventToSiblings = (
   draggedElement: HTMLElement,
   event: DragEvent,
@@ -453,20 +478,8 @@ const emitDroppingEventToSiblings = (
 
   allSiblings.splice(elementPosition, 0, draggedElement);
 
-  const isOutside = draggableIsOutside(draggedElement);
-  // TODO: refactor this code
-  const targetIndex = isOutside ? elementPosition : actualIndex.value;
-
-  const getPreviousAndNextElementIndex = () => {
-    if (elementPosition < targetIndex) {
-      return [targetIndex, targetIndex + 1];
-    } else {
-      return [targetIndex - 1, targetIndex];
-    }
-  };
-  const [previousIndex, nextIndex] = getPreviousAndNextElementIndex();
-  const previousElement = allSiblings[previousIndex] ?? null;
-  const nextElement = allSiblings[nextIndex] ?? null;
+  const { previousElement, nextElement, targetIndex } =
+    getPreviousAndNextElement(draggedElement, elementPosition, allSiblings);
 
   translation = calculateInitialTranslation(
     draggedElement,
