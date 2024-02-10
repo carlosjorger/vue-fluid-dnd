@@ -376,10 +376,11 @@ const updateActualIndexBaseOnTranslation = (
   },
   siblingIndex: number
 ) => {
-  if (
-    (direction === "vertical" && translation.height == 0) ||
-    (direction === "horizontal" && translation.width == 0)
-  ) {
+  if (!direction) {
+    return;
+  }
+  const { distance } = getPropByDirection(direction);
+  if (translation[distance] == 0) {
     actualIndex.value = Math.max(actualIndex.value, siblingIndex);
   } else {
     actualIndex.value = Math.min(actualIndex.value, siblingIndex - 1);
@@ -409,7 +410,6 @@ const canChangeDraggable = (
   const siblingSize = targetBoundingClientRect[distance];
 
   const siblingMiddle = targetosition + siblingSize / 2;
-
   if (
     (mouseDirection[direction] === after &&
       currentPosition + currentSize > siblingMiddle) ||
