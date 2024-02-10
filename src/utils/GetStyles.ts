@@ -5,6 +5,12 @@ import {
   Direction,
   BorderWidth,
   Distance,
+  Before,
+  Axis,
+  Offset,
+  Scroll,
+  InnerDistance,
+  Page,
 } from "../../index";
 export const getScroll = (element: HTMLElement | undefined | null) => {
   if (element) {
@@ -328,19 +334,29 @@ export const getPropByDirection = (direction: Direction) => {
     return {
       beforeMargin: "marginLeft" as BeforeMargin,
       afterMargin: "marginRight" as AfterMargin,
-      borderBeforeWidth: "borderLeftWidth",
-      before: "left",
+      borderBeforeWidth: "borderLeftWidth" as BorderWidth,
+      before: "left" as Before,
       gap: "columnGap" as GapStyle,
       distance: "width" as Distance,
+      axis: "x" as Axis,
+      offset: "offsetX" as Offset,
+      scroll: "scrollX" as Scroll,
+      page: "pageX" as Page,
+      inner: "innerWidth" as InnerDistance,
     };
   } else {
     return {
       beforeMargin: "marginTop" as BeforeMargin,
       afterMargin: "marginBottom" as AfterMargin,
-      borderBeforeWidth: "borderTopWidth",
-      before: "top",
+      borderBeforeWidth: "borderTopWidth" as BorderWidth,
+      before: "top" as Before,
       gap: "rowGap" as GapStyle,
       distance: "height" as Distance,
+      axis: "y" as Axis,
+      offset: "offsetY" as Offset,
+      scroll: "scrollY" as Scroll,
+      page: "pageY" as Page,
+      inner: "innerHeight" as InnerDistance,
     };
   }
 };
