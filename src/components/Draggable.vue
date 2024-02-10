@@ -348,50 +348,20 @@ const emitDraggingEventToSiblings = (
     width: number;
   }
 ) => {
-  // TODO: refactor this function
   const isOutside = draggableIsOutside(draggedElement);
-  const {
-    top: currentTop,
-    height: currentHeight,
-    left: currentLeft,
-    width: currentWidth,
-  } = draggedElement.getBoundingClientRect();
+
   for (const [index, sibling] of siblings.entries()) {
     const siblingDraggableId = sibling.getAttribute(DRAGGABLE_ID_ATTR) ?? "";
     if (!isOutside) {
-      const {
-        top: siblingTop,
-        height: siblingHeight,
-        left: siblingLeft,
-        width: siblingWidth,
-      } = sibling.getBoundingClientRect();
-      if (direction === "vertical") {
-        translation = canChangeDraggable(
-          () => mouseDirection.vertical === "down",
-          () => mouseDirection.vertical === "top",
-          currentTop,
-          currentHeight,
-          siblingTop,
-          siblingHeight,
-          translation
-        );
-      }
-      if (direction === "horizontal") {
-        translation = canChangeDraggable(
-          () => mouseDirection.horizontal === "right",
-          () => mouseDirection.horizontal === "left",
-          currentLeft,
-          currentWidth,
-          siblingLeft,
-          siblingWidth,
-          translation
-        );
-      }
+      translation = canChangeDraggable(
+        direction,
+        draggedElement,
+        sibling,
+        mouseDirection,
+        translation
+      );
     }
-    if (
-      (direction === "vertical" && mouseDirection.vertical == "quiet") ||
-      (direction === "horizontal" && mouseDirection.horizontal == "quiet")
-    ) {
+    if (direction && mouseDirection[direction] == "quiet") {
       continue;
     }
     const siblingRealIndex = siblings.length - index;
@@ -416,21 +386,34 @@ const updateActualIndexBaseOnTranslation = (
   }
 };
 const canChangeDraggable = (
-  isGoingFoward: () => boolean,
-  isGoingBackwards: () => boolean,
-  currentPosition: number,
-  currentSize: number,
-  siblingPosition: number,
-  siblingSize: number,
+  direction: Direction | undefined,
+  sourceElement: HTMLElement,
+  targetElement: HTMLElement,
+  mouseDirection: MouseDirection,
   translation: {
     height: number;
     width: number;
   }
 ) => {
-  const siblingMiddle = siblingPosition + siblingSize / 2;
+  if (!direction) {
+    return { height: 0, width: 0 };
+  }
+  const { before, distance, after } = getPropByDirection(direction);
+  const currentBoundingClientRect = sourceElement.getBoundingClientRect();
+  const targetBoundingClientRect = targetElement.getBoundingClientRect();
+
+  const currentPosition = currentBoundingClientRect[before];
+  const currentSize = currentBoundingClientRect[distance];
+
+  const targetosition = targetBoundingClientRect[before];
+  const siblingSize = targetBoundingClientRect[distance];
+
+  const siblingMiddle = targetosition + siblingSize / 2;
+
   if (
-    (isGoingFoward() && currentPosition + currentSize > siblingMiddle) ||
-    (isGoingBackwards() && currentPosition > siblingMiddle)
+    (mouseDirection[direction] === after &&
+      currentPosition + currentSize > siblingMiddle) ||
+    (mouseDirection[direction] === before && currentPosition > siblingMiddle)
   ) {
     return { height: 0, width: 0 };
   }

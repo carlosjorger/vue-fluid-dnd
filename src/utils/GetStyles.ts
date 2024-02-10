@@ -11,6 +11,7 @@ import {
   Scroll,
   InnerDistance,
   Page,
+  After,
 } from "../../index";
 export const getScroll = (element: HTMLElement | undefined | null) => {
   if (element) {
@@ -336,6 +337,7 @@ export const getPropByDirection = (direction: Direction) => {
       afterMargin: "marginRight" as AfterMargin,
       borderBeforeWidth: "borderLeftWidth" as BorderWidth,
       before: "left" as Before,
+      after: "right" as After,
       gap: "columnGap" as GapStyle,
       distance: "width" as Distance,
       axis: "x" as Axis,
@@ -350,6 +352,7 @@ export const getPropByDirection = (direction: Direction) => {
       afterMargin: "marginBottom" as AfterMargin,
       borderBeforeWidth: "borderTopWidth" as BorderWidth,
       before: "top" as Before,
+      after: "down" as After,
       gap: "rowGap" as GapStyle,
       distance: "height" as Distance,
       axis: "y" as Axis,

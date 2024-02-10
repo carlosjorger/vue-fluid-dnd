@@ -8,6 +8,7 @@ export type GapStyle = "columnGap" | "rowGap";
 export type BorderWidth = "borderTopWidth" | "borderLeftWidth";
 export type Distance = "width" | "height";
 export type Before = "left" | "top";
+export type After = "right" | "down";
 export type Axis = "x" | "y";
 export type Offset = "offsetX" | "offsetY";
 export type Scroll = "scrollX" | "scrollY";
