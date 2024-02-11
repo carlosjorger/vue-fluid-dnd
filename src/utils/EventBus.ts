@@ -22,6 +22,8 @@ type Events = {
   };
   drop: {
     droppableId?: string;
+    draggableIdEvent?: string;
+    element: HTMLElement;
   };
   startDrag: {
     height: number;

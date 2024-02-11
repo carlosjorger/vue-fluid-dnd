@@ -40,10 +40,15 @@ type MouseDirection = {
   vertical: VerticalDirection;
   horizontal: HorizontalDirection;
 };
-
+enum DraggingState {
+  NOT_DRAGGING = "notDragging",
+  START_DRAGGING = "startDragging",
+  DRAGING = "dragging",
+  END_DRAGGING = "endDragging",
+}
+const draggingState = ref<DraggingState>(DraggingState.NOT_DRAGGING);
 const position = ref({ top: 0, left: 0 });
 const currentOffset = ref({ offsetX: 0, offsetY: 0 });
-const dragging = ref(false);
 const direction = inject<Direction>("direction");
 const onDrop =
   inject<(source: DraggableElement, destination: DraggableElement) => void>(
@@ -89,6 +94,8 @@ onMounted(() => {
           setTimeout(() => {
             eventBus?.emit(DROP_EVENT, {
               droppableId,
+              draggableIdEvent,
+              element,
             });
           }, duration);
         } else if (targetIndex === index) {
@@ -98,9 +105,6 @@ onMounted(() => {
             sourceElementTranlation.width
           );
           setTimeout(() => {
-            eventBus?.emit(DROP_EVENT, {
-              droppableId,
-            });
             onDrop(
               {
                 index: sourceIndex,
@@ -109,13 +113,27 @@ onMounted(() => {
                 index: targetIndex,
               }
             );
+            eventBus?.emit(DROP_EVENT, {
+              droppableId,
+              element,
+            });
           }, duration);
         }
       }
     },
-    drop: ({ droppableId: droppableIdEvent }) => {
-      if (droppableIdEvent === droppableId) {
-        removeTranslateWhitoutTransition();
+    drop: ({ droppableId: droppableIdEvent, draggableIdEvent, element }) => {
+      if (
+        (draggableIdEvent === undefined || draggableId === draggableIdEvent) &&
+        droppableIdEvent === droppableId
+      ) {
+        const observer = createObserverWithCallBack(() => {
+          removeTranslateWhitoutTransition();
+          observer.disconnect();
+        });
+        observer.observe(element, {
+          attributes: true,
+          attributeFilter: ["style"],
+        });
       }
     },
     startDrag: ({
@@ -130,11 +148,18 @@ onMounted(() => {
     },
   });
 });
+const createObserverWithCallBack = (callback: () => void) => {
+  return new MutationObserver((mutations) => {
+    mutations.forEach(() => {
+      callback();
+    });
+  });
+};
 const removeTranslateWhitoutTransition = () => {
   if (childRef.value) {
-    childRef.value.style.transition = ``;
+    childRef.value.style.transition = "";
+    childRef.value.style.transform = "";
   }
-  moveTranslate(childRef.value, 0, 0);
 };
 const setSlotRef = <_>(el: RefElement<_>) => {
   childRef.value = el as HTMLElement;
@@ -142,7 +167,6 @@ const setSlotRef = <_>(el: RefElement<_>) => {
     childRef.value.style.cursor = GRAB_CURSOR;
   }
 };
-
 const setSlotRefElementParams = (element: HTMLElement | undefined) => {
   if (element) {
     element.classList.add("draggable");
@@ -248,11 +272,12 @@ const setTransform = (
 };
 
 const onmousemove = function (event: MouseEvent, element: HTMLElement) {
-  if (!dragging.value) {
-    return;
+  if (draggingState.value === DraggingState.START_DRAGGING) {
+    startDragging(event);
+  } else if (draggingState.value === DraggingState.DRAGING) {
+    const mouseDirection = setTransform(element, event);
+    emitEventToSiblings(element, DRAG_EVENT, mouseDirection);
   }
-  const mouseDirection = setTransform(element, event);
-  emitEventToSiblings(element, DRAG_EVENT, mouseDirection);
 };
 const handlerMousemove = (event: MouseEvent) => {
   if (childRef.value) {
@@ -261,18 +286,25 @@ const handlerMousemove = (event: MouseEvent) => {
 };
 const onmousedown = (event: MouseEvent) => {
   const element = event.target as HTMLElement;
-  scroll.value = getScroll(element.parentElement);
-
-  if (dragging.value) {
-    onDropDraggingEvent(event);
-    document.removeEventListener(MOUSEMOVE_EVENT, handlerMousemove, false);
-    return;
+  if (draggingState.value === DraggingState.NOT_DRAGGING) {
+    draggingState.value = DraggingState.START_DRAGGING;
+    document.addEventListener(MOUSEMOVE_EVENT, handlerMousemove);
+    if (element) {
+      assignOnmouseup(element, (event: MouseEvent) => {
+        onDropDraggingEvent(event);
+        document.removeEventListener(MOUSEMOVE_EVENT, handlerMousemove);
+        assignOnmouseup(element, null);
+      });
+    }
   }
+};
+const startDragging = (event: MouseEvent) => {
+  const element = event.target as HTMLElement;
+  scroll.value = getScroll(element.parentElement);
   element.style.cursor = GRABBING_CURSOR;
   const { offsetX, offsetY } = event;
   currentOffset.value = { offsetX, offsetY };
-
-  dragging.value = true;
+  draggingState.value = DraggingState.DRAGING;
   emitEventToSiblings(element, START_DRAG_EVENT, {
     vertical: "down",
     horizontal: "right",
@@ -297,15 +329,6 @@ const onmousedown = (event: MouseEvent) => {
   setDraggingStyles(element);
   setBorderBoxStyle(element);
   setTransform(element, event);
-
-  document.addEventListener(MOUSEMOVE_EVENT, handlerMousemove);
-  if (element) {
-    assignOnmouseup(element, (event: MouseEvent) => {
-      onmouseup(event);
-      document.removeEventListener(MOUSEMOVE_EVENT, handlerMousemove);
-      assignOnmouseup(element, null);
-    });
-  }
 };
 const emitEventToSiblings = (
   draggedElement: HTMLElement,
@@ -585,15 +608,17 @@ const draggableIsOutside = (draggable: HTMLElement) => {
   return !hasIntersection(draggable, parentElement);
 };
 
-const onmouseup = (event: MouseEvent) => {
-  onDropDraggingEvent(event);
-};
 const onDropDraggingEvent = (event: MouseEvent) => {
-  dragging.value = false;
+  if (draggingState.value !== DraggingState.DRAGING) {
+    draggingState.value = DraggingState.NOT_DRAGGING;
+    return;
+  }
+  draggingState.value = DraggingState.END_DRAGGING;
   const element = event.target as HTMLElement;
   removeDraggingStyles(element);
   emitEventToSiblings(element, START_DROP_EVENT);
   setTimeout(() => {
+    draggingState.value = DraggingState.NOT_DRAGGING;
     element.style.position = "";
     element.style.zIndex = "";
     element.style.transform = "";
@@ -644,5 +669,4 @@ watch(
 }
 </style>
 <!-- TODO: refactor -->
-<!-- TODO: remove flashing of elements -->
 <!-- TODO: implement auto scroll functionality-->
