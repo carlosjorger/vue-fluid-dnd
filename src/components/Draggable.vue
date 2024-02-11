@@ -173,6 +173,10 @@ const setSlotRef = <_>(el: RefElement<_>) => {
   if (childRef.value) {
     childRef.value.style.cursor = GRAB_CURSOR;
   }
+  const vnode = el as VNodeRef;
+  if (vnode) {
+    return vnode;
+  }
 };
 const setSlotRefElementParams = (element: HTMLElement | undefined) => {
   if (element) {
