@@ -72,4 +72,4 @@
 
 ## 🤝 Contributing
 
-If you're interested in contributing to Fvue3-juice-dnd JS, please read our contributing docs before submitting a pull request [CONTRIBUTING](./CONTRIBUTING.md).cc
+If you're interested in contributing to Fvue3-juice-dnd JS, please read our contributing docs before submitting a pull request [CONTRIBUTING](./CONTRIBUTING.md).
