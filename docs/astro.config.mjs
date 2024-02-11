@@ -8,7 +8,7 @@ import netlify from "@astrojs/netlify";
 export default defineConfig({
   integrations: [
     starlight({
-      title: "Vue3JuiceDnD",
+      title: "VueJuiceDnD",
       social: {
         github: "https://github.com/carlosjorger/vue3-juice-dnd",
       },
