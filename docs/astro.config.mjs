@@ -31,6 +31,10 @@ export default defineConfig({
               label: "Single vertical list",
               link: "/guides/verticallist/",
             },
+            {
+              label: "Single vertical list with diferent styles",
+              link: "/guides/verticalliststyles/",
+            },
           ],
         },
         {

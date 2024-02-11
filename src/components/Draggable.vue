@@ -1,6 +1,13 @@
 <template><slot :set-ref="setSlotRef"></slot></template>
 <script setup lang="ts">
-import { ComponentPublicInstance, inject, onMounted, ref, watch } from "vue";
+import {
+  ComponentPublicInstance,
+  VNodeRef,
+  inject,
+  onMounted,
+  ref,
+  watch,
+} from "vue";
 import { LocalEventBus, useMittEvents } from "@/utils/EventBus";
 import { Direction, DraggableElement } from "../../index";
 import {
@@ -31,7 +38,7 @@ const START_DROP_EVENT = "startDrop";
 const DROP_EVENT = "drop";
 const GRAB_CURSOR = "grab";
 const GRABBING_CURSOR = "grabbing";
-type RefElement<T> = Element | ComponentPublicInstance<T> | null;
+type RefElement<T> = Element | ComponentPublicInstance<T> | VNodeRef | null;
 type DraggingEvent = typeof DRAG_EVENT | typeof START_DRAG_EVENT;
 type DragEvent = DraggingEvent | typeof DROP_EVENT | typeof START_DROP_EVENT;
 type VerticalDirection = "top" | "down" | "quiet";
