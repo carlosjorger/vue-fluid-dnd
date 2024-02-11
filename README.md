@@ -57,16 +57,16 @@
    //pass setRef to child to have the reference of draggable element
    //pass the direction of the list and droppable id
    <Droppable droppable-id="droppable-id" direction="vertical" :items="list1">
-   <div style="width: 40%; background-color: darkgray; display: block">
-       <Draggable
-       v-for="(element, index) in listToSort"
-       v-slot="{ setRef }"
-       :draggable-id="element['draggable-id']"
-       :index="index"
-       >
-       <div :ref="setRef" :style="element.style">{{ element.number }}</div>
-       </Draggable>
-   </div>
+      <div style="width: 40%; background-color: darkgray; display: block">
+         <Draggable
+         v-for="(element, index) in listToSort"
+         v-slot="{ setRef }"
+         :draggable-id="element['draggable-id']"
+         :index="index"
+         >
+         <div :ref="setRef" :style="element.style">{{ element.number }}</div>
+         </Draggable>
+      </div>
    </Droppable>
    ```
 

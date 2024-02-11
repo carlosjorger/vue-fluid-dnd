@@ -1,9 +1,8 @@
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
-// TODO: create guide sidar
 import vue from "@astrojs/vue";
-
 import tailwind from "@astrojs/tailwind";
+import netlify from "@astrojs/netlify";
 
 // https://astro.build/config
 export default defineConfig({
@@ -49,4 +48,5 @@ export default defineConfig({
     vue(),
     tailwind({ applyBaseStyles: false }),
   ],
+  adapter: netlify(),
 });

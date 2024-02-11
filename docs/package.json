@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.4.1",
+    "@astrojs/netlify": "^5.1.0",
     "@astrojs/starlight": "^0.17.3",
     "@astrojs/starlight-tailwind": "^2.0.1",
     "@astrojs/tailwind": "^5.1.0",
