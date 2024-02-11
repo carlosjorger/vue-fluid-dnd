@@ -1,8 +1,8 @@
 <template><slot :set-ref="setSlotRef"></slot></template>
 <script setup lang="ts">
 import {
+  ComponentOptionsBase,
   ComponentPublicInstance,
-  VNodeRef,
   inject,
   onMounted,
   ref,
@@ -38,7 +38,6 @@ const START_DROP_EVENT = "startDrop";
 const DROP_EVENT = "drop";
 const GRAB_CURSOR = "grab";
 const GRABBING_CURSOR = "grabbing";
-type RefElement<T> = Element | ComponentPublicInstance<T> | VNodeRef | null;
 type DraggingEvent = typeof DRAG_EVENT | typeof START_DRAG_EVENT;
 type DragEvent = DraggingEvent | typeof DROP_EVENT | typeof START_DROP_EVENT;
 type VerticalDirection = "top" | "down" | "quiet";
@@ -168,14 +167,43 @@ const removeTranslateWhitoutTransition = () => {
     childRef.value.style.transform = "";
   }
 };
-const setSlotRef = <_>(el: RefElement<_>) => {
-  childRef.value = el as HTMLElement;
-  if (childRef.value) {
+const setSlotRef = (
+  ref:
+    | Element
+    | ComponentPublicInstance<
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        false,
+        ComponentOptionsBase<
+          any,
+          any,
+          any,
+          any,
+          any,
+          any,
+          any,
+          any,
+          any,
+          {},
+          {},
+          string,
+          {}
+        >,
+        {},
+        {}
+      >
+    | null,
+  refs: Record<string, any>
+) => {
+  childRef.value = ref as HTMLElement;
+  if (childRef.value && refs) {
     childRef.value.style.cursor = GRAB_CURSOR;
-  }
-  const vnode = el as VNodeRef;
-  if (vnode) {
-    return vnode;
   }
 };
 const setSlotRefElementParams = (element: HTMLElement | undefined) => {
