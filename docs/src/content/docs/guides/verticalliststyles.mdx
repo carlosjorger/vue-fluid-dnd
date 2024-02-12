@@ -35,9 +35,13 @@ export const listOfNumbers = `
 
 ### Using Droppable and Draggable components
 
-You have to pass for each element its `styles`:
+You have to pass for each element its `styles`.
 
-export const highlightsDnD = [":style"];
+:::caution
+Each element must have its own `style` before and after change its position on the `list` using **VueJuiceDnD**. Avoid style with **psedo-classes** like [nth-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-last-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-of-type](https://developer.mozilla.org/es/docs/Web/CSS/:nth-of-type), etc because add styles to the elements of the list based in other properties like position, number of children, etc.
+:::
+
+export const highlightsDnD = [':style="element.style"'];
 
 export const listOfNumberInsideDnD = `
 <template>
@@ -49,7 +53,7 @@ export const listOfNumberInsideDnD = `
         :draggable-id="element.id"
         :index="index"
       >
-        <li class="number" :style="element.style" :ref="setRef">
+        <li :style="element.style" :ref="setRef">
           {{ element.content }}
         </li>
       </Draggable>
