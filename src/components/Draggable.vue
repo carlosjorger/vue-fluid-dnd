@@ -671,5 +671,6 @@ watch(
 }
 </style>
 <!-- TODO: refactor -->
+<!-- enable to drag in mobile -->
 <!-- TODO: avoid to fix height is already fixed -->
 <!-- TODO: implement auto scroll functionality-->
