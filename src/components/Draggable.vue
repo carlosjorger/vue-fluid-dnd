@@ -1,13 +1,6 @@
 <template><slot :set-ref="setSlotRef"></slot></template>
 <script setup lang="ts">
-import {
-  ComponentOptionsBase,
-  ComponentPublicInstance,
-  inject,
-  onMounted,
-  ref,
-  watch,
-} from "vue";
+import { ComponentPublicInstance, inject, onMounted, ref, watch } from "vue";
 import { LocalEventBus, useMittEvents } from "@/utils/EventBus";
 import { Direction, DraggableElement } from "../../index";
 import {
@@ -168,37 +161,7 @@ const removeTranslateWhitoutTransition = () => {
   }
 };
 const setSlotRef = (
-  ref:
-    | Element
-    | ComponentPublicInstance<
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        false,
-        ComponentOptionsBase<
-          any,
-          any,
-          any,
-          any,
-          any,
-          any,
-          any,
-          any,
-          any,
-          {},
-          {},
-          string,
-          {}
-        >,
-        {},
-        {}
-      >
-    | null,
+  ref: Element | ComponentPublicInstance | null,
   refs: Record<string, any>
 ) => {
   childRef.value = ref as HTMLElement;
@@ -708,4 +671,5 @@ watch(
 }
 </style>
 <!-- TODO: refactor -->
+<!-- TODO: avoid to fix height is already fixed -->
 <!-- TODO: implement auto scroll functionality-->

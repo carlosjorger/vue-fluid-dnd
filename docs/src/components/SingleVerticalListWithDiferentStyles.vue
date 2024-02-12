@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, VNodeRef } from "vue";
+import { ref } from "vue";
 import { Draggable, Droppable } from "vue3-juice-dnd";
 const list = ref([
   {
