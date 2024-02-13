@@ -39,6 +39,17 @@ type MouseDirection = {
   vertical: VerticalDirection;
   horizontal: HorizontalDirection;
 };
+// TODO. replace mouseevent
+type DragMouseTouchEvent = {
+  readonly clientX: number;
+  readonly clientY: number;
+  readonly pageX: number;
+  readonly pageY: number;
+  readonly screenX: number;
+  readonly screenY: number;
+  readonly target: EventTarget | null;
+};
+
 enum DraggingState {
   NOT_DRAGGING = "notDragging",
   START_DRAGGING = "startDragging",
@@ -172,7 +183,22 @@ const setSlotRef = (
 const setSlotRefElementParams = (element: HTMLElement | undefined) => {
   if (element) {
     element.classList.add("draggable");
-    element.onmousedown = onmousedown;
+    element.onmousedown = (event) => {
+      const { clientX, clientY, pageX, pageY, screenX, screenY, target } =
+        event;
+      onmousedown({
+        clientX,
+        clientY,
+        pageX,
+        pageY,
+        screenX,
+        screenY,
+        target,
+      });
+    };
+    element.ontouchstart = (event: TouchEvent) => {
+      console.log(event.touches[0].pageY, "TouchEvent");
+    };
     element.setAttribute(DRAGGABLE_ID_ATTR, draggableId);
   }
   if (element?.parentElement) {
@@ -286,7 +312,7 @@ const handlerMousemove = (event: MouseEvent) => {
     onmousemove(event, childRef.value);
   }
 };
-const onmousedown = (event: MouseEvent) => {
+const onmousedown = (event: DragMouseTouchEvent) => {
   const element = event.target as HTMLElement;
   if (draggingState.value === DraggingState.NOT_DRAGGING) {
     draggingState.value = DraggingState.START_DRAGGING;
