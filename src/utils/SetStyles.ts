@@ -1,3 +1,7 @@
+import { DragMouseTouchEvent } from "index";
+
+type onMouseEvent = "onmouseup" | "onmousedown" | "onmousemove";
+type onTouchEvent = "ontouchstart" | "ontouchmove";
 export const setBorderBoxStyle = (element: HTMLElement) => {
   element.style.boxSizing = "border-box";
 };
@@ -20,11 +24,42 @@ export const moveTranslate = (
   element.style.transform = `translate(${width}px,${height}px)`;
 };
 
-export const assignOnmouseup = (
+export const assignDraggingEvent = (
   element: HTMLElement,
-  onmouseupFunc: ((event: MouseEvent) => void) | null
+  onEvent: onMouseEvent | onTouchEvent,
+  onmouseupFunc: ((event: DragMouseTouchEvent) => void) | null
 ) => {
-  element.onmouseup = onmouseupFunc;
+  if (!onmouseupFunc) {
+    return;
+  }
+  if (
+    onEvent == "onmouseup" ||
+    onEvent == "onmousedown" ||
+    onEvent == "onmousemove"
+  ) {
+    element[onEvent] = onmouseupFunc;
+  } else {
+    element[onEvent] = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (touch) {
+        onmouseupFunc(convetEventToDragMouseTouchEvent(touch));
+      }
+    };
+  }
+};
+const convetEventToDragMouseTouchEvent = (
+  event: MouseEvent | Touch
+): DragMouseTouchEvent => {
+  const { clientX, clientY, pageX, pageY, screenX, screenY, target } = event;
+  return {
+    clientX,
+    clientY,
+    pageX,
+    pageY,
+    screenX,
+    screenY,
+    target,
+  };
 };
 export const setTranistion = (
   element: HTMLElement | undefined,

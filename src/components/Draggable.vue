@@ -2,12 +2,12 @@
 <script setup lang="ts">
 import { ComponentPublicInstance, inject, onMounted, ref, watch } from "vue";
 import { LocalEventBus, useMittEvents } from "@/utils/EventBus";
-import { Direction, DraggableElement } from "../../index";
+import { Direction, DragMouseTouchEvent, DraggableElement } from "../../index";
 import {
   setBorderBoxStyle,
   fixSizeStyle,
   moveTranslate,
-  assignOnmouseup,
+  assignDraggingEvent,
   setTranistion,
 } from "@/utils/SetStyles";
 import {
@@ -40,15 +40,6 @@ type MouseDirection = {
   horizontal: HorizontalDirection;
 };
 // TODO. replace mouseevent
-type DragMouseTouchEvent = {
-  readonly clientX: number;
-  readonly clientY: number;
-  readonly pageX: number;
-  readonly pageY: number;
-  readonly screenX: number;
-  readonly screenY: number;
-  readonly target: EventTarget | null;
-};
 
 enum DraggingState {
   NOT_DRAGGING = "notDragging",
@@ -196,9 +187,10 @@ const setSlotRefElementParams = (element: HTMLElement | undefined) => {
         target,
       });
     };
-    element.ontouchstart = (event: TouchEvent) => {
-      console.log(event.touches[0].pageY, "TouchEvent");
-    };
+    assignDraggingEvent(element, "ontouchstart", (event) => {
+      console.log(event.pageY, "TouchEvent");
+    });
+
     element.setAttribute(DRAGGABLE_ID_ATTR, draggableId);
   }
   if (element?.parentElement) {
@@ -318,11 +310,15 @@ const onmousedown = (event: DragMouseTouchEvent) => {
     draggingState.value = DraggingState.START_DRAGGING;
     document.addEventListener(MOUSEMOVE_EVENT, handlerMousemove);
     if (element) {
-      assignOnmouseup(element, (event: MouseEvent) => {
-        onDropDraggingEvent(event);
-        document.removeEventListener(MOUSEMOVE_EVENT, handlerMousemove);
-        assignOnmouseup(element, null);
-      });
+      assignDraggingEvent(
+        element,
+        "onmouseup",
+        (event: DragMouseTouchEvent) => {
+          onDropDraggingEvent(event);
+          document.removeEventListener(MOUSEMOVE_EVENT, handlerMousemove);
+          assignDraggingEvent(element, "onmouseup", null);
+        }
+      );
     }
   }
 };
@@ -636,7 +632,7 @@ const draggableIsOutside = (draggable: HTMLElement) => {
   return !hasIntersection(draggable, parentElement);
 };
 
-const onDropDraggingEvent = (event: MouseEvent) => {
+const onDropDraggingEvent = (event: DragMouseTouchEvent) => {
   if (draggingState.value !== DraggingState.DRAGING) {
     draggingState.value = DraggingState.NOT_DRAGGING;
     return;
