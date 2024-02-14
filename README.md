@@ -9,6 +9,7 @@
 - ✅ **Easy to install**.
 - ✅ **Fully customizable**.
 - ✅ **Work with horizontal and vertical list**.
+- ✅ **Mouse 🐭 and touch 👉📱 (mobile, tablet and so on) support**.
 - 🔲 **Fully tested, typed and reliable**.
 - 🔲 **Nice documentation and examples**.
 
