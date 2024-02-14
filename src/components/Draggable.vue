@@ -181,13 +181,11 @@ const setSlotRefElementParams = (element: HTMLElement | undefined) => {
       "onmousedown",
       onmousedown("mousemove", "onmouseup")
     );
-
-    assignDraggingEvent(element, "ontouchstart", (event) => {
-      console.log(event.pageY, "TouchStart");
-    });
-    assignDraggingEvent(element, "ontouchend", (event) => {
-      console.log(event.pageY, "TouchEnd");
-    });
+    assignDraggingEvent(
+      element,
+      "ontouchstart",
+      onmousedown("touchmove", "ontouchend")
+    );
     element.setAttribute(DRAGGABLE_ID_ATTR, draggableId);
   }
   if (element?.parentElement) {
@@ -697,9 +695,9 @@ watch(
 <style>
 .draggable {
   box-sizing: border-box !important;
+  touch-action: none;
 }
 </style>
 <!-- TODO: refactor -->
-<!-- TODO: enable to drag in mobile -->
 <!-- TODO: avoid to fix height is already fixed -->
 <!-- TODO: implement auto scroll functionality-->
