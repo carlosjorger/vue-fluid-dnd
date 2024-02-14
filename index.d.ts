@@ -22,4 +22,6 @@ export type DragMouseTouchEvent = {
   readonly screenX: number;
   readonly screenY: number;
   readonly target: EventTarget | null;
+  readonly offsetX: number;
+  readonly offsetY: number;
 };

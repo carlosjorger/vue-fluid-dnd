@@ -1,7 +1,10 @@
 import { DragMouseTouchEvent } from "index";
+import { getBorderWidthProperty } from "./GetStyles";
 
-type onMouseEvent = "onmouseup" | "onmousedown" | "onmousemove";
 type onTouchEvent = "ontouchstart" | "ontouchmove";
+const mouseEvents = ["onmouseup", "onmousedown", "onmousemove"] as const;
+type onMouseEvent = typeof mouseEvents[number];
+
 export const setBorderBoxStyle = (element: HTMLElement) => {
   element.style.boxSizing = "border-box";
 };
@@ -32,11 +35,7 @@ export const assignDraggingEvent = (
   if (!onmouseupFunc) {
     return;
   }
-  if (
-    onEvent == "onmouseup" ||
-    onEvent == "onmousedown" ||
-    onEvent == "onmousemove"
-  ) {
+  if (isMouseEvent(onEvent)) {
     element[onEvent] = onmouseupFunc;
   } else {
     element[onEvent] = (event: TouchEvent) => {
@@ -47,10 +46,33 @@ export const assignDraggingEvent = (
     };
   }
 };
+// TODO: create addEventListener and removeEventListener
+const isMouseEvent = (x: any): x is onMouseEvent => mouseEvents.includes(x);
 const convetEventToDragMouseTouchEvent = (
   event: MouseEvent | Touch
 ): DragMouseTouchEvent => {
   const { clientX, clientY, pageX, pageY, screenX, screenY, target } = event;
+  let offsetX = 0,
+    offsetY = 0;
+
+  if (event instanceof MouseEvent) {
+    offsetX = event.offsetX;
+    offsetY = event.offsetY;
+  } else {
+    const element = event.target as HTMLElement;
+    const boundingClientRect = element.getBoundingClientRect();
+    offsetX =
+      pageX -
+      window.scrollX -
+      boundingClientRect.left -
+      getBorderWidthProperty(element, "borderLeftWidth");
+
+    offsetY =
+      pageY -
+      window.scrollY -
+      boundingClientRect.top -
+      getBorderWidthProperty(element, "borderTopWidth");
+  }
   return {
     clientX,
     clientY,
@@ -59,6 +81,8 @@ const convetEventToDragMouseTouchEvent = (
     screenX,
     screenY,
     target,
+    offsetX,
+    offsetY,
   };
 };
 export const setTranistion = (

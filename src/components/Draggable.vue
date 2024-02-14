@@ -174,19 +174,9 @@ const setSlotRef = (
 const setSlotRefElementParams = (element: HTMLElement | undefined) => {
   if (element) {
     element.classList.add("draggable");
-    element.onmousedown = (event) => {
-      const { clientX, clientY, pageX, pageY, screenX, screenY, target } =
-        event;
-      onmousedown({
-        clientX,
-        clientY,
-        pageX,
-        pageY,
-        screenX,
-        screenY,
-        target,
-      });
-    };
+
+    assignDraggingEvent(element, "onmousedown", onmousedown);
+
     assignDraggingEvent(element, "ontouchstart", (event) => {
       console.log(event.pageY, "TouchEvent");
     });
@@ -199,7 +189,7 @@ const setSlotRefElementParams = (element: HTMLElement | undefined) => {
 };
 const setTransform = (
   element: HTMLElement,
-  event: MouseEvent
+  event: DragMouseTouchEvent
 ): MouseDirection => {
   const elementBoundingClientRect = element.getBoundingClientRect();
 
@@ -291,7 +281,10 @@ const setTransform = (
   return { vertical, horizontal };
 };
 
-const onmousemove = function (event: MouseEvent, element: HTMLElement) {
+const onmousemove = function (
+  event: DragMouseTouchEvent,
+  element: HTMLElement
+) {
   if (draggingState.value === DraggingState.START_DRAGGING) {
     startDragging(event);
   } else if (draggingState.value === DraggingState.DRAGING) {
@@ -299,7 +292,7 @@ const onmousemove = function (event: MouseEvent, element: HTMLElement) {
     emitEventToSiblings(element, DRAG_EVENT, mouseDirection);
   }
 };
-const handlerMousemove = (event: MouseEvent) => {
+const handlerMousemove = (event: DragMouseTouchEvent) => {
   if (childRef.value) {
     onmousemove(event, childRef.value);
   }
@@ -322,7 +315,7 @@ const onmousedown = (event: DragMouseTouchEvent) => {
     }
   }
 };
-const startDragging = (event: MouseEvent) => {
+const startDragging = (event: DragMouseTouchEvent) => {
   const element = event.target as HTMLElement;
   scroll.value = getScroll(element.parentElement);
   element.style.cursor = GRABBING_CURSOR;
