@@ -9,6 +9,7 @@ import {
   moveTranslate,
   assignDraggingEvent,
   setTranistion,
+  convetEventToDragMouseTouchEvent,
 } from "@/utils/SetStyles";
 import {
   getScroll,
@@ -175,12 +176,18 @@ const setSlotRefElementParams = (element: HTMLElement | undefined) => {
   if (element) {
     element.classList.add("draggable");
 
-    assignDraggingEvent(element, "onmousedown", onmousedown);
+    assignDraggingEvent(
+      element,
+      "onmousedown",
+      onmousedown("mousemove", "onmouseup")
+    );
 
     assignDraggingEvent(element, "ontouchstart", (event) => {
-      console.log(event.pageY, "TouchEvent");
+      console.log(event.pageY, "TouchStart");
     });
-
+    assignDraggingEvent(element, "ontouchend", (event) => {
+      console.log(event.pageY, "TouchEnd");
+    });
     element.setAttribute(DRAGGABLE_ID_ATTR, draggableId);
   }
   if (element?.parentElement) {
@@ -292,29 +299,36 @@ const onmousemove = function (
     emitEventToSiblings(element, DRAG_EVENT, mouseDirection);
   }
 };
-const handlerMousemove = (event: DragMouseTouchEvent) => {
+const handlerMousemove = (event: MouseEvent | TouchEvent) => {
+  const eventToDragMouse = convetEventToDragMouseTouchEvent(event);
   if (childRef.value) {
-    onmousemove(event, childRef.value);
+    onmousemove(eventToDragMouse, childRef.value);
   }
 };
-const onmousedown = (event: DragMouseTouchEvent) => {
-  const element = event.target as HTMLElement;
-  if (draggingState.value === DraggingState.NOT_DRAGGING) {
-    draggingState.value = DraggingState.START_DRAGGING;
-    document.addEventListener(MOUSEMOVE_EVENT, handlerMousemove);
-    if (element) {
-      assignDraggingEvent(
-        element,
-        "onmouseup",
-        (event: DragMouseTouchEvent) => {
-          onDropDraggingEvent(event);
-          document.removeEventListener(MOUSEMOVE_EVENT, handlerMousemove);
-          assignDraggingEvent(element, "onmouseup", null);
-        }
-      );
+const onmousedown = (
+  moveEvent: "mousemove" | "touchmove",
+  onLeaveEvent: "onmouseup" | "ontouchend"
+) => {
+  return (event: DragMouseTouchEvent) => {
+    const element = event.target as HTMLElement;
+    if (draggingState.value === DraggingState.NOT_DRAGGING) {
+      draggingState.value = DraggingState.START_DRAGGING;
+      document.addEventListener(moveEvent, handlerMousemove);
+      if (element) {
+        assignDraggingEvent(
+          element,
+          onLeaveEvent,
+          (event: DragMouseTouchEvent) => {
+            onDropDraggingEvent(event);
+            document.removeEventListener(moveEvent, handlerMousemove);
+            assignDraggingEvent(element, onLeaveEvent, null);
+          }
+        );
+      }
     }
-  }
+  };
 };
+
 const startDragging = (event: DragMouseTouchEvent) => {
   const element = event.target as HTMLElement;
   scroll.value = getScroll(element.parentElement);

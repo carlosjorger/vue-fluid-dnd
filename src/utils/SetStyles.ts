@@ -1,10 +1,13 @@
 import { DragMouseTouchEvent } from "index";
 import { getBorderWidthProperty } from "./GetStyles";
 
-type onTouchEvent = "ontouchstart" | "ontouchmove";
-const mouseEvents = ["onmouseup", "onmousedown", "onmousemove"] as const;
-type onMouseEvent = typeof mouseEvents[number];
+type onTouchEvent = "ontouchstart" | "ontouchmove" | "ontouchend";
+const onMouseEvents = ["onmouseup", "onmousedown", "onmousemove"] as const;
+type onMouseEvent = typeof onMouseEvents[number];
 
+type touchEvent = "touchstart" | "touchmove" | "touchend";
+const mouseEvents = ["mouseup", "mousedown", "mousemove"] as const;
+type mouseEvent = typeof mouseEvents[number];
 export const setBorderBoxStyle = (element: HTMLElement) => {
   element.style.boxSizing = "border-box";
 };
@@ -30,28 +33,61 @@ export const moveTranslate = (
 export const assignDraggingEvent = (
   element: HTMLElement,
   onEvent: onMouseEvent | onTouchEvent,
-  onmouseupFunc: ((event: DragMouseTouchEvent) => void) | null
+  callback: ((event: DragMouseTouchEvent) => void) | null
 ) => {
-  if (!onmouseupFunc) {
+  if (!callback) {
     return;
   }
-  if (isMouseEvent(onEvent)) {
-    element[onEvent] = onmouseupFunc;
+  if (isOnMouseEvent(onEvent)) {
+    element[onEvent] = callback;
   } else {
     element[onEvent] = (event: TouchEvent) => {
-      const touch = event.touches[0];
-      if (touch) {
-        onmouseupFunc(convetEventToDragMouseTouchEvent(touch));
-      }
+      const dragMouseTouchEvent = convetEventToDragMouseTouchEvent(event);
+      callback(dragMouseTouchEvent);
     };
   }
 };
+export const addDragMouseToucEventListener = (
+  event: touchEvent | mouseEvent,
+  callback: ((event: DragMouseTouchEvent) => void) | null
+) => {
+  if (!callback) {
+    return;
+  }
+  if (isMouseEvent(event)) {
+    document.addEventListener(event, callback);
+  } else {
+    document.addEventListener(event, (event: TouchEvent) => {
+      const dragMouseTouchEvent = convetEventToDragMouseTouchEvent(event);
+      callback(dragMouseTouchEvent);
+    });
+  }
+};
+
 // TODO: create addEventListener and removeEventListener
-const isMouseEvent = (x: any): x is onMouseEvent => mouseEvents.includes(x);
-const convetEventToDragMouseTouchEvent = (
-  event: MouseEvent | Touch
+const isOnMouseEvent = (x: any): x is onMouseEvent => onMouseEvents.includes(x);
+const isMouseEvent = (x: any): x is mouseEvent => mouseEvents.includes(x);
+
+export const convetEventToDragMouseTouchEvent = (
+  event: MouseEvent | TouchEvent
 ): DragMouseTouchEvent => {
-  const { clientX, clientY, pageX, pageY, screenX, screenY, target } = event;
+  let tempEvent = event instanceof TouchEvent ? event.touches[0] : event;
+  if (!tempEvent) {
+    const { target } = event;
+    return {
+      clientX: 0,
+      clientY: 0,
+      pageX: 0,
+      pageY: 0,
+      screenX: 0,
+      screenY: 0,
+      target,
+      offsetX: 0,
+      offsetY: 0,
+    };
+  }
+  const { clientX, clientY, pageX, pageY, screenX, screenY, target } =
+    tempEvent;
   let offsetX = 0,
     offsetY = 0;
 
