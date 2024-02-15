@@ -5,9 +5,9 @@ type onTouchEvent = "ontouchstart" | "ontouchmove" | "ontouchend";
 const onMouseEvents = ["onmouseup", "onmousedown", "onmousemove"] as const;
 type onMouseEvent = typeof onMouseEvents[number];
 
-type touchEvent = "touchstart" | "touchmove" | "touchend";
+type TouchEventType = "touchstart" | "touchmove" | "touchend";
 const mouseEvents = ["mouseup", "mousedown", "mousemove"] as const;
-type mouseEvent = typeof mouseEvents[number];
+type MouseEventType = typeof mouseEvents[number];
 export const setBorderBoxStyle = (element: HTMLElement) => {
   element.style.boxSizing = "border-box";
 };
@@ -48,7 +48,7 @@ export const assignDraggingEvent = (
   }
 };
 export const addDragMouseToucEventListener = (
-  event: touchEvent | mouseEvent,
+  event: TouchEventType | MouseEventType,
   callback: ((event: DragMouseTouchEvent) => void) | null
 ) => {
   if (!callback) {
@@ -66,7 +66,7 @@ export const addDragMouseToucEventListener = (
 
 // TODO: create addEventListener and removeEventListener
 const isOnMouseEvent = (x: any): x is onMouseEvent => onMouseEvents.includes(x);
-const isMouseEvent = (x: any): x is mouseEvent => mouseEvents.includes(x);
+const isMouseEvent = (x: any): x is MouseEventType => mouseEvents.includes(x);
 
 export const convetEventToDragMouseTouchEvent = (
   event: MouseEvent | TouchEvent

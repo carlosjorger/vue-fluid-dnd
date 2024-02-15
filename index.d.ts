@@ -14,6 +14,10 @@ export type Offset = "offsetX" | "offsetY";
 export type Scroll = "scrollX" | "scrollY";
 export type InnerDistance = "innerWidth" | "innerHeight";
 export type Page = "pageX" | "pageY";
+export type MoveEvent = "mousemove" | "touchmove";
+export type OnLeaveEvent = "onmouseup" | "ontouchend";
+export type TouchEvent = "touchstart" | "touchmove" | "touchend";
+
 export type DragMouseTouchEvent = {
   readonly clientX: number;
   readonly clientY: number;

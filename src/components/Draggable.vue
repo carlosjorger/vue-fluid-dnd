@@ -2,7 +2,13 @@
 <script setup lang="ts">
 import { ComponentPublicInstance, inject, onMounted, ref, watch } from "vue";
 import { LocalEventBus, useMittEvents } from "@/utils/EventBus";
-import { Direction, DragMouseTouchEvent, DraggableElement } from "../../index";
+import {
+  Direction,
+  DragMouseTouchEvent,
+  DraggableElement,
+  MoveEvent,
+  OnLeaveEvent,
+} from "../../index";
 import {
   setBorderBoxStyle,
   fixSizeStyle,
@@ -25,7 +31,6 @@ const { draggableId, index } = defineProps<{
   index: number;
 }>();
 const DRAGGABLE_ID_ATTR = "draggable-id";
-const MOUSEMOVE_EVENT = "mousemove";
 const DRAG_EVENT = "drag";
 const START_DRAG_EVENT = "startDrag";
 const START_DROP_EVENT = "startDrop";
@@ -303,10 +308,7 @@ const handlerMousemove = (event: MouseEvent | TouchEvent) => {
     onmousemove(eventToDragMouse, childRef.value);
   }
 };
-const onmousedown = (
-  moveEvent: "mousemove" | "touchmove",
-  onLeaveEvent: "onmouseup" | "ontouchend"
-) => {
+const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
   return (event: DragMouseTouchEvent) => {
     const element = event.target as HTMLElement;
     if (draggingState.value === DraggingState.NOT_DRAGGING) {
