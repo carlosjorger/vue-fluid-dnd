@@ -125,7 +125,8 @@ const list2 = ref([
       "color: white; background-color: brown; padding: 26px 0; margin: 27px;",
   },
 ]);
-const numbers = ref([1, 2, 3, 4, 5]);
+const numbers1 = ref([1, 2, 3, 4, 5]);
+const numbers2 = ref([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 </script>
 
 <template>
@@ -154,21 +155,36 @@ const numbers = ref([1, 2, 3, 4, 5]);
     </div>
   </Droppable>
 
-  <Droppable droppable-id="5" direction="vertical" :items="numbers">
-    <ul style="display: block; width: 50%">
-      <Draggable
-        v-for="(element, index) in numbers"
-        v-slot="{ setRef }"
-        :draggable-id="'number-' + element.toString()"
-        :index="index"
-        ><li :ref="setRef" class="number">
-          {{ element }}
-        </li>
-      </Draggable>
-    </ul>
-  </Droppable>
+  <div style="display: flex; flex-direction: row">
+    <Droppable droppable-id="5" direction="vertical" :items="numbers1">
+      <ul style="display: block; width: 40%">
+        <Draggable
+          v-for="(element, index) in numbers1"
+          v-slot="{ setRef }"
+          :draggable-id="'number-' + element.toString()"
+          :index="index"
+          ><li :ref="setRef" class="number">
+            {{ element }}
+          </li>
+        </Draggable>
+      </ul>
+    </Droppable>
+    <Droppable droppable-id="6" direction="vertical" :items="numbers2">
+      <ul style="display: block; width: 40%; height: 200px; overflow: auto">
+        <Draggable
+          v-for="(element, index) in numbers2"
+          v-slot="{ setRef }"
+          :draggable-id="'number-' + element.toString()"
+          :index="index"
+          ><li :ref="setRef" class="number">
+            {{ element }}
+          </li>
+        </Draggable>
+      </ul>
+    </Droppable>
+  </div>
   <div style="display: flex; flex-direction: row; column-gap: 10px">
-    <Droppable droppable-id="3" direction="vertical" :items="list1">
+    <Droppable droppable-id="7" direction="vertical" :items="list1">
       <div style="width: 40%; background-color: darkgray; display: block">
         <Draggable
           v-for="(element, index) in list1"
@@ -179,7 +195,7 @@ const numbers = ref([1, 2, 3, 4, 5]);
         </Draggable>
       </div>
     </Droppable>
-    <Droppable droppable-id="4" direction="vertical" :items="list2">
+    <Droppable droppable-id="8" direction="vertical" :items="list2">
       <div class="droppable-gaps">
         <Draggable
           v-for="(element, index) in list2"
