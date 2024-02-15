@@ -101,9 +101,11 @@ export const calculateRangeWhileDragging = (
 ) => {
   let height = 0;
   let width = 0;
-
   if (!direction) {
     return { height, width };
+  }
+  if (sourceIndex === targetIndex) {
+    return addScrollToRageDragging({ height, width }, direction, scroll);
   }
   const directionProps = getPropByDirection(direction);
   const isDraggedFoward = sourceIndex < targetIndex;
@@ -146,20 +148,37 @@ export const calculateRangeWhileDragging = (
   let beforeMarginCalc = Math.max(beforeMargin, afterMarginOutside);
   let afterMarginCalc = Math.max(afterMargin, beforeMarginOutside);
 
-  const actualWindowScroll = window[directionProps.scroll];
-  const initialScroll = scroll[directionProps.scroll];
-  const scrollChange = initialScroll - actualWindowScroll;
-
   const spaceBetween = afterMarginCalc + space + beforeMarginCalc + gap;
 
   let spaceCalc = spaceBetween - spaceBeforeDraggedElement;
-  spaceCalc = (isDraggedFoward ? spaceCalc : -spaceCalc) + scrollChange;
+
+  spaceCalc = isDraggedFoward ? spaceCalc : -spaceCalc;
   if (direction === "vertical") {
     height = spaceCalc;
   } else if (direction === "horizontal") {
     width = spaceCalc;
   }
-  return { height, width };
+
+  return addScrollToRageDragging({ height, width }, direction, scroll);
+};
+const addScrollToRageDragging = (
+  dragging: {
+    height: number;
+    width: number;
+  },
+  direction: Direction,
+  initialScroll: { scrollY: number; scrollX: number }
+) => {
+  const { scroll } = getPropByDirection(direction);
+  const actualWindowScroll = window[scroll];
+  const initialScrollProp = initialScroll[scroll];
+  const scrollChange = initialScrollProp - actualWindowScroll;
+  if (direction === "vertical") {
+    dragging.height += scrollChange;
+  } else if (direction === "horizontal") {
+    dragging.width += scrollChange;
+  }
+  return dragging;
 };
 const getBeforeAfterMarginBaseOnDraggedDirection = (
   beforeMarginProp: BeforeMargin,

@@ -234,7 +234,9 @@ const setTransform = (
     const scrollValue = window[scroll];
     const innerDistance = window[inner];
     const distanceValue = elementBoundingClientRect[distance];
-
+    // if (childRef.value && childRef.value.parentElement) {
+    //   console.log(childRef.value.offsetTop);
+    // }
     if (
       elementPosittion >= scrollValue - distanceValue / 2 &&
       elementPosittion <= scrollValue + innerDistance
@@ -696,5 +698,5 @@ watch(
 </style>
 <!-- TODO: refactor -->
 <!-- TODO: avoid to fix height is already fixed -->
-<!-- TODO: change drop position if scroll position is changed -->
+<!-- TODO: change drop position if scroll position is changed (relative to parent scroll)-->
 <!-- TODO: implement auto scroll functionality-->
