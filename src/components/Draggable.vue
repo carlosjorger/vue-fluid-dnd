@@ -25,6 +25,7 @@ import {
   calculateRangeWhileDragging,
   calculateWhileDragging,
   getPropByDirection,
+  getWindowScroll,
 } from "@/utils/GetStyles";
 const { draggableId, index } = defineProps<{
   draggableId: string;
@@ -64,6 +65,8 @@ const onDrop =
 const droppableId = inject<string>("droppableId");
 const translate = ref({ x: 0, y: 0 });
 const scroll = ref({ scrollLeft: 0, scrollTop: 0 });
+const windowScroll = ref({ scrollY: 0, scrollX: 0 });
+
 const duration = 200;
 
 let childRef = ref<HTMLElement>();
@@ -97,20 +100,12 @@ onMounted(() => {
         if (!onDrop) {
           return;
         }
-        if (sourceIndex === targetIndex) {
-          setTimeout(() => {
-            eventBus?.emit(DROP_EVENT, {
-              droppableId,
-              draggableIdEvent,
-              element,
-            });
-          }, duration);
-        } else if (targetIndex === index) {
-          moveTranslate(
-            element,
-            sourceElementTranlation.height,
-            sourceElementTranlation.width
-          );
+        moveTranslate(
+          element,
+          sourceElementTranlation.height,
+          sourceElementTranlation.width
+        );
+        if (sourceIndex === targetIndex || targetIndex === index) {
           setTimeout(() => {
             onDrop(
               {
@@ -128,11 +123,8 @@ onMounted(() => {
         }
       }
     },
-    drop: ({ droppableId: droppableIdEvent, draggableIdEvent, element }) => {
-      if (
-        (draggableIdEvent === undefined || draggableId === draggableIdEvent) &&
-        droppableIdEvent === droppableId
-      ) {
+    drop: ({ droppableId: droppableIdEvent, element }) => {
+      if (droppableIdEvent === droppableId) {
         const observer = createObserverWithCallBack(() => {
           removeTranslateWhitoutTransition();
           observer.disconnect();
@@ -332,6 +324,7 @@ const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
 const startDragging = (event: DragMouseTouchEvent) => {
   const element = event.target as HTMLElement;
   scroll.value = getScroll(element.parentElement);
+  windowScroll.value = getWindowScroll();
   element.style.cursor = GRABBING_CURSOR;
   const { offsetX, offsetY } = event;
   currentOffset.value = { offsetX, offsetY };
@@ -531,7 +524,8 @@ const emitDroppingEventToSiblings = (
       direction,
       allSiblings,
       elementPosition,
-      targetIndex
+      targetIndex,
+      windowScroll.value
     );
     emitEventBus(
       event,

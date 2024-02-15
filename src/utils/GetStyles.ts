@@ -20,6 +20,10 @@ export const getScroll = (element: HTMLElement | undefined | null) => {
   }
   return { scrollLeft: 0, scrollTop: 0 };
 };
+export const getWindowScroll = () => {
+  const { scrollX, scrollY } = window;
+  return { scrollX, scrollY };
+};
 export const parseFloatEmpty = (value: string) => {
   if (!value || value.trim().length == 0 || value == "normal") {
     return 0;
@@ -92,7 +96,8 @@ export const calculateRangeWhileDragging = (
   direction: Direction | undefined,
   siblings: HTMLElement[],
   sourceIndex: number,
-  targetIndex: number
+  targetIndex: number,
+  scroll: { scrollY: number; scrollX: number }
 ) => {
   let height = 0;
   let width = 0;
@@ -137,13 +142,18 @@ export const calculateRangeWhileDragging = (
     isDraggedFoward,
     hasGaps
   );
+
   let beforeMarginCalc = Math.max(beforeMargin, afterMarginOutside);
   let afterMarginCalc = Math.max(afterMargin, beforeMarginOutside);
+
+  const actualWindowScroll = window[directionProps.scroll];
+  const initialScroll = scroll[directionProps.scroll];
+  const scrollChange = initialScroll - actualWindowScroll;
 
   const spaceBetween = afterMarginCalc + space + beforeMarginCalc + gap;
 
   let spaceCalc = spaceBetween - spaceBeforeDraggedElement;
-  spaceCalc = isDraggedFoward ? spaceCalc : -spaceCalc;
+  spaceCalc = (isDraggedFoward ? spaceCalc : -spaceCalc) + scrollChange;
   if (direction === "vertical") {
     height = spaceCalc;
   } else if (direction === "horizontal") {

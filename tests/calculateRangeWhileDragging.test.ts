@@ -161,7 +161,8 @@ test("check calculateRangeWhileDragging replacing an element with another one fu
     "vertical",
     draggablesList,
     0,
-    3
+    3,
+    { scrollX: 0, scrollY: 0 }
   );
   expect(heightTranslate.height).toBe(308);
 });
@@ -170,7 +171,8 @@ test("check calculateRangeWhileDragging replacing an element with another one be
     "vertical",
     draggablesList,
     3,
-    0
+    0,
+    { scrollX: 0, scrollY: 0 }
   );
   expect(heightTranslate.height).toBe(-282);
 });
@@ -180,7 +182,8 @@ test("check calculateRangeWhileDragging replacing an element with another one fu
     "vertical",
     draggablesWithGapsList,
     0,
-    3
+    3,
+    { scrollX: 0, scrollY: 0 }
   );
   expect(heightTranslate.height).toBe(361);
 });
@@ -190,7 +193,8 @@ test("check calculateRangeWhileDragging replacing an element with another one fu
     "vertical",
     draggablesWithGapsList,
     1,
-    3
+    3,
+    { scrollX: 0, scrollY: 0 }
   );
   expect(heightTranslate.height).toBe(268);
 });
