@@ -234,9 +234,7 @@ const setTransform = (
     const scrollValue = window[scroll];
     const innerDistance = window[inner];
     const distanceValue = elementBoundingClientRect[distance];
-    // if (childRef.value && childRef.value.parentElement) {
-    //   console.log(childRef.value.offsetTop);
-    // }
+
     if (
       elementPosittion >= scrollValue - distanceValue / 2 &&
       elementPosittion <= scrollValue + innerDistance
@@ -248,7 +246,15 @@ const setTransform = (
         border -
         getMarginStyleByProperty(element, beforeMargin) -
         scrollValue;
-
+      if (childRef.value && childRef.value.parentElement) {
+        const positionInsideParent =
+          position.value[before] -
+          childRef.value.parentElement.getBoundingClientRect()[before] +
+          newTranslate;
+        const parentDistance =
+          childRef.value.parentElement.getBoundingClientRect()[distance];
+        console.log(positionInsideParent, parentDistance);
+      }
       if (translate.value.x > newTranslate) {
         return {
           direction: directionValues.before as T,

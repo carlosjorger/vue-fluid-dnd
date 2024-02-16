@@ -12,6 +12,7 @@ import {
   InnerDistance,
   Page,
   After,
+  OffsetElement,
 } from "../../index";
 export const getScroll = (element: HTMLElement | undefined | null) => {
   if (element) {
@@ -374,6 +375,7 @@ export const getPropByDirection = (direction: Direction) => {
       scroll: "scrollX" as Scroll,
       page: "pageX" as Page,
       inner: "innerWidth" as InnerDistance,
+      offsetElement: "offsetLeft" as OffsetElement,
     };
   } else {
     return {
@@ -389,6 +391,7 @@ export const getPropByDirection = (direction: Direction) => {
       scroll: "scrollY" as Scroll,
       page: "pageY" as Page,
       inner: "innerHeight" as InnerDistance,
+      offsetElement: "offsetTop" as OffsetElement,
     };
   }
 };

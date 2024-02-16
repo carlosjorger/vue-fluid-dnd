@@ -17,7 +17,7 @@ export type Page = "pageX" | "pageY";
 export type MoveEvent = "mousemove" | "touchmove";
 export type OnLeaveEvent = "onmouseup" | "ontouchend";
 export type TouchEvent = "touchstart" | "touchmove" | "touchend";
-
+export type OffsetElement = "offsetLeft" | "offsetLeft";
 export type DragMouseTouchEvent = {
   readonly clientX: number;
   readonly clientY: number;
