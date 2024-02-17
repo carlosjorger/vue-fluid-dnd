@@ -213,9 +213,9 @@ const setTransform = (
   const getTranslateWihtDirection = <
     T = VerticalDirection | HorizontalDirection
   >(
-    direction: Direction
+    translateDirection: Direction
   ): { direction: T; newTranslate: number } => {
-    const directionValues = directionInfo[direction];
+    const directionValues = directionInfo[translateDirection];
 
     const {
       beforeMargin,
@@ -227,7 +227,7 @@ const setTransform = (
       inner,
       distance,
       axis,
-    } = getPropByDirection(direction);
+    } = getPropByDirection(translateDirection);
 
     const pageValue = event[page];
     const elementPosittion = pageValue - currentOffset.value[offset];
@@ -246,14 +246,26 @@ const setTransform = (
         border -
         getMarginStyleByProperty(element, beforeMargin) -
         scrollValue;
-      if (childRef.value && childRef.value.parentElement) {
+      if (
+        childRef.value &&
+        childRef.value.parentElement &&
+        translateDirection === direction
+      ) {
+        // TODO: refactor in a function
+        const parentBoundingClientRect =
+          childRef.value.parentElement.getBoundingClientRect();
         const positionInsideParent =
           position.value[before] -
-          childRef.value.parentElement.getBoundingClientRect()[before] +
+          parentBoundingClientRect[before] +
           newTranslate;
-        const parentDistance =
-          childRef.value.parentElement.getBoundingClientRect()[distance];
-        console.log(positionInsideParent, parentDistance);
+        const parentDistance = parentBoundingClientRect[distance];
+        const totalDistance = parentDistance - distanceValue;
+        const relativePosition = positionInsideParent / totalDistance;
+        if (relativePosition < 0.2) {
+          console.log("up");
+        } else if (relativePosition > 0.8) {
+          console.log("down");
+        }
       }
       if (translate.value.x > newTranslate) {
         return {
