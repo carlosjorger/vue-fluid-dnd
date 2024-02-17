@@ -36,8 +36,6 @@ const DRAG_EVENT = "drag";
 const START_DRAG_EVENT = "startDrag";
 const START_DROP_EVENT = "startDrop";
 const DROP_EVENT = "drop";
-const GRAB_CURSOR = "grab";
-const GRABBING_CURSOR = "grabbing";
 type DraggingEvent = typeof DRAG_EVENT | typeof START_DRAG_EVENT;
 type DragEvent = DraggingEvent | typeof DROP_EVENT | typeof START_DROP_EVENT;
 type VerticalDirection = "top" | "down" | "quiet";
@@ -164,10 +162,10 @@ const setSlotRef = (
   ref: Element | ComponentPublicInstance | null,
   refs: Record<string, any>
 ) => {
-  childRef.value = ref as HTMLElement;
-  if (childRef.value && refs) {
-    childRef.value.style.cursor = GRAB_CURSOR;
+  if (!ref && refs) {
+    return;
   }
+  childRef.value = ref as HTMLElement;
 };
 const setSlotRefElementParams = (element: HTMLElement | undefined) => {
   if (element) {
@@ -345,7 +343,6 @@ const startDragging = (event: DragMouseTouchEvent) => {
   const element = event.target as HTMLElement;
   scroll.value = getScroll(element.parentElement);
   windowScroll.value = getWindowScroll();
-  element.style.cursor = GRABBING_CURSOR;
   const { offsetX, offsetY } = event;
   currentOffset.value = { offsetX, offsetY };
   draggingState.value = DraggingState.DRAGING;
@@ -664,13 +661,11 @@ const onDropDraggingEvent = (event: DragMouseTouchEvent) => {
   emitEventToSiblings(element, START_DROP_EVENT);
   setTimeout(() => {
     draggingState.value = DraggingState.NOT_DRAGGING;
-    element.style.position = "";
-    element.style.zIndex = "";
+    element.classList.remove("dragging");
     element.style.transform = "";
     element.style.transition = "";
     element.style.top = "";
     element.style.left = "";
-    element.style.cursor = GRAB_CURSOR;
   }, duration);
 };
 const removeDraggingStyles = (element: HTMLElement) => {
@@ -680,8 +675,7 @@ const removeDraggingStyles = (element: HTMLElement) => {
 
 const setDraggingStyles = (element: HTMLElement) => {
   fixSizeStyle(element);
-  element.style.position = "fixed";
-  element.style.zIndex = "5000";
+  element.classList.add("dragging");
   element.style.transition = "";
 };
 
@@ -712,6 +706,12 @@ watch(
 .draggable {
   box-sizing: border-box !important;
   touch-action: none;
+  cursor: grab;
+}
+.dragging {
+  position: fixed;
+  z-index: 5000;
+  cursor: grabbing !important;
 }
 </style>
 <!-- TODO: refactor -->
