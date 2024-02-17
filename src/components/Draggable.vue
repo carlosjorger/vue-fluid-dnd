@@ -250,6 +250,8 @@ const setTransform = (
         translateDirection === direction
       ) {
         // TODO: refactor in a function
+        //TODO: reuse this code in horizontal list
+        // TODO: fix droppable postition after dropping
         const parentBoundingClientRect =
           childRef.value.parentElement.getBoundingClientRect();
         const positionInsideParent =
@@ -259,10 +261,16 @@ const setTransform = (
         const parentDistance = parentBoundingClientRect[distance];
         const totalDistance = parentDistance - distanceValue;
         const relativePosition = positionInsideParent / totalDistance;
-        if (relativePosition < 0.2) {
-          console.log("up");
-        } else if (relativePosition > 0.8) {
-          console.log("down");
+        if (relativePosition < 0.25) {
+          childRef.value.parentElement.scrollBy(
+            0,
+            2.5 * -(1 - relativePosition / 0.25) * distanceValue
+          );
+        } else if (relativePosition > 0.75) {
+          childRef.value.parentElement.scrollBy(
+            0,
+            2.5 * 4 * (relativePosition - 0.75) * distanceValue
+          );
         }
       }
       if (translate.value.x > newTranslate) {
