@@ -144,6 +144,12 @@ onMounted(() => {
       }
     },
   });
+  if (childRef.value && childRef.value.parentElement) {
+    childRef.value.parentElement.onscroll = () => {
+      console.log("scroll");
+      // updateScroll();
+    };
+  }
 });
 const createObserverWithCallBack = (callback: () => void) => {
   return new MutationObserver((mutations) => {
@@ -187,6 +193,7 @@ const setSlotRefElementParams = (element: HTMLElement | undefined) => {
     element?.parentElement.classList.add("droppable");
   }
 };
+// TODO: create page variable
 const setTransform = (
   element: HTMLElement,
   event: DragMouseTouchEvent
@@ -226,54 +233,26 @@ const setTransform = (
       distance,
       axis,
     } = getPropByDirection(translateDirection);
-
     const pageValue = event[page];
-    const elementPosittion = pageValue - currentOffset.value[offset];
     const scrollValue = window[scroll];
     const innerDistance = window[inner];
     const distanceValue = elementBoundingClientRect[distance];
+    const border = getBorderWidthProperty(element, borderBeforeWidth);
+    const margin = getMarginStyleByProperty(element, beforeMargin);
+    const elementPosittion = pageValue - currentOffset.value[offset];
+
     if (
       elementPosittion >= scrollValue - distanceValue / 2 &&
       elementPosittion <= scrollValue + innerDistance
     ) {
-      const border = getBorderWidthProperty(element, borderBeforeWidth);
       const newTranslate =
         elementPosittion -
         position.value[before] -
         border -
-        getMarginStyleByProperty(element, beforeMargin) -
+        margin -
         scrollValue;
-      if (
-        childRef.value &&
-        childRef.value.parentElement &&
-        translateDirection === direction
-      ) {
-        // TODO: refactor in a function
-        //TODO: reuse this code in horizontal list
-        // TODO: fix droppable postition after dropping
-        const parentBoundingClientRect =
-          childRef.value.parentElement.getBoundingClientRect();
-        const positionInsideParent =
-          position.value[before] -
-          parentBoundingClientRect[before] +
-          newTranslate;
-        const parentDistance = parentBoundingClientRect[distance];
-        const totalDistance = parentDistance - distanceValue;
-        const relativePosition = positionInsideParent / totalDistance;
+      updateScroll(translateDirection);
 
-        const velocity = 2;
-        if (relativePosition < 0.25) {
-          childRef.value.parentElement.scrollBy(
-            0,
-            velocity * -(1 - relativePosition / 0.25) * distanceValue
-          );
-        } else if (relativePosition > 0.75) {
-          childRef.value.parentElement.scrollBy(
-            0,
-            velocity * 4 * (relativePosition - 0.75) * distanceValue
-          );
-        }
-      }
       if (translate.value[axis] > newTranslate) {
         return {
           direction: directionValues.before as T,
@@ -309,7 +288,46 @@ const setTransform = (
   translate.value.y = newTranslateY;
   return { vertical, horizontal };
 };
+const updateScroll = (translateDirection?: Direction) => {
+  if (
+    childRef.value &&
+    childRef.value.classList.contains("dragging") &&
+    childRef.value.parentElement &&
+    (translateDirection === direction || translateDirection === undefined) &&
+    direction
+  ) {
+    const { before, distance, axis } = getPropByDirection(direction);
+    const elementBoundingClientRect = childRef.value.getBoundingClientRect();
+    const distanceValue = elementBoundingClientRect[distance];
 
+    //TODO: reuse this code in horizontal list
+    // TODO: fix droppable postition after dropping
+
+    const parentBoundingClientRect =
+      childRef.value.parentElement.getBoundingClientRect();
+    const positionInsideParent =
+      position.value[before] -
+      parentBoundingClientRect[before] +
+      translate.value[axis];
+
+    const parentDistance = parentBoundingClientRect[distance];
+    const totalDistance = parentDistance - distanceValue;
+    const relativePosition = positionInsideParent / totalDistance;
+
+    const velocity = 2;
+    if (relativePosition < 0.25) {
+      childRef.value.parentElement.scrollBy(
+        0,
+        velocity * -(1 - relativePosition / 0.25) * distanceValue
+      );
+    } else if (relativePosition > 0.75) {
+      childRef.value.parentElement.scrollBy(
+        0,
+        velocity * 4 * (relativePosition - 0.75) * distanceValue
+      );
+    }
+  }
+};
 const onmousemove = function (
   event: DragMouseTouchEvent,
   element: HTMLElement
