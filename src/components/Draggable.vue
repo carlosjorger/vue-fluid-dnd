@@ -232,7 +232,6 @@ const setTransform = (
     const scrollValue = window[scroll];
     const innerDistance = window[inner];
     const distanceValue = elementBoundingClientRect[distance];
-
     if (
       elementPosittion >= scrollValue - distanceValue / 2 &&
       elementPosittion <= scrollValue + innerDistance
@@ -261,24 +260,26 @@ const setTransform = (
         const parentDistance = parentBoundingClientRect[distance];
         const totalDistance = parentDistance - distanceValue;
         const relativePosition = positionInsideParent / totalDistance;
+
+        const velocity = 2;
         if (relativePosition < 0.25) {
           childRef.value.parentElement.scrollBy(
             0,
-            2.5 * -(1 - relativePosition / 0.25) * distanceValue
+            velocity * -(1 - relativePosition / 0.25) * distanceValue
           );
         } else if (relativePosition > 0.75) {
           childRef.value.parentElement.scrollBy(
             0,
-            2.5 * 4 * (relativePosition - 0.75) * distanceValue
+            velocity * 4 * (relativePosition - 0.75) * distanceValue
           );
         }
       }
-      if (translate.value.x > newTranslate) {
+      if (translate.value[axis] > newTranslate) {
         return {
           direction: directionValues.before as T,
           newTranslate,
         };
-      } else if (translate.value.x < newTranslate) {
+      } else if (translate.value[axis] < newTranslate) {
         return {
           direction: directionValues.after as T,
           newTranslate,
@@ -336,17 +337,23 @@ const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
         assignDraggingEvent(
           element,
           onLeaveEvent,
-          (event: DragMouseTouchEvent) => {
-            onDropDraggingEvent(event);
-            document.removeEventListener(moveEvent, handlerMousemove);
-            assignDraggingEvent(element, onLeaveEvent, null);
-          }
+          onLeave(moveEvent, element, onLeaveEvent)
         );
       }
     }
   };
 };
-
+const onLeave = (
+  moveEvent: MoveEvent,
+  element: HTMLElement,
+  onLeaveEvent: OnLeaveEvent
+) => {
+  return (event: DragMouseTouchEvent) => {
+    onDropDraggingEvent(event);
+    document.removeEventListener(moveEvent, handlerMousemove);
+    assignDraggingEvent(element, onLeaveEvent, null);
+  };
+};
 const startDragging = (event: DragMouseTouchEvent) => {
   const element = event.target as HTMLElement;
   scroll.value = getScroll(element.parentElement);
@@ -482,6 +489,7 @@ const canChangeDraggable = (
   const siblingSize = targetBoundingClientRect[distance];
 
   const siblingMiddle = targetosition + siblingSize / 2;
+
   if (
     (mouseDirection[direction] === after &&
       currentPosition + currentSize > siblingMiddle) ||
@@ -724,5 +732,4 @@ watch(
 </style>
 <!-- TODO: refactor -->
 <!-- TODO: avoid to fix height is already fixed -->
-<!-- TODO: change drop position if scroll position is changed (relative to parent scroll)-->
 <!-- TODO: implement auto scroll functionality-->
