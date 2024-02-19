@@ -194,24 +194,24 @@ const setSlotRefElementParams = (element: HTMLElement | undefined) => {
     element?.parentElement.classList.add("droppable");
   }
 };
+const directionInfo = {
+  horizontal: {
+    before: "left" as HorizontalDirection,
+    after: "right" as HorizontalDirection,
+    quiet: "quiet" as HorizontalDirection,
+  },
+  vertical: {
+    before: "top" as VerticalDirection,
+    after: "down" as VerticalDirection,
+    quiet: "quiet" as VerticalDirection,
+  },
+};
 const setTransform = (element: HTMLElement): MouseDirection => {
   const elementBoundingClientRect = element.getBoundingClientRect();
 
   let vertical: VerticalDirection = "quiet";
   let horizontal: HorizontalDirection = "quiet";
 
-  const directionInfo = {
-    horizontal: {
-      before: "left" as HorizontalDirection,
-      after: "right" as HorizontalDirection,
-      quiet: "quiet" as HorizontalDirection,
-    },
-    vertical: {
-      before: "top" as VerticalDirection,
-      after: "down" as VerticalDirection,
-      quiet: "quiet" as VerticalDirection,
-    },
-  };
   const getTranslateWihtDirection = <
     T = VerticalDirection | HorizontalDirection
   >(
@@ -247,7 +247,7 @@ const setTransform = (element: HTMLElement): MouseDirection => {
         border -
         margin -
         scrollValue;
-      updateScroll(translateDirection);
+      const scrollDirection = updateScroll(translateDirection);
 
       if (translate.value[axis] > newTranslate) {
         return {
@@ -261,7 +261,7 @@ const setTransform = (element: HTMLElement): MouseDirection => {
         };
       } else {
         return {
-          direction: directionValues.quiet as T,
+          direction: (scrollDirection as T) ?? (directionValues.quiet as T),
           newTranslate,
         };
       }
@@ -284,8 +284,12 @@ const setTransform = (element: HTMLElement): MouseDirection => {
   translate.value.y = newTranslateY;
   return { vertical, horizontal };
 };
-const updateScroll = (translateDirection?: Direction) => {
+
+const updateScroll = (
+  translateDirection?: Direction
+): VerticalDirection | HorizontalDirection | undefined => {
   const element = childRef.value as HTMLElement;
+
   if (
     element &&
     element.classList.contains("dragging") &&
@@ -293,6 +297,8 @@ const updateScroll = (translateDirection?: Direction) => {
     (translateDirection === direction || translateDirection === undefined) &&
     direction
   ) {
+    const directionValues = directionInfo[direction];
+
     const { before, distance, axis } = getPropByDirection(direction);
     const elementBoundingClientRect = element.getBoundingClientRect();
     const distanceValue = elementBoundingClientRect[distance];
@@ -310,18 +316,20 @@ const updateScroll = (translateDirection?: Direction) => {
     const totalDistance = parentDistance - distanceValue;
     const relativePosition = positionInsideParent / totalDistance;
 
-    const velocity = 10;
+    const velocity = 5;
 
     if (relativePosition < 0.25) {
       parent.value?.scrollBy(
         0,
         velocity * -(1 - relativePosition / 0.25) * distanceValue
       );
+      return directionValues.before;
     } else if (relativePosition > 0.75) {
       parent.value?.scrollBy(
         0,
         velocity * 4 * (relativePosition - 0.75) * distanceValue
       );
+      return directionValues.after;
     }
   }
 };
@@ -358,13 +366,11 @@ const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
           // TODO. refactor the code
           if (parent.value && scrolling) {
             scrolling = false;
-            const element = parent.value.getElementsByClassName(
-              "dragging"
-            )[0] as HTMLElement;
+            const element = childRef.value as HTMLElement;
             const mouseDirection = setTransform(element);
             emitEventToSiblings(element, DRAG_EVENT, mouseDirection);
           }
-        }, 300);
+        }, 100);
       }
       if (element) {
         assignDraggingEvent(
