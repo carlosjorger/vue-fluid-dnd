@@ -66,7 +66,7 @@ const scroll = ref({ scrollLeft: 0, scrollTop: 0 });
 const windowScroll = ref({ scrollY: 0, scrollX: 0 });
 
 const duration = 200;
-
+const pagePosition = ref({ pageX: 0, pageY: 0 });
 let childRef = ref<HTMLElement>();
 const actualIndex = ref(index);
 const eventBus = inject(LocalEventBus);
@@ -193,11 +193,7 @@ const setSlotRefElementParams = (element: HTMLElement | undefined) => {
     element?.parentElement.classList.add("droppable");
   }
 };
-// TODO: create page variable
-const setTransform = (
-  element: HTMLElement,
-  event: DragMouseTouchEvent
-): MouseDirection => {
+const setTransform = (element: HTMLElement): MouseDirection => {
   const elementBoundingClientRect = element.getBoundingClientRect();
 
   let vertical: VerticalDirection = "quiet";
@@ -233,14 +229,13 @@ const setTransform = (
       distance,
       axis,
     } = getPropByDirection(translateDirection);
-    const pageValue = event[page];
+    const pageValue = pagePosition.value[page];
     const scrollValue = window[scroll];
     const innerDistance = window[inner];
     const distanceValue = elementBoundingClientRect[distance];
     const border = getBorderWidthProperty(element, borderBeforeWidth);
     const margin = getMarginStyleByProperty(element, beforeMargin);
     const elementPosittion = pageValue - currentOffset.value[offset];
-
     if (
       elementPosittion >= scrollValue - distanceValue / 2 &&
       elementPosittion <= scrollValue + innerDistance
@@ -335,7 +330,7 @@ const onmousemove = function (
   if (draggingState.value === DraggingState.START_DRAGGING) {
     startDragging(event);
   } else if (draggingState.value === DraggingState.DRAGING) {
-    const mouseDirection = setTransform(element, event);
+    const mouseDirection = setTransformEvent(element, event);
     emitEventToSiblings(element, DRAG_EVENT, mouseDirection);
   }
 };
@@ -402,7 +397,16 @@ const startDragging = (event: DragMouseTouchEvent) => {
 
   setDraggingStyles(element);
   setBorderBoxStyle(element);
-  setTransform(element, event);
+
+  setTransformEvent(element, event);
+};
+const setTransformEvent = (
+  element: HTMLElement,
+  event: DragMouseTouchEvent
+) => {
+  const { pageX, pageY } = event;
+  pagePosition.value = { pageX, pageY };
+  return setTransform(element);
 };
 const emitEventToSiblings = (
   draggedElement: HTMLElement,
