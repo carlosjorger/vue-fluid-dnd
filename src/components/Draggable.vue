@@ -1,6 +1,13 @@
 <template><slot :set-ref="setSlotRef"></slot></template>
 <script setup lang="ts">
-import { ComponentPublicInstance, inject, onMounted, ref, watch } from "vue";
+import {
+  ComponentPublicInstance,
+  computed,
+  inject,
+  onMounted,
+  ref,
+  watch,
+} from "vue";
 import { LocalEventBus, useMittEvents } from "@/utils/EventBus";
 import {
   Direction,
@@ -144,17 +151,6 @@ onMounted(() => {
       }
     },
   });
-  const parent = childRef.value?.parentElement;
-  if (childRef.value && parent) {
-    parent.onscroll = () => {
-      const element = parent.getElementsByClassName(
-        "dragging"
-      )[0] as HTMLElement;
-      // TODO: make sure that is called in the correct draggable component
-      const mouseDirection = setTransform(element);
-      emitEventToSiblings(element, DRAG_EVENT, mouseDirection);
-    };
-  }
 });
 const createObserverWithCallBack = (callback: () => void) => {
   return new MutationObserver((mutations) => {
@@ -293,7 +289,7 @@ const updateScroll = (translateDirection?: Direction) => {
   if (
     element &&
     element.classList.contains("dragging") &&
-    element.parentElement &&
+    parent.value &&
     (translateDirection === direction || translateDirection === undefined) &&
     direction
   ) {
@@ -304,8 +300,7 @@ const updateScroll = (translateDirection?: Direction) => {
     //TODO: reuse this code in horizontal list
     // TODO: fix droppable postition after dropping
 
-    const parentBoundingClientRect =
-      element.parentElement.getBoundingClientRect();
+    const parentBoundingClientRect = parent.value.getBoundingClientRect();
     const positionInsideParent =
       position.value[before] -
       parentBoundingClientRect[before] +
@@ -315,24 +310,15 @@ const updateScroll = (translateDirection?: Direction) => {
     const totalDistance = parentDistance - distanceValue;
     const relativePosition = positionInsideParent / totalDistance;
 
-    const velocity = 2;
-    console.log(
-      "updateScroll",
-      element.parentElement.scrollTop,
-      position.value[before],
-      parentBoundingClientRect[before],
-      translate.value[axis],
-      positionInsideParent,
-      direction
-    );
+    const velocity = 10;
 
     if (relativePosition < 0.25) {
-      element.parentElement.scrollBy(
+      parent.value?.scrollBy(
         0,
         velocity * -(1 - relativePosition / 0.25) * distanceValue
       );
     } else if (relativePosition > 0.75) {
-      element.parentElement.scrollBy(
+      parent.value?.scrollBy(
         0,
         velocity * 4 * (relativePosition - 0.75) * distanceValue
       );
@@ -363,6 +349,23 @@ const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
     if (draggingState.value === DraggingState.NOT_DRAGGING) {
       draggingState.value = DraggingState.START_DRAGGING;
       document.addEventListener(moveEvent, handlerMousemove);
+      if (parent.value) {
+        let scrolling = false;
+        parent.value.onscroll = () => {
+          scrolling = true;
+        };
+        setInterval(() => {
+          // TODO. refactor the code
+          if (parent.value && scrolling) {
+            scrolling = false;
+            const element = parent.value.getElementsByClassName(
+              "dragging"
+            )[0] as HTMLElement;
+            const mouseDirection = setTransform(element);
+            emitEventToSiblings(element, DRAG_EVENT, mouseDirection);
+          }
+        }, 300);
+      }
       if (element) {
         assignDraggingEvent(
           element,
@@ -381,6 +384,9 @@ const onLeave = (
   return (event: DragMouseTouchEvent) => {
     onDropDraggingEvent(event);
     document.removeEventListener(moveEvent, handlerMousemove);
+    if (parent.value?.onscroll) {
+      parent.value.onscroll = null;
+    }
     assignDraggingEvent(element, onLeaveEvent, null);
   };
 };
@@ -734,6 +740,12 @@ const setDraggingStyles = (element: HTMLElement) => {
   element.style.transition = "";
 };
 
+const parent = computed(() => {
+  const elementParent = childRef.value?.parentElement;
+  if (elementParent) {
+    return elementParent as HTMLElement;
+  }
+});
 watch(childRef, (element) => {
   setSlotRefElementParams(element);
 });
