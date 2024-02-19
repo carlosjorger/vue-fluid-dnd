@@ -144,10 +144,15 @@ onMounted(() => {
       }
     },
   });
-  if (childRef.value && childRef.value.parentElement) {
-    childRef.value.parentElement.onscroll = () => {
-      console.log("scroll");
-      // updateScroll();
+  const parent = childRef.value?.parentElement;
+  if (childRef.value && parent) {
+    parent.onscroll = () => {
+      const element = parent.getElementsByClassName(
+        "dragging"
+      )[0] as HTMLElement;
+      // TODO: make sure that is called in the correct draggable component
+      const mouseDirection = setTransform(element);
+      emitEventToSiblings(element, DRAG_EVENT, mouseDirection);
     };
   }
 });
@@ -284,22 +289,23 @@ const setTransform = (element: HTMLElement): MouseDirection => {
   return { vertical, horizontal };
 };
 const updateScroll = (translateDirection?: Direction) => {
+  const element = childRef.value as HTMLElement;
   if (
-    childRef.value &&
-    childRef.value.classList.contains("dragging") &&
-    childRef.value.parentElement &&
+    element &&
+    element.classList.contains("dragging") &&
+    element.parentElement &&
     (translateDirection === direction || translateDirection === undefined) &&
     direction
   ) {
     const { before, distance, axis } = getPropByDirection(direction);
-    const elementBoundingClientRect = childRef.value.getBoundingClientRect();
+    const elementBoundingClientRect = element.getBoundingClientRect();
     const distanceValue = elementBoundingClientRect[distance];
 
     //TODO: reuse this code in horizontal list
     // TODO: fix droppable postition after dropping
 
     const parentBoundingClientRect =
-      childRef.value.parentElement.getBoundingClientRect();
+      element.parentElement.getBoundingClientRect();
     const positionInsideParent =
       position.value[before] -
       parentBoundingClientRect[before] +
@@ -310,13 +316,23 @@ const updateScroll = (translateDirection?: Direction) => {
     const relativePosition = positionInsideParent / totalDistance;
 
     const velocity = 2;
+    console.log(
+      "updateScroll",
+      element.parentElement.scrollTop,
+      position.value[before],
+      parentBoundingClientRect[before],
+      translate.value[axis],
+      positionInsideParent,
+      direction
+    );
+
     if (relativePosition < 0.25) {
-      childRef.value.parentElement.scrollBy(
+      element.parentElement.scrollBy(
         0,
         velocity * -(1 - relativePosition / 0.25) * distanceValue
       );
     } else if (relativePosition > 0.75) {
-      childRef.value.parentElement.scrollBy(
+      element.parentElement.scrollBy(
         0,
         velocity * 4 * (relativePosition - 0.75) * distanceValue
       );
@@ -334,6 +350,7 @@ const onmousemove = function (
     emitEventToSiblings(element, DRAG_EVENT, mouseDirection);
   }
 };
+
 const handlerMousemove = (event: MouseEvent | TouchEvent) => {
   const eventToDragMouse = convetEventToDragMouseTouchEvent(event);
   if (childRef.value) {
