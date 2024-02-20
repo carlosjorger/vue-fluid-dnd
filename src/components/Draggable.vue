@@ -51,7 +51,6 @@ type MouseDirection = {
   vertical: VerticalDirection;
   horizontal: HorizontalDirection;
 };
-// TODO. replace mouseevent
 
 enum DraggingState {
   NOT_DRAGGING = "notDragging",
@@ -206,7 +205,8 @@ const directionInfo = {
     quiet: "quiet" as VerticalDirection,
   },
 };
-const setTransform = (element: HTMLElement): MouseDirection => {
+const setTransform = (): MouseDirection => {
+  const element = childRef.value as HTMLElement;
   const elementBoundingClientRect = element.getBoundingClientRect();
 
   let vertical: VerticalDirection = "quiet";
@@ -333,23 +333,17 @@ const updateScroll = (
     }
   }
 };
-const onmousemove = function (
-  event: DragMouseTouchEvent,
-  element: HTMLElement
-) {
+const onmousemove = function (event: DragMouseTouchEvent) {
   if (draggingState.value === DraggingState.START_DRAGGING) {
     startDragging(event);
   } else if (draggingState.value === DraggingState.DRAGING) {
-    const mouseDirection = setTransformEvent(element, event);
-    emitEventToSiblings(element, DRAG_EVENT, mouseDirection);
+    setTransformEvent(event, true);
   }
 };
 
 const handlerMousemove = (event: MouseEvent | TouchEvent) => {
   const eventToDragMouse = convetEventToDragMouseTouchEvent(event);
-  if (childRef.value) {
-    onmousemove(eventToDragMouse, childRef.value);
-  }
+  onmousemove(eventToDragMouse);
 };
 const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
   return (event: DragMouseTouchEvent) => {
@@ -363,12 +357,9 @@ const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
           scrolling = true;
         };
         setInterval(() => {
-          // TODO. refactor the code
           if (parent.value && scrolling) {
             scrolling = false;
-            const element = childRef.value as HTMLElement;
-            const mouseDirection = setTransform(element);
-            emitEventToSiblings(element, DRAG_EVENT, mouseDirection);
+            setTransformDragEvent();
           }
         }, 100);
       }
@@ -427,15 +418,22 @@ const startDragging = (event: DragMouseTouchEvent) => {
   setDraggingStyles(element);
   setBorderBoxStyle(element);
 
-  setTransformEvent(element, event);
+  setTransformEvent(event);
 };
 const setTransformEvent = (
-  element: HTMLElement,
-  event: DragMouseTouchEvent
+  event: DragMouseTouchEvent,
+  emitDragEvent: boolean = false
 ) => {
   const { pageX, pageY } = event;
   pagePosition.value = { pageX, pageY };
-  return setTransform(element);
+  if (emitDragEvent) {
+    setTransformDragEvent();
+  }
+};
+const setTransformDragEvent = () => {
+  const element = childRef.value as HTMLElement;
+  const mouseDirection = setTransform();
+  emitEventToSiblings(element, DRAG_EVENT, mouseDirection);
 };
 const emitEventToSiblings = (
   draggedElement: HTMLElement,
@@ -789,4 +787,3 @@ watch(
 </style>
 <!-- TODO: refactor -->
 <!-- TODO: avoid to fix height is already fixed -->
-<!-- TODO: implement auto scroll functionality-->
