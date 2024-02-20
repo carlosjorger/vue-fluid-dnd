@@ -13,6 +13,7 @@ import {
   Page,
   After,
   OffsetElement,
+  ScrollElement,
 } from "../../index";
 export const getScroll = (element: HTMLElement | undefined | null) => {
   if (element) {
@@ -98,7 +99,8 @@ export const calculateRangeWhileDragging = (
   siblings: HTMLElement[],
   sourceIndex: number,
   targetIndex: number,
-  scroll: { scrollY: number; scrollX: number }
+  scroll: { scrollY: number; scrollX: number },
+  previousScroll: { scrollLeft: number; scrollTop: number }
 ) => {
   let height = 0;
   let width = 0;
@@ -111,7 +113,9 @@ export const calculateRangeWhileDragging = (
   const directionProps = getPropByDirection(direction);
   const isDraggedFoward = sourceIndex < targetIndex;
 
-  const [firstIndex, secondIndex] = [sourceIndex, targetIndex].sort();
+  const [firstIndex, secondIndex] = [sourceIndex, targetIndex].toSorted(
+    (a, b) => a - b
+  );
   const sourceElement = siblings[sourceIndex];
   const targetElement = siblings[targetIndex];
   const siblingsBetween = isDraggedFoward
@@ -122,6 +126,7 @@ export const calculateRangeWhileDragging = (
 
   const gapStyle = directionProps.gap;
   const { gap, hasGaps } = gapAndDisplayInformation(parentElement, gapStyle);
+  const scrollElement = parentElement[directionProps.scrollElement];
   const beforeMarginProp = directionProps.beforeMargin;
   const afterMarginProp = directionProps.afterMargin;
   const spaceProp = directionProps.distance;
@@ -150,14 +155,16 @@ export const calculateRangeWhileDragging = (
   let afterMarginCalc = Math.max(afterMargin, beforeMarginOutside);
 
   const spaceBetween = afterMarginCalc + space + beforeMarginCalc + gap;
+  const scrollChange =
+    scrollElement - previousScroll[directionProps.scrollElement];
 
   let spaceCalc = spaceBetween - spaceBeforeDraggedElement;
 
   spaceCalc = isDraggedFoward ? spaceCalc : -spaceCalc;
   if (direction === "vertical") {
-    height = spaceCalc;
+    height = spaceCalc - scrollChange;
   } else if (direction === "horizontal") {
-    width = spaceCalc;
+    width = spaceCalc - scrollChange;
   }
 
   return addScrollToRageDragging({ height, width }, direction, scroll);
@@ -373,6 +380,7 @@ export const getPropByDirection = (direction: Direction) => {
       axis: "x" as Axis,
       offset: "offsetX" as Offset,
       scroll: "scrollX" as Scroll,
+      scrollElement: "scrollLeft" as ScrollElement,
       page: "pageX" as Page,
       inner: "innerWidth" as InnerDistance,
       offsetElement: "offsetLeft" as OffsetElement,
@@ -389,6 +397,7 @@ export const getPropByDirection = (direction: Direction) => {
       axis: "y" as Axis,
       offset: "offsetY" as Offset,
       scroll: "scrollY" as Scroll,
+      scrollElement: "scrollTop" as ScrollElement,
       page: "pageY" as Page,
       inner: "innerHeight" as InnerDistance,
       offsetElement: "offsetTop" as OffsetElement,

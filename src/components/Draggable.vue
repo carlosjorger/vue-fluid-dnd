@@ -76,6 +76,7 @@ const pagePosition = ref({ pageX: 0, pageY: 0 });
 let childRef = ref<HTMLElement>();
 const actualIndex = ref(index);
 const eventBus = inject(LocalEventBus);
+const droppableScroll = ref({ scrollLeft: 0, scrollTop: 0 });
 onMounted(() => {
   useMittEvents(eventBus, {
     drag: ({
@@ -303,8 +304,6 @@ const updateScroll = (
     const elementBoundingClientRect = element.getBoundingClientRect();
     const distanceValue = elementBoundingClientRect[distance];
 
-    // TODO: fix droppable postition after dropping
-
     const parentBoundingClientRect = parent.value.getBoundingClientRect();
     const positionInsideParent =
       position.value[before] -
@@ -363,6 +362,10 @@ const handlerMousemove = (event: MouseEvent | TouchEvent) => {
 const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
   return (event: DragMouseTouchEvent) => {
     const element = event.target as HTMLElement;
+    if (parent.value) {
+      droppableScroll.value.scrollLeft = parent.value.scrollLeft;
+      droppableScroll.value.scrollTop = parent.value.scrollTop;
+    }
     if (draggingState.value === DraggingState.NOT_DRAGGING) {
       draggingState.value = DraggingState.START_DRAGGING;
       document.addEventListener(moveEvent, handlerMousemove);
@@ -622,7 +625,8 @@ const emitDroppingEventToSiblings = (
       allSiblings,
       elementPosition,
       targetIndex,
-      windowScroll.value
+      windowScroll.value,
+      droppableScroll.value
     );
     emitEventBus(
       event,

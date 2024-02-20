@@ -12,6 +12,7 @@ export type After = "right" | "down";
 export type Axis = "x" | "y";
 export type Offset = "offsetX" | "offsetY";
 export type Scroll = "scrollX" | "scrollY";
+export type ScrollElement = "scrollTop" | "scrollLeft";
 export type InnerDistance = "innerWidth" | "innerHeight";
 export type Page = "pageX" | "pageY";
 export type MoveEvent = "mousemove" | "touchmove";
