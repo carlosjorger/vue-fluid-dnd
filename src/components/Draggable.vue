@@ -303,7 +303,6 @@ const updateScroll = (
     const elementBoundingClientRect = element.getBoundingClientRect();
     const distanceValue = elementBoundingClientRect[distance];
 
-    //TODO: reuse this code in horizontal list
     // TODO: fix droppable postition after dropping
 
     const parentBoundingClientRect = parent.value.getBoundingClientRect();
@@ -317,20 +316,36 @@ const updateScroll = (
     const relativePosition = positionInsideParent / totalDistance;
 
     const velocity = 5;
+    const infLimit = 0.25;
+    const upperLimit = 0.75;
 
-    if (relativePosition < 0.25) {
-      parent.value?.scrollBy(
-        0,
-        velocity * -(1 - relativePosition / 0.25) * distanceValue
-      );
+    if (relativePosition < infLimit) {
+      const scrollAmount =
+        velocity * -(1 - relativePosition / infLimit) * distanceValue;
+
+      scrollByDirection(parent.value, direction, scrollAmount);
       return directionValues.before;
-    } else if (relativePosition > 0.75) {
-      parent.value?.scrollBy(
-        0,
-        velocity * 4 * (relativePosition - 0.75) * distanceValue
-      );
+    } else if (relativePosition > upperLimit) {
+      const scrollAmount =
+        velocity *
+        (1 / (1 - upperLimit)) *
+        (relativePosition - upperLimit) *
+        distanceValue;
+
+      scrollByDirection(parent.value, direction, scrollAmount);
       return directionValues.after;
     }
+  }
+};
+const scrollByDirection = (
+  element: HTMLElement,
+  direction: Direction,
+  scrollAmount: number
+) => {
+  if (direction === "vertical") {
+    element.scrollBy(0, scrollAmount);
+  } else {
+    element.scrollBy(scrollAmount, 0);
   }
 };
 const onmousemove = function (event: DragMouseTouchEvent) {

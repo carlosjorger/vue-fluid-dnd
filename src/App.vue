@@ -129,6 +129,9 @@ const numbers1 = ref([1, 2, 3, 4, 5]);
 const numbers2 = ref([
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
 ]);
+const numbers3 = ref([
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+]);
 </script>
 
 <template>
@@ -185,6 +188,27 @@ const numbers2 = ref([
       </ul>
     </Droppable>
   </div>
+  <Droppable droppable-id="6.5" direction="horizontal" :items="numbers3">
+    <div
+      style="
+        display: flex;
+        flex-direction: row;
+        width: 40%;
+        height: 200px;
+        overflow: auto;
+      "
+    >
+      <Draggable
+        v-for="(element, index) in numbers3"
+        v-slot="{ setRef }"
+        :draggable-id="'number-' + element.toString()"
+        :index="index"
+        ><div :ref="setRef" class="number" style="padding: 10px">
+          {{ element }}
+        </div>
+      </Draggable>
+    </div>
+  </Droppable>
   <div style="display: flex; flex-direction: row; column-gap: 10px">
     <Droppable droppable-id="7" direction="vertical" :items="list1">
       <div style="width: 40%; background-color: darkgray; display: block">
