@@ -313,18 +313,25 @@ const updateScroll = (
     const parentDistance = parentBoundingClientRect[distance];
     const totalDistance = parentDistance - distanceValue;
     const relativePosition = positionInsideParent / totalDistance;
+    const relativeDistanceValue = distanceValue / totalDistance;
 
     const velocity = 5;
     const infLimit = 0.25;
     const upperLimit = 0.75;
 
-    if (relativePosition < infLimit && relativePosition > 0) {
+    if (
+      relativePosition < infLimit &&
+      relativePosition > -relativeDistanceValue
+    ) {
       const scrollAmount =
         velocity * -(1 - relativePosition / infLimit) * distanceValue;
 
       scrollByDirection(parent.value, direction, scrollAmount);
       return directionValues.before;
-    } else if (relativePosition > upperLimit && relativePosition < 1) {
+    } else if (
+      relativePosition > upperLimit &&
+      relativePosition < 1 + relativeDistanceValue
+    ) {
       const scrollAmount =
         velocity *
         (1 / (1 - upperLimit)) *
@@ -380,7 +387,7 @@ const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
             scrolling = false;
             setTransformDragEvent();
           }
-        }, 90);
+        }, 100);
       }
       if (element) {
         assignDraggingEvent(
