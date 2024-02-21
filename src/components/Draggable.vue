@@ -318,13 +318,13 @@ const updateScroll = (
     const infLimit = 0.25;
     const upperLimit = 0.75;
 
-    if (relativePosition < infLimit) {
+    if (relativePosition < infLimit && relativePosition > 0) {
       const scrollAmount =
         velocity * -(1 - relativePosition / infLimit) * distanceValue;
 
       scrollByDirection(parent.value, direction, scrollAmount);
       return directionValues.before;
-    } else if (relativePosition > upperLimit) {
+    } else if (relativePosition > upperLimit && relativePosition < 1) {
       const scrollAmount =
         velocity *
         (1 / (1 - upperLimit)) *
@@ -371,6 +371,7 @@ const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
       document.addEventListener(moveEvent, handlerMousemove);
       if (parent.value) {
         let scrolling = false;
+        // TODO: improve scroll dispatching
         parent.value.onscroll = () => {
           scrolling = true;
         };
@@ -379,7 +380,7 @@ const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
             scrolling = false;
             setTransformDragEvent();
           }
-        }, 100);
+        }, 90);
       }
       if (element) {
         assignDraggingEvent(

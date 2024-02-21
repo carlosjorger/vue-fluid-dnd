@@ -123,13 +123,14 @@ export const calculateRangeWhileDragging = (
     : siblings.slice(firstIndex, secondIndex);
 
   const parentElement = sourceElement.parentElement as HTMLElement;
-
-  const gapStyle = directionProps.gap;
+  const {
+    scrollElement,
+    beforeMargin: beforeMarginProp,
+    afterMargin: afterMarginProp,
+    distance: spaceProp,
+    gap: gapStyle,
+  } = directionProps;
   const { gap, hasGaps } = gapAndDisplayInformation(parentElement, gapStyle);
-  const scrollElement = parentElement[directionProps.scrollElement];
-  const beforeMarginProp = directionProps.beforeMargin;
-  const afterMarginProp = directionProps.afterMargin;
-  const spaceProp = directionProps.distance;
   const { beforeMargin, space, afterMargin } = spaceWithMargins(
     beforeMarginProp,
     afterMarginProp,
@@ -155,8 +156,10 @@ export const calculateRangeWhileDragging = (
   let afterMarginCalc = Math.max(afterMargin, beforeMarginOutside);
 
   const spaceBetween = afterMarginCalc + space + beforeMarginCalc + gap;
-  const scrollChange =
-    scrollElement - previousScroll[directionProps.scrollElement];
+
+  const scrollParent = parentElement[scrollElement];
+  const previousScrollValue = previousScroll[scrollElement];
+  const scrollChange = scrollParent - previousScrollValue;
 
   let spaceCalc = spaceBetween - spaceBeforeDraggedElement;
 
