@@ -219,7 +219,7 @@ const setTransform = (): MouseDirection => {
     T = VerticalDirection | HorizontalDirection
   >(
     translateDirection: Direction
-  ): { direction: T; newTranslate: number } => {
+  ): { direction: T; newTranslate: number; scrollWeight: number } => {
     const directionValues = directionInfo[translateDirection];
 
     const {
@@ -250,22 +250,26 @@ const setTransform = (): MouseDirection => {
         border -
         margin -
         scrollValue;
-      const scrollDirection = updateScroll(translateDirection);
+      const { scrollDirection, scrollWeight } =
+        updateScroll(translateDirection);
 
       if (translate.value[axis] > newTranslate) {
         return {
           direction: directionValues.before as T,
           newTranslate,
+          scrollWeight,
         };
       } else if (translate.value[axis] < newTranslate) {
         return {
           direction: directionValues.after as T,
           newTranslate,
+          scrollWeight,
         };
       } else {
         return {
-          direction: (scrollDirection as T) ?? (directionValues.quiet as T),
+          direction: scrollDirection as T,
           newTranslate,
+          scrollWeight,
         };
       }
     }
@@ -273,6 +277,7 @@ const setTransform = (): MouseDirection => {
     return {
       direction: directionValues.quiet as T,
       newTranslate: defaultTransalation,
+      scrollWeight: 1,
     };
   };
 
@@ -290,7 +295,10 @@ const setTransform = (): MouseDirection => {
 
 const updateScroll = (
   translateDirection?: Direction
-): VerticalDirection | HorizontalDirection | undefined => {
+): {
+  scrollDirection: VerticalDirection | HorizontalDirection;
+  scrollWeight: number;
+} => {
   const element = childRef.value as HTMLElement;
 
   if (
@@ -320,36 +328,36 @@ const updateScroll = (
     const velocity = 5;
     const infLimit = 0.25;
     const upperLimit = 0.75;
+    let percent = 0;
 
     if (
       relativePosition < infLimit &&
       relativePosition > -relativeDistanceValue
     ) {
-      const scrollAmount =
-        velocity * -(1 - relativePosition / infLimit) * distanceValue;
-
-      scrollByDirection(parent.value, direction, scrollAmount);
-      return directionValues.before;
+      percent = relativePosition / infLimit - 1;
     } else if (
       relativePosition > upperLimit &&
       relativePosition < 1 + relativeDistanceValue
     ) {
-      const scrollAmount =
-        velocity *
-        (1 / (1 - upperLimit)) *
-        (relativePosition - upperLimit) *
-        distanceValue;
-
-      scrollByDirection(parent.value, direction, scrollAmount);
-      return directionValues.after;
+      percent = (1 / (1 - upperLimit)) * (relativePosition - upperLimit);
     }
+    const scrollAmount = velocity * distanceValue * percent;
+    scrollByDirection(parent.value, direction, scrollAmount);
+    return {
+      scrollDirection: directionValues.after,
+      scrollWeight: 1 - Math.abs(percent),
+    };
   }
+  return { scrollDirection: "quiet", scrollWeight: 1 };
 };
 const scrollByDirection = (
   element: HTMLElement,
   direction: Direction,
   scrollAmount: number
 ) => {
+  if (scrollAmount == 0) {
+    return;
+  }
   if (direction === "vertical") {
     element.scrollBy(0, scrollAmount);
   } else {
