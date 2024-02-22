@@ -33,6 +33,7 @@ import {
   calculateWhileDragging,
   getPropByDirection,
   getWindowScroll,
+  getScrollElement,
 } from "@/utils/GetStyles";
 const { draggableId, index } = defineProps<{
   draggableId: string;
@@ -160,9 +161,10 @@ const createObserverWithCallBack = (callback: () => void) => {
   });
 };
 const removeTranslateWhitoutTransition = () => {
-  if (childRef.value) {
-    childRef.value.style.transition = "";
-    childRef.value.style.transform = "";
+  const childElement = childRef.value;
+  if (childElement) {
+    childElement.style.transition = "";
+    childElement.style.transform = "";
   }
 };
 const setSlotRef = (
@@ -370,8 +372,7 @@ const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
   return (event: DragMouseTouchEvent) => {
     const element = event.target as HTMLElement;
     if (parent.value) {
-      droppableScroll.value.scrollLeft = parent.value.scrollLeft;
-      droppableScroll.value.scrollTop = parent.value.scrollTop;
+      droppableScroll.value = getScrollElement(parent.value);
     }
     if (draggingState.value === DraggingState.NOT_DRAGGING) {
       draggingState.value = DraggingState.START_DRAGGING;
@@ -660,12 +661,13 @@ const emitEventBus = (
     width: number;
   }
 ) => {
+  const childElement = childRef.value;
   if (
     event === START_DROP_EVENT &&
     sourceIndex !== undefined &&
     targetIndex !== undefined &&
     sourceElementTranlation !== undefined &&
-    childRef.value
+    childElement
   ) {
     eventBus?.emit(event, {
       droppableId,
@@ -673,7 +675,7 @@ const emitEventBus = (
       ...tranlation,
       sourceIndex,
       targetIndex,
-      element: childRef.value,
+      element: childElement,
       sourceElementTranlation,
     });
   } else {
@@ -783,9 +785,10 @@ watch(childRef, (element) => {
 watch(
   position,
   (newPosition) => {
-    if (childRef.value) {
-      childRef.value.style.top = `${newPosition.top}px`;
-      childRef.value.style.left = `${newPosition.left}px`;
+    const childElement = childRef.value;
+    if (childElement) {
+      childElement.style.top = `${newPosition.top}px`;
+      childElement.style.left = `${newPosition.left}px`;
     }
   },
   { deep: true }
@@ -793,8 +796,9 @@ watch(
 watch(
   translate,
   (newTranslate) => {
-    if (childRef.value) {
-      childRef.value.style.transform = `translate( ${newTranslate.x}px, ${newTranslate.y}px)`;
+    const childElement = childRef.value;
+    if (childElement) {
+      childElement.style.transform = `translate( ${newTranslate.x}px, ${newTranslate.y}px)`;
     }
   },
   { deep: true }

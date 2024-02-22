@@ -370,6 +370,10 @@ const getDistancesByDirection = (direction: Direction, value: number) => {
     return { width: 0, height: value };
   }
 };
+export const getScrollElement = (element: HTMLElement) => {
+  const { scrollLeft, scrollTop } = element;
+  return { scrollLeft, scrollTop };
+};
 export const getPropByDirection = (direction: Direction) => {
   if (direction == "horizontal") {
     return {
