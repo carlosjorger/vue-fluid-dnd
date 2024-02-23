@@ -63,8 +63,6 @@ export const addDragMouseToucEventListener = (
     });
   }
 };
-
-// TODO: create addEventListener and removeEventListener
 const isOnMouseEvent = (x: any): x is onMouseEvent => onMouseEvents.includes(x);
 const isMouseEvent = (x: any): x is MouseEventType => mouseEvents.includes(x);
 

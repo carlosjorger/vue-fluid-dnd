@@ -816,4 +816,5 @@ watch(
 }
 </style>
 <!-- TODO: refactor -->
+<!-- TODO: avoid shaking dragging a element -->
 <!-- TODO: avoid to fix height is already fixed -->
