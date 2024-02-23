@@ -23,6 +23,7 @@ import {
   assignDraggingEvent,
   setTranistion,
   convetEventToDragMouseTouchEvent,
+  setEventWithInterval,
 } from "@/utils/SetStyles";
 import {
   getScroll,
@@ -329,13 +330,15 @@ const updateScroll = (
     const infLimit = 0.25;
     const upperLimit = 0.75;
     let percent = 0;
-
+    const isOutside = draggableIsOutside(element);
     if (
+      !isOutside &&
       relativePosition < infLimit &&
       relativePosition > -relativeDistanceValue
     ) {
       percent = relativePosition / infLimit - 1;
     } else if (
+      !isOutside &&
       relativePosition > upperLimit &&
       relativePosition < 1 + relativeDistanceValue
     ) {
@@ -385,19 +388,7 @@ const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
     if (draggingState.value === DraggingState.NOT_DRAGGING) {
       draggingState.value = DraggingState.START_DRAGGING;
       document.addEventListener(moveEvent, handlerMousemove);
-      if (parent.value) {
-        let scrolling = false;
-        // TODO: improve scroll dispatching
-        parent.value.onscroll = () => {
-          scrolling = true;
-        };
-        setInterval(() => {
-          if (parent.value && scrolling) {
-            scrolling = false;
-            setTransformDragEvent();
-          }
-        }, 100);
-      }
+      setEventWithInterval(parent.value, "onscroll", setTransformDragEvent);
       if (element) {
         assignDraggingEvent(
           element,

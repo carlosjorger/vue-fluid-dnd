@@ -130,3 +130,24 @@ export const setTranistion = (
     element.style.transition = `transform ${duration}ms ${timingFunction}`;
   }
 };
+export const setEventWithInterval = (
+  element: HTMLElement | undefined,
+  eventName: "onscroll",
+  callback: () => void
+) => {
+  // TODO: improve scroll dispatching
+  if (!element) {
+    return;
+  }
+  let scrolling = false;
+
+  element[eventName] = () => {
+    scrolling = true;
+  };
+  setInterval(() => {
+    if (scrolling) {
+      scrolling = false;
+      callback();
+    }
+  }, 90);
+};
