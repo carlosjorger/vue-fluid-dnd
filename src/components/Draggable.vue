@@ -507,13 +507,18 @@ const emitDraggingEventToSiblings = (
   for (const [index, sibling] of siblings.entries()) {
     const siblingDraggableId = sibling.getAttribute(DRAGGABLE_ID_ATTR) ?? "";
     if (!isOutside) {
-      translation = canChangeDraggable(
+      const siblingTransition = canChangeDraggable(
         direction,
         draggedElement,
         sibling,
         mouseDirection,
         translation
       );
+      if (siblingTransition) {
+        translation = siblingTransition;
+      } else {
+        return;
+      }
     }
     if (direction && mouseDirection[direction] == "quiet") {
       continue;
@@ -560,11 +565,14 @@ const canChangeDraggable = (
   const currentPosition = currentBoundingClientRect[before];
   const currentSize = currentBoundingClientRect[distance];
 
-  const targetosition = targetBoundingClientRect[before];
+  const targetPosition = targetBoundingClientRect[before];
   const siblingSize = targetBoundingClientRect[distance];
 
-  const siblingMiddle = targetosition + siblingSize / 2;
-
+  const siblingMiddle = targetPosition + siblingSize / 2;
+  const isTransitioned = targetElement.getAnimations().length !== 0;
+  if (isTransitioned) {
+    return;
+  }
   if (
     (mouseDirection[direction] === after &&
       currentPosition + currentSize > siblingMiddle) ||
@@ -816,5 +824,4 @@ watch(
 }
 </style>
 <!-- TODO: refactor -->
-<!-- TODO: avoid shaking dragging a element -->
 <!-- TODO: avoid to fix height is already fixed -->
