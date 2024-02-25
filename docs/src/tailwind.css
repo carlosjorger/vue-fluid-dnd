@@ -10,4 +10,5 @@ details {
 details[open] {
   max-height: 800px;
   transition: max-height 400ms ease-out; /* Animate the change */
+  color: rgb(0, 206, 166);
 }
