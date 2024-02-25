@@ -1,6 +1,6 @@
 {
   "name": "vue3-juice-dnd",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "type": "module",
   "files": [
     "dist",
@@ -13,7 +13,8 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/vue3-juice-dnd.js",
       "require": "./dist/vue3-juice-dnd.umd.cjs"
-    }
+    },
+    "./style.css": "./dist/style.css"
   },
   "types": "./dist/index.d.ts",
   "typings": "./dist/index.d.ts",

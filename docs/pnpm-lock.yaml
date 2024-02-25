@@ -39,8 +39,8 @@ dependencies:
     specifier: ^3.4.13
     version: 3.4.13(typescript@5.3.3)
   vue3-juice-dnd:
-    specifier: ^0.1.12
-    version: 0.1.12(vue@3.4.13)
+    specifier: ^0.1.13
+    version: 0.1.13(vue@3.4.13)
 
 packages:
 
@@ -5230,8 +5230,8 @@ packages:
     resolution: {integrity: sha512-AyFQ0EVmsOZOlAnxoFOGOq1SQDWAB7C6aqMGS23svWAllfOaxbuFvcT8D1i8z3Gyn8fraVeZNNmN6e9bxxXkKw==}
     dev: false
 
-  /vue3-juice-dnd@0.1.12(vue@3.4.13):
-    resolution: {integrity: sha512-5gkNtdH79tv8VmXoMnxapTERCI+/kKG+SLUt+lcHdoCKzpFudsbV5oCR7IFwu6OpOU9Wo832eNLgTDD05sRKgg==}
+  /vue3-juice-dnd@0.1.13(vue@3.4.13):
+    resolution: {integrity: sha512-tQiNwutrX5UsncHZ5lfhab8cWJmxazktPtazEwJLqeBgjJLmf/IbkKGxNNLuPyXbLsazwjgMesGONgdYxR4Rnw==}
     peerDependencies:
       vue: '>=3.3.0'
     dependencies:
