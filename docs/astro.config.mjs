@@ -9,6 +9,9 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "VueJuiceDnD",
+      logo: {
+        src: "./src/assets/logo.svg",
+      },
       social: {
         github: "https://github.com/carlosjorger/vue3-juice-dnd",
       },
