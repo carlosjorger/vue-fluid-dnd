@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Draggable, Droppable } from "vue3-juice-dnd";
+import "vue3-juice-dnd/style.css";
 const list = ref([1, 2, 3]);
 </script>
 <template>

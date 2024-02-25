@@ -43,19 +43,22 @@ app.mount('#app');`;
 
 #### Usage on local
 
-Import components on .vue files:
+Import components on .vue files and styles:
 
 export const optionApiCode = `
 <script>
   import { Draggable, Droppable } from 'vue3-juice-dnd';
-  export default {
-    components: { Draggable, Droppable },
-  }
+  import "vue3-juice-dnd/style.css";
+
+export default {
+components: { Draggable, Droppable },
+}
 
 </script>`;
 export const compositionApiCode = `
 <script>
   import { Draggable, Droppable } from 'vue3-juice-dnd';
+  import "vue3-juice-dnd/style.css";
 
 </script>`;
 
