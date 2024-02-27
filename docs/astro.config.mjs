@@ -38,6 +38,10 @@ export default defineConfig({
               label: "Single vertical list mixed styles",
               link: "/guides/verticalliststyles/",
             },
+            {
+              label: "Single vertical on a scroll container",
+              link: "/guides/verticallistautoscroll/",
+            },
           ],
         },
         {

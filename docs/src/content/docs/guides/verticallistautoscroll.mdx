@@ -1,0 +1,63 @@
+---
+title: Single vertical list on a scroll container
+description: A guide to use vue3-juice-dnd.
+---
+
+import SingleVerticalListWithAutoscroll from "../../../components/SingleVerticalListWithAutoscroll.vue";
+import { Code } from "@astrojs/starlight/components";
+
+### List of number example
+
+If you have a large list of elements with a scroll, you can easily navigate through the list.
+First, we're going to create a large list of numbers:
+
+export const listOfNumbers = `<script setup lang="ts">
+
+const list = ref([...Array(20).keys()]);
+
+</script>`;
+
+<Code code={listOfNumbers} lang="vue" />
+
+### Using Droppable and Draggable components
+
+We're going to make droppable element scrollable:
+
+export const highlightsDnD = ['number-list','overflow: auto;'];
+
+export const listOfNumberInsideDnD = `
+<template>
+  <Droppable droppable-id="1" direction="vertical" :items="list">
+    <ul class="number-list">
+      <Draggable
+        v-for="(element, index) in list"
+        v-slot="{ setRef }"
+        :draggable-id="element.toString()"
+        :index="index"
+      >
+        <li class="number" :ref="setRef">{{ element }}</li>
+      </Draggable>
+    </ul>
+  </Droppable>
+</template>
+<style>
+// ....
+.number-list {
+    display: block;
+    padding-inline: 10px;
+    overflow: auto;
+    height: 300px;
+}
+
+</style>
+
+`;
+
+<Code code={listOfNumberInsideDnD} lang="vue" mark={highlightsDnD} />
+### Preview
+
+This is what you got as a result:
+
+<div class="p-8 bg-[var(--sl-color-gray-6)] h-96">
+  <SingleVerticalListWithAutoscroll client:load />
+</div>
