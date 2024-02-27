@@ -12,8 +12,14 @@ export default defineConfig({
       logo: {
         src: "./src/assets/logo.svg",
       },
+      editLink: {
+        baseUrl:
+          "https://github.com/carlosjorger/vue3-juice-dnd/tree/main/docs/",
+      },
+      customCss: process.env.NO_GRADIENTS ? [] : ["/src/assets/landing.css"],
       social: {
         github: "https://github.com/carlosjorger/vue3-juice-dnd",
+        "x.com": "https://twitter.com/carlosjorgerc",
       },
       sidebar: [
         {
@@ -54,6 +60,7 @@ export default defineConfig({
       customCss: [
         // Path to your Tailwind base styles:
         "./src/tailwind.css",
+        "./src/assets/landing.css",
       ],
     }),
     vue(),
