@@ -7,7 +7,7 @@ hero:
   image:
     file: ../../assets/logo.svg
   actions:
-    - text: Guide
+    - text: Read Docs
       link: /introduction/introduction/
       icon: right-arrow
       variant: primary
@@ -18,20 +18,19 @@ hero:
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
 
-## Next steps
+## Features
 
-<CardGrid stagger>
-  <Card title="Update content" icon="pencil">
-    Edit `src/content/docs/index.mdx` to see this page change.
+<CardGrid>
+  <Card title="Easy and flexible" icon="pen">
+    This Vue library was created with the intention of writing as little code as
+    possible in order to use it and the same time can be used in many scenarios.
   </Card>
-  <Card title="Add new content" icon="add-document">
-    Add Markdown or MDX files to `src/content/docs` to create new pages.
+  <Card title="Clean and animated" icon="rocket">
+    The drag and drop functionalities have nice, clean and smooth animation
+    compared to the rest of the libraries.
   </Card>
-  <Card title="Configure your site" icon="setting">
-    Edit your `sidebar` and other config in `astro.config.mjs`.
-  </Card>
-  <Card title="Read the docs" icon="open-book">
-    Learn more in [the Starlight Docs](https://starlight.astro.build/).
+  <Card title="Fully Documented" icon="open-book">
+    We’ve included a comprehensive set of documentation to help you take advance
+    of this tool to add drag and drop functionalities to your projects.
   </Card>
 </CardGrid>
-{/* TODO: add autoscroll vertical list*/}
