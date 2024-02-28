@@ -133,7 +133,6 @@ export const setEventWithInterval = (
   eventName: "onscroll",
   callback: () => void
 ) => {
-  // TODO: improve scroll dispatching
   if (!element) {
     return;
   }

@@ -1,6 +1,6 @@
 {
-  "name": "vue3-juice-dnd",
-  "version": "0.1.14",
+  "name": "vue-fluid-dnd",
+  "version": "0.1.15",
   "type": "module",
   "files": [
     "dist",
