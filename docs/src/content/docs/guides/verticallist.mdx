@@ -1,6 +1,6 @@
 ---
 title: Single vertical list
-description: A guide to use vue3-juice-dnd.
+description: A guide to use vue-fluid-dnd.
 ---
 
 import SingleVerticalList from "../../../components/SingleVerticalList.vue";
@@ -8,13 +8,13 @@ import { Code } from "@astrojs/starlight/components";
 
 ### List of number example
 
-To showing how to use **VueJuiceDnD** for sorting a single list.
+To showing how to use **VueFluidDnD** for sorting a single list.
 First, we're going to create a list of numbers:
 
 export const listOfNumbers = `<script setup lang="ts">
 import { ref } from "vue";
-import { Draggable, Droppable } from "vue3-juice-dnd";
-import "vue3-juice-dnd/style.css";
+import { Draggable, Droppable } from "vue-fluid-dnd";
+import "vue-fluid-dnd/style.css";
 
 const list = ref([1, 2, 3]);
 

@@ -1,9 +1,9 @@
 # Contributing
 
-1. [Fork](https://github.com/carlosjorger/vue3-juice-dnd/fork) and clone the repository, put your **GitHub** username instead of `YOUR-USERNAME`:
+1. [Fork](https://github.com/carlosjorger/vue-fluid-dnd/fork) and clone the repository, put your **GitHub** username instead of `YOUR-USERNAME`:
 
 ```bash
-git clone git@github.com:YOUR-USERNAME/vue3-juice-dnd.git
+git clone git@github.com:YOUR-USERNAME/vue-fluid-dnd.git
 ```
 
 2. Install dependencies:

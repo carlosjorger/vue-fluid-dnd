@@ -1,4 +1,4 @@
-# vue3-juice-dnd
+# vue-fluid-dnd
 
 ## 👋 Introduction
 
@@ -15,26 +15,26 @@
 
 ## 🚀 Getting Started
 
-1. **Install vue3-juice-dnd:**
+1. **Install vue-fluid-dnd:**
 
    ```bash
    # with npm:
-   npm i vue3-juice-dnd
+   npm i vue-fluid-dnd
 
    # with yarn:
-   yarn add vue3-juice-dnd
+   yarn add vue-fluid-dnd
 
    # with pnpm:
-   pnpm i vue3-juice-dnd
+   pnpm i vue-fluid-dnd
 
    # with ultra:
-   ultra install vue3-juice-dnd
+   ultra install vue-fluid-dnd
    ```
 
 2. **Import components**
 
    ```js
-   import { Draggable, Droppable } from "vue3-juice-dnd";
+   import { Draggable, Droppable } from "vue-fluid-dnd";
    ```
 
 3. **Create a list that your want to sort**
@@ -71,10 +71,8 @@
    </Droppable>
    ```
 
-- 📚 [All docs here](https://vue3-juice-dnd.netlify.app/).
+- 📚 [All docs here](https://vue-fluid-dnd.netlify.app/).
 
 ## 🤝 Contributing
 
-If you're interested in contributing to Fvue3-juice-dnd JS, please read our contributing docs before submitting a pull request [CONTRIBUTING](./CONTRIBUTING.md).
-
-<!-- TODO: change library name -->
+If you're interested in contributing to vue-fluid-dnd JS, please read our contributing docs before submitting a pull request [CONTRIBUTING](./CONTRIBUTING.md).

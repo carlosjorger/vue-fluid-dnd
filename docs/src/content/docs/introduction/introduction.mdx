@@ -1,23 +1,23 @@
 ---
 title: Getting Started
-description: A guide to install vue3-juice-dnd.
+description: A guide to install vue-fluid-dnd.
 ---
 
 import { Tabs, TabItem, Code } from "@astrojs/starlight/components";
 
 ### Installation
 
-Install vue3-juice-dnd using your preferred package manager:
+Install vue-fluid-dnd using your preferred package manager:
 
 ```bash
 # with npm:
-npm i vue3-juice-dnd
+npm i vue-fluid-dnd
 
 # with yarn:
-yarn add vue3-juice-dnd
+yarn add vue-fluid-dnd
 
 # with pnpm:
-pnpm i vue3-juice-dnd
+pnpm i vue-fluid-dnd
 ```
 
 ### Usage
@@ -30,7 +30,7 @@ export const globalUsage = `
 import { createApp } from "vue";
 import App from './App.vue';
 
-import { Draggable, Droppable } from 'vue3-juice-dnd';
+import { Draggable, Droppable } from 'vue-fluid-dnd';
 
 const app = createApp(App);
 
@@ -47,8 +47,8 @@ Import components on .vue files and styles:
 
 export const optionApiCode = `
 <script>
-  import { Draggable, Droppable } from 'vue3-juice-dnd';
-  import "vue3-juice-dnd/style.css";
+  import { Draggable, Droppable } from 'vue-fluid-dnd';
+  import "vue3-fluid-dnd/style.css";
 
 export default {
 components: { Draggable, Droppable },
@@ -57,8 +57,8 @@ components: { Draggable, Droppable },
 </script>`;
 export const compositionApiCode = `
 <script>
-  import { Draggable, Droppable } from 'vue3-juice-dnd';
-  import "vue3-juice-dnd/style.css";
+  import { Draggable, Droppable } from 'vue3-fluid-dnd';
+  import "vue-fluid-dnd/style.css";
 
 </script>`;
 

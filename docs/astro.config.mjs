@@ -8,17 +8,17 @@ import netlify from "@astrojs/netlify";
 export default defineConfig({
   integrations: [
     starlight({
-      title: "VueJuiceDnD",
+      title: "VueFluidDnD",
       logo: {
         src: "./src/assets/logo.svg",
       },
       editLink: {
         baseUrl:
-          "https://github.com/carlosjorger/vue3-juice-dnd/tree/main/docs/",
+          "https://github.com/carlosjorger/vue-fluid-dnd/tree/main/docs/",
       },
       customCss: process.env.NO_GRADIENTS ? [] : ["/src/assets/landing.css"],
       social: {
-        github: "https://github.com/carlosjorger/vue3-juice-dnd",
+        github: "https://github.com/carlosjorger/vue-fluid-dnd",
         "x.com": "https://twitter.com/carlosjorgerc",
       },
       sidebar: [

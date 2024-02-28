@@ -1,6 +1,6 @@
 ---
 title: List with mixed styles
-description: A guide to use vue3-juice-dnd.
+description: A guide to use vue-fluid-dnd.
 ---
 
 import SingleVerticalListWithDiferentStyles from "../../../components/SingleVerticalListWithDiferentStyles.vue";
@@ -38,7 +38,7 @@ export const listOfNumbers = `
 You have to pass for each element its `styles`.
 
 :::caution
-Each element must have its own `style` before and after change its position on the `list` using **VueJuiceDnD**. Avoid style with **psedo-classes** like [nth-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-last-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-of-type](https://developer.mozilla.org/es/docs/Web/CSS/:nth-of-type), etc because add styles to the elements of the list based in other properties like position, number of children, etc.
+Each element must have its own `style` before and after change its position on the `list` using **VueFluidDnD**. Avoid style with **psedo-classes** like [nth-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-last-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-of-type](https://developer.mozilla.org/es/docs/Web/CSS/:nth-of-type), etc because add styles to the elements of the list based in other properties like position, number of children, etc.
 :::
 
 export const highlightsDnD = [':style="element.style"'];

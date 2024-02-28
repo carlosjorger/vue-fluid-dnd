@@ -17,8 +17,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
-      name: "VueJuiceDnd",
-      fileName: "vue3-juice-dnd",
+      name: "VueFluidDnd",
+      fileName: "vue-fluid-dnd",
     },
     rollupOptions: {
       external: ["vue"],
