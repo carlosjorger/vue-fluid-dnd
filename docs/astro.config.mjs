@@ -10,7 +10,7 @@ export default defineConfig({
     starlight({
       title: "VueFluidDnD",
       logo: {
-        src: "./src/assets/logo.svg",
+        src: "/src/assets/logo.svg",
       },
       editLink: {
         baseUrl:

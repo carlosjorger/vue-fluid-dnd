@@ -1,4 +1,7 @@
-# vue-fluid-dnd
+ <h1 align="center">
+    <img src="./docs/src/assets/logo.svg" alt="Icon" width="150" height="140" />
+  <br>vue-fluid-dnd<br>
+</h1>
 
 ## 👋 Introduction
 
