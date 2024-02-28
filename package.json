@@ -1,18 +1,18 @@
 {
   "name": "vue-fluid-dnd",
-  "version": "0.1.15",
+  "version": "0.1.17",
   "type": "module",
   "files": [
     "dist",
     "src/components/"
   ],
-  "main": "./dist/vue3-fluid-dnd.umd.cjs",
-  "module": "./dist/vue3-fluid-dnd.js",
+  "main": "./dist/vue-fluid-dnd.umd.cjs",
+  "module": "./dist/vue-fluid-dnd.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/vue3-fluid-dnd.js",
-      "require": "./dist/vue3-fluid-dnd.umd.cjs"
+      "import": "./dist/vue-fluid-dnd.js",
+      "require": "./dist/vue-fluid-dnd.umd.cjs"
     },
     "./style.css": "./dist/style.css"
   },

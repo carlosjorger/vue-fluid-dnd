@@ -326,7 +326,7 @@ const updateScroll = (
     const relativePosition = positionInsideParent / totalDistance;
     const relativeDistanceValue = distanceValue / totalDistance;
 
-    const velocity = 5;
+    const velocity = 0.1;
     const infLimit = 0.25;
     const upperLimit = 0.75;
     let percent = 0;
@@ -824,4 +824,3 @@ watch(
 }
 </style>
 <!-- TODO: refactor -->
-<!-- TODO: keep improving autoscroll -->

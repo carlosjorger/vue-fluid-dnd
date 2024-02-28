@@ -35,7 +35,7 @@ provide("onDrop", currentOnDrop.value);
 <style>
 .droppable {
   box-sizing: border-box !important;
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth; */
   position: relative;
 }
 </style>

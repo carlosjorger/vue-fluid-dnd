@@ -136,15 +136,7 @@ export const setEventWithInterval = (
   if (!element) {
     return;
   }
-  let scrolling = false;
-
   element[eventName] = () => {
-    scrolling = true;
+    callback();
   };
-  setInterval(() => {
-    if (scrolling) {
-      scrolling = false;
-      callback();
-    }
-  }, 90);
 };
