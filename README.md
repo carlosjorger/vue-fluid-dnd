@@ -79,3 +79,5 @@
 ## 🤝 Contributing
 
 If you're interested in contributing to vue-fluid-dnd JS, please read our contributing docs before submitting a pull request [CONTRIBUTING](./CONTRIBUTING.md).
+
+<!-- TODO: add a video -->
