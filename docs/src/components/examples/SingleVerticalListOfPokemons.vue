@@ -52,11 +52,12 @@ for (const result of results) {
   const pokemon = await fetch(result.url).then<Pokemon>((res) => res.json());
   pokemons.value.push(pokemon);
 }
-console.log(pokemons.value[0]);
 </script>
 <template>
   <Droppable droppable-id="1" direction="vertical" :items="pokemons">
-    <div class="number-list block">
+    <div
+      class="bg-gray-200/60 border-solid border-black/40 rounded-2xl border-4 p-8 block"
+    >
       <Draggable
         v-for="(pokemon, index) in pokemons"
         v-slot="{ setRef }"
@@ -65,7 +66,7 @@ console.log(pokemons.value[0]);
       >
         <div
           :ref="setRef"
-          class="rounded-md aspect-square w-40 m-1 text-white pokemon bg-no-repeat"
+          class="rounded-md aspect-square border-solid border-black/40 border-4 w-40 m-1 mx-auto text-white pokemon bg-no-repeat"
           :class="[pokeColor[pokemon.name]]"
         >
           <div class="p-2">
