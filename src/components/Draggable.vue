@@ -49,10 +49,6 @@ type DraggingEvent = typeof DRAG_EVENT | typeof START_DRAG_EVENT;
 type DragEvent = DraggingEvent | typeof DROP_EVENT | typeof START_DROP_EVENT;
 type VerticalDirection = "top" | "down" | "quiet";
 type HorizontalDirection = "left" | "right" | "quiet";
-type MouseDirection = {
-  vertical: VerticalDirection;
-  horizontal: HorizontalDirection;
-};
 
 enum DraggingState {
   NOT_DRAGGING = "notDragging",
@@ -209,20 +205,13 @@ const directionInfo = {
     quiet: "quiet" as VerticalDirection,
   },
 };
-const setTransform = (): MouseDirection => {
+const setTransform = () => {
   const element = childRef.value as HTMLElement;
   const elementBoundingClientRect = element.getBoundingClientRect();
 
-  let vertical: VerticalDirection = "quiet";
-  let horizontal: HorizontalDirection = "quiet";
-
-  const getTranslateWihtDirection = <
-    T = VerticalDirection | HorizontalDirection
-  >(
+  const getTranslateWihtDirection = (
     translateDirection: Direction
-  ): { direction: T; newTranslate: number; scrollWeight: number } => {
-    const directionValues = directionInfo[translateDirection];
-
+  ): { newTranslate: number; scrollWeight: number } => {
     const {
       beforeMargin,
       borderBeforeWidth,
@@ -251,24 +240,20 @@ const setTransform = (): MouseDirection => {
         border -
         margin -
         scrollValue;
-      const { scrollDirection, scrollWeight } =
-        updateScroll(translateDirection);
+      const { scrollWeight } = updateScroll(translateDirection);
 
       if (translate.value[axis] > newTranslate) {
         return {
-          direction: directionValues.before as T,
           newTranslate,
           scrollWeight,
         };
       } else if (translate.value[axis] < newTranslate) {
         return {
-          direction: directionValues.after as T,
           newTranslate,
           scrollWeight,
         };
       } else {
         return {
-          direction: scrollDirection as T,
           newTranslate,
           scrollWeight,
         };
@@ -276,22 +261,17 @@ const setTransform = (): MouseDirection => {
     }
     const defaultTransalation = translate.value[axis];
     return {
-      direction: directionValues.quiet as T,
       newTranslate: defaultTransalation,
       scrollWeight: 1,
     };
   };
 
-  const { direction: horizontalDirection, newTranslate: newTranslateX } =
-    getTranslateWihtDirection<HorizontalDirection>("horizontal");
-  horizontal = horizontalDirection;
+  const { newTranslate: newTranslateX } =
+    getTranslateWihtDirection("horizontal");
   translate.value.x = newTranslateX;
 
-  const { direction: verticalDirection, newTranslate: newTranslateY } =
-    getTranslateWihtDirection<VerticalDirection>("vertical");
-  vertical = verticalDirection;
+  const { newTranslate: newTranslateY } = getTranslateWihtDirection("vertical");
   translate.value.y = newTranslateY;
-  return { vertical, horizontal };
 };
 
 const updateScroll = (
@@ -420,10 +400,7 @@ const startDragging = (event: DragMouseTouchEvent) => {
   const { offsetX, offsetY } = event;
   currentOffset.value = { offsetX, offsetY };
   draggingState.value = DraggingState.DRAGING;
-  emitEventToSiblings(element, START_DRAG_EVENT, {
-    vertical: "down",
-    horizontal: "right",
-  });
+  emitEventToSiblings(element, START_DRAG_EVENT);
   fixSizeStyle(element.parentElement);
   const getPositionByDistance = (direction: Direction) => {
     const { offset, beforeMargin, page, borderBeforeWidth, scroll } =
@@ -458,32 +435,17 @@ const setTransformEvent = (
 };
 const setTransformDragEvent = () => {
   const element = childRef.value as HTMLElement;
-  //TODO: is not trow a transformation
-  console.log(element.getBoundingClientRect().top);
 
-  const mouseDirection = setTransform();
-  emitEventToSiblings(element, DRAG_EVENT, mouseDirection);
+  setTransform();
+  emitEventToSiblings(element, DRAG_EVENT);
 };
-const emitEventToSiblings = (
-  draggedElement: HTMLElement,
-  event: DragEvent,
-  mouseDirection: MouseDirection = {
-    vertical: "quiet",
-    horizontal: "quiet",
-  }
-) => {
+const emitEventToSiblings = (draggedElement: HTMLElement, event: DragEvent) => {
   let tranlation = { height: 0, width: 0 };
   tranlation = calculateInitialTranslation(draggedElement, event);
   const { siblings, elementPosition } = getSiblings(draggedElement);
   const dropping = event === DROP_EVENT || event === START_DROP_EVENT;
   if (!dropping) {
-    emitDraggingEventToSiblings(
-      draggedElement,
-      event,
-      mouseDirection,
-      siblings,
-      tranlation
-    );
+    emitDraggingEventToSiblings(draggedElement, event, siblings, tranlation);
   } else {
     emitDroppingEventToSiblings(
       draggedElement,
@@ -498,7 +460,6 @@ const emitEventToSiblings = (
 const emitDraggingEventToSiblings = (
   draggedElement: HTMLElement,
   event: DragEvent,
-  mouseDirection: MouseDirection,
   siblings: HTMLElement[],
   translation: {
     height: number;
@@ -509,27 +470,22 @@ const emitDraggingEventToSiblings = (
 
   for (const [index, sibling] of siblings.entries()) {
     const siblingDraggableId = sibling.getAttribute(DRAGGABLE_ID_ATTR) ?? "";
-    let currentTranslation = translation;
     if (!isOutside) {
       const siblingTransition = canChangeDraggable(
         direction,
         draggedElement,
         sibling,
-        mouseDirection,
         translation
       );
       if (siblingTransition) {
-        currentTranslation = siblingTransition;
+        translation = siblingTransition;
       } else {
-        return;
+        continue;
       }
     }
-    if (direction && mouseDirection[direction] == "quiet") {
-      continue;
-    }
     const siblingRealIndex = siblings.length - index;
-    updateActualIndexBaseOnTranslation(currentTranslation, siblingRealIndex);
-    emitEventBus(event, currentTranslation, siblingDraggableId);
+    updateActualIndexBaseOnTranslation(translation, siblingRealIndex);
+    emitEventBus(event, translation, siblingDraggableId);
   }
 };
 const updateActualIndexBaseOnTranslation = (
@@ -553,7 +509,6 @@ const canChangeDraggable = (
   direction: Direction | undefined,
   sourceElement: HTMLElement,
   targetElement: HTMLElement,
-  mouseDirection: MouseDirection,
   translation: {
     height: number;
     width: number;
@@ -563,11 +518,11 @@ const canChangeDraggable = (
     return { height: 0, width: 0 };
   }
 
-  const { before, distance, after } = getPropByDirection(direction);
+  const { before, distance } = getPropByDirection(direction);
   const currentBoundingClientRect = sourceElement.getBoundingClientRect();
   const targetBoundingClientRect = targetElement.getBoundingClientRect();
 
-  const currentPosition = position.value.top + translate.value.y;
+  const currentPosition = currentBoundingClientRect[before];
   const currentSize = currentBoundingClientRect[distance];
 
   const targetPosition = targetBoundingClientRect[before];
@@ -580,30 +535,20 @@ const canChangeDraggable = (
   if (isTransitioned) {
     return;
   }
-  // TODO: remove margin
+  const targetEndPosition = targetPosition + targetSize;
+  const currentEndPosition = currentPosition + currentSize;
+
+  const currentPositionIsInsideTarget =
+    currentPosition >= targetPosition && currentPosition <= targetEndPosition;
+  const currentEndPositionIsInsideTarget =
+    currentEndPosition >= targetPosition &&
+    currentEndPosition <= targetEndPosition;
+
   const newCondition =
-    (currentPosition <= targetPosition + targetSize &&
-      currentPosition >= targetPosition &&
-      currentPosition > siblingMiddle) ||
-    (currentPosition + currentSize >= targetPosition &&
-      currentPosition + currentSize <= targetPosition + targetSize &&
-      currentPosition + currentSize > siblingMiddle) ||
-    currentPosition > targetPosition + targetSize;
-  console.log(currentPosition);
-  // console.log(
-  //   currentPosition <= targetPosition + targetSize &&
-  //     currentPosition >= targetPosition,
-  //   currentPosition + currentSize >= targetPosition &&
-  //     currentPosition + currentSize <= targetPosition + targetSize &&
-  //     currentPosition + currentSize > siblingMiddle,
-  //   currentPosition > targetPosition + targetSize,
-  //   currentPosition,
-  //   currentPosition + currentSize,
-  //   targetPosition,
-  //   targetPosition + targetSize,
-  //   targetElement.getAttribute(DRAGGABLE_ID_ATTR) ?? ""
-  // );
-  // TODO keep working on this condition
+    (currentPositionIsInsideTarget && currentPosition > siblingMiddle) ||
+    (currentEndPositionIsInsideTarget && currentEndPosition > siblingMiddle) ||
+    currentPosition > targetEndPosition;
+
   if (newCondition) {
     return { height: 0, width: 0 };
   }
