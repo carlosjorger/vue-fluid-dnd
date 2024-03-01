@@ -27,7 +27,11 @@ export const moveTranslate = (
   if (!element) {
     return;
   }
-  element.style.transform = `translate(${width}px,${height}px)`;
+  if (width == 0 && height == 0) {
+    element.style.transform = ``;
+  } else {
+    element.style.transform = `translate(${width}px,${height}px)`;
+  }
 };
 
 export const assignDraggingEvent = (

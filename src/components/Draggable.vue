@@ -73,7 +73,7 @@ const translate = ref({ x: 0, y: 0 });
 const scroll = ref({ scrollLeft: 0, scrollTop: 0 });
 const windowScroll = ref({ scrollY: 0, scrollX: 0 });
 
-const duration = 200;
+const duration = 150;
 const pagePosition = ref({ pageX: 0, pageY: 0 });
 let childRef = ref<HTMLElement>();
 const actualIndex = ref(index);
@@ -89,7 +89,7 @@ onMounted(() => {
     }) => {
       if (draggableId == draggableIdEvent && droppableId === droppableIdEvent) {
         moveTranslate(childRef.value, height, width);
-        setTranistion(childRef.value, duration, "ease-in-out");
+        setTranistion(childRef.value, duration, "cubic-bezier(0.2, 0, 0, 1)");
       }
     },
     startDrop: ({
@@ -458,6 +458,9 @@ const setTransformEvent = (
 };
 const setTransformDragEvent = () => {
   const element = childRef.value as HTMLElement;
+  //TODO: is not trow a transformation
+  console.log(element.getBoundingClientRect().top);
+
   const mouseDirection = setTransform();
   emitEventToSiblings(element, DRAG_EVENT, mouseDirection);
 };
@@ -506,6 +509,7 @@ const emitDraggingEventToSiblings = (
 
   for (const [index, sibling] of siblings.entries()) {
     const siblingDraggableId = sibling.getAttribute(DRAGGABLE_ID_ATTR) ?? "";
+    let currentTranslation = translation;
     if (!isOutside) {
       const siblingTransition = canChangeDraggable(
         direction,
@@ -515,7 +519,7 @@ const emitDraggingEventToSiblings = (
         translation
       );
       if (siblingTransition) {
-        translation = siblingTransition;
+        currentTranslation = siblingTransition;
       } else {
         return;
       }
@@ -524,8 +528,8 @@ const emitDraggingEventToSiblings = (
       continue;
     }
     const siblingRealIndex = siblings.length - index;
-    updateActualIndexBaseOnTranslation(translation, siblingRealIndex);
-    emitEventBus(event, translation, siblingDraggableId);
+    updateActualIndexBaseOnTranslation(currentTranslation, siblingRealIndex);
+    emitEventBus(event, currentTranslation, siblingDraggableId);
   }
 };
 const updateActualIndexBaseOnTranslation = (
@@ -558,26 +562,49 @@ const canChangeDraggable = (
   if (!direction) {
     return { height: 0, width: 0 };
   }
+
   const { before, distance, after } = getPropByDirection(direction);
   const currentBoundingClientRect = sourceElement.getBoundingClientRect();
   const targetBoundingClientRect = targetElement.getBoundingClientRect();
 
-  const currentPosition = currentBoundingClientRect[before];
+  const currentPosition = position.value.top + translate.value.y;
   const currentSize = currentBoundingClientRect[distance];
 
   const targetPosition = targetBoundingClientRect[before];
-  const siblingSize = targetBoundingClientRect[distance];
+  const targetSize = targetBoundingClientRect[distance];
 
-  const siblingMiddle = targetPosition + siblingSize / 2;
+  const siblingMiddle = targetPosition + targetSize / 2;
+
   const isTransitioned = targetElement.getAnimations().length !== 0;
+
   if (isTransitioned) {
     return;
   }
-  if (
-    (mouseDirection[direction] === after &&
+  // TODO: remove margin
+  const newCondition =
+    (currentPosition <= targetPosition + targetSize &&
+      currentPosition >= targetPosition &&
+      currentPosition > siblingMiddle) ||
+    (currentPosition + currentSize >= targetPosition &&
+      currentPosition + currentSize <= targetPosition + targetSize &&
       currentPosition + currentSize > siblingMiddle) ||
-    (mouseDirection[direction] === before && currentPosition > siblingMiddle)
-  ) {
+    currentPosition > targetPosition + targetSize;
+  console.log(currentPosition);
+  // console.log(
+  //   currentPosition <= targetPosition + targetSize &&
+  //     currentPosition >= targetPosition,
+  //   currentPosition + currentSize >= targetPosition &&
+  //     currentPosition + currentSize <= targetPosition + targetSize &&
+  //     currentPosition + currentSize > siblingMiddle,
+  //   currentPosition > targetPosition + targetSize,
+  //   currentPosition,
+  //   currentPosition + currentSize,
+  //   targetPosition,
+  //   targetPosition + targetSize,
+  //   targetElement.getAttribute(DRAGGABLE_ID_ATTR) ?? ""
+  // );
+  // TODO keep working on this condition
+  if (newCondition) {
     return { height: 0, width: 0 };
   }
   return translation;
