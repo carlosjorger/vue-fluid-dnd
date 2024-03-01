@@ -796,5 +796,7 @@ watch(
 }
 </style>
 <!-- TODO: fix autoscroll when a element is dropped at the end-->
-<!-- TODO: increase swap rate-->
+<!-- TODO: work with mx-auto or my-auto-->
+<!-- TODO: work with inside images and flex-->
+
 <!-- TODO: refactor -->

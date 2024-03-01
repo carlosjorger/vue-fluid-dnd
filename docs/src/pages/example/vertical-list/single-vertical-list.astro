@@ -1,0 +1,13 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import SingleVerticalListOfPokemons from "../../../components/examples/SingleVerticalListOfPokemons.vue";
+
+---
+
+<StarlightPage frontmatter={{ title: 'Single vertical list example', tableOfContents:false }}  >
+  <p>This is a custom page with a custom component:</p>
+  <div class="p-8 bg-[var(--sl-color-gray-6)]">
+    <SingleVerticalListOfPokemons client:load />
+  </div>
+</StarlightPage>
+
