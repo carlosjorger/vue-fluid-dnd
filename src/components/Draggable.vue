@@ -69,7 +69,7 @@ const translate = ref({ x: 0, y: 0 });
 const scroll = ref({ scrollLeft: 0, scrollTop: 0 });
 const windowScroll = ref({ scrollY: 0, scrollX: 0 });
 
-const duration = 150;
+const duration = 200;
 const pagePosition = ref({ pageX: 0, pageY: 0 });
 let childRef = ref<HTMLElement>();
 const actualIndex = ref(index);
