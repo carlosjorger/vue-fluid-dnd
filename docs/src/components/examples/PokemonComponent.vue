@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, type ComponentPublicInstance } from "vue";
 import type { Pokemon } from "./Pokemon";
 
-const { pokemon } = defineProps<{
+const { pokemon, setRef } = defineProps<{
   pokemon: Pokemon;
+  setRef: (
+    ref: Element | ComponentPublicInstance | null,
+    refs: Record<string, any>
+  ) => void;
 }>();
 
 const pokeColor = {
@@ -47,7 +51,7 @@ const darkPokeColor = {
 
 <template>
   <div
-    ref="draggable"
+    :ref="setRef"
     class="rounded-xl aspect-square border-solid border-black/40 border-4 mb-4 dark:text-gray-100 text-gray-800 pokemon bg-no-repeat p-0.5"
     :class="[pokeColor[pokemon.name], darkPokeColor[pokemon.name]]"
   >
@@ -60,10 +64,16 @@ const darkPokeColor = {
       </div>
       <img :src="pokemon.sprites.front_default" alt="pokemon" />
     </div>
-    <div class="w-11/12 mx-auto rounded-md p-2 text-sm">
+    <div class="w-11/12 mx-auto bg-gray-100/20 rounded-md p-2 text-sm">
       <div v-for="pokemonType in pokemon.types">
         {{ pokemonType.type.name }}
       </div>
     </div>
   </div>
 </template>
+<style>
+.pokemon {
+  margin-top: 0rem !important;
+  background-image: url("../../assets/pokemon-bg.svg");
+}
+</style>

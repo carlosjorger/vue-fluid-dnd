@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import Draggable from "./components/Draggable.vue";
 import Droppable from "./components/Droppable.vue";
-
+import NumberComponent from "./NumberComponent.vue";
 const colList1 = ref([
   {
     "draggable-id": "h1",
@@ -193,9 +193,7 @@ const numbers3 = ref([
         v-slot="{ setRef }"
         :draggable-id="'number-' + element.toString()"
         :index="index"
-        ><li :ref="setRef" class="number">
-          {{ element }}
-        </li>
+        ><NumberComponent :setRef="setRef" :number="element" />
       </Draggable>
     </ul>
   </Droppable>

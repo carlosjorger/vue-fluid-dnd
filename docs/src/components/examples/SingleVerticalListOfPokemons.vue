@@ -65,7 +65,7 @@ for (const result of results) {
           :draggable-id="pokemon.name"
           :index="index"
         >
-          <PokemonComponent :ref="setRef" :pokemon="pokemon" />
+          <PokemonComponent :setRef="setRef" :pokemon="pokemon" />
         </Draggable>
       </div>
     </Droppable>
@@ -76,10 +76,6 @@ for (const result of results) {
   :not(a, strong, em, del, span, input, code)
   + :not(a, strong, em, del, span, input, code, :where(.not-content *)) {
   margin-top: 0rem !important;
-}
-.pokemon {
-  margin-top: 0rem !important;
-  background-image: url("../../assets/pokemon-bg.svg");
 }
 </style>
 <!-- TODO: refactor -->
