@@ -161,9 +161,9 @@ const numbers3 = ref([
     </div>
   </Droppable>
 
-  <div style="display: flex; flex-direction: row">
+  <div style="display: flex; flex-direction: row; width: 100%">
     <Droppable droppable-id="5" direction="vertical" :items="numbers1">
-      <ul style="display: block; width: 40%">
+      <ul style="display: block; width: 40%; margin-inline: auto">
         <Draggable
           v-for="(element, index) in numbers1"
           v-slot="{ setRef }"
