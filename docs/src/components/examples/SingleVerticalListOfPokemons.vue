@@ -2,10 +2,8 @@
 import { ref } from "vue";
 import { Draggable, Droppable } from "vue-fluid-dnd";
 import "vue-fluid-dnd/style.css";
-type PokemonLink = {
-  name: string;
-  url: string;
-};
+import type { Pokemon, PokemonLink } from "./Pokemon";
+import PokemonComponent from "./PokemonComponent.vue";
 const pokeColor = {
   bulbasaur: "bg-[#64dbb2]",
   ivysaur: "bg-[#64dbb2]",
@@ -24,22 +22,25 @@ const pokeColor = {
   purple: "#9f5bba",
   coco: "#ca8179",
 } as const;
-type Pokemon = {
-  name: keyof typeof pokeColor;
-  order: number;
-  types: PokemonTypeOrder[];
-  sprites: PokemonStripes;
-};
-type PokemonTypeOrder = {
-  slot: number;
-  type: PokemonType;
-};
-type PokemonType = {
-  name: string;
-};
-type PokemonStripes = {
-  front_default: string;
-};
+
+const darkPokeColor = {
+  bulbasaur: "dark:bg-[#429075]",
+  ivysaur: "dark:bg-[#429075]",
+  venusaur: "dark:bg-[#429075]",
+  charmander: "dark:bg-[#8e463f]",
+  charmeleon: "dark:bg-[#8e463f]",
+  charizard: "dark:bg-[#8e463f]",
+  squirtle: "dark:bg-[#3a72a4]",
+  wartortle: "dark:bg-[#3a72a4]",
+  blastoise: "dark:bg-[#3a72a4]",
+
+  green: "#64dbb2",
+  orange: "#f0776a",
+  blue: "#58abf6",
+  yellow: "#facd4b",
+  purple: "#9f5bba",
+  coco: "#ca8179",
+} as const;
 
 const pokemons = ref([] as Pokemon[]);
 const { results } = await fetch(
@@ -64,26 +65,7 @@ for (const result of results) {
           :draggable-id="pokemon.name"
           :index="index"
         >
-          <div
-            :ref="setRef"
-            class="rounded-xl aspect-square border-solid border-black/40 border-4 mb-4 dark:text-gray-100 text-gray-800 pokemon bg-no-repeat p-0.5"
-            :class="[pokeColor[pokemon.name]]"
-          >
-            <div class="p-2">
-              <div class="flex flex-row items-center justify-between gap-1">
-                <div class="">{{ pokemon.name }}</div>
-                <div class="dark:text-gray-100/40 text-gray-800/40">
-                  #{{ pokemon.order }}
-                </div>
-              </div>
-              <img :src="pokemon.sprites.front_default" alt="pokemon" />
-            </div>
-            <div class="w-11/12 mx-auto rounded-md p-2 text-sm">
-              <div v-for="pokemonType in pokemon.types">
-                {{ pokemonType.type.name }}
-              </div>
-            </div>
-          </div>
+          <PokemonComponent :ref="setRef" :pokemon="pokemon" />
         </Draggable>
       </div>
     </Droppable>
