@@ -794,9 +794,10 @@ watch(
   z-index: 5000;
   cursor: grabbing !important;
 }
+.draggable * {
+  pointer-events: none;
+}
 </style>
 <!-- TODO: fix autoscroll when a element is dropped at the end-->
 <!-- TODO: work with mx-auto or my-auto-->
-<!-- TODO: work with inside images and flex-->
-
 <!-- TODO: refactor -->

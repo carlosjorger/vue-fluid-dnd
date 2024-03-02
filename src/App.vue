@@ -171,6 +171,11 @@ const numbers3 = ref([
           :index="index"
           ><li :ref="setRef" class="number">
             {{ element }}
+            <div style="display: flex; flex-direction: row">
+              <span v-for="number in [...Array(4).keys()]">
+                {{ number + element }}
+              </span>
+            </div>
           </li>
         </Draggable>
       </ul>
