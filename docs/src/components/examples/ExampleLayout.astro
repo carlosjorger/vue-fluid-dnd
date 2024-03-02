@@ -1,0 +1,19 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+const {pathname}= Astro.url
+const basicHref='/example/vertical-list/single-vertical-list/'
+---
+
+<StarlightPage   
+  sidebar={[
+      { label: 'VueFluidDnD', href: '/' },
+      {
+        label: 'Single vertical list',
+        items: [
+          { label: 'basic', href: basicHref,  isCurrent: basicHref===pathname },
+        ],
+      },
+    ]} 
+  frontmatter={{ title: 'Vertical list example of pokemons', description:'Sorting a list of pokemons with vue-fluid-dnd' ,tableOfContents:false }}  >
+  <slot/>
+</StarlightPage>

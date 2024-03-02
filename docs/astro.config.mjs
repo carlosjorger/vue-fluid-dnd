@@ -21,6 +21,9 @@ export default defineConfig({
         github: "https://github.com/carlosjorger/vue-fluid-dnd",
         "x.com": "https://twitter.com/carlosjorgerc",
       },
+      components: {
+        SiteTitle: "./src/components/CustomTitle.astro",
+      },
       sidebar: [
         {
           label: "Introduction",
@@ -53,12 +56,6 @@ export default defineConfig({
               link: "/guides/horizontallist/",
             },
           ],
-        },
-        {
-          label: "Reference",
-          autogenerate: {
-            directory: "reference",
-          },
         },
       ],
       customCss: [

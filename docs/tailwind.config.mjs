@@ -4,6 +4,7 @@ import starlightPlugin from "@astrojs/starlight-tailwind";
 // #00cea5
 const accent = {
   200: "#a9d3c5",
+  400: "#02b38f",
   600: "#007e65",
   900: "#003c2f",
   950: "#012b21",
@@ -24,6 +25,10 @@ export default {
   theme: {
     extend: {
       colors: { accent, gray },
+    },
+    colors: {
+      accent,
+      gray,
     },
   },
   plugins: [starlightPlugin()],

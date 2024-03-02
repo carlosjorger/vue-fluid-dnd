@@ -23,9 +23,9 @@ const pokeColor = {
   yellow: "#facd4b",
   purple: "#9f5bba",
   coco: "#ca8179",
-};
+} as const;
 type Pokemon = {
-  name: string;
+  name: keyof typeof pokeColor;
   order: number;
   types: PokemonTypeOrder[];
   sprites: PokemonStripes;
@@ -40,7 +40,6 @@ type PokemonType = {
 type PokemonStripes = {
   front_default: string;
 };
-const list = ref([1, 2, 3]);
 
 const pokemons = ref([] as Pokemon[]);
 const { results } = await fetch(
@@ -54,37 +53,41 @@ for (const result of results) {
 }
 </script>
 <template>
-  <Droppable droppable-id="1" direction="vertical" :items="pokemons">
-    <div
-      class="bg-gray-200/60 border-solid border-black/40 rounded-2xl border-4 p-8 block"
-    >
-      <Draggable
-        v-for="(pokemon, index) in pokemons"
-        v-slot="{ setRef }"
-        :draggable-id="pokemon.name"
-        :index="index"
+  <div class="flex justify-center items-start">
+    <Droppable droppable-id="1" direction="vertical" :items="pokemons">
+      <div
+        class="bg-gray-200/60 border-solid border-black/40 rounded-2xl w-60 border-4 p-4 block"
       >
-        <div
-          :ref="setRef"
-          class="rounded-md aspect-square border-solid border-black/40 border-4 w-40 m-1 mx-auto text-white pokemon bg-no-repeat"
-          :class="[pokeColor[pokemon.name]]"
+        <Draggable
+          v-for="(pokemon, index) in pokemons"
+          v-slot="{ setRef }"
+          :draggable-id="pokemon.name"
+          :index="index"
         >
-          <div class="p-2">
-            <div class="flex flex-row items-center justify-between gap-1">
-              <div class="">{{ pokemon.name }}</div>
-              <div class="text-white/60">#{{ pokemon.order }}</div>
+          <div
+            :ref="setRef"
+            class="rounded-xl aspect-square border-solid border-black/40 border-4 mb-4 dark:text-gray-100 text-gray-800 pokemon bg-no-repeat p-0.5"
+            :class="[pokeColor[pokemon.name]]"
+          >
+            <div class="p-2">
+              <div class="flex flex-row items-center justify-between gap-1">
+                <div class="">{{ pokemon.name }}</div>
+                <div class="dark:text-gray-100/40 text-gray-800/40">
+                  #{{ pokemon.order }}
+                </div>
+              </div>
+              <img :src="pokemon.sprites.front_default" alt="pokemon" />
             </div>
-            <img :src="pokemon.sprites.front_default" alt="pokemon" />
-          </div>
-          <div class="w-full bg-white/40 rounded-md p-2 text-sm">
-            <div v-for="pokemonType in pokemon.types">
-              {{ pokemonType.type.name }}
+            <div class="w-11/12 mx-auto rounded-md p-2 text-sm">
+              <div v-for="pokemonType in pokemon.types">
+                {{ pokemonType.type.name }}
+              </div>
             </div>
           </div>
-        </div>
-      </Draggable>
-    </div>
-  </Droppable>
+        </Draggable>
+      </div>
+    </Droppable>
+  </div>
 </template>
 <style>
 .sl-markdown-content

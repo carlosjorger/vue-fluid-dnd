@@ -161,17 +161,13 @@ const numbers3 = ref([
     </div>
   </Droppable>
   <Droppable droppable-id="5" direction="vertical" :items="numbers1">
-    <ul style="display: block; padding: 2rem">
+    <ul style="display: block; padding: 6rem">
       <Draggable
         v-for="(element, index) in numbers1"
         v-slot="{ setRef }"
         :draggable-id="'number-' + element.toString()"
         :index="index"
-        ><li
-          :ref="setRef"
-          class="number"
-          style="margin-inline: auto; width: 20rem"
-        >
+        ><li :ref="setRef" class="number" style="width: 100%">
           {{ element }}
           <div style="display: flex; flex-direction: row">
             <span v-for="number in [...Array(4).keys()]">

@@ -1,10 +1,9 @@
 ---
-import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 import SingleVerticalListOfPokemons from "../../../components/examples/SingleVerticalListOfPokemons.vue";
-
+import ExampleLayout from "../../../components/examples/ExampleLayout.astro";
 ---
-
-<StarlightPage frontmatter={{ title: 'Single vertical list example', tableOfContents:false }}  >
+<ExampleLayout>
   <SingleVerticalListOfPokemons client:load />
-</StarlightPage>
+</ExampleLayout>
+
 
