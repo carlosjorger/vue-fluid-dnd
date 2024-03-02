@@ -160,40 +160,49 @@ const numbers3 = ref([
       </Draggable>
     </div>
   </Droppable>
-
-  <div style="display: flex; flex-direction: row; width: 100%">
-    <Droppable droppable-id="5" direction="vertical" :items="numbers1">
-      <ul style="display: block; width: 40%; margin-inline: auto">
-        <Draggable
-          v-for="(element, index) in numbers1"
-          v-slot="{ setRef }"
-          :draggable-id="'number-' + element.toString()"
-          :index="index"
-          ><li :ref="setRef" class="number">
-            {{ element }}
-            <div style="display: flex; flex-direction: row">
-              <span v-for="number in [...Array(4).keys()]">
-                {{ number + element }}
-              </span>
-            </div>
-          </li>
-        </Draggable>
-      </ul>
-    </Droppable>
-    <Droppable droppable-id="6" direction="vertical" :items="numbers2">
-      <ul style="display: block; width: 40%; height: 300px; overflow: auto">
-        <Draggable
-          v-for="(element, index) in numbers2"
-          v-slot="{ setRef }"
-          :draggable-id="'number-' + element.toString()"
-          :index="index"
-          ><li :ref="setRef" class="number">
-            {{ element }}
-          </li>
-        </Draggable>
-      </ul>
-    </Droppable>
-  </div>
+  <Droppable droppable-id="5" direction="vertical" :items="numbers1">
+    <ul style="display: block; padding: 2rem">
+      <Draggable
+        v-for="(element, index) in numbers1"
+        v-slot="{ setRef }"
+        :draggable-id="'number-' + element.toString()"
+        :index="index"
+        ><li
+          :ref="setRef"
+          class="number"
+          style="margin-inline: auto; width: 20rem"
+        >
+          {{ element }}
+          <div style="display: flex; flex-direction: row">
+            <span v-for="number in [...Array(4).keys()]">
+              {{ number + element }}
+            </span>
+          </div>
+        </li>
+      </Draggable>
+    </ul>
+  </Droppable>
+  <Droppable droppable-id="6" direction="vertical" :items="numbers2">
+    <ul
+      style="
+        display: block;
+        width: 60%;
+        height: 300px;
+        overflow: auto;
+        padding: 5rem;
+      "
+    >
+      <Draggable
+        v-for="(element, index) in numbers2"
+        v-slot="{ setRef }"
+        :draggable-id="'number-' + element.toString()"
+        :index="index"
+        ><li :ref="setRef" class="number">
+          {{ element }}
+        </li>
+      </Draggable>
+    </ul>
+  </Droppable>
   <Droppable droppable-id="6.5" direction="horizontal" :items="numbers3">
     <div
       style="
