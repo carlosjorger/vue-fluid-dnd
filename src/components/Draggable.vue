@@ -798,6 +798,5 @@ watch(
   pointer-events: none;
 }
 </style>
-<!-- TODO: remove height and widht after dropping-->
-<!-- TODO: fix autoscroll when a element is dropped at the end-->
-<!-- TODO: refactor -->
+<!-- TODO: remove height and widht after dropping -->
+<!-- TODO: fix autoscroll when a element is dropped at the end -->
