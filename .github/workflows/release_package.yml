@@ -23,7 +23,11 @@ jobs:
       # Install dependencies (required by Run tests step)
       #- name: Install dependencies
       #  run: yarn install
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
 
+      - name: Build project
+        run: npm run build
       # Tests
       #- name: Run tests
       #  run: yarn test
@@ -68,9 +72,6 @@ jobs:
           git add "CHANGELOG.md"
           git commit -m "chore: release ${{ env.NEW_VERSION }}"
           git tag ${{ env.NEW_VERSION }}
-      # Instal and build solution
-      - name: Install dependencies and build 🔧
-        run: npm run build
       # Publish version to public repository
       - name: Publish
         run: yarn publish --verbose --access public --tag ${{ env.RELEASE_TAG }}
