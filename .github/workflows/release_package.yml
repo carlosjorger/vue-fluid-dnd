@@ -19,19 +19,8 @@ jobs:
         with:
           registry-url: https://registry.npmjs.org/
           node-version: "21"
-
-      # Install dependencies (required by Run tests step)
-      #- name: Install dependencies
-      #  run: yarn install
-      - name: Install dependencies
-        uses: bahmutov/npm-install@v1
-
-      - name: Build project
-        run: npm run build
-      # Tests
-      #- name: Run tests
-      #  run: yarn test
-
+      - run: npm ci
+      - run: npm run build
       # Configure Git
       - name: Git configuration
         run: |
