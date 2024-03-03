@@ -70,7 +70,7 @@ jobs:
           git tag ${{ env.NEW_VERSION }}
       # Instal and build solution
       - name: Install dependencies and build 🔧
-        run: npm ci && npm run build
+        run: npm run build
       # Publish version to public repository
       - name: Publish
         run: yarn publish --verbose --access public --tag ${{ env.RELEASE_TAG }}
