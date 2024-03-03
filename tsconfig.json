@@ -26,6 +26,12 @@
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "exclude": ["src/App.vue", "src/main.ts", "examples", "docs"],
+  "exclude": [
+    "src/App.vue",
+    "src/main.ts",
+    "examples",
+    "docs",
+    "src/NumberComponent.vue"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
