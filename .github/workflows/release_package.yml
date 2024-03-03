@@ -19,8 +19,11 @@ jobs:
         with:
           registry-url: https://registry.npmjs.org/
           node-version: "21"
-      - run: npm ci
-      - run: npm run build
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+      - run: pnpm install
+      - run: pnpm run build
       # Configure Git
       - name: Git configuration
         run: |
