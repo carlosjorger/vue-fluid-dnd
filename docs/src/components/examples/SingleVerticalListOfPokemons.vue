@@ -2,19 +2,12 @@
 import { ref } from "vue";
 import { Draggable, Droppable } from "vue-fluid-dnd";
 import "vue-fluid-dnd/style.css";
-import type { Pokemon, PokemonLink } from "./Pokemon";
+import type { Pokemon } from "./Pokemon";
 import PokemonComponent from "./PokemonComponent.vue";
+import { fetchPokemons } from "@/server/pokemonServer";
 
 const pokemons = ref([] as Pokemon[]);
-const { results } = await fetch(
-  `https://pokeapi.co/api/v2/pokemon/?limit=9`
-).then<{
-  results: PokemonLink[];
-}>((res) => res.json());
-for (const result of results) {
-  const pokemon = await fetch(result.url).then<Pokemon>((res) => res.json());
-  pokemons.value.push(pokemon);
-}
+pokemons.value = await fetchPokemons(9);
 </script>
 <template>
   <div class="flex justify-center items-start">
@@ -41,4 +34,3 @@ for (const result of results) {
   margin-top: 0rem !important;
 }
 </style>
-<!-- TODO: refactor -->
