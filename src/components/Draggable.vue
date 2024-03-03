@@ -797,4 +797,5 @@ watch(
   pointer-events: none;
 }
 </style>
+<!-- TODO: change diferents pokemons types doesnt work -->
 <!-- TODO: fix autoscroll when a element is dropped at the end -->
