@@ -167,7 +167,7 @@ const numbers3 = ref([
         v-slot="{ setRef }"
         :draggable-id="'number-' + element.toString()"
         :index="index"
-        ><li :ref="setRef" class="number" style="width: 100%">
+        ><li :ref="setRef" class="number2">
           {{ element }}
           <div style="display: flex; flex-direction: row">
             <span v-for="number in [...Array(4).keys()]">
@@ -258,5 +258,12 @@ const numbers3 = ref([
   text-align: start;
   border-style: solid;
   border-width: 0.8rem;
+}
+.number2 {
+  padding-left: 5px;
+  text-align: start;
+  border-style: solid;
+  border-width: 0.8rem;
+  width: 100px;
 }
 </style>

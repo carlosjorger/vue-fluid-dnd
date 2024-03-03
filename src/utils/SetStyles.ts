@@ -8,9 +8,6 @@ type onMouseEvent = typeof onMouseEvents[number];
 type TouchEventType = "touchstart" | "touchmove" | "touchend";
 const mouseEvents = ["mouseup", "mousedown", "mousemove"] as const;
 type MouseEventType = typeof mouseEvents[number];
-export const setBorderBoxStyle = (element: HTMLElement) => {
-  element.style.boxSizing = "border-box";
-};
 export const fixSizeStyle = (element: HTMLElement | undefined | null) => {
   if (!element) {
     return;

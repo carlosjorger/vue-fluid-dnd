@@ -17,7 +17,6 @@ import {
   OnLeaveEvent,
 } from "../../index";
 import {
-  setBorderBoxStyle,
   fixSizeStyle,
   moveTranslate,
   assignDraggingEvent,
@@ -419,8 +418,6 @@ const startDragging = (event: DragMouseTouchEvent) => {
   };
 
   setDraggingStyles(element);
-  setBorderBoxStyle(element);
-
   setTransformEvent(event);
 };
 const setTransformEvent = (
@@ -739,6 +736,8 @@ const onDropDraggingEvent = (event: DragMouseTouchEvent) => {
     element.style.transition = "";
     element.style.top = "";
     element.style.left = "";
+    element.style.height = "";
+    element.style.width = "";
   }, duration);
 };
 const removeDraggingStyles = (element: HTMLElement) => {
@@ -798,5 +797,4 @@ watch(
   pointer-events: none;
 }
 </style>
-<!-- TODO: remove height and widht after dropping -->
 <!-- TODO: fix autoscroll when a element is dropped at the end -->
