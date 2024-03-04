@@ -34,4 +34,7 @@ const list = ref([...Array(20).keys()]);
   height: 300px;
   padding-left: 30px;
 }
+.temp-child {
+  margin-top: 0 !important;
+}
 </style>

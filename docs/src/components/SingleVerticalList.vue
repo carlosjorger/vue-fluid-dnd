@@ -6,7 +6,7 @@ const list = ref([1, 2, 3]);
 </script>
 <template>
   <Droppable droppable-id="1" direction="vertical" :items="list">
-    <ul class="number-list">
+    <ul class="number-list p-8 bg-[var(--sl-color-gray-6)]">
       <Draggable
         v-for="(element, index) in list"
         v-slot="{ setRef }"
@@ -29,6 +29,9 @@ const list = ref([1, 2, 3]);
 }
 .number-list {
   display: block;
-  padding-inline: 10px;
+  padding-inline: 25px;
+}
+.temp-child {
+  margin-top: 0 !important;
 }
 </style>
