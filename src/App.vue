@@ -92,7 +92,7 @@ const list1 = ref([
     "draggable-id": "4",
     number: 4,
     style:
-      "color: white; background-color: wheat; padding: 30px 0; margin: 20px 0; margin-right: 100px;",
+      "color: white; background-color: wheat; padding: 30px 0; margin: 20px 0; margin-right: 100px; width:40%",
   },
   {
     "draggable-id": "5",

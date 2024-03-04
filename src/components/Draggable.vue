@@ -74,6 +74,9 @@ let childRef = ref<HTMLElement>();
 const actualIndex = ref(index);
 const eventBus = inject(LocalEventBus);
 const droppableScroll = ref({ scrollLeft: 0, scrollTop: 0 });
+const fixedWidth = ref("");
+const fixedHeight = ref("");
+
 onMounted(() => {
   useMittEvents(eventBus, {
     drag: ({
@@ -435,6 +438,8 @@ const addTempChild = (draggedElement: HTMLElement) => {
     );
     var child = document.createElement("div");
     child.classList.add("temp-child");
+    fixedHeight.value = `${height}px`;
+    fixedWidth.value = `${width}px`;
     child.style.height = `${height}px`;
     child.style.width = `${width}px`;
     parent.value.appendChild(child);
@@ -760,8 +765,8 @@ const onDropDraggingEvent = (event: DragMouseTouchEvent) => {
     element.style.transition = "";
     element.style.top = "";
     element.style.left = "";
-    element.style.height = "";
-    element.style.width = "";
+    fixedHeight.value = "";
+    fixedWidth.value = "";
   }, duration);
 };
 const removeDraggingStyles = (element: HTMLElement) => {
@@ -816,6 +821,8 @@ watch(
   position: fixed;
   z-index: 5000;
   cursor: grabbing !important;
+  width: v-bind(fixedWidth);
+  height: v-bind(fixedHeight);
 }
 .draggable * {
   pointer-events: none;
