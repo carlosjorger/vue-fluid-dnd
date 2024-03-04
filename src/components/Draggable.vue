@@ -109,6 +109,14 @@ onMounted(() => {
         );
         if (sourceIndex === targetIndex || targetIndex === index) {
           setTimeout(() => {
+            if (parent.value) {
+              var lastChildren = parent.value.querySelectorAll(".temp-child");
+              lastChildren.forEach((lastChild) => {
+                if (parent.value) {
+                  parent.value.removeChild(lastChild);
+                }
+              });
+            }
             onDrop(
               {
                 index: sourceIndex,
@@ -418,6 +426,14 @@ const startDragging = (event: DragMouseTouchEvent) => {
   };
 
   setDraggingStyles(element);
+  if (parent.value) {
+    const { height, width } = element.getBoundingClientRect();
+    var child = document.createElement("div");
+    child.classList.add("temp-child");
+    child.style.height = `${height}px`;
+    child.style.width = `${width}px`;
+    parent.value.appendChild(child);
+  }
   setTransformEvent(event);
 };
 const setTransformEvent = (
@@ -467,6 +483,9 @@ const emitDraggingEventToSiblings = (
 
   for (const [index, sibling] of siblings.entries()) {
     const siblingDraggableId = sibling.getAttribute(DRAGGABLE_ID_ATTR) ?? "";
+    if (!siblingDraggableId) {
+      continue;
+    }
     if (!isOutside) {
       const siblingTransition = canChangeDraggable(
         direction,
@@ -480,6 +499,7 @@ const emitDraggingEventToSiblings = (
         continue;
       }
     }
+
     const siblingRealIndex = siblings.length - index;
     updateActualIndexBaseOnTranslation(translation, siblingRealIndex);
     emitEventBus(event, translation, siblingDraggableId);
@@ -794,6 +814,11 @@ watch(
   cursor: grabbing !important;
 }
 .draggable * {
+  pointer-events: none;
+}
+.temp-child {
+  box-sizing: border-box !important;
+  touch-action: none;
   pointer-events: none;
 }
 </style>
