@@ -407,8 +407,8 @@ const startDragging = (event: DragMouseTouchEvent) => {
   const { offsetX, offsetY } = event;
   currentOffset.value = { offsetX, offsetY };
   draggingState.value = DraggingState.DRAGING;
+  addTempChild(element, event);
   emitEventToSiblings(element, START_DRAG_EVENT);
-  fixSizeStyle(element.parentElement);
   const getPositionByDistance = (direction: Direction) => {
     const { offset, beforeMargin, page, borderBeforeWidth, scroll } =
       getPropByDirection(direction);
@@ -426,15 +426,22 @@ const startDragging = (event: DragMouseTouchEvent) => {
   };
 
   setDraggingStyles(element);
+};
+const addTempChild = (
+  draggedElement: HTMLElement,
+  event: DragMouseTouchEvent
+) => {
   if (parent.value) {
-    const { height, width } = element.getBoundingClientRect();
+    const { height, width } = calculateInitialTranslation(
+      draggedElement,
+      "startDrag"
+    );
     var child = document.createElement("div");
     child.classList.add("temp-child");
     child.style.height = `${height}px`;
     child.style.width = `${width}px`;
     parent.value.appendChild(child);
   }
-  setTransformEvent(event);
 };
 const setTransformEvent = (
   event: DragMouseTouchEvent,
@@ -823,4 +830,3 @@ watch(
 }
 </style>
 <!-- TODO: change diferents pokemons types doesnt work -->
-<!-- TODO: fix autoscroll when a element is dropped at the end -->
