@@ -775,6 +775,7 @@ const removeDraggingStyles = (element: HTMLElement) => {
 };
 
 const setDraggingStyles = (element: HTMLElement) => {
+  // TODO: test not use this
   fixSizeStyle(element);
   element.classList.add("dragging");
   element.style.transition = "";
