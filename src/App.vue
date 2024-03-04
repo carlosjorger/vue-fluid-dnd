@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import Draggable from "./components/Draggable.vue";
 import Droppable from "./components/Droppable.vue";
-import NumberComponent from "./NumberComponent.vue";
+import NumberComponent from "./testComponents/NumberComponent.vue";
+import { fetchPokemons } from "../docs/src/server/pokemonServer.ts";
+import type { Pokemon } from "../docs/src/components/examples/Pokemon";
+
 const colList1 = ref([
   {
     "draggable-id": "h1",
@@ -133,6 +136,10 @@ const numbers2 = ref([
 const numbers3 = ref([
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
 ]);
+const pokemons = ref([] as Pokemon[]);
+onMounted(async () => {
+  // pokemons.value = await fetchPokemons(9);
+});
 </script>
 
 <template>
@@ -185,7 +192,7 @@ const numbers3 = ref([
         width: 60%;
         height: 300px;
         overflow: auto;
-        padding: 5rem;
+        padding-inline: 5rem;
       "
     >
       <Draggable
@@ -242,6 +249,18 @@ const numbers3 = ref([
       </div>
     </Droppable>
   </div>
+  <Droppable droppable-id="1" direction="vertical" :items="pokemons">
+    <div style="width: 40%; background-color: darkgray; display: block">
+      <Draggable
+        v-for="(pokemon, index) in pokemons"
+        v-slot="{ setRef }"
+        :draggable-id="pokemon.name"
+        :index="index"
+      >
+        <div :ref="setRef" class="number">{{ pokemon.name }}</div>
+      </Draggable>
+    </div>
+  </Droppable>
 </template>
 <style>
 .droppable-gaps {
@@ -267,3 +286,4 @@ const numbers3 = ref([
   width: 100px;
 }
 </style>
+./testComponents/NumberComponent.vue/index.ts

@@ -31,7 +31,7 @@
     "src/main.ts",
     "examples",
     "docs",
-    "src/NumberComponent.vue"
+    "src/testComponents/"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
