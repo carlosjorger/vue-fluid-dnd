@@ -92,7 +92,7 @@ const list1 = ref([
     "draggable-id": "4",
     number: 4,
     style:
-      "color: white; background-color: wheat; padding: 30px 0; margin: 20px 0; margin-right: 100px; width: 30%;",
+      "color: white; background-color: wheat; padding: 30px 0; margin: 20px 0; margin-right: 100px;",
   },
   {
     "draggable-id": "5",
@@ -130,8 +130,7 @@ const list2 = ref([
 ]);
 const numbers1 = ref([1, 2, 3, 4, 5, 6]);
 const numbers2 = ref([
-  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
-  23, 24, 25,
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
 ]);
 const numbers3 = ref([
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
