@@ -3,6 +3,8 @@ import { ref, onMounted } from "vue";
 import Draggable from "./components/Draggable.vue";
 import Droppable from "./components/Droppable.vue";
 import NumberComponent from "./testComponents/NumberComponent.vue";
+import PokemonComponent from "./testComponents/PokemonComponent.vue";
+
 import { fetchPokemons } from "../docs/src/server/pokemonServer.ts";
 import type { Pokemon } from "../docs/src/components/examples/Pokemon";
 
@@ -137,7 +139,7 @@ const numbers3 = ref([
 ]);
 const pokemons = ref([] as Pokemon[]);
 onMounted(async () => {
-  // pokemons.value = await fetchPokemons(9);
+  pokemons.value = await fetchPokemons(9);
 });
 </script>
 
@@ -258,7 +260,7 @@ onMounted(async () => {
         :draggable-id="pokemon.name"
         :index="index"
       >
-        <div :ref="setRef" class="number">{{ pokemon.name }}</div>
+        <PokemonComponent :setRef="setRef" :pokemon="pokemon" />
       </Draggable>
     </div>
   </Droppable>
@@ -287,4 +289,3 @@ onMounted(async () => {
   width: 100px;
 }
 </style>
-./testComponents/NumberComponent.vue/index.ts

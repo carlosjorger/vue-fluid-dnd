@@ -2,6 +2,7 @@
 <script setup lang="ts">
 import {
   ComponentPublicInstance,
+  Ref,
   computed,
   inject,
   onMounted,
@@ -59,9 +60,10 @@ const position = ref({ top: 0, left: 0 });
 const currentOffset = ref({ offsetX: 0, offsetY: 0 });
 const direction = inject<Direction>("direction");
 const onDrop =
-  inject<(source: DraggableElement, destination: DraggableElement) => void>(
-    "onDrop"
-  );
+  inject<
+    Ref<(source: DraggableElement, destination: DraggableElement) => void>
+  >("onDrop");
+
 const droppableId = inject<string>("droppableId");
 const translate = ref({ x: 0, y: 0 });
 const scroll = ref({ scrollLeft: 0, scrollTop: 0 });
@@ -119,7 +121,7 @@ onMounted(() => {
                 }
               });
             }
-            onDrop(
+            onDrop.value(
               {
                 index: sourceIndex,
               },

@@ -2,35 +2,50 @@
   <slot></slot>
 </template>
 <script setup lang="ts" generic="T">
-import { provide, ref, computed } from "vue";
+import { provide, ref, computed, watch } from "vue";
 import { Direction, DraggableElement } from "../../index";
 import { dropDraggingElementsBetween } from "@/utils/DropMethods";
 import { LocalEventBus, createEventBus } from "@/utils/EventBus";
 
-const { droppableId, direction, onDrop, items } = defineProps<{
+const props = defineProps<{
   droppableId: string;
   direction: Direction;
   onDrop?: (source: DraggableElement, destination: DraggableElement) => void;
   items?: T[];
 }>();
-const currentOnDrop = computed(() => {
-  if (items) {
-    return (source: DraggableElement, destination: DraggableElement) => {
+
+const getOnDrop = (items: T[]) => {
+  return (source: DraggableElement, destination: DraggableElement) => {
+    if (items) {
       dropDraggingElementsBetween(ref(items), source, destination);
-    };
+    }
+  };
+};
+const initOnDrop = () => {
+  if (props.items) {
+    return getOnDrop(props.items);
   }
-  if (onDrop) {
-    return onDrop;
+  if (props.onDrop) {
+    return props.onDrop;
   }
   return () => {};
-});
+};
+const currentOnDrop = ref(initOnDrop());
 
+watch(
+  () => props.items,
+  (value) => {
+    if (value) {
+      currentOnDrop.value = getOnDrop(value);
+    }
+  }
+);
 const localBus = createEventBus();
 
 provide(LocalEventBus, localBus);
-provide("direction", direction);
-provide("droppableId", droppableId);
-provide("onDrop", currentOnDrop.value);
+provide("direction", props.direction);
+provide("droppableId", props.droppableId);
+provide("onDrop", currentOnDrop);
 </script>
 <style>
 .droppable {
