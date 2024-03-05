@@ -17,7 +17,6 @@ import {
   OnLeaveEvent,
 } from "../../index";
 import {
-  fixSizeStyle,
   moveTranslate,
   assignDraggingEvent,
   setTranistion,
@@ -438,8 +437,7 @@ const addTempChild = (draggedElement: HTMLElement) => {
     );
     var child = document.createElement("div");
     child.classList.add("temp-child");
-    fixedHeight.value = `${height}px`;
-    fixedWidth.value = `${width}px`;
+
     child.style.height = `${height}px`;
     child.style.width = `${width}px`;
     parent.value.appendChild(child);
@@ -775,8 +773,9 @@ const removeDraggingStyles = (element: HTMLElement) => {
 };
 
 const setDraggingStyles = (element: HTMLElement) => {
-  // TODO: test not use this
-  fixSizeStyle(element);
+  const { height, width } = element.getBoundingClientRect();
+  fixedHeight.value = `${height}px`;
+  fixedWidth.value = `${width}px`;
   element.classList.add("dragging");
   element.style.transition = "";
 };
@@ -822,8 +821,8 @@ watch(
   position: fixed;
   z-index: 5000;
   cursor: grabbing !important;
-  width: v-bind(fixedWidth);
-  height: v-bind(fixedHeight);
+  width: v-bind(fixedWidth) !important;
+  height: v-bind(fixedHeight) !important;
 }
 .draggable * {
   pointer-events: none;
