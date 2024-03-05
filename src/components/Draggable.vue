@@ -192,11 +192,15 @@ const setSlotRef = (
     return;
   }
   childRef.value = ref as HTMLElement;
+  setDraggable();
+};
+const setDraggable = () => {
+  if (childRef.value) {
+    childRef.value.classList.add("draggable");
+  }
 };
 const setSlotRefElementParams = (element: HTMLElement | undefined) => {
   if (element) {
-    element.classList.add("draggable");
-
     assignDraggingEvent(
       element,
       "onmousedown",
@@ -814,10 +818,10 @@ watch(
   (_) => {
     if (childRef.value) {
       updateDraggableId(childRef.value);
-      childRef.value.classList.add("draggable");
     }
   }
 );
+
 watch(
   position,
   (newPosition) => {
@@ -862,4 +866,3 @@ watch(
   pointer-events: none;
 }
 </style>
-<!-- TODO: change diferents pokemons types doesnt work -->
