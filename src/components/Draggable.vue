@@ -35,7 +35,7 @@ import {
   getWindowScroll,
   getScrollElement,
 } from "@/utils/GetStyles";
-const { draggableId, index } = defineProps<{
+const props = defineProps<{
   draggableId: string;
   index: number;
 }>();
@@ -72,7 +72,7 @@ const windowScroll = ref({ scrollY: 0, scrollX: 0 });
 const duration = 200;
 const pagePosition = ref({ pageX: 0, pageY: 0 });
 let childRef = ref<HTMLElement>();
-const actualIndex = ref(index);
+const actualIndex = ref(props.index);
 const eventBus = inject(LocalEventBus);
 const droppableScroll = ref({ scrollLeft: 0, scrollTop: 0 });
 const fixedWidth = ref("");
@@ -86,7 +86,10 @@ onMounted(() => {
       draggableIdEvent,
       droppableId: droppableIdEvent,
     }) => {
-      if (draggableId == draggableIdEvent && droppableId === droppableIdEvent) {
+      if (
+        props.draggableId == draggableIdEvent &&
+        droppableId === droppableIdEvent
+      ) {
         moveTranslate(childRef.value, height, width);
         setTranistion(childRef.value, duration, "cubic-bezier(0.2, 0, 0, 1)");
       }
@@ -101,7 +104,10 @@ onMounted(() => {
       element,
       sourceElementTranlation,
     }) => {
-      if (draggableId == draggableIdEvent && droppableId === droppableIdEvent) {
+      if (
+        props.draggableId == draggableIdEvent &&
+        droppableId === droppableIdEvent
+      ) {
         moveTranslate(childRef.value, height, width);
         if (!onDrop) {
           return;
@@ -111,7 +117,7 @@ onMounted(() => {
           sourceElementTranlation.height,
           sourceElementTranlation.width
         );
-        if (sourceIndex === targetIndex || targetIndex === index) {
+        if (sourceIndex === targetIndex || targetIndex === props.index) {
           setTimeout(() => {
             if (parent.value) {
               var lastChildren = parent.value.querySelectorAll(".temp-child");
@@ -155,7 +161,10 @@ onMounted(() => {
       draggableIdEvent,
       droppableId: droppableIdEvent,
     }) => {
-      if (draggableId == draggableIdEvent && droppableId === droppableIdEvent) {
+      if (
+        props.draggableId == draggableIdEvent &&
+        droppableId === droppableIdEvent
+      ) {
         moveTranslate(childRef.value, height, width);
       }
     },
@@ -198,10 +207,15 @@ const setSlotRefElementParams = (element: HTMLElement | undefined) => {
       "ontouchstart",
       onmousedown("touchmove", "ontouchend")
     );
-    element.setAttribute(DRAGGABLE_ID_ATTR, draggableId);
+    updateDraggableId(element);
   }
   if (element?.parentElement) {
     element?.parentElement.classList.add("droppable");
+  }
+};
+const updateDraggableId = (element: HTMLElement | undefined) => {
+  if (element) {
+    element.setAttribute(DRAGGABLE_ID_ATTR, props.draggableId);
   }
 };
 const directionInfo = {
@@ -788,9 +802,22 @@ const parent = computed(() => {
     return elementParent as HTMLElement;
   }
 });
-watch(childRef, (element) => {
-  setSlotRefElementParams(element);
-});
+watch(
+  childRef,
+  (element) => {
+    setSlotRefElementParams(element);
+  },
+  { deep: true }
+);
+watch(
+  () => props.draggableId,
+  (_) => {
+    if (childRef.value) {
+      updateDraggableId(childRef.value);
+      childRef.value.classList.add("draggable");
+    }
+  }
+);
 watch(
   position,
   (newPosition) => {
