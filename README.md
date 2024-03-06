@@ -5,7 +5,7 @@
 
 ## 👋 Introduction
 
-**Juicy**, **smooth** and **versatil** drag and drop for lists with Vue.
+**Fluid**, **smooth** and **versatil** drag and drop for lists with Vue.
 
 ## ✨ Features
 
@@ -78,6 +78,6 @@
 
 ## 🤝 Contributing
 
-If you're interested in contributing to vue-fluid-dnd JS, please read our contributing docs before submitting a pull request [CONTRIBUTING](./CONTRIBUTING.md).
+If you're interested in contributing to vue-fluid-dnd, please read our contributing docs before submitting a pull request [CONTRIBUTING](./CONTRIBUTING.md).
 
 <!-- TODO: add a video of a horizontal example -->

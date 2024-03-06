@@ -34,7 +34,12 @@
     "vue3",
     "component",
     "dnd",
-    "library"
+    "library",
+    "drag",
+    "drop",
+    "draggable",
+    "droppable",
+    "sortable"
   ],
   "author": "Carlos Jorge",
   "dependencies": {
