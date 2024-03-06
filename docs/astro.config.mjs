@@ -4,6 +4,8 @@ import vue from "@astrojs/vue";
 import tailwind from "@astrojs/tailwind";
 import netlify from "@astrojs/netlify";
 
+const site = "https://vue-fluid-dnd.netlify.app/";
+
 // https://astro.build/config
 export default defineConfig({
   integrations: [
@@ -56,6 +58,16 @@ export default defineConfig({
               link: "/guides/horizontallist/",
             },
           ],
+        },
+      ],
+      head: [
+        {
+          tag: "meta",
+          attrs: { property: "og:image", content: site + "org.webp?v=1" },
+        },
+        {
+          tag: "meta",
+          attrs: { property: "twitter:image", content: site + "og.webp?v=1" },
         },
       ],
       customCss: [
