@@ -866,3 +866,4 @@ watch(
   pointer-events: none;
 }
 </style>
+<!-- TODO: horizontal droppable width change if doest has a width -->

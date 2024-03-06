@@ -2,6 +2,7 @@
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 const {pathname}= Astro.url
 const basicHref='/example/vertical-list/single-vertical-list/'
+const singleHorinzontal='/example/horizontal-list/single-horizontal-list/'
 ---
 
 <StarlightPage   
@@ -11,6 +12,12 @@ const basicHref='/example/vertical-list/single-vertical-list/'
         label: 'Single vertical list',
         items: [
           { label: 'basic', href: basicHref,  isCurrent: basicHref===pathname },
+        ],
+      },
+      {
+        label: 'Single horizontal list',
+        items: [
+          { label: 'basic', href: singleHorinzontal,  isCurrent: singleHorinzontal===pathname },
         ],
       },
     ]} 

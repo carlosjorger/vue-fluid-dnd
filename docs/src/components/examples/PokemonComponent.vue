@@ -52,10 +52,10 @@ const darkPokeColor = {
 <template>
   <div
     :ref="setRef"
-    class="rounded-xl aspect-square border-solid border-black/40 border-4 mb-4 dark:text-gray-100 text-gray-800 pokemon bg-no-repeat p-0.5"
+    class="rounded-xl border-solid border-black/40 border-4 mb-4 dark:text-gray-100 text-gray-800 pokemon bg-no-repeat p-0.5"
     :class="[pokeColor[pokemon.name], darkPokeColor[pokemon.name]]"
   >
-    <div class="p-2">
+    <div class="p-2 max-sm:text-sm">
       <div class="flex flex-row items-center justify-between gap-1">
         <div class="">{{ pokemon.name }}</div>
         <div class="dark:text-gray-100/40 text-gray-800/40">
@@ -64,7 +64,9 @@ const darkPokeColor = {
       </div>
       <img :src="pokemon.sprites.front_default" alt="pokemon" />
     </div>
-    <div class="w-11/12 mx-auto bg-gray-100/20 rounded-md p-2 text-sm">
+    <div
+      class="w-11/12 mx-auto bg-gray-100/20 rounded-md p-2 text-sm max-sm:text-xs"
+    >
       <div v-for="pokemonType in pokemon.types">
         {{ pokemonType.type.name }}
       </div>
