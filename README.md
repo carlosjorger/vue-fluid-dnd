@@ -3,9 +3,8 @@
   <br>vue-fluid-dnd<br>
 </h1>
 
-## 👋 Introduction
-
-**Fluid**, **smooth** and **versatil** drag and drop for lists with Vue.
+A **fluid**, **smooth** and **versatil** drag and drop
+solution for lists on Vue3.
 
 ![increment](src/assets/graphic/example-video.gif)
 
