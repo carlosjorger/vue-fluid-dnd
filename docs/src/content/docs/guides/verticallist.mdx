@@ -68,7 +68,12 @@ export const listOfNumbersDroppable = `
 
 For each `<li>` element we'll create a **`Draggable`** component and add a reference from `<li>` element to Draggable (`setRef`), a `index` that is the position index from the list and an unique id (`draggable-id`) :
 
+:::caution
+If the `draggable` element is a vue component, make sure to create a prop on this component to pass `setRef` value from **`Draggable`** component.
+:::
+
 export const listOfNumbersDraggable = `
+
 <template>
   <Droppable droppable-id="1" direction="vertical" :items="list">
     <ul class="number-list">

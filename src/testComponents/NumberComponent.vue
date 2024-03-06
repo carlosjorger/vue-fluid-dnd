@@ -5,7 +5,6 @@ const { number, setRef } = defineProps<{
   number: number;
   setRef: (ref: Element | setRef | null, refs: Record<string, any>) => void;
 }>();
-// TODO: talk about this exampe in the doc
 </script>
 <template>
   <li :ref="setRef" class="number">
