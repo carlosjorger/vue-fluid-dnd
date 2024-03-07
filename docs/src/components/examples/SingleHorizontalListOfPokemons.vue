@@ -13,7 +13,7 @@ pokemons.value = await fetchPokemons(3);
   <div class="flex justify-center items-start">
     <Droppable droppable-id="1" direction="horizontal" :items="pokemons">
       <div
-        class="bg-gray-200/60 border-solid border-black/40 rounded-2xl border-4 p-4 max-sm:p-2 flex flex-row overflow-auto gap-2 max-sm:gap-1 w-full"
+        class="bg-gray-200/60 border-solid border-black/40 rounded-2xl border-4 p-4 max-sm:p-2 flex flex-row overflow-auto gap-2 max-sm:gap-1"
       >
         <Draggable
           v-for="(pokemon, index) in pokemons"

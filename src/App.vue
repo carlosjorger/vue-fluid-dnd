@@ -144,19 +144,28 @@ onMounted(async () => {
 </script>
 
 <template>
-  <Droppable droppable-id="1" direction="horizontal" :items="colList1">
-    <div
-      style="width: 80%; display: flex; flex-direction: row; column-gap: 10%"
-    >
-      <Draggable
-        v-for="(element, index) in colList1"
-        v-slot="{ setRef }"
-        :draggable-id="element['draggable-id']"
-        :index="index"
-        ><div :ref="setRef" :style="element.style">{{ element.number }}</div>
-      </Draggable>
-    </div>
-  </Droppable>
+  <div style="display: flex; justify-content: center">
+    <Droppable droppable-id="1" direction="horizontal" :items="colList1">
+      <div
+        style="
+          display: flex;
+          flex-direction: row;
+          gap: 0.5rem;
+          overflow: auto;
+          background-color: darkgrey;
+          border: solid;
+        "
+      >
+        <Draggable
+          v-for="(element, index) in colList1"
+          v-slot="{ setRef }"
+          :draggable-id="element['draggable-id']"
+          :index="index"
+          ><div :ref="setRef" :style="element.style">{{ element.number }}</div>
+        </Draggable>
+      </div>
+    </Droppable>
+  </div>
   <Droppable droppable-id="2" direction="horizontal" :items="colList2">
     <div style="width: 30%; overflow: auto; display: flex; flex-direction: row">
       <Draggable

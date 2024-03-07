@@ -451,6 +451,7 @@ const startDragging = (event: DragMouseTouchEvent) => {
 };
 const addTempChild = (draggedElement: HTMLElement) => {
   if (parent.value) {
+    // TODO: remove gap if draggedElement is not the last element
     const { height, width } = calculateInitialTranslation(
       draggedElement,
       "startDrag"
@@ -866,4 +867,3 @@ watch(
   pointer-events: none;
 }
 </style>
-<!-- TODO: horizontal droppable width change if doest has a width -->
