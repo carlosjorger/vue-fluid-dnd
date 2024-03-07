@@ -6,7 +6,7 @@
 A **fluid**, **smooth** and **versatil** drag and drop
 solution for lists on Vue3.
 
-![increment](src/assets/graphic/example-video.gif)
+<img src="src/assets/graphic/example-video.gif" width="100%"/>
 
 ## ✨ Features
 
