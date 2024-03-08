@@ -306,7 +306,18 @@ export const getMarginStyleByProperty = (
   }
   return 0;
 };
-const gapAndDisplayInformation = (element: HTMLElement, gapStyle: GapStyle) => {
+export const getGapPixels = (element: HTMLElement, direction: Direction) => {
+  const { gap: gapStyle } = getPropByDirection(direction);
+  const { gap, hasGaps } = gapAndDisplayInformation(element, gapStyle);
+  if (hasGaps) {
+    return gap;
+  }
+  return 0;
+};
+export const gapAndDisplayInformation = (
+  element: HTMLElement,
+  gapStyle: GapStyle
+) => {
   const gap = computeGapPixels(element, gapStyle);
   const display = window.getComputedStyle(element).display;
   const hasGaps = gap > 0 || display === "flex";

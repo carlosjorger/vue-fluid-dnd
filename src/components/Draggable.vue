@@ -34,6 +34,7 @@ import {
   getPropByDirection,
   getWindowScroll,
   getScrollElement,
+  getGapPixels,
 } from "@/utils/GetStyles";
 const props = defineProps<{
   draggableId: string;
@@ -451,16 +452,16 @@ const startDragging = (event: DragMouseTouchEvent) => {
 };
 const addTempChild = (draggedElement: HTMLElement) => {
   if (parent.value) {
-    // TODO: remove gap if draggedElement is not the last element
-    const { height, width } = calculateInitialTranslation(
-      draggedElement,
-      "startDrag"
-    );
+    let distances = calculateInitialTranslation(draggedElement, "startDrag");
     var child = document.createElement("div");
     child.classList.add("temp-child");
-
-    child.style.height = `${height}px`;
-    child.style.width = `${width}px`;
+    if (childRef.value && childRef.value.nextElementSibling && direction) {
+      const gap = getGapPixels(parent.value, direction);
+      const { distance } = getPropByDirection(direction);
+      distances[distance] -= gap;
+    }
+    child.style.height = `${distances.height}px`;
+    child.style.width = `${distances.width}px`;
     parent.value.appendChild(child);
   }
 };
