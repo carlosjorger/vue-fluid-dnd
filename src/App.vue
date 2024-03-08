@@ -30,7 +30,7 @@ const colList1 = ref([
     "draggable-id": "h4",
     number: 4,
     style:
-      "color: white; background-color: chocolate; padding: 10px; margin: 8px; width: 7%;",
+      "color: white; background-color: chocolate; padding: 10px; margin: 8px; width: 15px;",
   },
 ]);
 const colList2 = ref([
@@ -154,6 +154,7 @@ onMounted(async () => {
           overflow: auto;
           background-color: darkgrey;
           border: solid;
+          padding: 2rem;
         "
       >
         <Draggable

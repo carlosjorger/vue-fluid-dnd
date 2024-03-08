@@ -455,7 +455,7 @@ const addTempChild = (draggedElement: HTMLElement) => {
     let distances = calculateInitialTranslation(draggedElement, "startDrag");
     var child = document.createElement("div");
     child.classList.add("temp-child");
-    if (childRef.value && childRef.value.nextElementSibling && direction) {
+    if (direction) {
       const gap = getGapPixels(parent.value, direction);
       const { distance } = getPropByDirection(direction);
       distances[distance] -= gap;
