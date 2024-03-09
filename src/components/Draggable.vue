@@ -868,4 +868,5 @@ watch(
   pointer-events: none;
 }
 </style>
+<!-- TODO: add last child on horixontal list -->
 <!-- TODO: fix text selection bug of image-->
