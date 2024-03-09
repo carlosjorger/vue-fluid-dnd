@@ -851,6 +851,7 @@ watch(
   box-sizing: border-box !important;
   touch-action: none;
   cursor: grab;
+  user-select: none;
 }
 .dragging {
   position: fixed;
@@ -868,4 +869,3 @@ watch(
   pointer-events: none;
 }
 </style>
-<!-- TODO: fix text selection bug of image-->
