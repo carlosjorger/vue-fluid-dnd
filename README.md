@@ -80,3 +80,6 @@ solution for lists on Vue3.
 ## 🤝 Contributing
 
 If you're interested in contributing to vue-fluid-dnd, please read our contributing docs before submitting a pull request [CONTRIBUTING](./CONTRIBUTING.md).
+
+<!-- TODO: add traduction -->
+<!-- TODO: add test with playwright https://github.com/formkit/drag-and-drop -->
