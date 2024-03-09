@@ -461,7 +461,7 @@ const addTempChild = (draggedElement: HTMLElement) => {
       distances[distance] -= gap;
     }
     child.style.height = `${distances.height}px`;
-    child.style.width = `${distances.width}px`;
+    child.style.minWidth = `${distances.width}px`;
     parent.value.appendChild(child);
   }
 };
@@ -868,5 +868,4 @@ watch(
   pointer-events: none;
 }
 </style>
-<!-- TODO: add last child on horixontal list -->
 <!-- TODO: fix text selection bug of image-->
