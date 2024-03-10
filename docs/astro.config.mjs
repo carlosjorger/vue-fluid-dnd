@@ -11,6 +11,18 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "VueFluidDnD",
+      defaultLocale: "root", // optional
+      locales: {
+        // English docs in `src/content/docs/en/`
+        root: {
+          label: "English",
+          lang: "en",
+        },
+        es: {
+          label: "Español",
+          lang: "es",
+        },
+      },
       logo: {
         src: "/src/assets/logo.svg",
       },
