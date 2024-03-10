@@ -8,12 +8,15 @@ const site = "https://vue-fluid-dnd.netlify.app/";
 
 // https://astro.build/config
 export default defineConfig({
+  i18n: {
+    defaultLocale: "en",
+    locales: ["en", "es"],
+  },
   integrations: [
     starlight({
       title: "VueFluidDnD",
-      defaultLocale: "root", // optional
+      defaultLocale: "root",
       locales: {
-        // English docs in `src/content/docs/en/`
         root: {
           label: "English",
           lang: "en",

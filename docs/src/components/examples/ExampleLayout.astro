@@ -1,39 +1,53 @@
 ---
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 const {pathname}= Astro.url
-const basicHref='/example/vertical-list/single-vertical-list/'
-const singleHorinzontal='/example/horizontal-list/single-horizontal-list/'
-const singleVerticalOnScrollContainer='/example/vertical-list/single-vertical-list-autoscroll/'
-const singleHorinzontalOnScrollContainer='/example/horizontal-list/single-horizontal-list-autoscroll/'
+const { currentLocale } = Astro;
+const baseUrl= currentLocale==='en'?'/example':`/${currentLocale}/example`
+const basicHref=`${baseUrl}/vertical-list/single-vertical-list/`
+const singleHorinzontal=`${baseUrl}/horizontal-list/single-horizontal-list/`
+const singleVerticalOnScrollContainer=`${baseUrl}/vertical-list/single-vertical-list-autoscroll/`
+const singleHorinzontalOnScrollContainer=`${baseUrl}/horizontal-list/single-horizontal-list-autoscroll/`
 
 
 interface Props {
    title: string;
 }
-const getItem=(label:string,href:string)=>{
+const getItem = (label:string,href:string)=>{
   return { label, href,  isCurrent: href===pathname }
 }
+const getLabel = (label:string, spanishLabel:string)=>{
+  if (currentLocale==='es') {
+    return spanishLabel
+  }
+  return label
+}
+const basic = getLabel('basic','básico')
+const verticalListScrollLabel = getLabel('vertical list on a scroll container','lista vertical en un contenedor con scroll')
+const horizontalListScrollLabel = getLabel('horizontal list on a scroll container','lista horizontal en un contenedor con scroll')
+const description = getLabel('Sorting a list of pokemons with vue-fluid-dnd','Ordenar una lista de pokemones con vue-fluid-dnd') 
+
 ---
 
-<StarlightPage   
+<StarlightPage
+  lang={currentLocale},
   sidebar={[
       { label: 'VueFluidDnD', href: '/' },
       {
-        label: 'Single vertical list',
+        label: getLabel('Single vertical list','Simple lista vertical'),
         items: [
-          getItem('basic',basicHref),
-          getItem('vertical list on a scroll container',singleVerticalOnScrollContainer),
+          getItem(basic,basicHref),
+          getItem(verticalListScrollLabel, singleVerticalOnScrollContainer),
         ],
       },
       {
-        label: 'Single horizontal list',
+        label: getLabel('Single horizontal list','Simple lista horizontal'),
         items: [
-           getItem('basic',singleHorinzontal),
-           getItem('horizontal list on a scroll container',singleHorinzontalOnScrollContainer),
+           getItem(basic, singleHorinzontal),
+           getItem(horizontalListScrollLabel, singleHorinzontalOnScrollContainer),
 
         ],
       },
     ]} 
-  frontmatter={{ ...Astro.props, description:'Sorting a list of pokemons with vue-fluid-dnd' ,tableOfContents:false }}  >
+  frontmatter={{ ...Astro.props, description ,tableOfContents:false }}  >
   <slot/>
 </StarlightPage>
