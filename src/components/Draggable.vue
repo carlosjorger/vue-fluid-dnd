@@ -869,3 +869,5 @@ watch(
   pointer-events: none;
 }
 </style>
+<!-- TODO: try to remove the mitt events-->
+<!-- TODO: fis Jose flashing bug -->
