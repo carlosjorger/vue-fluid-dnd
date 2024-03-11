@@ -1,0 +1,102 @@
+---
+title: Lista vertical
+description: A guide to use vue-fluid-dnd with a single vertical list.
+---
+
+import SingleVerticalList from "@/components/SingleVerticalList.vue";
+import { Code } from "@astrojs/starlight/components";
+
+### List of number example
+
+To showing how to use **VueFluidDnD** for sorting a single list.
+First, we're going to create a list of numbers:
+
+export const listOfNumbers = `<script setup lang="ts">
+import { ref } from "vue";
+import { Draggable, Droppable } from "vue-fluid-dnd";
+import "vue-fluid-dnd/style.css";
+
+const list = ref([1, 2, 3]);
+
+</script>`;
+
+<Code code={listOfNumbers} lang="vue" />
+
+Next, create a list of numbers on vue template:
+
+export const listOfNumbersHTML = `
+<template>
+  <ul class="number-list">
+    <li class="number">{{ element }}</li>
+  </ul>
+</template>
+<style>
+  .number {
+    border-style: solid;
+    padding-left: 5px;
+    margin-top: 0.25rem;
+    border-width: 2px;
+  }
+  .number-list {
+    display: block;
+    padding: 10px;
+  }
+</style>
+`;
+
+<Code code={listOfNumbersHTML} lang="vue" />
+
+### Adding Droppable component
+
+First, we define a **`Droppable`** component that represent a list of **`Draggable`** elements, it needs an unique id (`droppable-id`), direction of the list (`direction`) and the list to sort (`items`):
+
+export const highlightsDroppable = ["droppable-id", "direction", "items"];
+
+export const listOfNumbersDroppable = `
+<template>
+  <Droppable droppable-id="1" direction="vertical" :items="list">
+    <ul class="number-list">
+      <li class="number">{{ element }}</li>
+    </ul>
+  </Droppable>
+</template>
+`;
+
+<Code code={listOfNumbersDroppable} lang="vue" mark={highlightsDroppable} />
+
+### Adding Draggable component
+
+For each `<li>` element we'll create a **`Draggable`** component and add a reference from `<li>` element to Draggable (`setRef`), a `index` that is the position index from the list and an unique id (`draggable-id`) :
+
+:::caution
+If the `draggable` element is a vue component, make sure to create a prop on this component to pass `setRef` value from **`Draggable`** component.
+:::
+
+export const listOfNumbersDraggable = `
+
+<template>
+  <Droppable droppable-id="1" direction="vertical" :items="list">
+    <ul class="number-list">
+      <Draggable
+        v-for="(element, index) in list"
+        v-slot="{ setRef }"
+        :draggable-id="element.toString()"
+        :index="index"
+      >
+        <li class="number" :ref="setRef">{{ element }}</li>
+      </Draggable>
+    </ul>
+  </Droppable>
+</template>`;
+
+export const highlightsDraggable = ["setRef", "draggable-i", ":index"];
+
+<Code code={listOfNumbersDraggable} lang="vue" mark={highlightsDraggable} />
+
+### Preview
+
+This is the result:
+
+<div class="pl-8">
+  <SingleVerticalList client:load />
+</div>

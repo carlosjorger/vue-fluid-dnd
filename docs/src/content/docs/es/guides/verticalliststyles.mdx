@@ -1,0 +1,73 @@
+---
+title: List with mixed styles
+description: A guide to use vue-fluid-dnd with a list of elements with mixed styles.
+---
+
+import SingleVerticalListWithDiferentStyles from "@/components/SingleVerticalListWithDiferentStyles.vue";
+import { Code } from "@astrojs/starlight/components";
+
+### List of elements example with mixed styles
+
+We can sort lists of elements with diferents `styles`:
+
+export const listOfNumbers = `
+  const list = ref([
+  {
+    id: "1",
+    style:
+      "margin: 30px 0px; border-style: solid; border-width: 0.8rem; padding: 5px;",
+    content: "1",
+  },
+  {
+    id: "2",
+    style:
+      "margin: 20px 0px; border-style: solid; border-width: 0.6rem; padding: 10px;",
+    content: "2",
+  },
+  {
+    id: "3",
+    style:
+      "margin: 10px 0px; border-style: solid; border-width: 0.4rem; padding: 15px;",
+    content: "3",
+  },`;
+
+<Code code={listOfNumbers} lang="js" />
+
+### Using Droppable and Draggable components
+
+You have to pass for each element its `styles`.
+
+:::caution
+Each element must have its own `style` before and after change its position on the `list` using **VueFluidDnD**. Avoid style with **psedo-classes** like [nth-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-last-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-of-type](https://developer.mozilla.org/es/docs/Web/CSS/:nth-of-type), etc because add styles to the elements of the list based in other properties like position, number of children, etc.
+:::
+
+export const highlightsDnD = [':style="element.style"'];
+
+export const listOfNumberInsideDnD = `
+<template>
+  <Droppable droppable-id="1" direction="vertical" :items="list">
+    <ul>
+      <Draggable
+        v-for="(element, index) in list"
+        v-slot="{ setRef }"
+        :draggable-id="element.id"
+        :index="index"
+      >
+        <li :style="element.style" :ref="setRef">
+          {{ element.content }}
+        </li>
+      </Draggable>
+    </ul>
+  </Droppable>
+</template>
+`;
+
+<Code code={listOfNumberInsideDnD} lang="vue" mark={highlightsDnD} />
+
+### Preview
+
+This is what you got as a result:
+
+<div class="p-8 bg-[var(--sl-color-gray-6)] h-96">
+  <SingleVerticalListWithDiferentStyles client:load />
+</div>

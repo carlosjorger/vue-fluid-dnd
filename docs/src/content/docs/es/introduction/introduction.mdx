@@ -1,0 +1,72 @@
+---
+title: Inicio rápido
+description: Guía para instalar vue-fluid-dnd.
+---
+
+import { Tabs, TabItem, Code } from "@astrojs/starlight/components";
+
+### Instalación
+
+Instala vue-fluid-dnd usando tu manejador de paquetes favorito:
+
+```bash
+# con npm:
+npm i vue-fluid-dnd
+
+# con yarn:
+yarn add vue-fluid-dnd
+
+# con pnpm:
+pnpm i vue-fluid-dnd
+```
+
+### Uso
+
+#### Uso global
+
+Configura las componentes en el archivo main:
+
+export const globalUsage = `
+import { createApp } from "vue";
+import App from './App.vue';
+
+import { Draggable, Droppable } from 'vue-fluid-dnd';
+
+const app = createApp(App);
+
+app.component('Droppable', Droppable);
+app.component('Draggable', Draggable);
+
+app.mount('#app');`;
+
+<Code code={globalUsage} lang="js" />
+
+#### Uso local
+
+Importa las componentes y los estilos en los archivos .vue:
+
+export const optionApiCode = `
+<script>
+  import { Draggable, Droppable } from 'vue-fluid-dnd';
+  import "vue3-fluid-dnd/style.css";
+
+export default {
+components: { Draggable, Droppable },
+}
+
+</script>`;
+export const compositionApiCode = `
+<script>
+  import { Draggable, Droppable } from 'vue3-fluid-dnd';
+  import "vue-fluid-dnd/style.css";
+
+</script>`;
+
+<Tabs>
+  <TabItem label="Options API">
+    <Code code={optionApiCode} lang="vue" />
+  </TabItem>
+  <TabItem label="Composition API">
+    <Code code={compositionApiCode} lang="vue" />
+  </TabItem>
+</Tabs>

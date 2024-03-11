@@ -1,0 +1,60 @@
+---
+title: Single horizontal list
+description: A guide to use vue-fluid-dnd with a single horizontal list.
+---
+
+import SingleHorizontalList from "@/components/SingleHorizontalList.vue";
+import { Code } from "@astrojs/starlight/components";
+
+### List of number example
+
+In this example we'll use **VueFluidDnD** for sorting a horizontal list.
+First, we're going to create a list of numbers:
+
+export const listOfNumbers = `<script setup lang="ts">
+    const list = ref(1, 2, 3, 4, 5]);
+</script>`;
+
+<Code code={listOfNumbers} lang="vue" />
+
+### Using Droppable and Draggable components
+
+We're going change direction prop value of **Droppable** component to **horizontal** and change the styles of the **Droppable** element:
+
+export const highlightsDnD = ['direction="horizontal"','.number-list'];
+
+export const listOfNumberInsideDnD = `
+<template>
+  <Droppable droppable-id="1" direction="horizontal" :items="list">
+    <div class="number-list">
+      <Draggable
+        v-for="(element, index) in list"
+        v-slot="{ setRef }"
+        :draggable-id="element.toString()"
+        :index="index"
+      >
+        <div class="number" :ref="setRef">{{ element }}</div>
+      </Draggable>
+    </div>
+  </Droppable>
+</template>
+
+<style>
+/* ... */
+.number-list {
+  display: flex;
+  flex-direction: row;
+}
+</style>
+
+`;
+
+<Code code={listOfNumberInsideDnD} lang="vue" mark={highlightsDnD} />
+
+### Preview
+
+This is the result:
+
+<div class="p-8 bg-[var(--sl-color-gray-6)]">
+  <SingleHorizontalList client:load />
+</div>
