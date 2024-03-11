@@ -47,10 +47,13 @@ export default defineConfig({
           items: [
             // Each item here is one entry in the navigation menu.
             {
-              label: "Getting Started",
+              label: "Inicio rápido",
               link: "/introduction/introduction/",
             },
           ],
+          translations: {
+            es: "Introducción",
+          },
         },
         {
           label: "Guide",
@@ -59,20 +62,35 @@ export default defineConfig({
             {
               label: "Single vertical list",
               link: "/guides/verticallist/",
+              translations: {
+                es: "Lista vertical simple",
+              },
             },
             {
               label: "List with mixed styles",
               link: "/guides/verticalliststyles/",
+              translations: {
+                es: "Lista vertical con diferentes estilos",
+              },
             },
             {
               label: "List on a scroll",
               link: "/guides/verticallistautoscroll/",
+              translations: {
+                es: "Lista en un contenedor con scroll",
+              },
             },
             {
               label: "Single horizontal list",
               link: "/guides/horizontallist/",
+              translations: {
+                es: "Lista horizontal simple",
+              },
             },
           ],
+          translations: {
+            es: "Guía",
+          },
         },
       ],
       head: [
