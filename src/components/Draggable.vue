@@ -46,7 +46,8 @@ const START_DRAG_EVENT = "startDrag";
 const START_DROP_EVENT = "startDrop";
 const DROP_EVENT = "drop";
 type DraggingEvent = typeof DRAG_EVENT | typeof START_DRAG_EVENT;
-type DragEvent = DraggingEvent | typeof DROP_EVENT | typeof START_DROP_EVENT;
+type DropEvent = typeof DROP_EVENT | typeof START_DROP_EVENT;
+type DragEvent = DraggingEvent | DropEvent;
 type VerticalDirection = "top" | "down" | "quiet";
 type HorizontalDirection = "left" | "right" | "quiet";
 
@@ -501,7 +502,7 @@ const emitEventToSiblings = (draggedElement: HTMLElement, event: DragEvent) => {
 
 const emitDraggingEventToSiblings = (
   draggedElement: HTMLElement,
-  event: DragEvent,
+  event: DraggingEvent,
   siblings: HTMLElement[],
   translation: {
     height: number;
@@ -627,7 +628,7 @@ const getPreviousAndNextElement = (
 };
 const emitDroppingEventToSiblings = (
   draggedElement: HTMLElement,
-  event: DragEvent,
+  event: DropEvent,
   siblings: HTMLElement[],
   elementPosition: number,
   translation: {
