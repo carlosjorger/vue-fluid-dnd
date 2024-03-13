@@ -82,20 +82,6 @@ const fixedHeight = ref("");
 
 onMounted(() => {
   useMittEvents(eventBus, {
-    drag: ({
-      height,
-      width,
-      draggableIdEvent,
-      droppableId: droppableIdEvent,
-    }) => {
-      if (
-        props.draggableId == draggableIdEvent &&
-        droppableId === droppableIdEvent
-      ) {
-        moveTranslate(childRef.value, height, width);
-        setTranistion(childRef.value, duration, "cubic-bezier(0.2, 0, 0, 1)");
-      }
-    },
     startDrop: ({
       height,
       width,
@@ -521,8 +507,8 @@ const emitDraggingEventToSiblings = (
     updateActualIndexBaseOnTranslation(translation, siblingRealIndex);
     if (event === START_DRAG_EVENT) {
       startDragEventOverElement(sibling, translation);
-    } else {
-      emitEventBus(event, translation, siblingDraggableId);
+    } else if (event === DRAG_EVENT) {
+      dragEventOverElement(sibling, translation);
     }
   }
 };
@@ -535,6 +521,17 @@ const startDragEventOverElement = (
 ) => {
   const { width, height } = translation;
   moveTranslate(element, height, width);
+};
+const dragEventOverElement = (
+  element: HTMLElement,
+  translation: {
+    height: number;
+    width: number;
+  }
+) => {
+  const { width, height } = translation;
+  moveTranslate(element, height, width);
+  setTranistion(element, duration, "cubic-bezier(0.2, 0, 0, 1)");
 };
 const updateActualIndexBaseOnTranslation = (
   translation: {
@@ -704,12 +701,6 @@ const emitEventBus = (
       targetIndex,
       element: childElement,
       sourceElementTranlation,
-    });
-  } else if (event !== START_DRAG_EVENT) {
-    eventBus?.emit(event, {
-      droppableId,
-      draggableIdEvent,
-      ...tranlation,
     });
   }
 };

@@ -1,12 +1,6 @@
 import mitt, { Emitter } from "mitt";
 import { InjectionKey, onUnmounted } from "vue";
 type Events = {
-  drag: {
-    height: number;
-    width: number;
-    draggableIdEvent: string;
-    droppableId?: string;
-  };
   startDrop: {
     height: number;
     width: number;
