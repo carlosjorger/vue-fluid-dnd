@@ -1,14 +1,14 @@
 ---
-title: List with mixed styles
+title: Lista con elementos con varios estilos
 description: A guide to use vue-fluid-dnd with a list of elements with mixed styles.
 ---
 
 import SingleVerticalListWithDiferentStyles from "@/components/SingleVerticalListWithDiferentStyles.vue";
 import { Code } from "@astrojs/starlight/components";
 
-### List of elements example with mixed styles
+### Ejemplo de lista de elementos con diferentes estilos
 
-We can sort lists of elements with diferents `styles`:
+Podemos ordernar la lista de elementos con diferentes `estilos`:
 
 export const listOfNumbers = `
   const list = ref([
@@ -33,12 +33,12 @@ export const listOfNumbers = `
 
 <Code code={listOfNumbers} lang="js" />
 
-### Using Droppable and Draggable components
+### Usando las componentes Droppable y Draggable
 
-You have to pass for each element its `styles`.
+Tu puedes por cada elemento sus `estilos`.
 
 :::caution
-Each element must have its own `style` before and after change its position on the `list` using **VueFluidDnD**. Avoid style with **psedo-classes** like [nth-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-last-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-of-type](https://developer.mozilla.org/es/docs/Web/CSS/:nth-of-type), etc because add styles to the elements of the list based in other properties like position, number of children, etc.
+Cada elemento debe tener su propio `estilo` antes y después de cambiar su posición en la `lista` usando **VueFluidDnD**. Evita stilos con **psedo-classes** como [nth-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-last-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-of-type](https://developer.mozilla.org/es/docs/Web/CSS/:nth-of-type), etc, porque añade estilos a los elementos de la lista basado en otras propiedades como la posición, número de hijos, etc.
 :::
 
 export const highlightsDnD = [':style="element.style"'];
@@ -64,9 +64,9 @@ export const listOfNumberInsideDnD = `
 
 <Code code={listOfNumberInsideDnD} lang="vue" mark={highlightsDnD} />
 
-### Preview
+### Resultado
 
-This is what you got as a result:
+Esto es lo que tienes como resultado:
 
 <div class="p-8 bg-[var(--sl-color-gray-6)] h-96">
   <SingleVerticalListWithDiferentStyles client:load />
