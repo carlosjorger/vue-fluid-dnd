@@ -25,12 +25,6 @@ type Events = {
     draggableIdEvent?: string;
     element: HTMLElement;
   };
-  startDrag: {
-    height: number;
-    width: number;
-    draggableIdEvent: string;
-    droppableId?: string;
-  };
 };
 
 type EventHandlers<T extends Record<string, unknown>> = {

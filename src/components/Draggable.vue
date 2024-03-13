@@ -157,19 +157,6 @@ onMounted(() => {
         });
       }
     },
-    startDrag: ({
-      height,
-      width,
-      draggableIdEvent,
-      droppableId: droppableIdEvent,
-    }) => {
-      if (
-        props.draggableId == draggableIdEvent &&
-        droppableId === droppableIdEvent
-      ) {
-        moveTranslate(childRef.value, height, width);
-      }
-    },
   });
 });
 const createObserverWithCallBack = (callback: () => void) => {
@@ -532,8 +519,22 @@ const emitDraggingEventToSiblings = (
 
     const siblingRealIndex = siblings.length - index;
     updateActualIndexBaseOnTranslation(translation, siblingRealIndex);
-    emitEventBus(event, translation, siblingDraggableId);
+    if (event === START_DRAG_EVENT) {
+      startDragEventOverElement(sibling, translation);
+    } else {
+      emitEventBus(event, translation, siblingDraggableId);
+    }
   }
+};
+const startDragEventOverElement = (
+  element: HTMLElement,
+  translation: {
+    height: number;
+    width: number;
+  }
+) => {
+  const { width, height } = translation;
+  moveTranslate(element, height, width);
 };
 const updateActualIndexBaseOnTranslation = (
   translation: {
@@ -704,7 +705,7 @@ const emitEventBus = (
       element: childElement,
       sourceElementTranlation,
     });
-  } else {
+  } else if (event !== START_DRAG_EVENT) {
     eventBus?.emit(event, {
       droppableId,
       draggableIdEvent,
