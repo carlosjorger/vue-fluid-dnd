@@ -123,28 +123,14 @@ onMounted(() => {
                 index: targetIndex,
               }
             );
-            eventBus?.emit(DROP_EVENT, {
-              droppableId,
-              element,
-            });
+            dropEventOverElement(element);
           }, duration);
         }
       }
     },
-    drop: ({ droppableId: droppableIdEvent, element }) => {
-      if (droppableIdEvent === droppableId) {
-        const observer = createObserverWithCallBack(() => {
-          removeTranslateWhitoutTransition();
-          observer.disconnect();
-        });
-        observer.observe(element, {
-          attributes: true,
-          attributeFilter: ["style"],
-        });
-      }
-    },
   });
 });
+
 const createObserverWithCallBack = (callback: () => void) => {
   return new MutationObserver((mutations) => {
     mutations.forEach(() => {
@@ -152,11 +138,10 @@ const createObserverWithCallBack = (callback: () => void) => {
     });
   });
 };
-const removeTranslateWhitoutTransition = () => {
-  const childElement = childRef.value;
-  if (childElement) {
-    childElement.style.transition = "";
-    childElement.style.transform = "";
+const removeTranslateWhitoutTransition = (element?: HTMLElement) => {
+  if (element) {
+    element.style.transition = "";
+    element.style.transform = "";
   }
 };
 const setSlotRef = (
@@ -533,6 +518,20 @@ const dragEventOverElement = (
   moveTranslate(element, height, width);
   setTranistion(element, duration, "cubic-bezier(0.2, 0, 0, 1)");
 };
+const dropEventOverElement = (element: HTMLElement) => {
+  const { siblings } = getSiblings(element);
+  for (const sibling of [...siblings, element]) {
+    const observer = createObserverWithCallBack(() => {
+      removeTranslateWhitoutTransition(sibling);
+      observer.disconnect();
+    });
+    observer.observe(element, {
+      attributes: true,
+      attributeFilter: ["style"],
+    });
+  }
+};
+
 const updateActualIndexBaseOnTranslation = (
   translation: {
     height: number;
