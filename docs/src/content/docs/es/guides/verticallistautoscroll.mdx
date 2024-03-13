@@ -1,15 +1,15 @@
 ---
-title: List on a scroll
+title: Lista en un contenedor con scroll
 description: A guide to use vue-fluid-dnd to make autoscroll on a list.
 ---
 
 import SingleVerticalListWithAutoscroll from "@/components/SingleVerticalListWithAutoscroll.vue";
 import { Code } from "@astrojs/starlight/components";
 
-### List of number example
+### Ejemplo de lista de números
 
-If you have a large list of elements with a scroll, you can easily navigate through the list.
-First, we're going to create a large list of numbers:
+Si tienes una larga lista de número con scroll, puedes navegar fácilmente por la lista.
+Primero, creamos la larga lista de números:
 
 export const listOfNumbers = `<script setup lang="ts">
 
@@ -19,9 +19,9 @@ const list = ref([...Array(20).keys()]);
 
 <Code code={listOfNumbers} lang="vue" />
 
-### Using Droppable and Draggable components
+### Usando las componentes Droppable y Draggable
 
-We're going to make droppable element scrollable:
+Después, vamos hacer el elemento droppable scrollable:
 
 export const highlightsDnD = ['number-list','overflow: auto;'];
 
@@ -54,9 +54,9 @@ export const listOfNumberInsideDnD = `
 `;
 
 <Code code={listOfNumberInsideDnD} lang="vue" mark={highlightsDnD} />
-### Preview
+### Resultado
 
-This is what you got as a result:
+Esto es lo que obtienes como resultado:
 
 <div class="p-8 bg-[var(--sl-color-gray-6)] h-96">
   <SingleVerticalListWithAutoscroll client:load />
