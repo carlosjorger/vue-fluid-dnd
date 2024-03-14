@@ -5,7 +5,6 @@
 import { provide, ref, watch } from "vue";
 import { Direction, DraggableElement } from "../../index";
 import { dropDraggingElementsBetween } from "@/utils/DropMethods";
-import { LocalEventBus, createEventBus } from "@/utils/EventBus";
 
 const props = defineProps<{
   droppableId: string;
@@ -40,9 +39,6 @@ watch(
     }
   }
 );
-const localBus = createEventBus();
-
-provide(LocalEventBus, localBus);
 provide("direction", props.direction);
 provide("droppableId", props.droppableId);
 provide("onDrop", currentOnDrop);
@@ -50,7 +46,6 @@ provide("onDrop", currentOnDrop);
 <style>
 .droppable {
   box-sizing: border-box !important;
-  /* scroll-behavior: smooth; */
   position: relative;
 }
 </style>

@@ -5,11 +5,9 @@ import {
   Ref,
   computed,
   inject,
-  onMounted,
   ref,
   watch,
 } from "vue";
-import { LocalEventBus, useMittEvents } from "@/utils/EventBus";
 import {
   Direction,
   DragMouseTouchEvent,
@@ -42,6 +40,7 @@ const props = defineProps<{
   index: number;
 }>();
 const DRAGGABLE_ID_ATTR = "draggable-id";
+const INDEX_ATTR = "index";
 const DRAG_EVENT = "drag";
 const START_DRAG_EVENT = "startDrag";
 const START_DROP_EVENT = "startDrop";
@@ -67,7 +66,6 @@ const onDrop =
     Ref<(source: DraggableElement, destination: DraggableElement) => void>
   >("onDrop");
 
-const droppableId = inject<string>("droppableId");
 const translate = ref({ x: 0, y: 0 });
 const scroll = ref({ scrollLeft: 0, scrollTop: 0 });
 const windowScroll = ref({ scrollY: 0, scrollX: 0 });
@@ -76,61 +74,9 @@ const duration = 200;
 const pagePosition = ref({ pageX: 0, pageY: 0 });
 let childRef = ref<HTMLElement>();
 const actualIndex = ref(props.index);
-const eventBus = inject(LocalEventBus);
 const droppableScroll = ref({ scrollLeft: 0, scrollTop: 0 });
 const fixedWidth = ref("");
 const fixedHeight = ref("");
-
-onMounted(() => {
-  useMittEvents(eventBus, {
-    startDrop: ({
-      height,
-      width,
-      draggableIdEvent,
-      droppableId: droppableIdEvent,
-      sourceIndex,
-      targetIndex,
-      element,
-      sourceElementTranlation,
-    }) => {
-      if (
-        props.draggableId == draggableIdEvent &&
-        droppableId === droppableIdEvent
-      ) {
-        moveTranslate(childRef.value, height, width);
-        if (!onDrop) {
-          return;
-        }
-        moveTranslate(
-          element,
-          sourceElementTranlation.height,
-          sourceElementTranlation.width
-        );
-        if (sourceIndex === targetIndex || targetIndex === props.index) {
-          setTimeout(() => {
-            if (parent.value) {
-              var lastChildren = parent.value.querySelectorAll(".temp-child");
-              lastChildren.forEach((lastChild) => {
-                if (parent.value) {
-                  parent.value.removeChild(lastChild);
-                }
-              });
-            }
-            onDrop.value(
-              {
-                index: sourceIndex,
-              },
-              {
-                index: targetIndex,
-              }
-            );
-            dropEventOverElement(element);
-          }, duration);
-        }
-      }
-    },
-  });
-});
 
 const createObserverWithCallBack = (callback: () => void) => {
   return new MutationObserver((mutations) => {
@@ -181,6 +127,7 @@ const setSlotRefElementParams = (element: HTMLElement | undefined) => {
 const updateDraggableId = (element: HTMLElement | undefined) => {
   if (element) {
     element.setAttribute(DRAGGABLE_ID_ATTR, props.draggableId);
+    element.setAttribute(INDEX_ATTR, props.index.toString());
   }
 };
 const directionInfo = {
@@ -532,7 +479,58 @@ const dropEventOverElement = (element: HTMLElement) => {
     });
   }
 };
-
+const startDropEventOverElement = (
+  element: HTMLElement,
+  targetElement: HTMLElement,
+  translation: {
+    height: number;
+    width: number;
+  },
+  sourceElementTranlation: {
+    height: number;
+    width: number;
+  },
+  sourceIndex: number,
+  targetIndex: number
+) => {
+  moveTranslate(targetElement, translation.height, translation.width);
+  if (!onDrop) {
+    return;
+  }
+  moveTranslate(
+    element,
+    sourceElementTranlation.height,
+    sourceElementTranlation.width
+  );
+  const index = parseInt(targetElement.getAttribute(INDEX_ATTR) ?? "-1");
+  if (index === -1) return;
+  if (sourceIndex === targetIndex || targetIndex === index) {
+    if (parent.value?.style.overflow === "auto") {
+      removeTempChild();
+    }
+    setTimeout(() => {
+      onDrop.value(
+        {
+          index: sourceIndex,
+        },
+        {
+          index: targetIndex,
+        }
+      );
+      dropEventOverElement(element);
+    }, duration);
+  }
+};
+const removeTempChild = () => {
+  if (parent.value) {
+    var lastChildren = parent.value.querySelectorAll(".temp-child");
+    lastChildren.forEach((lastChild) => {
+      if (parent.value) {
+        parent.value.removeChild(lastChild);
+      }
+    });
+  }
+};
 const updateActualIndexBaseOnTranslation = (
   translation: {
     height: number;
@@ -648,7 +646,6 @@ const emitDroppingEventToSiblings = (
     nextElement
   );
   for (const [index, sibling] of siblings.toReversed().entries()) {
-    const siblingDraggableId = sibling.getAttribute(DRAGGABLE_ID_ATTR) ?? "";
     let newTranslation = translation;
     if (targetIndex - 1 >= index) {
       newTranslation = { height: 0, width: 0 };
@@ -661,11 +658,10 @@ const emitDroppingEventToSiblings = (
       windowScroll.value,
       droppableScroll.value
     );
-    console.log(sibling);
     emitEventBus(
       event,
       newTranslation,
-      siblingDraggableId,
+      sibling,
       elementPosition,
       targetIndex,
       draggableTranslation
@@ -678,7 +674,7 @@ const emitEventBus = (
     height: number;
     width: number;
   },
-  draggableIdEvent: string,
+  sibling: HTMLElement,
   sourceIndex?: number,
   targetIndex?: number,
   sourceElementTranlation?: {
@@ -694,15 +690,14 @@ const emitEventBus = (
     sourceElementTranlation !== undefined &&
     childElement
   ) {
-    eventBus?.emit(event, {
-      droppableId,
-      draggableIdEvent,
-      ...tranlation,
-      sourceIndex,
-      targetIndex,
-      element: childElement,
+    startDropEventOverElement(
+      childElement,
+      sibling,
+      tranlation,
       sourceElementTranlation,
-    });
+      sourceIndex,
+      targetIndex
+    );
   }
 };
 const calculateInitialTranslation = (
@@ -739,6 +734,7 @@ const onDropDraggingEvent = (event: DragMouseTouchEvent) => {
   removeDraggingStyles(element);
   emitEventToSiblings(element, START_DROP_EVENT);
   setTimeout(() => {
+    removeTempChild();
     draggingState.value = DraggingState.NOT_DRAGGING;
     element.classList.remove("dragging");
     element.style.transform = "";
@@ -829,5 +825,4 @@ watch(
   pointer-events: none;
 }
 </style>
-<!-- TODO: try to remove the mitt events-->
 <!-- TODO: fis Jose flashing bug -->

@@ -42,9 +42,6 @@
     "sortable"
   ],
   "author": "Carlos Jorge",
-  "dependencies": {
-    "mitt": "^3.0.1"
-  },
   "peerDependencies": {
     "vue": ">=3.3.0"
   },
