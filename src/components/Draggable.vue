@@ -35,6 +35,7 @@ import {
   getWindowScroll,
   getScrollElement,
   getGapPixels,
+  getSiblings,
 } from "@/utils/GetStyles";
 const props = defineProps<{
   draggableId: string;
@@ -660,6 +661,7 @@ const emitDroppingEventToSiblings = (
       windowScroll.value,
       droppableScroll.value
     );
+    console.log(sibling);
     emitEventBus(
       event,
       newTranslation,
@@ -702,40 +704,6 @@ const emitEventBus = (
       sourceElementTranlation,
     });
   }
-};
-const getSiblings = (current: HTMLElement) => {
-  const nextSiblings = nextSiblingsFromElement(current);
-  const { previousSiblings, elementPosition } =
-    previousSiblingsFromElement(current);
-  return {
-    siblings: [...nextSiblings, ...previousSiblings],
-    elementPosition,
-  };
-};
-const nextSiblingsFromElement = (current: HTMLElement) => {
-  const siblings = [] as HTMLElement[];
-  let sibling = current as Element | null;
-  while (sibling) {
-    sibling = sibling.nextElementSibling;
-    if (sibling instanceof HTMLElement) {
-      siblings.push(sibling as HTMLElement);
-    }
-  }
-  return siblings.toReversed();
-};
-const previousSiblingsFromElement = (current: HTMLElement) => {
-  const siblings = [] as HTMLElement[];
-  let previousSibling = current as Element | null;
-  while (previousSibling) {
-    previousSibling = previousSibling.previousElementSibling;
-    if (previousSibling instanceof HTMLElement) {
-      siblings.push(previousSibling as HTMLElement);
-    }
-  }
-  return {
-    previousSiblings: siblings,
-    elementPosition: siblings.length,
-  };
 };
 const calculateInitialTranslation = (
   current: HTMLElement,
