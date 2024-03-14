@@ -39,8 +39,8 @@ dependencies:
     specifier: ^3.4.13
     version: 3.4.13(typescript@5.3.3)
   vue-fluid-dnd:
-    specifier: ^0.4.12
-    version: 0.4.12(vue@3.4.13)
+    specifier: ^0.5.0
+    version: 0.5.0(vue@3.4.13)
 
 packages:
 
@@ -3660,10 +3660,6 @@ packages:
     engines: {node: '>=16 || 14 >=14.17'}
     dev: false
 
-  /mitt@3.0.1:
-    resolution: {integrity: sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==}
-    dev: false
-
   /mkdirp-classic@0.5.3:
     resolution: {integrity: sha512-gKLcREMhtuZRwRAfqP3RFW+TK4JqApVBtOIftVgjuABpAtpxhPGaDcfvbhNvD0B8iD1oUr/txX35NjcaY6Ns/A==}
     dev: false
@@ -5140,12 +5136,11 @@ packages:
     resolution: {integrity: sha512-AyFQ0EVmsOZOlAnxoFOGOq1SQDWAB7C6aqMGS23svWAllfOaxbuFvcT8D1i8z3Gyn8fraVeZNNmN6e9bxxXkKw==}
     dev: false
 
-  /vue-fluid-dnd@0.4.12(vue@3.4.13):
-    resolution: {integrity: sha512-TkuL9Rc93X1jx3tcF9G0/KwbFxYthOij6KtdE8sUKJ42t5vQOwn2uxsUH4Hc2qCCqKZmlGXYx/CqAZCaiEoMJQ==}
+  /vue-fluid-dnd@0.5.0(vue@3.4.13):
+    resolution: {integrity: sha512-aB4hEa66BquHVP0fHPMeEEXbR4ll7mS2SP4OiggVSq8bcgTATPtDl6NvCKAdM313bwC5wArmuiuG0bekfhlgYQ==}
     peerDependencies:
       vue: '>=3.3.0'
     dependencies:
-      mitt: 3.0.1
       vue: 3.4.13(typescript@5.3.3)
     dev: false
 
