@@ -44,7 +44,7 @@
     "dependency-free",
     "vue-fluid-dnd"
   ],
-  "author": "Carlos Jorge",
+  "author": "Carlos Jorge Rodriguez",
   "peerDependencies": {
     "vue": ">=3.3.0"
   },
