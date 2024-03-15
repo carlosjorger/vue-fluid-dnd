@@ -466,7 +466,7 @@ const dragEventOverElement = (
   moveTranslate(element, height, width);
   setTranistion(element, duration, "cubic-bezier(0.2, 0, 0, 1)");
 };
-const dropEventOverElement = (element: HTMLElement) => {
+const observeDroppedElements = (element: HTMLElement) => {
   const { siblings } = getSiblings(element);
   for (const sibling of [...siblings, element]) {
     const observer = createObserverWithCallBack(() => {
@@ -479,6 +479,27 @@ const dropEventOverElement = (element: HTMLElement) => {
     });
   }
 };
+const dropEventOverElement = (
+  sourceIndex: number,
+  targetIndex: number,
+  element: HTMLElement
+) => {
+  if (!onDrop) {
+    return;
+  }
+  setTimeout(() => {
+    onDrop.value(
+      {
+        index: sourceIndex,
+      },
+      {
+        index: targetIndex,
+      }
+    );
+    observeDroppedElements(element);
+  }, duration);
+};
+
 const startDropEventOverElement = (
   element: HTMLElement,
   targetElement: HTMLElement,
@@ -489,9 +510,7 @@ const startDropEventOverElement = (
   sourceElementTranlation: {
     height: number;
     width: number;
-  },
-  sourceIndex: number,
-  targetIndex: number
+  }
 ) => {
   moveTranslate(targetElement, translation.height, translation.width);
   if (!onDrop) {
@@ -502,26 +521,8 @@ const startDropEventOverElement = (
     sourceElementTranlation.height,
     sourceElementTranlation.width
   );
-  const index = parseInt(targetElement.getAttribute(INDEX_ATTR) ?? "-1");
-  if (index === -1) return;
-  if (sourceIndex === targetIndex || targetIndex === index) {
-    // TODO: call once if sourceIndex === targetIndex
-    if (parent.value?.style.overflow === "auto") {
-      removeTempChild();
-    }
-    setTimeout(() => {
-      onDrop.value(
-        {
-          index: sourceIndex,
-        },
-        {
-          index: targetIndex,
-        }
-      );
-      dropEventOverElement(element);
-    }, duration);
-  }
 };
+
 const removeTempChild = () => {
   if (parent.value) {
     var lastChildren = parent.value.querySelectorAll(".temp-child");
@@ -646,6 +647,10 @@ const emitDroppingEventToSiblings = (
     previousElement,
     nextElement
   );
+  const childElement = childRef.value;
+  if (!childElement) {
+    return;
+  }
   for (const [index, sibling] of siblings.toReversed().entries()) {
     let newTranslation = translation;
     if (targetIndex - 1 >= index) {
@@ -659,18 +664,16 @@ const emitDroppingEventToSiblings = (
       windowScroll.value,
       droppableScroll.value
     );
-    const childElement = childRef.value;
-    if (event === START_DROP_EVENT && childElement) {
+    if (event === START_DROP_EVENT) {
       startDropEventOverElement(
         childElement,
         sibling,
         newTranslation,
-        draggableTranslation,
-        elementPosition,
-        targetIndex
+        draggableTranslation
       );
     }
   }
+  dropEventOverElement(elementPosition, targetIndex, childElement);
 };
 const calculateInitialTranslation = (
   current: HTMLElement,
