@@ -210,7 +210,6 @@ const setTransform = () => {
   const { newTranslate: newTranslateY } = getTranslateWihtDirection("vertical");
   translate.value.y = newTranslateY;
 };
-
 const updateScroll = (
   translateDirection?: Direction
 ): {
@@ -291,7 +290,6 @@ const onmousemove = function (event: DragMouseTouchEvent) {
     setTransformEvent(event, true);
   }
 };
-
 const handlerMousemove = (event: MouseEvent | TouchEvent) => {
   const eventToDragMouse = convetEventToDragMouseTouchEvent(event);
   onmousemove(eventToDragMouse);
@@ -466,6 +464,7 @@ const dragEventOverElement = (
   moveTranslate(element, height, width);
   setTranistion(element, duration, "cubic-bezier(0.2, 0, 0, 1)");
 };
+//TODO: keep refactoring
 const observeDroppedElements = (element: HTMLElement) => {
   const { siblings } = getSiblings(element);
   for (const sibling of [...siblings, element]) {
@@ -524,7 +523,6 @@ const startDropEventOverElement = (
     sourceElementTranlation.width
   );
 };
-
 const removeTempChild = () => {
   if (parent.value) {
     var lastChildren = parent.value.querySelectorAll(".temp-child");
@@ -702,7 +700,6 @@ const draggableIsOutside = (draggable: HTMLElement) => {
   const parentElement = draggable.parentElement as HTMLElement;
   return !hasIntersection(draggable, parentElement);
 };
-
 const onDropDraggingEvent = (event: DragMouseTouchEvent) => {
   if (draggingState.value !== DraggingState.DRAGING) {
     draggingState.value = DraggingState.NOT_DRAGGING;
@@ -727,7 +724,6 @@ const removeDraggingStyles = (element: HTMLElement) => {
   setTranistion(element, duration);
   moveTranslate(element, 0, 0);
 };
-
 const setDraggingStyles = (element: HTMLElement) => {
   const { height, width } = element.getBoundingClientRect();
   fixedHeight.value = `${height}px`;
@@ -735,7 +731,6 @@ const setDraggingStyles = (element: HTMLElement) => {
   element.classList.add("dragging");
   element.style.transition = "";
 };
-
 const parent = computed(() => {
   const elementParent = childRef.value?.parentElement;
   if (elementParent) {
