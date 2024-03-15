@@ -613,8 +613,10 @@ const getPreviousAndNextElement = (
   const getPreviousAndNextElementIndex = () => {
     if (elementPosition < targetIndex) {
       return [targetIndex, targetIndex + 1];
-    } else {
+    } else if (elementPosition > targetIndex) {
       return [targetIndex - 1, targetIndex];
+    } else {
+      return [targetIndex - 1, targetIndex + 1];
     }
   };
   const [previousIndex, nextIndex] = getPreviousAndNextElementIndex();
