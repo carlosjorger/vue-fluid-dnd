@@ -659,46 +659,17 @@ const emitDroppingEventToSiblings = (
       windowScroll.value,
       droppableScroll.value
     );
-    emitEventBus(
-      event,
-      newTranslation,
-      sibling,
-      elementPosition,
-      targetIndex,
-      draggableTranslation
-    );
-  }
-};
-const emitEventBus = (
-  event: DragEvent,
-  tranlation: {
-    height: number;
-    width: number;
-  },
-  sibling: HTMLElement,
-  sourceIndex?: number,
-  targetIndex?: number,
-  sourceElementTranlation?: {
-    height: number;
-    width: number;
-  }
-) => {
-  const childElement = childRef.value;
-  if (
-    event === START_DROP_EVENT &&
-    sourceIndex !== undefined &&
-    targetIndex !== undefined &&
-    sourceElementTranlation !== undefined &&
-    childElement
-  ) {
-    startDropEventOverElement(
-      childElement,
-      sibling,
-      tranlation,
-      sourceElementTranlation,
-      sourceIndex,
-      targetIndex
-    );
+    const childElement = childRef.value;
+    if (event === START_DROP_EVENT && childElement) {
+      startDropEventOverElement(
+        childElement,
+        sibling,
+        newTranslation,
+        draggableTranslation,
+        elementPosition,
+        targetIndex
+      );
+    }
   }
 };
 const calculateInitialTranslation = (
