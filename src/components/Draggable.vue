@@ -505,6 +505,7 @@ const startDropEventOverElement = (
   const index = parseInt(targetElement.getAttribute(INDEX_ATTR) ?? "-1");
   if (index === -1) return;
   if (sourceIndex === targetIndex || targetIndex === index) {
+    // TODO: call once if sourceIndex === targetIndex
     if (parent.value?.style.overflow === "auto") {
       removeTempChild();
     }
@@ -734,6 +735,7 @@ const onDropDraggingEvent = (event: DragMouseTouchEvent) => {
   removeDraggingStyles(element);
   emitEventToSiblings(element, START_DROP_EVENT);
   setTimeout(() => {
+    //TODO: call this code on startDropEventOverElement function
     removeTempChild();
     draggingState.value = DraggingState.NOT_DRAGGING;
     element.classList.remove("dragging");
@@ -825,4 +827,4 @@ watch(
   pointer-events: none;
 }
 </style>
-<!-- TODO: fis Jose flashing bug -->
+<!-- TODO: fix Jose flashing bug -->

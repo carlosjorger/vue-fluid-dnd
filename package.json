@@ -39,7 +39,10 @@
     "drop",
     "draggable",
     "droppable",
-    "sortable"
+    "sortable",
+    "lightweight",
+    "dependency-free",
+    "vue-fluid-dnd"
   ],
   "author": "Carlos Jorge",
   "peerDependencies": {

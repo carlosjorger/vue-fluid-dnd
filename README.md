@@ -3,19 +3,19 @@
   <br>vue-fluid-dnd<br>
 </h1>
 
-A **fluid**, **smooth** and **versatil** drag and drop
-solution for lists on Vue3.
+A **fluid**, **smooth**, **versatil** and **lightweight** drag and drop
+library for lists on Vue3.
 
 <img src="src/assets/graphic/example-video.gif" width="100%"/>
 
 ## ✨ Features
 
-- ✅ **Easy to install**.
-- ✅ **Fully customizable**.
-- ✅ **Work with horizontal and vertical list**.
+- ✅ **Fully customizable 🎨**.
+- ✅ **Zero dependencies 🪶**.
+- ✅ **Work with horizontal➡️and vertical list :arrow_down:**.
 - ✅ **Mouse 🐭 and touch 👉📱 (mobile, tablet and so on) support**.
-- 🔲 **Fully tested, typed and reliable**.
-- 🔲 **Nice documentation and examples**.
+- ✅ **Nice documentation 📑 and examples**.
+- 🔲 **Fully tested 🧪, typed and reliable**.
 
 ## 🚀 Getting Started
 
@@ -35,10 +35,11 @@ solution for lists on Vue3.
    ultra install vue-fluid-dnd
    ```
 
-2. **Import components**
+2. **Import components and styles**
 
    ```js
    import { Draggable, Droppable } from "vue-fluid-dnd";
+   import "vue3-fluid-dnd/style.css";
    ```
 
 3. **Create a list that your want to sort**
