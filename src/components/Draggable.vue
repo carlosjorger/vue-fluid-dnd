@@ -496,6 +496,8 @@ const dropEventOverElement = (
         index: targetIndex,
       }
     );
+    removeTempChild();
+    removeElementDraggingStyles(element);
     observeDroppedElements(element);
   }, duration);
 };
@@ -708,18 +710,16 @@ const onDropDraggingEvent = (event: DragMouseTouchEvent) => {
   const element = event.target as HTMLElement;
   removeDraggingStyles(element);
   emitEventToSiblings(element, START_DROP_EVENT);
-  setTimeout(() => {
-    //TODO: call this code on startDropEventOverElement function
-    removeTempChild();
-    draggingState.value = DraggingState.NOT_DRAGGING;
-    element.classList.remove("dragging");
-    element.style.transform = "";
-    element.style.transition = "";
-    element.style.top = "";
-    element.style.left = "";
-    fixedHeight.value = "";
-    fixedWidth.value = "";
-  }, duration);
+};
+const removeElementDraggingStyles = (element: HTMLElement) => {
+  draggingState.value = DraggingState.NOT_DRAGGING;
+  element.classList.remove("dragging");
+  element.style.transform = "";
+  element.style.transition = "";
+  element.style.top = "";
+  element.style.left = "";
+  fixedHeight.value = "";
+  fixedWidth.value = "";
 };
 const removeDraggingStyles = (element: HTMLElement) => {
   setTranistion(element, duration);
