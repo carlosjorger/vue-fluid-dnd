@@ -464,7 +464,6 @@ const dragEventOverElement = (
   moveTranslate(element, height, width);
   setTranistion(element, duration, "cubic-bezier(0.2, 0, 0, 1)");
 };
-//TODO: keep refactoring
 const observeDroppedElements = (element: HTMLElement) => {
   const { siblings } = getSiblings(element);
   for (const sibling of [...siblings, element]) {
@@ -486,7 +485,9 @@ const dropEventOverElement = (
   if (!onDrop) {
     return;
   }
+
   setTimeout(() => {
+    removeTempChild();
     onDrop.value(
       {
         index: sourceIndex,
@@ -495,7 +496,6 @@ const dropEventOverElement = (
         index: targetIndex,
       }
     );
-    removeTempChild();
     removeElementDraggingStyles(element);
     observeDroppedElements(element);
   }, duration);
@@ -666,7 +666,10 @@ const emitDroppingEventToSiblings = (
       windowScroll.value,
       droppableScroll.value
     );
-    if (event === START_DROP_EVENT) {
+    if (
+      event === START_DROP_EVENT &&
+      !sibling.classList.contains("temp-child")
+    ) {
       startDropEventOverElement(
         childElement,
         sibling,
@@ -799,3 +802,4 @@ watch(
 }
 </style>
 <!-- TODO: fix Jose flashing bug -->
+<!-- TODO: keep refactoring -->

@@ -83,3 +83,4 @@ library for lists on Vue3.
 If you're interested in contributing to vue-fluid-dnd, please read our contributing docs before submitting a pull request [CONTRIBUTING](./CONTRIBUTING.md).
 
 <!-- TODO: add test with playwright https://github.com/formkit/drag-and-drop -->
+<!-- TODO: put the vue examples in a another folder and add tests -->
