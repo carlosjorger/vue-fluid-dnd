@@ -28,13 +28,13 @@ import {
   hasIntersection,
   getBorderWidthProperty,
   calculateRangeWhileDragging,
-  calculateWhileDragging,
   getPropByDirection,
   getWindowScroll,
   getScrollElement,
   getGapPixels,
   getSiblings,
 } from "@/utils/GetStyles";
+import getTranslationByDragging from "@/utils/GetTranslationByDragging";
 const props = defineProps<{
   draggableId: string;
   index: number;
@@ -686,7 +686,7 @@ const calculateInitialTranslation = (
   previousElement = current.previousElementSibling,
   nextElement = current.nextElementSibling
 ) => {
-  let { height, width } = calculateWhileDragging(
+  let { height, width } = getTranslationByDragging(
     direction,
     current,
     previousElement,
