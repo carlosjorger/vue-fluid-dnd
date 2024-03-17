@@ -200,6 +200,7 @@ const setTransform = () => {
   const { newTranslate: newTranslateY } = getTranslateWihtDirection("vertical");
   translate.value.y = newTranslateY;
 };
+// TODO: refactor this function
 const updateScroll = (
   translateDirection?: Direction
 ): {
@@ -762,4 +763,3 @@ watch(
 }
 </style>
 <!-- TODO: fix Jose flashing bug -->
-<!-- TODO: keep refactoring -->

@@ -58,7 +58,7 @@ const intersection = (
   }
   return firstInterval.x2 - secondInterval.x1;
 };
-
+// TODO: make som refactor to this function
 export const hasIntersection = (
   element1: HTMLElement,
   element2: HTMLElement
