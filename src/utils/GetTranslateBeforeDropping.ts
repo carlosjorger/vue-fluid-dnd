@@ -138,15 +138,11 @@ const addScrollToRageDragging = (
   direction: Direction,
   initialScroll: { scrollY: number; scrollX: number }
 ) => {
-  const { scroll } = getPropByDirection(direction);
+  const { scroll, distance } = getPropByDirection(direction);
   const actualWindowScroll = window[scroll];
   const initialScrollProp = initialScroll[scroll];
   const scrollChange = initialScrollProp - actualWindowScroll;
-  if (direction === "vertical") {
-    dragging.height += scrollChange;
-  } else if (direction === "horizontal") {
-    dragging.width += scrollChange;
-  }
+  dragging[distance] += scrollChange;
   return dragging;
 };
 const getBeforeAfterMarginBaseOnDraggedDirection = (
