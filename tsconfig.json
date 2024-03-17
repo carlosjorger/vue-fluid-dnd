@@ -32,7 +32,8 @@
     "examples",
     "docs",
     "src/testComponents/",
-    "src/assets"
+    "src/assets",
+    "my-test-examples"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
