@@ -10,7 +10,7 @@ import {
   getMarginStyleByProperty,
   getPropByDirection,
 } from "./GetStyles";
-
+// TODO: refactor this function to make more legible
 export default function getTranslateBeforeDropping(
   direction: Direction | undefined,
   siblings: HTMLElement[],
@@ -25,7 +25,7 @@ export default function getTranslateBeforeDropping(
     return { height, width };
   }
   if (sourceIndex === targetIndex) {
-    return addScrollToRageDragging({ height, width }, direction, scroll);
+    return addScrollToTranslate({ height, width }, direction, scroll);
   }
   const directionProps = getPropByDirection(direction);
   const isDraggedFoward = sourceIndex < targetIndex;
@@ -81,13 +81,14 @@ export default function getTranslateBeforeDropping(
   let spaceCalc = spaceBetween - spaceBeforeDraggedElement;
 
   spaceCalc = isDraggedFoward ? spaceCalc : -spaceCalc;
+
   if (direction === "vertical") {
     height = spaceCalc - scrollChange;
   } else if (direction === "horizontal") {
     width = spaceCalc - scrollChange;
   }
 
-  return addScrollToRageDragging({ height, width }, direction, scroll);
+  return addScrollToTranslate({ height, width }, direction, scroll);
 }
 const spaceWithMargins = (
   beforeMargin: BeforeMargin,
@@ -111,17 +112,14 @@ const spaceWithMargins = (
   for (let index = 0; index < siblings.length; index++) {
     const sibling = siblings[index];
     const siblingSpace = sibling.getBoundingClientRect()[space];
+    const siblingBeforeMargin = getMarginStyleByProperty(sibling, beforeMargin);
     if (hasGaps) {
-      afterMarginCalc =
-        afterMarginCalc + getMarginStyleByProperty(sibling, beforeMargin);
+      afterMarginCalc += siblingBeforeMargin;
     }
     if (hasGaps && index > 0) {
       afterMarginCalc += gap;
     } else {
-      afterMarginCalc = Math.max(
-        afterMarginCalc,
-        getMarginStyleByProperty(sibling, beforeMargin)
-      );
+      afterMarginCalc = Math.max(afterMarginCalc, siblingBeforeMargin);
     }
     spaceCalc += afterMarginCalc + siblingSpace;
     afterMarginCalc = getMarginStyleByProperty(sibling, afterMargin);
@@ -133,8 +131,8 @@ const spaceWithMargins = (
     afterMargin: afterMarginCalc,
   };
 };
-const addScrollToRageDragging = (
-  dragging: Translate,
+const addScrollToTranslate = (
+  translate: Translate,
   direction: Direction,
   initialScroll: { scrollY: number; scrollX: number }
 ) => {
@@ -142,8 +140,8 @@ const addScrollToRageDragging = (
   const actualWindowScroll = window[scroll];
   const initialScrollProp = initialScroll[scroll];
   const scrollChange = initialScrollProp - actualWindowScroll;
-  dragging[distance] += scrollChange;
-  return dragging;
+  translate[distance] += scrollChange;
+  return translate;
 };
 const getBeforeAfterMarginBaseOnDraggedDirection = (
   beforeMarginProp: BeforeMargin,
@@ -153,23 +151,17 @@ const getBeforeAfterMarginBaseOnDraggedDirection = (
   isDraggedFoward: boolean,
   hasGaps: boolean
 ) => {
-  if (isDraggedFoward) {
-    return getBeforeAfterMargin(
-      beforeMarginProp,
-      afterMarginProp,
-      draggedElement.previousElementSibling,
-      draggedElement,
-      hasGaps
-    );
-  } else {
-    return getBeforeAfterMargin(
-      beforeMarginProp,
-      afterMarginProp,
-      previousElement,
-      draggedElement,
-      hasGaps
-    );
-  }
+  const previousElementByDirection = isDraggedFoward
+    ? draggedElement.previousElementSibling
+    : previousElement;
+
+  return getBeforeAfterMargin(
+    beforeMarginProp,
+    afterMarginProp,
+    previousElementByDirection,
+    draggedElement,
+    hasGaps
+  );
 };
 const getBeforeAfterMargin = (
   beforeMarginProp: BeforeMargin,

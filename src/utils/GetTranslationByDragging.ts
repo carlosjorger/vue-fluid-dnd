@@ -4,6 +4,7 @@ import {
   getMarginStyleByProperty,
   getPropByDirection,
 } from "./GetStyles";
+// TODO: refactor this function to make more legible
 export default function getTranslationByDragging(
   direction: Direction | undefined,
   current: HTMLElement,
@@ -27,11 +28,15 @@ export default function getTranslationByDragging(
   let afterSpace = currentAfterMargin;
   let beforeScace = currentBeforeMargin;
   let rest = nextBeforeMargin;
-  const parentElement = current.parentElement as HTMLElement;
 
   const gapStyle = directionProps.gap;
+
+  const parentElement = current.parentElement as HTMLElement;
+
   const { gap, hasGaps } = gapAndDisplayInformation(parentElement, gapStyle);
+
   const space = current.getBoundingClientRect()[directionProps.distance];
+
   if (hasGaps) {
     return getDistancesByDirection(
       direction,
