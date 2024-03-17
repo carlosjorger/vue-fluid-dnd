@@ -14,6 +14,7 @@ import {
   DraggableElement,
   MoveEvent,
   OnLeaveEvent,
+  Translate,
 } from "../../index";
 import {
   moveTranslate,
@@ -27,7 +28,6 @@ import {
   getMarginStyleByProperty,
   hasIntersection,
   getBorderWidthProperty,
-  calculateRangeWhileDragging,
   getPropByDirection,
   getWindowScroll,
   getScrollElement,
@@ -35,6 +35,7 @@ import {
   getSiblings,
 } from "@/utils/GetStyles";
 import getTranslationByDragging from "@/utils/GetTranslationByDragging";
+import getTranslateBeforeDropping from "@/utils/GetTranslateBeforeDropping";
 const props = defineProps<{
   draggableId: string;
   index: number;
@@ -77,7 +78,7 @@ const actualIndex = ref(props.index);
 const droppableScroll = ref({ scrollLeft: 0, scrollTop: 0 });
 const fixedWidth = ref("");
 const fixedHeight = ref("");
-
+const draggableTargetTimingFunction = "cubic-bezier(0.2, 0, 0, 1)";
 const createObserverWithCallBack = (callback: () => void) => {
   return new MutationObserver((mutations) => {
     mutations.forEach(() => {
@@ -177,24 +178,13 @@ const setTransform = () => {
         border -
         margin -
         scrollValue;
+
       const { scrollWeight } = updateScroll(translateDirection);
 
-      if (translate.value[axis] > newTranslate) {
-        return {
-          newTranslate,
-          scrollWeight,
-        };
-      } else if (translate.value[axis] < newTranslate) {
-        return {
-          newTranslate,
-          scrollWeight,
-        };
-      } else {
-        return {
-          newTranslate,
-          scrollWeight,
-        };
-      }
+      return {
+        newTranslate,
+        scrollWeight,
+      };
     }
     const defaultTransalation = translate.value[axis];
     return {
@@ -408,10 +398,7 @@ const emitDraggingEventToSiblings = (
   draggedElement: HTMLElement,
   event: DraggingEvent,
   siblings: HTMLElement[],
-  translation: {
-    height: number;
-    width: number;
-  }
+  translation: Translate
 ) => {
   const isOutside = draggableIsOutside(draggedElement);
 
@@ -445,24 +432,15 @@ const emitDraggingEventToSiblings = (
 };
 const startDragEventOverElement = (
   element: HTMLElement,
-  translation: {
-    height: number;
-    width: number;
-  }
+  translation: Translate
 ) => {
   const { width, height } = translation;
   moveTranslate(element, height, width);
 };
-const dragEventOverElement = (
-  element: HTMLElement,
-  translation: {
-    height: number;
-    width: number;
-  }
-) => {
+const dragEventOverElement = (element: HTMLElement, translation: Translate) => {
   const { width, height } = translation;
   moveTranslate(element, height, width);
-  setTranistion(element, duration, "cubic-bezier(0.2, 0, 0, 1)");
+  setTranistion(element, duration, draggableTargetTimingFunction);
 };
 const observeDroppedElements = (element: HTMLElement) => {
   const { siblings } = getSiblings(element);
@@ -504,19 +482,10 @@ const dropEventOverElement = (
 const startDropEventOverElement = (
   element: HTMLElement,
   targetElement: HTMLElement,
-  translation: {
-    height: number;
-    width: number;
-  },
-  sourceElementTranlation: {
-    height: number;
-    width: number;
-  }
+  translation: Translate,
+  sourceElementTranlation: Translate
 ) => {
   moveTranslate(targetElement, translation.height, translation.width);
-  if (!onDrop) {
-    return;
-  }
   moveTranslate(
     element,
     sourceElementTranlation.height,
@@ -534,10 +503,7 @@ const removeTempChild = () => {
   }
 };
 const updateActualIndexBaseOnTranslation = (
-  translation: {
-    height: number;
-    width: number;
-  },
+  translation: Translate,
   siblingIndex: number
 ) => {
   if (!direction) {
@@ -554,10 +520,7 @@ const canChangeDraggable = (
   direction: Direction | undefined,
   sourceElement: HTMLElement,
   targetElement: HTMLElement,
-  translation: {
-    height: number;
-    width: number;
-  }
+  translation: Translate
 ) => {
   if (!direction) {
     return { height: 0, width: 0 };
@@ -631,10 +594,7 @@ const emitDroppingEventToSiblings = (
   event: DropEvent,
   siblings: HTMLElement[],
   elementPosition: number,
-  translation: {
-    height: number;
-    width: number;
-  }
+  translation: Translate
 ) => {
   const allSiblings = siblings.toReversed();
 
@@ -658,18 +618,18 @@ const emitDroppingEventToSiblings = (
     if (targetIndex - 1 >= index) {
       newTranslation = { height: 0, width: 0 };
     }
-    const draggableTranslation = calculateRangeWhileDragging(
-      direction,
-      allSiblings,
-      elementPosition,
-      targetIndex,
-      windowScroll.value,
-      droppableScroll.value
-    );
     if (
       event === START_DROP_EVENT &&
       !sibling.classList.contains("temp-child")
     ) {
+      const draggableTranslation = getTranslateBeforeDropping(
+        direction,
+        allSiblings,
+        elementPosition,
+        targetIndex,
+        windowScroll.value,
+        droppableScroll.value
+      );
       startDropEventOverElement(
         childElement,
         sibling,

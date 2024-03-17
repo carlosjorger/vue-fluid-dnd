@@ -19,6 +19,10 @@ export type MoveEvent = "mousemove" | "touchmove";
 export type OnLeaveEvent = "onmouseup" | "ontouchend";
 export type TouchEvent = "touchstart" | "touchmove" | "touchend";
 export type OffsetElement = "offsetLeft" | "offsetLeft";
+export type Translate = {
+  height: number;
+  width: number;
+};
 export type DragMouseTouchEvent = {
   readonly clientX: number;
   readonly clientY: number;

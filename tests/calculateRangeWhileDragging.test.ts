@@ -1,4 +1,4 @@
-import { calculateRangeWhileDragging } from "../src/utils/GetStyles";
+import { getTranslateBeforeDropping } from "../src/utils/GetStyles";
 import { expect, test, vi } from "vitest";
 const listWithoutGaps = document.createElement("div");
 listWithoutGaps.innerHTML = `<div style="background-color: darkgray; display: block;">
@@ -157,44 +157,60 @@ vi.spyOn(draggablesWithGapsList[3], "getBoundingClientRect").mockReturnValue(
   new DOMRect(0, 0, 185.71, 76)
 );
 test("check calculateRangeWhileDragging replacing an element with another one further ahead", () => {
-  const heightTranslate = calculateRangeWhileDragging(
+  const heightTranslate = getTranslateBeforeDropping(
     "vertical",
     draggablesList,
     0,
     3,
-    { scrollX: 0, scrollY: 0 }
+    { scrollX: 0, scrollY: 0 },
+    {
+      scrollLeft: 0,
+      scrollTop: 0,
+    }
   );
   expect(heightTranslate.height).toBe(308);
 });
 test("check calculateRangeWhileDragging replacing an element with another one before", () => {
-  const heightTranslate = calculateRangeWhileDragging(
+  const heightTranslate = getTranslateBeforeDropping(
     "vertical",
     draggablesList,
     3,
     0,
-    { scrollX: 0, scrollY: 0 }
+    { scrollX: 0, scrollY: 0 },
+    {
+      scrollLeft: 0,
+      scrollTop: 0,
+    }
   );
   expect(heightTranslate.height).toBe(-282);
 });
 
 test("check calculateRangeWhileDragging replacing an element with another one further ahead with a list with gaps", () => {
-  const heightTranslate = calculateRangeWhileDragging(
+  const heightTranslate = getTranslateBeforeDropping(
     "vertical",
     draggablesWithGapsList,
     0,
     3,
-    { scrollX: 0, scrollY: 0 }
+    { scrollX: 0, scrollY: 0 },
+    {
+      scrollLeft: 0,
+      scrollTop: 0,
+    }
   );
   expect(heightTranslate.height).toBe(361);
 });
 
 test("check calculateRangeWhileDragging replacing an element with another one further ahead with a list with gaps", () => {
-  const heightTranslate = calculateRangeWhileDragging(
+  const heightTranslate = getTranslateBeforeDropping(
     "vertical",
     draggablesWithGapsList,
     1,
     3,
-    { scrollX: 0, scrollY: 0 }
+    { scrollX: 0, scrollY: 0 },
+    {
+      scrollLeft: 0,
+      scrollTop: 0,
+    }
   );
   expect(heightTranslate.height).toBe(268);
 });
