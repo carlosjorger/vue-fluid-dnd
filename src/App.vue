@@ -130,7 +130,6 @@ const list2 = ref([
       "color: white; background-color: brown; padding: 26px 0; margin: 27px;",
   },
 ]);
-const numbers1 = ref([1, 2, 3, 4, 5, 6]);
 const numbers2 = ref([
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
 ]);
@@ -178,26 +177,6 @@ onMounted(async () => {
       </Draggable>
     </div>
   </Droppable>
-  <div style="padding: 2rem; background-color: gray">
-    <Droppable droppable-id="5" direction="vertical" :items="numbers1">
-      <ul style="display: block; padding-inline: 10px">
-        <Draggable
-          v-for="(element, index) in numbers1"
-          v-slot="{ setRef }"
-          :draggable-id="'number-' + element.toString()"
-          :index="index"
-          ><li :ref="setRef" class="number2">
-            {{ element }}
-            <div style="display: flex; flex-direction: row">
-              <span v-for="number in [...Array(4).keys()]">
-                {{ number + element }}
-              </span>
-            </div>
-          </li>
-        </Draggable>
-      </ul>
-    </Droppable>
-  </div>
   <Droppable droppable-id="6" direction="vertical" :items="numbers2">
     <ul
       style="
