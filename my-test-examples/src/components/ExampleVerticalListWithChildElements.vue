@@ -7,13 +7,20 @@ const numbers = ref([1, 2, 3, 4, 5, 6]);
 </script>
 <template>
   <Droppable droppable-id="5" direction="vertical" :items="numbers">
-    <ul style="display: block; padding-inline: 10px">
+    <ul
+      id="example-vertical-list-with-child-elements"
+      style="display: block; padding-inline: 10px"
+    >
       <Draggable
         v-for="(element, index) in numbers"
         v-slot="{ setRef }"
         :draggable-id="'number-' + element.toString()"
         :index="index"
-        ><li :ref="setRef as any" class="number">
+        ><li
+          :id="'child-with-children-' + +element.toString()"
+          :ref="setRef as any"
+          class="number"
+        >
           {{ element }}
           <div style="display: flex; flex-direction: row">
             <span v-for="number in [...Array(4).keys()]">
