@@ -4,7 +4,7 @@
 <script setup lang="ts" generic="T">
 import { provide, ref, watch } from "vue";
 import { Direction, DraggableElement } from "../../index";
-import { dropDraggingElementsBetween } from "@/utils/DropMethods";
+import { dropDraggingElementsBetween } from "../utils/DropMethods";
 
 const props = defineProps<{
   droppableId: string;

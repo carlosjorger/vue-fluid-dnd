@@ -22,7 +22,7 @@ import {
   setTranistion,
   convetEventToDragMouseTouchEvent,
   setEventWithInterval,
-} from "@/utils/SetStyles";
+} from "../utils/SetStyles";
 import {
   getScroll,
   getMarginStyleByProperty,
@@ -33,9 +33,9 @@ import {
   getScrollElement,
   getGapPixels,
   getSiblings,
-} from "@/utils/GetStyles";
-import getTranslationByDragging from "@/utils/GetTranslationByDragging";
-import getTranslateBeforeDropping from "@/utils/GetTranslateBeforeDropping";
+} from "../utils/GetStyles";
+import getTranslationByDragging from "../utils/GetTranslationByDragging";
+import getTranslateBeforeDropping from "../utils/GetTranslateBeforeDropping";
 const props = defineProps<{
   draggableId: string;
   index: number;

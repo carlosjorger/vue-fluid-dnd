@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import HelloWorld from "./components/HelloWorld.vue";
+import ExampleVerticalListWithChildElements from "./components/ExampleVerticalListWithChildElements.vue";
 </script>
 
 <template>
@@ -11,7 +11,7 @@ import HelloWorld from "./components/HelloWorld.vue";
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <HelloWorld msg="vue-fluid-dnd + Vue" />
+  <ExampleVerticalListWithChildElements />
 </template>
 
 <style scoped>

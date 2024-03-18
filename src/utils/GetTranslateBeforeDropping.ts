@@ -4,7 +4,7 @@ import {
   Direction,
   Distance,
   Translate,
-} from "index";
+} from "../../index";
 import {
   gapAndDisplayInformation,
   getMarginStyleByProperty,

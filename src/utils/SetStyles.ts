@@ -1,4 +1,4 @@
-import { DragMouseTouchEvent } from "index";
+import { DragMouseTouchEvent } from "../../index";
 import { getBorderWidthProperty } from "./GetStyles";
 
 type onTouchEvent = "ontouchstart" | "ontouchmove" | "ontouchend";
