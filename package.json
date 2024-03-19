@@ -24,7 +24,7 @@
   "types": "./dist/index.d.ts",
   "typings": "./dist/index.d.ts",
   "scripts": {
-    "dev": "vite",
+    "dev": "cd my-test-examples && vite",
     "build": "vite build && vue-tsc --emitDeclarationOnly",
     "preview": "vite preview",
     "test": "vitest"

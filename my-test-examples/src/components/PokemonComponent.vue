@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, type ComponentPublicInstance } from "vue";
-import type { Pokemon } from "../../docs/src/components/examples/Pokemon";
+import { type ComponentPublicInstance } from "vue";
+import type { Pokemon } from "../../../docs/src/components/examples/Pokemon";
 const { pokemon, setRef } = defineProps<{
   pokemon: Pokemon;
   setRef: (

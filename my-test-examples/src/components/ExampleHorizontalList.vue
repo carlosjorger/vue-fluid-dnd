@@ -10,15 +10,19 @@ const { droppableId } = defineProps<{
 }>();
 </script>
 <template>
-  <Droppable :droppable-id="droppableId" direction="vertical" :items="numbers">
-    <ul id="example-vertical-list-with-child-elements" class="vertical-list">
+  <Droppable
+    :droppable-id="droppableId"
+    direction="horizontal"
+    :items="numbers"
+  >
+    <div id="example-vertical-list-with-child-elements" class="list">
       <Draggable
         v-for="(element, index) in numbers"
         v-slot="{ setRef }"
         :draggable-id="'number-' + element.toString()"
         :index="index"
-        ><li
-          :id="'child-with-children-' + +element.toString()"
+        ><div
+          :id="'horizontal-child-' + +element.toString()"
           :ref="setRef as any"
           class="number"
         >
@@ -28,15 +32,16 @@ const { droppableId } = defineProps<{
               {{ number + element }}
             </span>
           </div>
-        </li>
+        </div>
       </Draggable>
-    </ul>
+    </div>
   </Droppable>
 </template>
 <style>
-.vertical-list {
-  display: block;
-  padding-inline: 10px;
+.list {
+  display: flex;
+  padding: 10px;
+  flex-direction: row;
 }
 .number {
   padding-left: 5px;
@@ -44,7 +49,7 @@ const { droppableId } = defineProps<{
   border-style: solid;
   border-width: 0.8rem;
   width: 100px;
-  transition: background-color 150ms ease;
+  transition: all 150ms ease;
 }
 .number:hover {
   background-color: red;
