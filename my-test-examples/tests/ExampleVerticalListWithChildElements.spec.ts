@@ -1,12 +1,8 @@
 import { test, expect, Page } from "@playwright/test";
 
 let page: Page;
-
-test.beforeAll(async ({ browser }) => {
-  page = await browser.newPage();
-  await page.goto("/");
-});
-test("has title", async ({ page }) => {
+//TODO Add drag and drop from top and from bottom
+test("drag and drop top-down", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("ul > li")).toHaveText([
     "1 1234",
@@ -16,19 +12,36 @@ test("has title", async ({ page }) => {
     "5 5678",
     "6 6789",
   ]);
-});
-//TODO Add drag and drop from top and from bottom
-test("drag and drop top-down", async ({ page }) => {
-  await page.goto("/");
-
+  await page.waitForTimeout(1000);
   await dragDrop(page, "#child-with-children-1", "#child-with-children-6");
   await expect(page.locator("ul > li")).toHaveText([
-    "6 6789",
     "2 2345",
     "3 3456",
     "4 4567",
     "5 5678",
+    "6 6789",
     "1 1234",
+  ]);
+});
+test("drag and drop down-top", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("ul > li")).toHaveText([
+    "1 1234",
+    "2 2345",
+    "3 3456",
+    "4 4567",
+    "5 5678",
+    "6 6789",
+  ]);
+  await page.waitForTimeout(1000);
+  await dragDrop(page, "#child-with-children-6", "#child-with-children-1");
+  await expect(page.locator("ul > li")).toHaveText([
+    "6 6789",
+    "1 1234",
+    "2 2345",
+    "3 3456",
+    "4 4567",
+    "5 5678",
   ]);
 });
 async function dragDrop(
@@ -38,11 +51,21 @@ async function dragDrop(
 ) {
   const originElement = await page.waitForSelector(originSelector);
   const destinationElement = await page.waitForSelector(destinationSelector);
-
-  await originElement.hover();
+  const originElementBox = await originElement.boundingBox();
+  const destinationElementBox = await destinationElement.boundingBox();
+  if (!originElementBox || !destinationElementBox) {
+    return;
+  }
+  const yError = originElementBox.y < destinationElementBox.y ? 1 : -1;
+  await page.mouse.move(
+    originElementBox.x + originElementBox.width / 2,
+    originElementBox.y + originElementBox.height / 2
+  );
   await page.mouse.down();
-  const box = (await destinationElement.boundingBox())!;
-  await page.mouse.move(box.x, box.y + box.height / 2, { steps: 5 });
-  await destinationElement.hover();
+  await page.mouse.move(
+    destinationElementBox.x + destinationElementBox.width / 2,
+    destinationElementBox.y + destinationElementBox.height / 2 + yError,
+    { steps: 20 }
+  );
   await page.mouse.up();
 }

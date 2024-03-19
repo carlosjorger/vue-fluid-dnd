@@ -40,4 +40,7 @@ const numbers = ref([1, 2, 3, 4, 5, 6]);
   border-width: 0.8rem;
   width: 100px;
 }
+.number:hover {
+  background-color: red;
+}
 </style>
