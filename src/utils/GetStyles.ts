@@ -58,7 +58,6 @@ const intersection = (
   }
   return firstInterval.x2 - secondInterval.x1;
 };
-// TODO: make som refactor to this function
 export const draggableIsOutside = (draggable: HTMLElement) => {
   const parentElement = draggable.parentElement as HTMLElement;
   return !hasIntersection(draggable, parentElement);
@@ -67,34 +66,31 @@ export const hasIntersection = (
   element1: HTMLElement,
   element2: HTMLElement
 ) => {
-  const element1ElementRect = element1.getBoundingClientRect();
-  const element2ElementRect = element2.getBoundingClientRect();
+  const rect1 = element1.getBoundingClientRect();
+  const rect2 = element2.getBoundingClientRect();
 
-  const intersectionY = intersection(
-    {
-      x1: element1ElementRect.top,
-      x2: element1ElementRect.top + element1ElementRect.height,
-    },
-    {
-      x1: element2ElementRect.top,
-      x2: element2ElementRect.top + element2ElementRect.height,
-    }
-  );
-  const intersectionX = intersection(
-    {
-      x1: element1ElementRect.left,
-      x2: element1ElementRect.left + element1ElementRect.width,
-    },
-    {
-      x1: element2ElementRect.left,
-      x2: element2ElementRect.left + element2ElementRect.width,
-    }
-  );
+  const intersectionY = intersectionByDirection(rect1, rect2, "vertical");
+  const intersectionX = intersectionByDirection(rect1, rect2, "horizontal");
   return (
-    intersectionY >=
-      Math.min(element1ElementRect.height, element2ElementRect.height) / 2 &&
-    intersectionX >=
-      Math.min(element1ElementRect.width, element2ElementRect.width) / 2
+    intersectionY >= Math.min(rect1.height, rect2.height) / 2 &&
+    intersectionX >= Math.min(rect1.width, rect2.width) / 2
+  );
+};
+const intersectionByDirection = (
+  rect1: DOMRect,
+  rect2: DOMRect,
+  direction: Direction
+) => {
+  const { before, distance } = getPropByDirection(direction);
+  return intersection(
+    {
+      x1: rect1[before],
+      x2: rect1[before] + rect1[distance],
+    },
+    {
+      x1: rect2[before],
+      x2: rect2[before] + rect2[distance],
+    }
   );
 };
 export const getBorderWidthProperty = (

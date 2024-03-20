@@ -378,7 +378,6 @@ const setTransformEvent = (
 };
 const setTransformDragEvent = () => {
   const element = childRef.value as HTMLElement;
-
   setTransform();
   emitEventToSiblings(element, DRAG_EVENT);
 };
@@ -399,7 +398,6 @@ const emitEventToSiblings = (draggedElement: HTMLElement, event: DragEvent) => {
     );
   }
 };
-
 const emitDraggingEventToSiblings = (
   draggedElement: HTMLElement,
   event: DraggingEvent,
