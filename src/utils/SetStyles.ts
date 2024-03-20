@@ -1,5 +1,5 @@
-import { DragMouseTouchEvent } from "../../index";
-import { getBorderWidthProperty } from "./GetStyles";
+import { Direction, DragMouseTouchEvent } from "../../index";
+import { getBorderWidthProperty, getPropByDirection } from "./GetStyles";
 
 type onTouchEvent = "ontouchstart" | "ontouchmove" | "ontouchend";
 const onMouseEvents = ["onmouseup", "onmousedown", "onmousemove"] as const;
@@ -66,25 +66,11 @@ export const addDragMouseToucEventListener = (
 };
 const isOnMouseEvent = (x: any): x is onMouseEvent => onMouseEvents.includes(x);
 const isMouseEvent = (x: any): x is MouseEventType => mouseEvents.includes(x);
-// TODO: refactor using direction
+
 export const convetEventToDragMouseTouchEvent = (
   event: MouseEvent | TouchEvent
 ): DragMouseTouchEvent => {
   let tempEvent = event instanceof TouchEvent ? event.touches[0] : event;
-  if (!tempEvent) {
-    const { target } = event;
-    return {
-      clientX: 0,
-      clientY: 0,
-      pageX: 0,
-      pageY: 0,
-      screenX: 0,
-      screenY: 0,
-      target,
-      offsetX: 0,
-      offsetY: 0,
-    };
-  }
   const { clientX, clientY, pageX, pageY, screenX, screenY, target } =
     tempEvent;
   let offsetX = 0,
@@ -95,18 +81,8 @@ export const convetEventToDragMouseTouchEvent = (
     offsetY = event.offsetY;
   } else {
     const element = event.target as HTMLElement;
-    const boundingClientRect = element.getBoundingClientRect();
-    offsetX =
-      pageX -
-      window.scrollX -
-      boundingClientRect.left -
-      getBorderWidthProperty(element, "borderLeftWidth");
-
-    offsetY =
-      pageY -
-      window.scrollY -
-      boundingClientRect.top -
-      getBorderWidthProperty(element, "borderTopWidth");
+    offsetX = getOffset(tempEvent, window, "horizontal", element);
+    offsetY = getOffset(tempEvent, window, "vertical", element);
   }
   return {
     clientX,
@@ -119,6 +95,22 @@ export const convetEventToDragMouseTouchEvent = (
     offsetX,
     offsetY,
   };
+};
+const getOffset = (
+  event: MouseEvent | Touch,
+  window: Window,
+  direction: Direction,
+  element: HTMLElement
+) => {
+  const { page, scroll, before, borderBeforeWidth } =
+    getPropByDirection(direction);
+  const boundingClientRect = element.getBoundingClientRect();
+  return (
+    event[page] -
+    window[scroll] -
+    boundingClientRect[before] -
+    getBorderWidthProperty(element, borderBeforeWidth)
+  );
 };
 export const setTranistion = (
   element: HTMLElement | undefined,
