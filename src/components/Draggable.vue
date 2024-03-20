@@ -34,8 +34,9 @@ import {
   getGapPixels,
   getSiblings,
 } from "../utils/GetStyles";
-import getTranslationByDragging from "../utils/GetTranslationByDragging";
+import getTranslationByDragging from "../utils/GetTranslationByDraggingAndEvent";
 import getTranslateBeforeDropping from "../utils/GetTranslateBeforeDropping";
+import { IsDropEvent } from "../utils";
 const props = defineProps<{
   draggableId: string;
   index: number;
@@ -348,7 +349,11 @@ const startDragging = (event: DragMouseTouchEvent) => {
 };
 const addTempChild = (draggedElement: HTMLElement) => {
   if (parent.value) {
-    let distances = calculateInitialTranslation(draggedElement, "startDrag");
+    let distances = getTranslationByDragging(
+      draggedElement,
+      "startDrag",
+      direction
+    );
     var child = document.createElement("div");
     child.classList.add("temp-child");
     if (direction) {
@@ -379,9 +384,9 @@ const setTransformDragEvent = () => {
 };
 const emitEventToSiblings = (draggedElement: HTMLElement, event: DragEvent) => {
   let tranlation = { height: 0, width: 0 };
-  tranlation = calculateInitialTranslation(draggedElement, event);
+  tranlation = getTranslationByDragging(draggedElement, event, direction);
   const { siblings, elementPosition } = getSiblings(draggedElement);
-  const dropping = event === DROP_EVENT || event === START_DROP_EVENT;
+  const dropping = IsDropEvent(event);
   if (!dropping) {
     emitDraggingEventToSiblings(draggedElement, event, siblings, tranlation);
   } else {
@@ -604,9 +609,10 @@ const emitDroppingEventToSiblings = (
   const { previousElement, nextElement, targetIndex } =
     getPreviousAndNextElement(draggedElement, elementPosition, allSiblings);
 
-  translation = calculateInitialTranslation(
+  translation = getTranslationByDragging(
     draggedElement,
     event,
+    direction,
     previousElement,
     nextElement
   );
@@ -640,25 +646,6 @@ const emitDroppingEventToSiblings = (
     }
   }
   dropEventOverElement(elementPosition, targetIndex, childElement);
-};
-const calculateInitialTranslation = (
-  current: HTMLElement,
-  event: DragEvent,
-  previousElement = current.previousElementSibling,
-  nextElement = current.nextElementSibling
-) => {
-  let { height, width } = getTranslationByDragging(
-    direction,
-    current,
-    previousElement,
-    nextElement
-  );
-  const intersection = draggableIsOutside(current);
-  if (intersection && event == DRAG_EVENT) {
-    height = 0;
-    width = 0;
-  }
-  return { height, width };
 };
 const draggableIsOutside = (draggable: HTMLElement) => {
   const parentElement = draggable.parentElement as HTMLElement;

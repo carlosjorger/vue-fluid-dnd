@@ -1,11 +1,35 @@
+import { DragAndDropEvent } from ".";
 import { Direction } from "../../index";
 import {
+  draggableIsOutside,
   gapAndDisplayInformation,
   getMarginStyleByProperty,
   getPropByDirection,
 } from "./GetStyles";
+
+export default function getTranslationByDraggingAndEvent(
+  current: HTMLElement,
+  event: DragAndDropEvent,
+  direction: Direction | undefined,
+  previousElement = current.previousElementSibling,
+  nextElement = current.nextElementSibling
+) {
+  let { height, width } = getTranslationByDragging(
+    direction,
+    current,
+    previousElement,
+    nextElement
+  );
+  const intersection = draggableIsOutside(current);
+  if (intersection && event == "drag") {
+    height = 0;
+    width = 0;
+  }
+  return { height, width };
+}
 // TODO: refactor this function to make more legible
-export default function getTranslationByDragging(
+
+function getTranslationByDragging(
   direction: Direction | undefined,
   current: HTMLElement,
   previousElement: Element | null,
