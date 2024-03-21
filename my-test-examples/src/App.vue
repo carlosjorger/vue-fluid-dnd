@@ -6,7 +6,7 @@ import ExampleHorizontalListWithMixedStyles from "./components/ExampleHorizontal
 import ExampleHorizontalScrollList from "./components/ExampleHorizontalScrollList.vue";
 import ExampleVerticalListWithMixedStyles from "./components/ExampleVerticalListWithMixedStyles.vue";
 import ExampleVerticalListWithMixedStylesAndGaps from "./components/ExampleVerticalListWithMixedStylesAndGaps.vue";
-import ExampleOfPokemonList from "./components/ExampleOfPokemonList.vue";
+// import ExampleOfPokemonList from "./components/ExampleOfPokemonList.vue";
 </script>
 
 <template>

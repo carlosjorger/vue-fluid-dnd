@@ -50,8 +50,6 @@ const DROP_EVENT = "drop";
 type DraggingEvent = typeof DRAG_EVENT | typeof START_DRAG_EVENT;
 type DropEvent = typeof DROP_EVENT | typeof START_DROP_EVENT;
 type DragEvent = DraggingEvent | DropEvent;
-type VerticalDirection = "top" | "down" | "quiet";
-type HorizontalDirection = "left" | "right" | "quiet";
 
 enum DraggingState {
   NOT_DRAGGING = "notDragging",
@@ -108,6 +106,7 @@ const setDraggable = () => {
     childRef.value.classList.add("draggable");
   }
 };
+// TODO: create a module to this set events
 const setSlotRefElementParams = (element: HTMLElement | undefined) => {
   if (element) {
     assignDraggingEvent(
@@ -132,25 +131,12 @@ const updateDraggableId = (element: HTMLElement | undefined) => {
     element.setAttribute(INDEX_ATTR, props.index.toString());
   }
 };
-const directionInfo = {
-  horizontal: {
-    before: "left" as HorizontalDirection,
-    after: "right" as HorizontalDirection,
-    quiet: "quiet" as HorizontalDirection,
-  },
-  vertical: {
-    before: "top" as VerticalDirection,
-    after: "down" as VerticalDirection,
-    quiet: "quiet" as VerticalDirection,
-  },
-};
+// TODO: move setTransform to module
 const setTransform = () => {
   const element = childRef.value as HTMLElement;
   const elementBoundingClientRect = element.getBoundingClientRect();
 
-  const getTranslateWihtDirection = (
-    translateDirection: Direction
-  ): { newTranslate: number; scrollWeight: number } => {
+  const getTranslateWihtDirection = (translateDirection: Direction) => {
     const {
       beforeMargin,
       borderBeforeWidth,
@@ -180,45 +166,29 @@ const setTransform = () => {
         margin -
         scrollValue;
 
-      const { scrollWeight } = updateScroll(translateDirection);
+      updateScroll(translateDirection);
 
-      return {
-        newTranslate,
-        scrollWeight,
-      };
+      return newTranslate;
     }
     const defaultTransalation = translate.value[axis];
-    return {
-      newTranslate: defaultTransalation,
-      scrollWeight: 1,
-    };
+    return defaultTransalation;
   };
-
-  const { newTranslate: newTranslateX } =
-    getTranslateWihtDirection("horizontal");
-  translate.value.x = newTranslateX;
-
-  const { newTranslate: newTranslateY } = getTranslateWihtDirection("vertical");
-  translate.value.y = newTranslateY;
+  const updateTranlateByDirection = (direction: Direction) => {
+    const { axis } = getPropByDirection(direction);
+    translate.value[axis] = getTranslateWihtDirection(direction);
+  };
+  updateTranlateByDirection("horizontal");
+  updateTranlateByDirection("vertical");
 };
-// TODO: refactor this function
-const updateScroll = (
-  translateDirection?: Direction
-): {
-  scrollDirection: VerticalDirection | HorizontalDirection;
-  scrollWeight: number;
-} => {
+const updateScroll = (translateDirection: Direction) => {
   const element = childRef.value as HTMLElement;
 
   if (
     element &&
     element.classList.contains("dragging") &&
     parent.value &&
-    (translateDirection === direction || translateDirection === undefined) &&
-    direction
+    translateDirection === direction
   ) {
-    const directionValues = directionInfo[direction];
-
     const { before, distance, axis } = getPropByDirection(direction);
     const elementBoundingClientRect = element.getBoundingClientRect();
     const distanceValue = elementBoundingClientRect[distance];
@@ -254,12 +224,7 @@ const updateScroll = (
     }
     const scrollAmount = velocity * distanceValue * percent;
     scrollByDirection(parent.value, direction, scrollAmount);
-    return {
-      scrollDirection: directionValues.after,
-      scrollWeight: 1 - Math.abs(percent),
-    };
   }
-  return { scrollDirection: "quiet", scrollWeight: 1 };
 };
 const scrollByDirection = (
   element: HTMLElement,
