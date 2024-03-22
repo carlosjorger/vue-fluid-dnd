@@ -71,6 +71,20 @@ export const convetEventToDragMouseTouchEvent = (
   event: MouseEvent | TouchEvent
 ): DragMouseTouchEvent => {
   let tempEvent = event instanceof TouchEvent ? event.touches[0] : event;
+  if (!tempEvent) {
+    const { target } = event;
+    return {
+      clientX: 0,
+      clientY: 0,
+      pageX: 0,
+      pageY: 0,
+      screenX: 0,
+      screenY: 0,
+      target,
+      offsetX: 0,
+      offsetY: 0,
+    };
+  }
   const { clientX, clientY, pageX, pageY, screenX, screenY, target } =
     tempEvent;
   let offsetX = 0,

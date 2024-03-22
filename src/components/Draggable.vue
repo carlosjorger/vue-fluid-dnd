@@ -25,9 +25,7 @@ import {
 } from "../utils/SetStyles";
 import {
   getScroll,
-  getMarginStyleByProperty,
   hasIntersection,
-  getBorderWidthProperty,
   getPropByDirection,
   getWindowScroll,
   getScrollElement,
@@ -37,6 +35,7 @@ import {
 import getTranslationByDragging from "../utils/GetTranslationByDraggingAndEvent";
 import getTranslateBeforeDropping from "../utils/GetTranslateBeforeDropping";
 import { IsDropEvent } from "../utils";
+import { useTransform } from "../utils/SetTransform";
 const props = defineProps<{
   draggableId: string;
   index: number;
@@ -78,6 +77,7 @@ const droppableScroll = ref({ scrollLeft: 0, scrollTop: 0 });
 const fixedWidth = ref("");
 const fixedHeight = ref("");
 const draggableTargetTimingFunction = "cubic-bezier(0.2, 0, 0, 1)";
+const { setTransform, updateTransformState } = useTransform();
 const createObserverWithCallBack = (callback: () => void) => {
   return new MutationObserver((mutations) => {
     mutations.forEach(() => {
@@ -131,120 +131,11 @@ const updateDraggableId = (element: HTMLElement | undefined) => {
     element.setAttribute(INDEX_ATTR, props.index.toString());
   }
 };
-// TODO: move setTransform to module
-const setTransform = () => {
-  const element = childRef.value as HTMLElement;
-  const elementBoundingClientRect = element.getBoundingClientRect();
-
-  const getTranslateWihtDirection = (translateDirection: Direction) => {
-    const {
-      beforeMargin,
-      borderBeforeWidth,
-      before,
-      offset,
-      scroll,
-      page,
-      inner,
-      distance,
-      axis,
-    } = getPropByDirection(translateDirection);
-    const pageValue = pagePosition.value[page];
-    const scrollValue = window[scroll];
-    const innerDistance = window[inner];
-    const distanceValue = elementBoundingClientRect[distance];
-    const border = getBorderWidthProperty(element, borderBeforeWidth);
-    const margin = getMarginStyleByProperty(element, beforeMargin);
-    const elementPosittion = pageValue - currentOffset.value[offset];
-    if (
-      elementPosittion >= scrollValue - distanceValue / 2 &&
-      elementPosittion <= scrollValue + innerDistance
-    ) {
-      const newTranslate =
-        elementPosittion -
-        position.value[before] -
-        border -
-        margin -
-        scrollValue;
-
-      updateScroll(translateDirection);
-
-      return newTranslate;
-    }
-    const defaultTransalation = translate.value[axis];
-    return defaultTransalation;
-  };
-  const updateTranlateByDirection = (direction: Direction) => {
-    const { axis } = getPropByDirection(direction);
-    translate.value[axis] = getTranslateWihtDirection(direction);
-  };
-  updateTranlateByDirection("horizontal");
-  updateTranlateByDirection("vertical");
-};
-const updateScroll = (translateDirection: Direction) => {
-  const element = childRef.value as HTMLElement;
-
-  if (
-    element &&
-    element.classList.contains("dragging") &&
-    parent.value &&
-    translateDirection === direction
-  ) {
-    const { before, distance, axis } = getPropByDirection(direction);
-    const elementBoundingClientRect = element.getBoundingClientRect();
-    const distanceValue = elementBoundingClientRect[distance];
-
-    const parentBoundingClientRect = parent.value.getBoundingClientRect();
-    const positionInsideParent =
-      position.value[before] -
-      parentBoundingClientRect[before] +
-      translate.value[axis];
-
-    const parentDistance = parentBoundingClientRect[distance];
-    const totalDistance = parentDistance - distanceValue;
-    const relativePosition = positionInsideParent / totalDistance;
-    const relativeDistanceValue = distanceValue / totalDistance;
-
-    const velocity = 0.1;
-    const infLimit = 0.25;
-    const upperLimit = 0.75;
-    let percent = 0;
-    const isOutside = draggableIsOutside(element);
-    if (
-      !isOutside &&
-      relativePosition < infLimit &&
-      relativePosition > -relativeDistanceValue
-    ) {
-      percent = relativePosition / infLimit - 1;
-    } else if (
-      !isOutside &&
-      relativePosition > upperLimit &&
-      relativePosition < 1 + relativeDistanceValue
-    ) {
-      percent = (1 / (1 - upperLimit)) * (relativePosition - upperLimit);
-    }
-    const scrollAmount = velocity * distanceValue * percent;
-    scrollByDirection(parent.value, direction, scrollAmount);
-  }
-};
-const scrollByDirection = (
-  element: HTMLElement,
-  direction: Direction,
-  scrollAmount: number
-) => {
-  if (scrollAmount == 0) {
-    return;
-  }
-  if (direction === "vertical") {
-    element.scrollBy(0, scrollAmount);
-  } else {
-    element.scrollBy(scrollAmount, 0);
-  }
-};
 const onmousemove = function (event: DragMouseTouchEvent) {
   if (draggingState.value === DraggingState.START_DRAGGING) {
     startDragging(event);
   } else if (draggingState.value === DraggingState.DRAGING) {
-    setTransformEvent(event, true);
+    setTransformEvent(event);
   }
 };
 const handlerMousemove = (event: MouseEvent | TouchEvent) => {
@@ -287,30 +178,16 @@ const onLeave = (
 };
 const startDragging = (event: DragMouseTouchEvent) => {
   const element = event.target as HTMLElement;
-  scroll.value = getScroll(element.parentElement);
-  windowScroll.value = getWindowScroll();
-  const { offsetX, offsetY } = event;
-  currentOffset.value = { offsetX, offsetY };
-  draggingState.value = DraggingState.DRAGING;
+  updateDraggingStateBeforeDragging(element);
   addTempChild(element);
   emitEventToSiblings(element, START_DRAG_EVENT);
-  const getPositionByDistance = (direction: Direction) => {
-    const { offset, beforeMargin, page, borderBeforeWidth, scroll } =
-      getPropByDirection(direction);
-    return (
-      event[page] -
-      currentOffset.value[offset] -
-      getMarginStyleByProperty(element, beforeMargin) -
-      getBorderWidthProperty(element, borderBeforeWidth) -
-      window[scroll]
-    );
-  };
-  position.value = {
-    top: getPositionByDistance("vertical"),
-    left: getPositionByDistance("horizontal"),
-  };
-
+  updateTransformState(event, element, currentOffset, position);
   setDraggingStyles(element);
+};
+const updateDraggingStateBeforeDragging = (element: HTMLElement) => {
+  scroll.value = getScroll(element.parentElement);
+  windowScroll.value = getWindowScroll();
+  draggingState.value = DraggingState.DRAGING;
 };
 const addTempChild = (draggedElement: HTMLElement) => {
   if (parent.value) {
@@ -331,19 +208,24 @@ const addTempChild = (draggedElement: HTMLElement) => {
     parent.value.appendChild(child);
   }
 };
-const setTransformEvent = (
-  event: DragMouseTouchEvent,
-  emitDragEvent: boolean = false
-) => {
+const setTransformEvent = (event: DragMouseTouchEvent) => {
   const { pageX, pageY } = event;
   pagePosition.value = { pageX, pageY };
-  if (emitDragEvent) {
-    setTransformDragEvent();
-  }
+  setTransformDragEvent();
 };
 const setTransformDragEvent = () => {
   const element = childRef.value as HTMLElement;
-  setTransform();
+  if (parent.value) {
+    setTransform(
+      element,
+      parent.value,
+      pagePosition,
+      translate,
+      currentOffset,
+      position,
+      direction
+    );
+  }
   emitEventToSiblings(element, DRAG_EVENT);
 };
 const emitEventToSiblings = (draggedElement: HTMLElement, event: DragEvent) => {
