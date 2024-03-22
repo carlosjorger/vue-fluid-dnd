@@ -5,8 +5,10 @@ import {
   getMarginStyleByProperty,
   getPropByDirection,
 } from "./GetStyles";
-import { Ref } from "vue";
+import { Ref, ref } from "vue";
 export const useTransform = () => {
+  const currentOffset = ref({ offsetX: 0, offsetY: 0 });
+  // TOOD: create position state
   function setTransform(
     element: HTMLElement,
     parent: HTMLElement,
@@ -17,10 +19,6 @@ export const useTransform = () => {
     translate: Ref<{
       x: number;
       y: number;
-    }>,
-    currentOffset: Ref<{
-      offsetX: number;
-      offsetY: number;
     }>,
     position: Ref<{
       top: number;
@@ -135,10 +133,6 @@ export const useTransform = () => {
   const updateTransformState = (
     event: DragMouseTouchEvent,
     element: HTMLElement,
-    currentOffset: Ref<{
-      offsetX: number;
-      offsetY: number;
-    }>,
     position: Ref<{
       top: number;
       left: number;

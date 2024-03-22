@@ -58,7 +58,6 @@ enum DraggingState {
 }
 const draggingState = ref<DraggingState>(DraggingState.NOT_DRAGGING);
 const position = ref({ top: 0, left: 0 });
-const currentOffset = ref({ offsetX: 0, offsetY: 0 });
 const direction = inject<Direction>("direction");
 const onDrop =
   inject<
@@ -106,7 +105,6 @@ const setDraggable = () => {
     childRef.value.classList.add("draggable");
   }
 };
-// TODO: create a module to this set events
 const setSlotRefElementParams = (element: HTMLElement | undefined) => {
   if (element) {
     assignDraggingEvent(
@@ -181,7 +179,7 @@ const startDragging = (event: DragMouseTouchEvent) => {
   updateDraggingStateBeforeDragging(element);
   addTempChild(element);
   emitEventToSiblings(element, START_DRAG_EVENT);
-  updateTransformState(event, element, currentOffset, position);
+  updateTransformState(event, element, position);
   setDraggingStyles(element);
 };
 const updateDraggingStateBeforeDragging = (element: HTMLElement) => {
@@ -221,7 +219,6 @@ const setTransformDragEvent = () => {
       parent.value,
       pagePosition,
       translate,
-      currentOffset,
       position,
       direction
     );
@@ -572,6 +569,7 @@ watch(
 );
 </script>
 <style>
+/*  TODO: se styles dinamicly */
 .draggable {
   box-sizing: border-box !important;
   touch-action: none;

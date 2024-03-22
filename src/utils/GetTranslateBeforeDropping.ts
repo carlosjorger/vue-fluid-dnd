@@ -10,8 +10,8 @@ import {
   getMarginStyleByProperty,
   getPropByDirection,
 } from "./GetStyles";
-// TODO: refactor this function to make more legible
 export default function getTranslateBeforeDropping(
+  // TODO: refactor this function to make more legible
   direction: Direction | undefined,
   siblings: HTMLElement[],
   sourceIndex: number,
