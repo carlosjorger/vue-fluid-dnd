@@ -6,7 +6,7 @@
 A **fluid**, **smooth**, **versatil** and **lightweight** drag and drop
 library for lists on Vue3.
 
-<img src="src/assets/graphic/example-video.gif" width="100%"/>
+<img src="https://github.com/carlosjorger/vue-fluid-dnd/assets/50055316/4b25fd5e-4815-4a24-afe4-6f41d34be820" width="100%"/>
 
 ## ✨ Features
 
