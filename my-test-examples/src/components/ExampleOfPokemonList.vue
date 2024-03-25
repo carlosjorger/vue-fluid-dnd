@@ -10,7 +10,6 @@ import type { Pokemon } from "../../../docs/src/components/examples/Pokemon";
 const pokemons = ref([] as Pokemon[]);
 onMounted(async () => {
   pokemons.value = await fetchPokemons(9);
-  console.log(pokemons.value);
 });
 
 const { droppableId } = defineProps<{

@@ -57,7 +57,6 @@ enum DraggingState {
   END_DRAGGING = "endDragging",
 }
 const draggingState = ref<DraggingState>(DraggingState.NOT_DRAGGING);
-const position = ref({ top: 0, left: 0 });
 const direction = inject<Direction>("direction");
 const onDrop =
   inject<
@@ -76,7 +75,7 @@ const droppableScroll = ref({ scrollLeft: 0, scrollTop: 0 });
 const fixedWidth = ref("");
 const fixedHeight = ref("");
 const draggableTargetTimingFunction = "cubic-bezier(0.2, 0, 0, 1)";
-const { setTransform, updateTransformState } = useTransform();
+const { setTransform, updateTransformState } = useTransform(childRef);
 const createObserverWithCallBack = (callback: () => void) => {
   return new MutationObserver((mutations) => {
     mutations.forEach(() => {
@@ -179,7 +178,7 @@ const startDragging = (event: DragMouseTouchEvent) => {
   updateDraggingStateBeforeDragging(element);
   addTempChild(element);
   emitEventToSiblings(element, START_DRAG_EVENT);
-  updateTransformState(event, element, position);
+  updateTransformState(event, element);
   setDraggingStyles(element);
 };
 const updateDraggingStateBeforeDragging = (element: HTMLElement) => {
@@ -214,14 +213,7 @@ const setTransformEvent = (event: DragMouseTouchEvent) => {
 const setTransformDragEvent = () => {
   const element = childRef.value as HTMLElement;
   if (parent.value) {
-    setTransform(
-      element,
-      parent.value,
-      pagePosition,
-      translate,
-      position,
-      direction
-    );
+    setTransform(element, parent.value, pagePosition, translate, direction);
   }
   emitEventToSiblings(element, DRAG_EVENT);
 };
@@ -544,18 +536,6 @@ watch(
       updateDraggableId(childRef.value);
     }
   }
-);
-
-watch(
-  position,
-  (newPosition) => {
-    const childElement = childRef.value;
-    if (childElement) {
-      childElement.style.top = `${newPosition.top}px`;
-      childElement.style.left = `${newPosition.left}px`;
-    }
-  },
-  { deep: true }
 );
 watch(
   translate,
