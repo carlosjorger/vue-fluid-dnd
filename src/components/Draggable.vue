@@ -549,7 +549,6 @@ watch(
 );
 </script>
 <style>
-/*  TODO: se styles dinamicly */
 .draggable {
   box-sizing: border-box !important;
   touch-action: none;
@@ -572,4 +571,5 @@ watch(
   pointer-events: none;
 }
 </style>
+<!-- TODO: set styles dinamicly -->
 <!-- TODO: fix Jose flashing bug -->
