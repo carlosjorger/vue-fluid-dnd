@@ -14,7 +14,7 @@ export default defineConfig({
   },
   integrations: [
     starlight({
-      title: "VueFluidDnD",
+      title: "Vue Fluid DnD",
       defaultLocale: "root",
       locales: {
         root: {
