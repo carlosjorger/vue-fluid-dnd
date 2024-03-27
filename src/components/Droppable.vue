@@ -43,9 +43,3 @@ provide("direction", props.direction);
 provide("droppableId", props.droppableId);
 provide("onDrop", currentOnDrop);
 </script>
-<style>
-.droppable {
-  box-sizing: border-box !important;
-  position: relative;
-}
-</style>

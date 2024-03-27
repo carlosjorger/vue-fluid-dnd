@@ -5,6 +5,7 @@ import {
   Ref,
   computed,
   inject,
+  onMounted,
   ref,
   watch,
 } from "vue";
@@ -22,6 +23,7 @@ import {
   setTranistion,
   convetEventToDragMouseTouchEvent,
   setEventWithInterval,
+  AddCssStyleToElement,
 } from "../utils/SetStyles";
 import {
   getScroll,
@@ -76,6 +78,44 @@ const fixedWidth = ref("");
 const fixedHeight = ref("");
 const draggableTargetTimingFunction = "cubic-bezier(0.2, 0, 0, 1)";
 const { setTransform, updateTransformState } = useTransform(childRef);
+onMounted(() => {
+  setCssStyles();
+});
+const setCssStyles = () => {
+  if (!parent.value) {
+    return;
+  }
+  AddCssStyleToElement(
+    parent.value,
+    `.draggable {  
+      box-sizing: border-box !important; 
+      touch-action: none; 
+      cursor: grab; 
+      user-select: none;
+    }`
+  );
+  AddCssStyleToElement(
+    parent.value,
+    `.draggable * {
+        pointer-events: none;
+      }`
+  );
+  AddCssStyleToElement(
+    parent.value,
+    `.temp-child {
+        box-sizing: border-box !important;
+        touch-action: none;
+        pointer-events: none;
+      }`
+  );
+  AddCssStyleToElement(
+    parent.value,
+    `.droppable {
+      box-sizing: border-box !important;
+      position: relative;
+    }`
+  );
+};
 const createObserverWithCallBack = (callback: () => void) => {
   return new MutationObserver((mutations) => {
     mutations.forEach(() => {
@@ -549,26 +589,12 @@ watch(
 );
 </script>
 <style>
-.draggable {
-  box-sizing: border-box !important;
-  touch-action: none;
-  cursor: grab;
-  user-select: none;
-}
 .dragging {
   position: fixed;
   z-index: 5000;
   cursor: grabbing !important;
   width: v-bind(fixedWidth) !important;
   height: v-bind(fixedHeight) !important;
-}
-.draggable * {
-  pointer-events: none;
-}
-.temp-child {
-  box-sizing: border-box !important;
-  touch-action: none;
-  pointer-events: none;
 }
 </style>
 <!-- TODO: set styles dinamicly -->

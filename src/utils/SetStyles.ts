@@ -147,3 +147,14 @@ export const setEventWithInterval = (
     callback();
   };
 };
+export const AddCssStyleToElement = (element: HTMLElement, cssCode: string) => {
+  var draggableClass = document.createElement("style");
+  draggableClass.innerHTML = cssCode;
+  for (const child of element.children) {
+    if (child.innerHTML === cssCode) {
+      return;
+    }
+  }
+  console.log(element.childNodes);
+  element.appendChild(draggableClass);
+};
