@@ -1,5 +1,5 @@
 import { DragAndDropEvent } from ".";
-import { Direction } from "../../index";
+import { AfterMargin, Direction } from "../../index";
 import {
   draggableIsOutside,
   gapAndDisplayInformation,
@@ -27,7 +27,6 @@ export default function getTranslationByDraggingAndEvent(
   }
   return { height, width };
 }
-// TODO: refactor this function to make more legible
 
 function getTranslationByDragging(
   direction: Direction | undefined,
@@ -35,39 +34,58 @@ function getTranslationByDragging(
   previousElement: Element | null,
   nextElement: Element | null
 ) {
-  let height = 0;
-  let width = 0;
   if (!direction) {
-    return { width, height };
+    return { width: 0, height: 0 };
   }
-  const directionProps = getPropByDirection(direction);
-
-  const { afterMargin, beforeMargin } = directionProps;
+  const {
+    afterMargin,
+    beforeMargin,
+    distance,
+    gap: gapStyle,
+  } = getPropByDirection(direction);
 
   const currentAfterMargin = getMarginStyleByProperty(current, afterMargin);
   const currentBeforeMargin = getMarginStyleByProperty(current, beforeMargin);
 
   let nextBeforeMargin = getMarginStyleByProperty(nextElement, beforeMargin);
 
-  let afterSpace = currentAfterMargin;
-  let beforeScace = currentBeforeMargin;
-  let rest = nextBeforeMargin;
-
-  const gapStyle = directionProps.gap;
-
   const parentElement = current.parentElement as HTMLElement;
 
   const { gap, hasGaps } = gapAndDisplayInformation(parentElement, gapStyle);
 
-  const space = current.getBoundingClientRect()[directionProps.distance];
+  const space = current.getBoundingClientRect()[distance];
 
   if (hasGaps) {
     return getDistancesByDirection(
       direction,
-      space + beforeScace + afterSpace + gap
+      getTranslation(space, currentBeforeMargin, currentAfterMargin, gap, 0)
     );
   }
-  afterSpace = Math.max(nextBeforeMargin, currentAfterMargin);
+
+  const { afterSpace, beforeScace, rest } = getTranslationByDraggingWithoutGaps(
+    previousElement,
+    nextBeforeMargin,
+    currentAfterMargin,
+    currentBeforeMargin,
+    afterMargin
+  );
+
+  return getDistancesByDirection(
+    direction,
+    getTranslation(space, beforeScace, afterSpace, 0, rest)
+  );
+}
+const getTranslationByDraggingWithoutGaps = (
+  previousElement: Element | null,
+  nextBeforeMargin: number,
+  currentAfterMargin: number,
+  currentBeforeMargin: number,
+  afterMargin: AfterMargin
+) => {
+  const afterSpace = Math.max(nextBeforeMargin, currentAfterMargin);
+  let beforeScace = currentBeforeMargin;
+  let rest = nextBeforeMargin;
+
   if (previousElement) {
     const previousAfterMargin = getMarginStyleByProperty(
       previousElement,
@@ -76,12 +94,17 @@ function getTranslationByDragging(
     beforeScace = Math.max(previousAfterMargin, currentBeforeMargin);
     rest = Math.max(rest, previousAfterMargin);
   }
-  return getDistancesByDirection(
-    direction,
-    space + beforeScace + afterSpace - rest
-  );
-}
-
+  return { afterSpace, beforeScace, rest };
+};
+const getTranslation = (
+  space: number,
+  beforeScace: number,
+  afterSpace: number,
+  gap: number,
+  rest: number
+) => {
+  return space + beforeScace + afterSpace + gap - rest;
+};
 const getDistancesByDirection = (direction: Direction, value: number) => {
   if (direction == "horizontal") {
     return { width: value, height: 0 };
