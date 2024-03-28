@@ -155,6 +155,5 @@ export const AddCssStyleToElement = (element: HTMLElement, cssCode: string) => {
       return;
     }
   }
-  console.log(element.childNodes);
   element.appendChild(draggableClass);
 };

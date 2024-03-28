@@ -115,6 +115,16 @@ const setCssStyles = () => {
       position: relative;
     }`
   );
+  AddCssStyleToElement(
+    parent.value,
+    `.dragging {
+      position: fixed;
+      z-index: 5000;
+      cursor: grabbing !important;
+      width: var(--fixedWidth) !important;
+      height: var(--fixedHeight) !important;
+    }`
+  );
 };
 const createObserverWithCallBack = (callback: () => void) => {
   return new MutationObserver((mutations) => {
@@ -587,15 +597,18 @@ watch(
   },
   { deep: true }
 );
+watch(fixedWidth, (newFixedWidth) => {
+  const childElement = childRef.value;
+  if (childElement) {
+    childElement.style.setProperty("--fixedWidth", newFixedWidth);
+  }
+});
+watch(fixedHeight, (newFixedHeight) => {
+  const childElement = childRef.value;
+  if (childElement) {
+    childElement.style.setProperty("--fixedHeight", newFixedHeight);
+  }
+});
 </script>
-<style>
-.dragging {
-  position: fixed;
-  z-index: 5000;
-  cursor: grabbing !important;
-  width: v-bind(fixedWidth) !important;
-  height: v-bind(fixedHeight) !important;
-}
-</style>
-<!-- TODO: set styles dinamicly -->
+<!-- TODO: convert into a vue composable -->
 <!-- TODO: fix Jose flashing bug -->

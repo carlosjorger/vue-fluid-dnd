@@ -40,6 +40,5 @@ watch(
   }
 );
 provide("direction", props.direction);
-provide("droppableId", props.droppableId);
 provide("onDrop", currentOnDrop);
 </script>
