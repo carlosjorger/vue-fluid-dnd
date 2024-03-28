@@ -40,7 +40,6 @@ library for lists on Vue3.
    ```js
    import { Draggable, Droppable } from "vue-fluid-dnd";
    import "vue3-fluid-dnd/style.css";
-   
    ```
 
 3. **Create a list that your want to sort**
