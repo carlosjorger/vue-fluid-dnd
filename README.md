@@ -1,5 +1,5 @@
  <h1 align="center">
-    <img src="./docs/src/assets/logo.svg" alt="Icon" width="150" height="140" />
+    <img src="https://github.com/carlosjorger/vue-fluid-dnd/assets/50055316/cdec8638-d074-4f26-8c72-92f7280c4b26" alt="Icon" width="150" height="140" />
   <br>vue-fluid-dnd<br>
 </h1>
 
@@ -40,6 +40,7 @@ library for lists on Vue3.
    ```js
    import { Draggable, Droppable } from "vue-fluid-dnd";
    import "vue3-fluid-dnd/style.css";
+   
    ```
 
 3. **Create a list that your want to sort**
