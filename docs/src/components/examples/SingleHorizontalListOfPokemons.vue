@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Draggable, Droppable } from "vue-fluid-dnd";
-import "vue-fluid-dnd/style.css";
 import type { Pokemon } from "./Pokemon";
 import PokemonComponent from "./PokemonComponent.vue";
 import { fetchPokemons } from "@/server/pokemonServer";

@@ -31,7 +31,6 @@ import { createApp } from "vue";
 import App from './App.vue';
 
 import { Draggable, Droppable } from 'vue-fluid-dnd';
-import "vue3-fluid-dnd/style.css";
 
 const app = createApp(App);
 
@@ -44,22 +43,21 @@ app.mount('#app');`;
 
 #### Usage on local
 
-Import components on .vue files and styles:
+Import components on .vue files:
 
 export const optionApiCode = `
 <script>
-  import { Draggable, Droppable } from 'vue-fluid-dnd';
-  import "vue3-fluid-dnd/style.css";
+import { Draggable, Droppable } from 'vue-fluid-dnd';
+import "vue3-fluid-dnd/style.css";
 
 export default {
-components: { Draggable, Droppable },
+  components: { Draggable, Droppable },
 }
 
 </script>`;
 export const compositionApiCode = `
 <script>
   import { Draggable, Droppable } from 'vue3-fluid-dnd';
-  import "vue-fluid-dnd/style.css";
 
 </script>`;
 

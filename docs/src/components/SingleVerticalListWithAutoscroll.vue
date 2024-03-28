@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Draggable, Droppable } from "vue-fluid-dnd";
-import "vue-fluid-dnd/style.css";
+
 const list = ref([...Array(20).keys()]);
 </script>
 <template>
