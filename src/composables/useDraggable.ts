@@ -28,7 +28,7 @@ import {
   OnLeaveEvent,
   Translate,
 } from "index";
-import { Ref, computed, onMounted, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 const DRAGGABLE_ID_ATTR = "draggable-id";
 const DRAG_EVENT = "drag";
 const START_DRAG_EVENT = "startDrag";
@@ -44,18 +44,16 @@ enum DraggingState {
   DRAGING = "dragging",
   END_DRAGGING = "endDragging",
 }
-
 export const useDraggable = (
-  childRef: Ref<HTMLElement | undefined>,
-  actualIndex: Ref<number>,
-  updateDraggableId: (element: HTMLElement | undefined) => void,
-  onDrop?: Ref<
-    (source: DraggableElement, destination: DraggableElement) => void
-  >,
+  child: HTMLElement | undefined,
+  index: number,
+  updateDraggableId: (element: HTMLElement | undefined, index: number) => void,
+  onDrop?: (source: DraggableElement, destination: DraggableElement) => void,
   direction?: Direction
 ) => {
   const draggingState = ref<DraggingState>(DraggingState.NOT_DRAGGING);
-
+  const childRef = ref(child);
+  const actualIndex = ref(index);
   const translate = ref({ x: 0, y: 0 });
   const scroll = ref({ scrollLeft: 0, scrollTop: 0 });
   const windowScroll = ref({ scrollY: 0, scrollX: 0 });
@@ -70,9 +68,6 @@ export const useDraggable = (
 
   const draggableTargetTimingFunction = "cubic-bezier(0.2, 0, 0, 1)";
   const { setTransform, updateTransformState } = useTransform(childRef);
-  onMounted(() => {
-    setCssStyles();
-  });
   const setCssStyles = () => {
     if (!parent.value) {
       return;
@@ -118,6 +113,7 @@ export const useDraggable = (
     }`
     );
   };
+
   const createObserverWithCallBack = (callback: () => void) => {
     return new MutationObserver((mutations) => {
       mutations.forEach(() => {
@@ -143,7 +139,7 @@ export const useDraggable = (
         "ontouchstart",
         onmousedown("touchmove", "ontouchend")
       );
-      updateDraggableId(element);
+      updateDraggableId(element, actualIndex.value);
     }
     if (element?.parentElement) {
       element?.parentElement.classList.add("droppable");
@@ -334,7 +330,7 @@ export const useDraggable = (
 
     setTimeout(() => {
       removeTempChild();
-      onDrop.value(
+      onDrop(
         {
           index: sourceIndex,
         },
@@ -552,13 +548,6 @@ export const useDraggable = (
     }
   });
   watch(
-    childRef,
-    (element) => {
-      setSlotRefElementParams(element);
-    },
-    { deep: true }
-  );
-  watch(
     translate,
     (newTranslate) => {
       const childElement = childRef.value;
@@ -580,4 +569,6 @@ export const useDraggable = (
       childElement.style.setProperty("--fixedHeight", newFixedHeight);
     }
   });
+  setCssStyles();
+  setSlotRefElementParams(childRef.value);
 };

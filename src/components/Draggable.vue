@@ -18,8 +18,6 @@ const onDrop =
 
 let childRef = ref<HTMLElement>();
 
-const actualIndex = ref(props.index);
-
 const setSlotRef = (
   ref: Element | ComponentPublicInstance | null,
   refs: Record<string, any>
@@ -29,25 +27,31 @@ const setSlotRef = (
   }
   childRef.value = ref as HTMLElement;
   setDraggable();
+  useDraggable(
+    childRef.value,
+    props.index,
+    updateDraggableId,
+    onDrop?.value,
+    direction
+  );
 };
 const setDraggable = () => {
   if (childRef.value) {
     childRef.value.classList.add("draggable");
   }
 };
-const updateDraggableId = (element: HTMLElement | undefined) => {
+const updateDraggableId = (element: HTMLElement | undefined, index: number) => {
   if (element) {
     element.setAttribute(DRAGGABLE_ID_ATTR, props.draggableId);
-    element.setAttribute(INDEX_ATTR, actualIndex.value.toString());
+    element.setAttribute(INDEX_ATTR, index.toString());
   }
 };
-useDraggable(childRef, actualIndex, updateDraggableId, onDrop, direction);
 
 watch(
   () => props.draggableId,
   (_) => {
     if (childRef.value) {
-      updateDraggableId(childRef.value);
+      updateDraggableId(childRef.value, props.index);
     }
   }
 );
