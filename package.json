@@ -46,7 +46,7 @@
   ],
   "author": "Carlos Jorge Rodriguez",
   "peerDependencies": {
-    "vue": ">=3.3.0"
+    "vue": ">=3.4.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.2",

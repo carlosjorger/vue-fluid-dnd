@@ -68,6 +68,11 @@ export const useDraggable = (
 
   const draggableTargetTimingFunction = "cubic-bezier(0.2, 0, 0, 1)";
   const { setTransform, updateTransformState } = useTransform(childRef);
+  const setDraggable = () => {
+    if (childRef.value) {
+      childRef.value.classList.add("draggable");
+    }
+  };
   const setCssStyles = () => {
     if (!parent.value) {
       return;
@@ -112,6 +117,7 @@ export const useDraggable = (
       height: var(--fixedHeight) !important;
     }`
     );
+    setDraggable();
   };
 
   const createObserverWithCallBack = (callback: () => void) => {

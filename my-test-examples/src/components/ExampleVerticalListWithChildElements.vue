@@ -1,37 +1,38 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import Droppable from "../../../src/components/Droppable.vue";
-import Draggable from "../../../src/components/Draggable.vue";
-
+import { useDragAndDrop } from "../../../src/composables/useDragAndDrop";
 const numbers = ref([1, 2, 3, 4, 5, 6]);
 
-const { droppableId } = defineProps<{
+defineProps<{
   droppableId: string;
 }>();
+const { parent } = useDragAndDrop<number>(
+  "vertical",
+  undefined,
+  numbers as any
+);
 </script>
 <template>
-  <Droppable :droppable-id="droppableId" direction="vertical" :items="numbers">
-    <ul id="example-vertical-list-with-child-elements" class="vertical-list">
-      <Draggable
-        v-for="(element, index) in numbers"
-        v-slot="{ setRef }"
-        :draggable-id="'number-' + element.toString()"
-        :index="index"
-        ><li
-          :id="'child-with-children-' + +element.toString()"
-          :ref="setRef as any"
-          class="number"
-        >
-          {{ element }}
-          <div style="display: flex; flex-direction: row">
-            <span v-for="number in [...Array(4).keys()]">
-              {{ number + element }}
-            </span>
-          </div>
-        </li>
-      </Draggable>
-    </ul>
-  </Droppable>
+  <ul
+    ref="parent"
+    id="example-vertical-list-with-child-elements"
+    class="vertical-list"
+  >
+    <li
+      v-for="(element, index) in numbers"
+      :draggable-id="'number-' + element.toString()"
+      :index="index"
+      :id="'child-with-children-' + +element.toString()"
+      class="number"
+    >
+      {{ element }}
+      <div style="display: flex; flex-direction: row">
+        <span v-for="number in [...Array(4).keys()]">
+          {{ number + element }}
+        </span>
+      </div>
+    </li>
+  </ul>
 </template>
 <style>
 .vertical-list {

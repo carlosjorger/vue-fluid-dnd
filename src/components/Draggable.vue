@@ -26,7 +26,6 @@ const setSlotRef = (
     return;
   }
   childRef.value = ref as HTMLElement;
-  setDraggable();
   useDraggable(
     childRef.value,
     props.index,
@@ -35,11 +34,7 @@ const setSlotRef = (
     direction
   );
 };
-const setDraggable = () => {
-  if (childRef.value) {
-    childRef.value.classList.add("draggable");
-  }
-};
+
 const updateDraggableId = (element: HTMLElement | undefined, index: number) => {
   if (element) {
     element.setAttribute(DRAGGABLE_ID_ATTR, props.draggableId);
