@@ -3,7 +3,7 @@ import { ref } from "vue";
 import Droppable from "../../../src/components/Droppable.vue";
 import Draggable from "../../../src/components/Draggable.vue";
 
-const numbers = ref([1, 2, 3, 4, 5, 6]);
+const numbers = ref([1, 2, 3, 4, 5, 6, 7]);
 
 const { droppableId } = defineProps<{
   droppableId: string;

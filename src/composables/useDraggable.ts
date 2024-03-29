@@ -44,13 +44,13 @@ enum DraggingState {
   DRAGING = "dragging",
   END_DRAGGING = "endDragging",
 }
-export const useDraggable = (
+export default function useDraggable(
   child: HTMLElement | undefined,
   index: number,
-  updateDraggableId: (element: HTMLElement | undefined, index: number) => void,
+  direction?: Direction,
   onDrop?: (source: DraggableElement, destination: DraggableElement) => void,
-  direction?: Direction
-) => {
+  updateDraggableId?: (element: HTMLElement | undefined, index: number) => void
+) {
   const draggingState = ref<DraggingState>(DraggingState.NOT_DRAGGING);
   const childRef = ref(child);
   const actualIndex = ref(index);
@@ -145,7 +145,9 @@ export const useDraggable = (
         "ontouchstart",
         onmousedown("touchmove", "ontouchend")
       );
-      updateDraggableId(element, actualIndex.value);
+      if (updateDraggableId) {
+        updateDraggableId(element, actualIndex.value);
+      }
     }
     if (element?.parentElement) {
       element?.parentElement.classList.add("droppable");
@@ -577,4 +579,4 @@ export const useDraggable = (
   });
   setCssStyles();
   setSlotRefElementParams(childRef.value);
-};
+}

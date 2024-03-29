@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import { ComponentPublicInstance, Ref, inject, ref, watch } from "vue";
 import { Direction, DraggableElement } from "../../index";
-import { useDraggable } from "../composables/useDraggable";
+import useDraggable from "../composables/useDraggable";
 const props = defineProps<{
   draggableId: string;
   index: number;
@@ -29,9 +29,9 @@ const setSlotRef = (
   useDraggable(
     childRef.value,
     props.index,
-    updateDraggableId,
+    direction,
     onDrop?.value,
-    direction
+    updateDraggableId
   );
 };
 

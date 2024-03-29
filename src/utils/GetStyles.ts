@@ -32,6 +32,12 @@ export const parseFloatEmpty = (value: string) => {
   }
   return parseFloat(value);
 };
+export const parseIntEmpty = (value: string | null) => {
+  if (!value) {
+    return -1;
+  }
+  return parseInt(value);
+};
 export const computeGapPixels = (element: HTMLElement, gapType: GapStyle) => {
   const gap = getComputedStyle(element as HTMLElement)[gapType];
   if (gap.match("%")) {

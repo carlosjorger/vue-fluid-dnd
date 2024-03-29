@@ -1,16 +1,12 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "../../../src/composables/useDragAndDrop";
-const numbers = ref([1, 2, 3, 4, 5, 6]);
+import useDragAndDrop from "../../../src/composables/useDragAndDrop";
+const numbers = ref([1, 2, 3, 4, 5]);
 
 defineProps<{
   droppableId: string;
 }>();
-const { parent } = useDragAndDrop<number>(
-  "vertical",
-  undefined,
-  numbers as any
-);
+const { parent } = useDragAndDrop<number>(numbers as any);
 </script>
 <template>
   <ul
