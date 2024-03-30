@@ -39,8 +39,8 @@ dependencies:
     specifier: ^3.4.13
     version: 3.4.13(typescript@5.3.3)
   vue-fluid-dnd:
-    specifier: ^0.5.2
-    version: 0.5.2(vue@3.4.13)
+    specifier: ^0.5.3
+    version: 0.5.3(vue@3.4.13)
 
 packages:
 
@@ -5136,10 +5136,10 @@ packages:
     resolution: {integrity: sha512-AyFQ0EVmsOZOlAnxoFOGOq1SQDWAB7C6aqMGS23svWAllfOaxbuFvcT8D1i8z3Gyn8fraVeZNNmN6e9bxxXkKw==}
     dev: false
 
-  /vue-fluid-dnd@0.5.2(vue@3.4.13):
-    resolution: {integrity: sha512-VveW5r2Zj4hy6zaGao6nif/ab/vlVEnJF2k5vOCiVWXnjhzyrk8+VLCQ4dl+zDHgL/IKgMXrASE9CkdcdCILSQ==}
+  /vue-fluid-dnd@0.5.3(vue@3.4.13):
+    resolution: {integrity: sha512-ku1vbr235O0X6bGDp0OVr/c7NmS03OHuf6FSKiX3c7hDOMeYBYvSLJ/qaYOxYRxCGHVKDXQLoBAJbpbNX3jAxg==}
     peerDependencies:
-      vue: '>=3.3.0'
+      vue: '>=3.4.0'
     dependencies:
       vue: 3.4.13(typescript@5.3.3)
     dev: false

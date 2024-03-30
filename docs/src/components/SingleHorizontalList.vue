@@ -1,21 +1,15 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { Draggable, Droppable } from "vue-fluid-dnd";
+import { useDragAndDrop } from "vue-fluid-dnd";
 const list = ref([1, 2, 3, 4, 5]);
+const { parent } = useDragAndDrop(list, { direction: "horizontal" });
 </script>
 <template>
-  <Droppable droppable-id="1" direction="horizontal" :items="list">
-    <div class="number-list">
-      <Draggable
-        v-for="(element, index) in list"
-        v-slot="{ setRef }"
-        :draggable-id="element.toString()"
-        :index="index"
-      >
-        <div class="number" :ref="setRef">{{ element }}</div>
-      </Draggable>
+  <div ref="parent" class="number-list">
+    <div class="number" v-for="(element, index) in list" :index="index">
+      {{ element }}
     </div>
-  </Droppable>
+  </div>
 </template>
 
 <style>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { Draggable, Droppable } from "vue-fluid-dnd";
+import { useDragAndDrop } from "vue-fluid-dnd";
 
 const list = ref([
   {
@@ -22,22 +22,19 @@ const list = ref([
     content: "3",
   },
 ]);
+const { parent } = useDragAndDrop(list);
 </script>
 <template>
-  <Droppable droppable-id="1" direction="vertical" :items="list">
-    <ul class="number-list" style="height: 280px">
-      <Draggable
-        v-for="(element, index) in list"
-        v-slot="{ setRef }"
-        :draggable-id="element.id"
-        :index="index"
-      >
-        <li class="number" :style="element.style" :ref="setRef">
-          {{ element.content }}
-        </li>
-      </Draggable>
-    </ul>
-  </Droppable>
+  <ul ref="parent" class="number-list" style="height: 280px">
+    <li
+      class="number"
+      v-for="(element, index) in list"
+      :index="index"
+      :style="element.style"
+    >
+      {{ element.content }}
+    </li>
+  </ul>
 </template>
 
 <style>
