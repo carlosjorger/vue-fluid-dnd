@@ -1,7 +1,7 @@
+import { Direction } from "../composables";
 import {
   AfterMargin,
   BeforeMargin,
-  Direction,
   Distance,
   ScrollElement,
   Translate,

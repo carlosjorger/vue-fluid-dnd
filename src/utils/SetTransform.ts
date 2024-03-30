@@ -1,4 +1,4 @@
-import { Direction, DragMouseTouchEvent } from "index";
+import { DragMouseTouchEvent } from "index";
 import {
   draggableIsOutside,
   getBorderWidthProperty,
@@ -6,6 +6,7 @@ import {
   getPropByDirection,
 } from "./GetStyles";
 import { Ref, ref, watch } from "vue";
+import { Direction } from "../composables";
 export const useTransform = (childRef: Ref<HTMLElement | undefined>) => {
   const currentOffset = ref({ offsetX: 0, offsetY: 0 });
   const position = ref({ top: 0, left: 0 });

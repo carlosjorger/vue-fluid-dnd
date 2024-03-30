@@ -1,4 +1,5 @@
-import { Direction, DragMouseTouchEvent } from "../../index";
+import { Direction } from "../composables";
+import { DragMouseTouchEvent } from "../../index";
 import { getBorderWidthProperty, getPropByDirection } from "./GetStyles";
 
 type onTouchEvent = "ontouchstart" | "ontouchmove" | "ontouchend";

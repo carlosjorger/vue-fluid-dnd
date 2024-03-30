@@ -1,8 +1,8 @@
+import { Direction } from "../composables";
 import {
   BeforeMargin,
   AfterMargin,
   GapStyle,
-  Direction,
   BorderWidth,
   Distance,
   Before,

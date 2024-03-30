@@ -1,11 +1,10 @@
 import { dropDraggingElementsBetween } from "../utils/DropMethods";
-import { Direction, DraggableElement } from "index";
+import { DraggableElement } from "index";
 import { Ref, ref, watch } from "vue";
 import useDraggable from "./useDraggable";
 import { parseIntEmpty } from "../utils/GetStyles";
-type Config = {
-  direction?: Direction;
-};
+import { Config } from ".";
+
 const DEFAULT_CONFIG = { direction: "vertical" } as Config;
 export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
   const { direction = "vertical" } = config ?? DEFAULT_CONFIG;

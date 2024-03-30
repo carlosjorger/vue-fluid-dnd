@@ -21,7 +21,6 @@ import { useTransform } from "../utils/SetTransform";
 import getTranslationByDragging from "../utils/GetTranslationByDraggingAndEvent";
 
 import {
-  Direction,
   DragMouseTouchEvent,
   DraggableElement,
   MoveEvent,
@@ -29,6 +28,7 @@ import {
   Translate,
 } from "index";
 import { computed, ref, watch } from "vue";
+import { Direction } from ".";
 const DRAG_EVENT = "drag";
 const START_DRAG_EVENT = "startDrag";
 const START_DROP_EVENT = "startDrop";
