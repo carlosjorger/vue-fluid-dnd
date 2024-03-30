@@ -35,14 +35,13 @@ library for lists on Vue3.
    ultra install vue-fluid-dnd
    ```
 
-2. **Import components and styles**
+2. **Import the composable**
 
    ```js
-   import { Draggable, Droppable } from "vue-fluid-dnd";
-   import "vue3-fluid-dnd/style.css";
+   import useDragAndDrop from "../../../src/composables/useDragAndDrop";
    ```
 
-3. **Create a list that your want to sort**
+3. **Create a list that your want to sort an use useDragAndDrop**
 
    ```js
    // Each element have its own styles or classes and the draggable-id
@@ -55,25 +54,26 @@ library for lists on Vue3.
      },
      //...
    ]);
+   // crate parent element calling useDragAndDrop composable
+   const { parent } = useDragAndDrop(numbers);
    ```
 
-4. **Use the components**
+4. **Add references**
 
    ```jsx
    //pass setRef to child to have the reference of draggable element
    //pass the direction of the list and droppable id
-   <Droppable droppable-id="droppable-id" direction="vertical" :items="list1">
+   <template>
       <div style="width: 40%; background-color: darkgray; display: block">
-         <Draggable
-         v-for="(element, index) in listToSort"
-         v-slot="{ setRef }"
-         :draggable-id="element['draggable-id']"
-         :index="index"
+         <div
+            v-for="(element, index) in listToSort"
+            :index="index"
+            :style="element.style"
          >
-         <div :ref="setRef" :style="element.style">{{ element.number }}</div>
-         </Draggable>
+            {{ element.number }}
+         </div>
       </div>
-   </Droppable>
+   </template>
    ```
 
 - 📚 [All docs here](https://vue-fluid-dnd.netlify.app/).
