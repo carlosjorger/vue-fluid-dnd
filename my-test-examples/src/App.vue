@@ -6,7 +6,7 @@ import ExampleHorizontalListWithMixedStyles from "./components/ExampleHorizontal
 import ExampleHorizontalScrollList from "./components/ExampleHorizontalScrollList.vue";
 import ExampleVerticalListWithMixedStyles from "./components/ExampleVerticalListWithMixedStyles.vue";
 import ExampleVerticalListWithMixedStylesAndGaps from "./components/ExampleVerticalListWithMixedStylesAndGaps.vue";
-// import ExampleOfPokemonList from "./components/ExampleOfPokemonList.vue";
+import ExampleOfPokemonList from "./components/ExampleOfPokemonList.vue";
 </script>
 
 <template>
@@ -27,5 +27,5 @@ import ExampleVerticalListWithMixedStylesAndGaps from "./components/ExampleVerti
       droppableId="example-vertical-with-mixed-styles-gaps"
     />
   </div>
-  <!-- <ExampleOfPokemonList droppableId="example-pokemon-list" /> -->
+  <ExampleOfPokemonList droppableId="example-pokemon-list" />
 </template>

@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import { ComponentPublicInstance as setRef } from "vue";
-
-const { number, setRef } = defineProps<{
+const { number } = defineProps<{
   number: number;
-  setRef: (ref: Element | setRef | null, refs: Record<string, any>) => void;
 }>();
 </script>
 <template>
-  <li :ref="setRef" class="number">
+  <li class="number">
     {{ number }}
   </li>
 </template>

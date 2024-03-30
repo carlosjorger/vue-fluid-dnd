@@ -1,41 +1,32 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import Droppable from "../../../src/components/Droppable.vue";
-import Draggable from "../../../src/components/Draggable.vue";
+import useDragAndDrop from "../../../src/composables/useDragAndDrop";
 
 const numbers = ref([1, 2, 3, 4, 5, 6, 7]);
+const { parent } = useDragAndDrop<number>(numbers as any, {
+  direction: "horizontal",
+});
 
-const { droppableId } = defineProps<{
+defineProps<{
   droppableId: string;
 }>();
 </script>
 <template>
-  <Droppable
-    :droppable-id="droppableId"
-    direction="horizontal"
-    :items="numbers"
-  >
-    <div id="example-vertical-list-with-child-elements" class="list">
-      <Draggable
-        v-for="(element, index) in numbers"
-        v-slot="{ setRef }"
-        :draggable-id="'number-' + element.toString()"
-        :index="index"
-        ><div
-          :id="'horizontal-child-' + +element.toString()"
-          :ref="setRef as any"
-          class="number"
-        >
-          {{ element }}
-          <div style="display: flex; flex-direction: row">
-            <span v-for="number in [...Array(4).keys()]">
-              {{ number + element }}
-            </span>
-          </div>
-        </div>
-      </Draggable>
+  <div ref="parent" id="example-vertical-list-with-child-elements" class="list">
+    <div
+      v-for="(element, index) in numbers"
+      :index="index"
+      :id="'horizontal-child-' + +element.toString()"
+      class="number"
+    >
+      {{ element }}
+      <div style="display: flex; flex-direction: row">
+        <span v-for="number in [...Array(4).keys()]">
+          {{ number + element }}
+        </span>
+      </div>
     </div>
-  </Droppable>
+  </div>
 </template>
 <style>
 .list {

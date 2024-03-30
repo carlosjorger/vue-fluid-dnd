@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import useDragAndDrop from "../../../src/composables/useDragAndDrop";
-const numbers = ref([1, 2, 3, 4, 5]);
+const numbers = ref([1, 2, 3, 4, 5, 6]);
 
 defineProps<{
   droppableId: string;
@@ -16,7 +16,6 @@ const { parent } = useDragAndDrop<number>(numbers as any);
   >
     <li
       v-for="(element, index) in numbers"
-      :draggable-id="'number-' + element.toString()"
       :index="index"
       :id="'child-with-children-' + +element.toString()"
       class="number"

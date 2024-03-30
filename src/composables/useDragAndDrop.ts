@@ -1,6 +1,6 @@
 import { dropDraggingElementsBetween } from "../utils/DropMethods";
 import { Direction, DraggableElement } from "index";
-import { Ref, ref, watch } from "vue";
+import { Ref, ref, warn, watch } from "vue";
 import useDraggable from "./useDraggable";
 import { parseIntEmpty } from "../utils/GetStyles";
 type Config = {
@@ -64,5 +64,3 @@ const createObserverWithCallBack = (callback: () => void) => {
     });
   });
 };
-// TODO: replace dragable-id attr name with key
-// TODO: test useDragAndDrop with all the cases

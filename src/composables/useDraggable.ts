@@ -29,11 +29,11 @@ import {
   Translate,
 } from "index";
 import { computed, ref, watch } from "vue";
-const DRAGGABLE_ID_ATTR = "draggable-id";
 const DRAG_EVENT = "drag";
 const START_DRAG_EVENT = "startDrag";
 const START_DROP_EVENT = "startDrop";
 const DROP_EVENT = "drop";
+const DRAGGABLE_CLASS = "draggable";
 type DraggingEvent = typeof DRAG_EVENT | typeof START_DRAG_EVENT;
 type DropEvent = typeof DROP_EVENT | typeof START_DROP_EVENT;
 type DragEvent = DraggingEvent | DropEvent;
@@ -70,7 +70,7 @@ export default function useDraggable(
   const { setTransform, updateTransformState } = useTransform(childRef);
   const setDraggable = () => {
     if (childRef.value) {
-      childRef.value.classList.add("draggable");
+      childRef.value.classList.add(DRAGGABLE_CLASS);
     }
   };
   const setCssStyles = () => {
@@ -272,8 +272,7 @@ export default function useDraggable(
     const isOutside = draggableIsOutside(draggedElement);
 
     for (const [index, sibling] of siblings.entries()) {
-      const siblingDraggableId = sibling.getAttribute(DRAGGABLE_ID_ATTR) ?? "";
-      if (!siblingDraggableId) {
+      if (!sibling.classList.contains(DRAGGABLE_CLASS)) {
         continue;
       }
       if (!isOutside) {

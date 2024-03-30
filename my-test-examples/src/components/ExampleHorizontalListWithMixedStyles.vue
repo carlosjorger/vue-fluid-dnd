@@ -1,58 +1,50 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import Droppable from "../../../src/components/Droppable.vue";
-import Draggable from "../../../src/components/Draggable.vue";
+import useDragAndDrop from "../../../src/composables/useDragAndDrop";
 
 const lsitWithMixedStyles = ref([
   {
-    "draggable-id": "h1",
     number: 1,
     style: "color: white; background-color: red; width: 50px; margin: 23px 0;",
   },
   {
-    "draggable-id": "h2",
     number: 2,
     style:
       "color: white; background-color: blue; padding: 30px; margin: 12px; margin-right: 30px;",
   },
   {
-    "draggable-id": "h3",
     number: 3,
     style:
       "color: white; background-color: blueviolet; padding: 10px; margin: 8px; height: 70px;",
   },
   {
-    "draggable-id": "h4",
     number: 4,
     style:
       "color: white; background-color: chocolate; padding: 10px; margin: 8px; width: 15px;",
   },
 ]);
-const { droppableId } = defineProps<{
+defineProps<{
   droppableId: string;
 }>();
+
+const { parent } = useDragAndDrop<number>(lsitWithMixedStyles as any, {
+  direction: "horizontal",
+});
 </script>
 <template>
-  <Droppable
-    :droppable-id="droppableId"
-    direction="horizontal"
-    :items="lsitWithMixedStyles"
+  <div
+    ref="parent"
+    id="example-vertical-list-with-child-elements"
+    class="horizontal-list-with-mixed-styles"
   >
     <div
-      id="example-vertical-list-with-child-elements"
-      class="horizontal-list-with-mixed-styles"
+      v-for="(element, index) in lsitWithMixedStyles"
+      :index="index"
+      :style="element.style"
     >
-      <Draggable
-        v-for="(element, index) in lsitWithMixedStyles"
-        v-slot="{ setRef }"
-        :draggable-id="element['draggable-id']"
-        :index="index"
-        ><div :ref="setRef as any" :style="element.style">
-          {{ element.number }}
-        </div>
-      </Draggable>
+      {{ element.number }}
     </div>
-  </Droppable>
+  </div>
 </template>
 <style>
 .horizontal-list-with-mixed-styles {

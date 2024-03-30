@@ -1,61 +1,48 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import Droppable from "../../../src/components/Droppable.vue";
-import Draggable from "../../../src/components/Draggable.vue";
+import useDragAndDrop from "../../../src/composables/useDragAndDrop";
 const listWithMixedStyles = ref([
   {
-    "draggable-id": "1",
     number: 1,
     style:
       "color: white; background-color: red; padding: 20px 0; margin: 23px 0;",
   },
   {
-    "draggable-id": "2",
     number: 2,
     style:
       "color: white; background-color: blue; padding: 20px 0; margin: 12px; margin-right: 120px;",
   },
   {
-    "draggable-id": "3",
     number: 3,
     style:
       "color: white; background-color: green; padding: 26px 0; margin: 26px; margin-left: 100px;",
   },
   {
-    "draggable-id": "4",
     number: 4,
     style:
       "color: white; background-color: wheat; padding: 30px 0; margin: 20px 0; margin-right: 100px; width:40%",
   },
   {
-    "draggable-id": "5",
     number: 5,
     style:
       "color: white; background-color: crimson; padding: 26px 0; margin: 20px 0; margin-right: 100px;",
   },
 ]);
-const { droppableId } = defineProps<{
+defineProps<{
   droppableId: string;
 }>();
+const { parent } = useDragAndDrop<number>(listWithMixedStyles as any);
 </script>
 <template>
-  <Droppable
-    :droppable-id="droppableId"
-    direction="vertical"
-    :items="listWithMixedStyles"
-  >
-    <div class="vertical-list-with-mixed-styles">
-      <Draggable
-        v-for="(element, index) in listWithMixedStyles"
-        v-slot="{ setRef }"
-        :draggable-id="element['draggable-id']"
-        :index="index"
-        ><div :ref="setRef as any" :style="element.style">
-          {{ element.number }}
-        </div>
-      </Draggable>
+  <div ref="parent" class="vertical-list-with-mixed-styles">
+    <div
+      v-for="(element, index) in listWithMixedStyles"
+      :index="index"
+      :style="element.style"
+    >
+      {{ element.number }}
     </div>
-  </Droppable>
+  </div>
 </template>
 <style>
 .vertical-list-with-mixed-styles {

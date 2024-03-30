@@ -1,12 +1,7 @@
 <script setup lang="ts">
-import { type ComponentPublicInstance } from "vue";
 import type { Pokemon } from "../../../docs/src/components/examples/Pokemon";
-const { pokemon, setRef } = defineProps<{
+const { pokemon } = defineProps<{
   pokemon: Pokemon;
-  setRef: (
-    ref: Element | ComponentPublicInstance | null,
-    refs: Record<string, any>
-  ) => void;
 }>();
 
 const pokeColor = {
@@ -30,7 +25,7 @@ const pokeColor = {
 </script>
 
 <template>
-  <div :ref="setRef" :class="[pokeColor[pokemon.name]]">
+  <div :class="[pokeColor[pokemon.name]]">
     <div class="p-2">
       <div>
         <div class="">{{ pokemon.name }}</div>
