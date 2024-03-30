@@ -12,33 +12,25 @@ If you have a large list of elements with a scroll, you can easily navigate thro
 First, we're going to create a large list of numbers:
 
 export const listOfNumbers = `<script setup lang="ts">
-
-const list = ref([...Array(20).keys()]);
-
+  const list = ref([...Array(20).keys()]);
+  const { parent } = useDragAndDrop(list);
 </script>`;
 
 <Code code={listOfNumbers} lang="vue" />
 
-### Using Droppable and Draggable components
+### Using useDragAndDrop
 
-We're going to make droppable element scrollable:
+We're going to make `parent` element scrollable:
 
 export const highlightsDnD = ['number-list','overflow: auto;'];
 
 export const listOfNumberInsideDnD = `
 <template>
-  <Droppable droppable-id="1" direction="vertical" :items="list">
-    <ul class="number-list">
-      <Draggable
-        v-for="(element, index) in list"
-        v-slot="{ setRef }"
-        :draggable-id="element.toString()"
-        :index="index"
-      >
-        <li class="number" :ref="setRef">{{ element }}</li>
-      </Draggable>
-    </ul>
-  </Droppable>
+  <ul ref="parent" class="number-list">
+    <li class="number" v-for="(element, index) in list" :index="index">
+      {{ element }}
+    </li>
+  </ul>
 </template>
 <style>
 // ....

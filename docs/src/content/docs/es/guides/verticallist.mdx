@@ -13,9 +13,10 @@ Primero, vamos a crear una lista de números:
 
 export const listOfNumbers = `<script setup lang="ts">
 import { ref } from "vue";
-import { Draggable, Droppable } from "vue-fluid-dnd";
+import { useDragAndDrop } from "vue-fluid-dnd";
 
 const list = ref([1, 2, 3]);
+const { parent } = useDragAndDrop(list);
 
 </script>`;
 
@@ -45,50 +46,37 @@ export const listOfNumbersHTML = `
 
 <Code code={listOfNumbersHTML} lang="vue" />
 
-### Añadiendo la componente Droppable
+### Añadiendo referencia al elemento padre
 
-Primero, definimos una componente **`Droppable`** que representa una lista de elementos **`Draggable`**, esta component necesita un id único (`droppable-id`), la dirección de la lista (`direction`) y la lista a ordernar(`items`):
+Primero, añademos una referencia al elemento `parent`creado de `useDragAndDrop`:
 
 export const highlightsDroppable = ["droppable-id", "direction", "items"];
 
 export const listOfNumbersDroppable = `
 <template>
-  <Droppable droppable-id="1" direction="vertical" :items="list">
-    <ul class="number-list">
+  <ul ref="parent" class="number-list">
       <li class="number">{{ element }}</li>
-    </ul>
-  </Droppable>
+   </ul>
 </template>
 `;
 
 <Code code={listOfNumbersDroppable} lang="vue" mark={highlightsDroppable} />
 
-### Añadiendo la componente Draggable
+### Añadiendo referencia a los elementos hijos
 
-Por cada elemento `<li>` crearemos una componente **`Draggable`** y añadimos una referencia de un elemento `<li>` al Draggable (`setRef`), un `index`que es la posición en la lista del elemento y un id único (`draggable-id`):
-
-:::caution
-Si el elemento `draggable` es una componente de vue, tienes que crear un prop en esta componente para pasar el valor de `setRef` de la componente **`Draggable`**.
-:::
+Por cada elemento `<li>` solo pasaremos el **atributo** `index` para saber su posición actual:
 
 export const listOfNumbersDraggable = `
 
 <template>
-  <Droppable droppable-id="1" direction="vertical" :items="list">
-    <ul class="number-list">
-      <Draggable
-        v-for="(element, index) in list"
-        v-slot="{ setRef }"
-        :draggable-id="element.toString()"
-        :index="index"
-      >
-        <li class="number" :ref="setRef">{{ element }}</li>
-      </Draggable>
+    <ul ref="parent" class="number-list">
+      <li class="number" v-for="(element, index) in list" :index="index">
+        {{ element }}
+      </li>
     </ul>
-  </Droppable>
 </template>`;
 
-export const highlightsDraggable = ["setRef", "draggable-id", ":index"];
+export const highlightsDraggable = [':index="index"'];
 
 <Code code={listOfNumbersDraggable} lang="vue" mark={highlightsDraggable} />
 

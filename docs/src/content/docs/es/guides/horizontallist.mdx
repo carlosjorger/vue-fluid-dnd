@@ -9,34 +9,27 @@ import { Code } from "@astrojs/starlight/components";
 ### Ejemplo de lista de números
 
 En este ejemplo vamos usar **Vue Fluid DnD** para ordernar una lista horizontal.
-Primero, vamos a crear una lista de números:
+Primero, vamos a crear una lista de números y vamos añadir el propiedad `direction` con valor igual `horizontal`:
 
 export const listOfNumbers = `<script setup lang="ts">
-    const list = ref(1, 2, 3, 4, 5]);
+  const list = ref(1, 2, 3, 4, 5]);
+  const { parent } = useDragAndDrop(list, { direction: "horizontal" });
 </script>`;
 
 <Code code={listOfNumbers} lang="vue" />
 
-### Usando las componentes Droppable y Draggable
+### Usando useDragAndDrop
 
-Vamos a cambiar el valor de la propiedad `direction` de la componente **Droppable** a `horizontal` y cambiar los estilos del elemento **Droppable**:
+Después añadimos las referencias:
 
 export const highlightsDnD = ['direction="horizontal"','.number-list'];
 
-export const listOfNumberInsideDnD = `
-<template>
-  <Droppable droppable-id="1" direction="horizontal" :items="list">
-    <div class="number-list">
-      <Draggable
-        v-for="(element, index) in list"
-        v-slot="{ setRef }"
-        :draggable-id="element.toString()"
-        :index="index"
-      >
-        <div class="number" :ref="setRef">{{ element }}</div>
-      </Draggable>
+export const listOfNumberInsideDnD = `<template>
+  <div ref="parent" class="number-list">
+    <div class="number" v-for="(element, index) in list" :index="index">
+      {{ element }}
     </div>
-  </Droppable>
+  </div>
 </template>
 
 <style>

@@ -33,9 +33,9 @@ export const listOfNumbers = `
 
 <Code code={listOfNumbers} lang="js" />
 
-### Using Droppable and Draggable components
+### Using useDragAndDrop
 
-You have to pass for each element its `styles`.
+You can pass for each element its `styles`.
 
 :::caution
 Each element must have its own `style` before and after change its position on the `list` using **Vue Fluid DnD**. Avoid style with **psedo-classes** like [nth-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-last-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-of-type](https://developer.mozilla.org/es/docs/Web/CSS/:nth-of-type), etc because add styles to the elements of the list based in other properties like position, number of children, etc.
@@ -45,20 +45,16 @@ export const highlightsDnD = [':style="element.style"'];
 
 export const listOfNumberInsideDnD = `
 <template>
-  <Droppable droppable-id="1" direction="vertical" :items="list">
-    <ul>
-      <Draggable
-        v-for="(element, index) in list"
-        v-slot="{ setRef }"
-        :draggable-id="element.id"
-        :index="index"
-      >
-        <li :style="element.style" :ref="setRef">
-          {{ element.content }}
-        </li>
-      </Draggable>
-    </ul>
-  </Droppable>
+  <ul ref="parent" class="number-list" style="height: 280px">
+    <li
+      class="number"
+      v-for="(element, index) in list"
+      :index="index"
+      :style="element.style"
+    >
+      {{ element.content }}
+    </li>
+  </ul>
 </template>
 `;
 

@@ -24,19 +24,17 @@ pnpm i vue-fluid-dnd
 
 #### Uso global
 
-Configura las componentes en el archivo main:
+Configura el **composable** (`useDragAndDrop`) usando [provide/inject](https://vuejs.org/guide/components/provide-inject) para que toda la aplicación lo pueda usar
 
 export const globalUsage = `
 import { createApp } from "vue";
 import App from './App.vue';
 
-import { Draggable, Droppable } from 'vue-fluid-dnd';
-import "vue3-fluid-dnd/style.css";
+import { useDragAndDrop } from 'vue-fluid-dnd';
 
 const app = createApp(App);
 
-app.component('Droppable', Droppable);
-app.component('Draggable', Draggable);
+app.provide('useDragAndDrop', useDragAndDrop);
 
 app.mount('#app');`;
 
@@ -44,29 +42,11 @@ app.mount('#app');`;
 
 #### Uso local
 
-Importa las componentes y los estilos en los archivos .vue:
+Importa **composable** (`useDragAndDrop`):
 
-export const optionApiCode = `
-<script>
-  import { Draggable, Droppable } from 'vue-fluid-dnd';
-  import "vue3-fluid-dnd/style.css";
-
-export default {
-components: { Draggable, Droppable },
-}
-
-</script>`;
 export const compositionApiCode = `
 <script>
-  import { Draggable, Droppable } from 'vue3-fluid-dnd';
-
+  import { useDragAndDrop } from 'vue3-fluid-dnd';
 </script>`;
 
-<Tabs>
-  <TabItem label="Options API">
-    <Code code={optionApiCode} lang="vue" />
-  </TabItem>
-  <TabItem label="Composition API">
-    <Code code={compositionApiCode} lang="vue" />
-  </TabItem>
-</Tabs>
+<Code code={compositionApiCode} lang="vue" />
