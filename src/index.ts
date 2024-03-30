@@ -1,4 +1,3 @@
-import Draggable from "./components/Draggable.vue";
-import Droppable from "./components/Droppable.vue";
-
-export { Draggable, Droppable };
+import useDragAndDrop from "./composables/useDragAndDrop";
+export { useDragAndDrop };
+// TODO: update version
