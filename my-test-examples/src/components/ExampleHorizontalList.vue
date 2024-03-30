@@ -40,9 +40,5 @@ defineProps<{
   border-style: solid;
   border-width: 0.8rem;
   width: 100px;
-  transition: all 150ms ease;
-}
-.number:hover {
-  background-color: red;
 }
 </style>

@@ -40,9 +40,5 @@ const { parent } = useDragAndDrop<number>(numbers as any);
   border-style: solid;
   border-width: 0.8rem;
   width: 100px;
-  transition: background-color 150ms ease;
-}
-.number:hover {
-  background-color: red;
 }
 </style>

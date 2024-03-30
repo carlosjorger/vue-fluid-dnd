@@ -29,6 +29,7 @@ import {
 } from "index";
 import { computed, ref, watch } from "vue";
 import { Direction } from ".";
+//TODO: use number instead string
 const DRAG_EVENT = "drag";
 const START_DRAG_EVENT = "startDrag";
 const START_DROP_EVENT = "startDrop";
@@ -37,7 +38,7 @@ const DRAGGABLE_CLASS = "draggable";
 type DraggingEvent = typeof DRAG_EVENT | typeof START_DRAG_EVENT;
 type DropEvent = typeof DROP_EVENT | typeof START_DROP_EVENT;
 type DragEvent = DraggingEvent | DropEvent;
-
+//TODO: use number instead string
 enum DraggingState {
   NOT_DRAGGING = "notDragging",
   START_DRAGGING = "startDragging",

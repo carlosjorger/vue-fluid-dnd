@@ -1,7 +1,6 @@
 import { test, expect, Page } from "@playwright/test";
 
 let page: Page;
-//TODO Add drag and drop from top and from bottom
 const li_with_child_elements =
   "ul#example-vertical-list-with-child-elements > li";
 test("drag and drop top-down", async ({ page }) => {
@@ -65,4 +64,6 @@ async function dragDrop(
   );
   await page.mouse.up();
 }
+//TODO: Add drag and drop from top and from bottom
 // TODO: pass playwright to main project
+// TODO: test with safari

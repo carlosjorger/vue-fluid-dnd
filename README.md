@@ -64,13 +64,12 @@ library for lists on Vue3.
    //pass setRef to child to have the reference of draggable element
    //pass the direction of the list and droppable id
    <template>
-      <div style="width: 40%; background-color: darkgray; display: block">
+      <div style="width: 40%; display: block">
          <div
             v-for="(element, index) in listToSort"
             :index="index"
             :style="element.style"
-         >
-            {{ element.number }}
+         >{{ element.number }}
          </div>
       </div>
    </template>
@@ -81,6 +80,3 @@ library for lists on Vue3.
 ## 🤝 Contributing
 
 If you're interested in contributing to vue-fluid-dnd, please read our contributing docs before submitting a pull request [CONTRIBUTING](./CONTRIBUTING.md).
-
-<!-- TODO: add test with playwright https://github.com/formkit/drag-and-drop -->
-<!-- TODO: put the vue examples in a another folder and add tests -->

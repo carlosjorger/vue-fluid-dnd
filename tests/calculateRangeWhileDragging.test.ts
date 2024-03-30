@@ -1,5 +1,6 @@
 import { getTranslateBeforeDropping } from "../src/utils/GetStyles";
 import { expect, test, vi } from "vitest";
+// TODO: update tests
 const listWithoutGaps = document.createElement("div");
 listWithoutGaps.innerHTML = `<div style="background-color: darkgray; display: block;">
                         <div 
