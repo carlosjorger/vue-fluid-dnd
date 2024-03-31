@@ -54,7 +54,8 @@ export default function useDraggable(
   child: HTMLElement | undefined,
   index: number,
   direction: Direction,
-  onDrop: (source: DraggableElement, destination: DraggableElement) => void
+  onDrop: (source: DraggableElement, destination: DraggableElement) => void,
+  parent: HTMLElement
 ) {
   const draggingState = ref<DraggingState>(DraggingState.NOT_DRAGGING);
   const childRef = ref(child);
@@ -79,11 +80,8 @@ export default function useDraggable(
     }
   };
   const setCssStyles = () => {
-    if (!parent.value) {
-      return;
-    }
     AddCssStyleToElement(
-      parent.value,
+      parent,
       `.draggable {  
       box-sizing: border-box !important; 
       touch-action: none; 
@@ -92,13 +90,13 @@ export default function useDraggable(
     }`
     );
     AddCssStyleToElement(
-      parent.value,
+      parent,
       `.draggable * {
         pointer-events: none;
       }`
     );
     AddCssStyleToElement(
-      parent.value,
+      parent,
       `.temp-child {
         box-sizing: border-box !important;
         touch-action: none;
@@ -106,14 +104,14 @@ export default function useDraggable(
       }`
     );
     AddCssStyleToElement(
-      parent.value,
+      parent,
       `.droppable {
       box-sizing: border-box !important;
       position: relative;
     }`
     );
     AddCssStyleToElement(
-      parent.value,
+      parent,
       `.dragging {
       position: fixed;
       z-index: 5000;
@@ -170,13 +168,11 @@ export default function useDraggable(
   const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
     return (event: DragMouseTouchEvent) => {
       const element = event.target as HTMLElement;
-      if (parent.value) {
-        droppableScroll.value = getScrollElement(parent.value);
-      }
+      droppableScroll.value = getScrollElement(parent);
       if (draggingState.value === DraggingState.NOT_DRAGGING) {
         draggingState.value = DraggingState.START_DRAGGING;
         document.addEventListener(moveEvent, handlerMousemove);
-        setEventWithInterval(parent.value, "onscroll", setTransformDragEvent);
+        setEventWithInterval(parent, "onscroll", setTransformDragEvent);
         if (element) {
           assignDraggingEvent(
             element,
@@ -195,9 +191,7 @@ export default function useDraggable(
     return (event: DragMouseTouchEvent) => {
       onDropDraggingEvent(event);
       document.removeEventListener(moveEvent, handlerMousemove);
-      if (parent.value?.onscroll) {
-        parent.value.onscroll = null;
-      }
+      parent.onscroll = null;
       assignDraggingEvent(element, onLeaveEvent, null);
     };
   };
@@ -215,21 +209,19 @@ export default function useDraggable(
     draggingState.value = DraggingState.DRAGING;
   };
   const addTempChild = (draggedElement: HTMLElement) => {
-    if (parent.value) {
-      let distances = getTranslationByDragging(
-        draggedElement,
-        START_DRAG_EVENT,
-        direction
-      );
-      var child = document.createElement("div");
-      child.classList.add(TEMP_CHILD_CLASS);
-      const gap = getGapPixels(parent.value, direction);
-      const { distance } = getPropByDirection(direction);
-      distances[distance] -= gap;
-      child.style.height = `${distances.height}px`;
-      child.style.minWidth = `${distances.width}px`;
-      parent.value.appendChild(child);
-    }
+    let distances = getTranslationByDragging(
+      draggedElement,
+      START_DRAG_EVENT,
+      direction
+    );
+    var child = document.createElement("div");
+    child.classList.add(TEMP_CHILD_CLASS);
+    const gap = getGapPixels(parent, direction);
+    const { distance } = getPropByDirection(direction);
+    distances[distance] -= gap;
+    child.style.height = `${distances.height}px`;
+    child.style.minWidth = `${distances.width}px`;
+    parent.appendChild(child);
   };
   const setTransformEvent = (event: DragMouseTouchEvent) => {
     const { pageX, pageY } = event;
@@ -238,9 +230,7 @@ export default function useDraggable(
   };
   const setTransformDragEvent = () => {
     const element = childRef.value as HTMLElement;
-    if (parent.value) {
-      setTransform(element, parent.value, pagePosition, translate, direction);
-    }
+    setTransform(element, parent, pagePosition, translate, direction);
     emitEventToSiblings(element, DRAG_EVENT);
   };
 
@@ -361,14 +351,10 @@ export default function useDraggable(
     );
   };
   const removeTempChild = () => {
-    if (parent.value) {
-      var lastChildren = parent.value.querySelectorAll(`.${TEMP_CHILD_CLASS}`);
-      lastChildren.forEach((lastChild) => {
-        if (parent.value) {
-          parent.value.removeChild(lastChild);
-        }
-      });
-    }
+    var lastChildren = parent.querySelectorAll(`.${TEMP_CHILD_CLASS}`);
+    lastChildren.forEach((lastChild) => {
+      parent.removeChild(lastChild);
+    });
   };
   const updateActualIndexBaseOnTranslation = (
     translation: Translate,
@@ -538,12 +524,6 @@ export default function useDraggable(
     element.classList.add(DRAGING_CLASS);
     element.style.transition = "";
   };
-  const parent = computed(() => {
-    const elementParent = childRef.value?.parentElement;
-    if (elementParent) {
-      return elementParent as HTMLElement;
-    }
-  });
   watch(
     translate,
     (newTranslate) => {

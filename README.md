@@ -64,7 +64,7 @@ library for lists on Vue3.
    //pass setRef to child to have the reference of draggable element
    //pass the direction of the list and droppable id
    <template>
-      <div style="width: 40%; display: block">
+      <div ref="parent" style="width: 40%; display: block">
          <div
             v-for="(element, index) in listToSort"
             :index="index"

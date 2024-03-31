@@ -29,7 +29,13 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
       const onDrop = getOnDrop(items.value);
 
       if (childHTMLElement && numberIndex >= 0) {
-        useDraggable(childHTMLElement, numberIndex, direction, onDrop);
+        useDraggable(
+          childHTMLElement,
+          numberIndex,
+          direction,
+          onDrop,
+          parent.value
+        );
       }
     }
   };
