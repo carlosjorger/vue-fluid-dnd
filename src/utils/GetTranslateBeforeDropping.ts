@@ -12,7 +12,7 @@ import {
   getPropByDirection,
 } from "./GetStyles";
 export default function getTranslateBeforeDropping(
-  direction: Direction | undefined,
+  direction: Direction,
   siblings: HTMLElement[],
   sourceIndex: number,
   targetIndex: number,
@@ -21,9 +21,6 @@ export default function getTranslateBeforeDropping(
 ) {
   let height = 0;
   let width = 0;
-  if (!direction) {
-    return { height, width };
-  }
   if (sourceIndex === targetIndex) {
     return addScrollToTranslate({ height, width }, direction, scroll);
   }

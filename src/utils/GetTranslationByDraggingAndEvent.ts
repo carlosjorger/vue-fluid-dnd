@@ -11,7 +11,7 @@ import {
 export default function getTranslationByDraggingAndEvent(
   current: HTMLElement,
   event: DragAndDropEvent,
-  direction: Direction | undefined,
+  direction: Direction,
   previousElement = current.previousElementSibling,
   nextElement = current.nextElementSibling
 ) {
@@ -30,14 +30,11 @@ export default function getTranslationByDraggingAndEvent(
 }
 
 function getTranslationByDragging(
-  direction: Direction | undefined,
+  direction: Direction,
   current: HTMLElement,
   previousElement: Element | null,
   nextElement: Element | null
 ) {
-  if (!direction) {
-    return { width: 0, height: 0 };
-  }
   const {
     afterMargin,
     beforeMargin,

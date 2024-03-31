@@ -30,15 +30,15 @@ import {
 import { computed, ref, watch } from "vue";
 import { Direction } from ".";
 
-const DRAG_EVENT = "drag";
-const START_DRAG_EVENT = "startDrag";
-const START_DROP_EVENT = "startDrop";
-const DROP_EVENT = "drop";
-
 const DRAGGABLE_CLASS = "draggable";
 const DROPPABLE_CLASS = "droppable";
 const TEMP_CHILD_CLASS = "temp-child";
 const DRAGING_CLASS = "dragging";
+
+const DRAG_EVENT = "drag";
+const START_DRAG_EVENT = "startDrag";
+const START_DROP_EVENT = "startDrop";
+const DROP_EVENT = "drop";
 
 type DraggingEvent = typeof DRAG_EVENT | typeof START_DRAG_EVENT;
 type DropEvent = typeof DROP_EVENT | typeof START_DROP_EVENT;
@@ -53,9 +53,8 @@ enum DraggingState {
 export default function useDraggable(
   child: HTMLElement | undefined,
   index: number,
-  direction?: Direction,
-  onDrop?: (source: DraggableElement, destination: DraggableElement) => void,
-  updateDraggableId?: (element: HTMLElement | undefined, index: number) => void
+  direction: Direction,
+  onDrop: (source: DraggableElement, destination: DraggableElement) => void
 ) {
   const draggingState = ref<DraggingState>(DraggingState.NOT_DRAGGING);
   const childRef = ref(child);
@@ -151,9 +150,6 @@ export default function useDraggable(
         "ontouchstart",
         onmousedown("touchmove", "ontouchend")
       );
-      if (updateDraggableId) {
-        updateDraggableId(element, actualIndex.value);
-      }
     }
     if (element?.parentElement) {
       element?.parentElement.classList.add(DROPPABLE_CLASS);
@@ -227,11 +223,9 @@ export default function useDraggable(
       );
       var child = document.createElement("div");
       child.classList.add(TEMP_CHILD_CLASS);
-      if (direction) {
-        const gap = getGapPixels(parent.value, direction);
-        const { distance } = getPropByDirection(direction);
-        distances[distance] -= gap;
-      }
+      const gap = getGapPixels(parent.value, direction);
+      const { distance } = getPropByDirection(direction);
+      distances[distance] -= gap;
       child.style.height = `${distances.height}px`;
       child.style.minWidth = `${distances.width}px`;
       parent.value.appendChild(child);
@@ -338,10 +332,6 @@ export default function useDraggable(
     targetIndex: number,
     element: HTMLElement
   ) => {
-    if (!onDrop) {
-      return;
-    }
-
     setTimeout(() => {
       removeTempChild();
       onDrop(
@@ -384,9 +374,6 @@ export default function useDraggable(
     translation: Translate,
     siblingIndex: number
   ) => {
-    if (!direction) {
-      return;
-    }
     const { distance } = getPropByDirection(direction);
     if (translation[distance] == 0) {
       actualIndex.value = Math.max(actualIndex.value, siblingIndex);
@@ -395,15 +382,11 @@ export default function useDraggable(
     }
   };
   const canChangeDraggable = (
-    direction: Direction | undefined,
+    direction: Direction,
     sourceElement: HTMLElement,
     targetElement: HTMLElement,
     translation: Translate
   ) => {
-    if (!direction) {
-      return { height: 0, width: 0 };
-    }
-
     const { before, distance } = getPropByDirection(direction);
     const currentBoundingClientRect = sourceElement.getBoundingClientRect();
     const targetBoundingClientRect = targetElement.getBoundingClientRect();
