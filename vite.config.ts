@@ -36,5 +36,6 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom", // or 'node'
+    exclude: ["node_modules", "my-test-examples", "docs/node_modules"],
   },
 });

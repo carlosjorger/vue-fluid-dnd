@@ -27,7 +27,7 @@ import {
   OnLeaveEvent,
   Translate,
 } from "index";
-import { computed, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { Direction } from ".";
 
 const DRAGGABLE_CLASS = "draggable";

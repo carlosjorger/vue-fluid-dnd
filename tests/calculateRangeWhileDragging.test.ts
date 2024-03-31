@@ -1,11 +1,10 @@
-import { getTranslateBeforeDropping } from "../src/utils/GetStyles";
 import { expect, test, vi } from "vitest";
-// TODO: update tests
+import getTranslateBeforeDropping from "../src/utils/GetTranslateBeforeDropping";
+
 const listWithoutGaps = document.createElement("div");
-listWithoutGaps.innerHTML = `<div style="background-color: darkgray; display: block;">
+listWithoutGaps.innerHTML = `<div style="background-color: darkgray; display: block;" class="droppable">
                         <div 
                             class="draggable" 
-                            draggable-id="1" 
                             style="
                                 color: white; 
                                 background-color: red; 
@@ -17,7 +16,6 @@ listWithoutGaps.innerHTML = `<div style="background-color: darkgray; display: bl
                             </div>
                             <div 
                                 class="draggable" 
-                                draggable-id="2" 
                                 style="
                                     color: white; 
                                     background-color: blue; 
@@ -29,7 +27,6 @@ listWithoutGaps.innerHTML = `<div style="background-color: darkgray; display: bl
                             </div>
                             <div 
                                 class="draggable" 
-                                draggable-id="3" 
                                 style="
                                     color: white; 
                                     background-color: green; 
@@ -41,7 +38,6 @@ listWithoutGaps.innerHTML = `<div style="background-color: darkgray; display: bl
                             </div>
                             <div 
                                 class="draggable" 
-                                draggable-id="4" 
                                 style="
                                     color: white; 
                                     background-color: wheat; 
@@ -54,7 +50,6 @@ listWithoutGaps.innerHTML = `<div style="background-color: darkgray; display: bl
                             </div>
                             <div 
                                 class="draggable" 
-                                draggable-id="5" 
                                 style="
                                     color: white; 
                                     background-color: crimson; 
@@ -67,10 +62,9 @@ listWithoutGaps.innerHTML = `<div style="background-color: darkgray; display: bl
                                 </div>
                             </div>`;
 const listWithGaps = document.createElement("div");
-listWithGaps.innerHTML = `<div style="width: 40%; background-color: darkgray; display: inline-block; overflow: hidden; display: flex; flex-direction: column; gap: 5px; row-gap: 5px;">
+listWithGaps.innerHTML = `<div style="width: 40%; background-color: darkgray; display: inline-block; overflow: hidden; display: flex; flex-direction: column; gap: 5px; row-gap: 5px;" class="droppable">
 	                          <div 
                               class="draggable" 
-                              draggable-id="1" 
                               style="
                                 color: white; 
                                 background-color: red; 
@@ -82,7 +76,6 @@ listWithGaps.innerHTML = `<div style="width: 40%; background-color: darkgray; di
                             </div>
                             <div 
                               class="draggable" 
-                              draggable-id="2" 
                               style="
                                 color: white; 
                                 background-color: blue; 
@@ -94,7 +87,6 @@ listWithGaps.innerHTML = `<div style="width: 40%; background-color: darkgray; di
                             </div>
                             <div 
                               class="draggable" 
-                              draggable-id="3" 
                               style="
                                 color: white; 
                                 background-color: green; 
@@ -107,7 +99,6 @@ listWithGaps.innerHTML = `<div style="width: 40%; background-color: darkgray; di
                             </div>
                             <div 
                               class="draggable" 
-                              draggable-id="4" 
                               style="
                                 color: white; 
                                 background-color: brown; 
