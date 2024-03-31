@@ -25,7 +25,7 @@ const listWithMixedStyles = ref([
   {
     number: 5,
     style:
-      "color: white; background-color: crimson; padding: 26px 0; margin: 20px 0; margin-right: 100px;",
+      "color: white; background-color: crimson; padding: 26px 0; margin: 14px 0; margin-right: 100px;",
   },
 ]);
 defineProps<{

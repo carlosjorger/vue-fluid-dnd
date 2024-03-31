@@ -261,7 +261,6 @@ export default function useDraggable(
     translation: Translate
   ) => {
     const isOutside = draggableIsOutside(draggedElement);
-
     for (const [index, sibling] of siblings.entries()) {
       if (!sibling.classList.contains(DRAGGABLE_CLASS)) {
         continue;
@@ -549,3 +548,4 @@ export default function useDraggable(
   setCssStyles();
   setSlotRefElementParams(childRef.value);
 }
+// TODO: drag between groups https://javascript.info/mouse-drag-and-drop
