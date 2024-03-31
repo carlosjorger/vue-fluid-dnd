@@ -29,21 +29,26 @@ import {
 } from "index";
 import { computed, ref, watch } from "vue";
 import { Direction } from ".";
-//TODO: use number instead string
+
 const DRAG_EVENT = "drag";
 const START_DRAG_EVENT = "startDrag";
 const START_DROP_EVENT = "startDrop";
 const DROP_EVENT = "drop";
+
 const DRAGGABLE_CLASS = "draggable";
+const DROPPABLE_CLASS = "droppable";
+const TEMP_CHILD_CLASS = "temp-child";
+const DRAGING_CLASS = "dragging";
+
 type DraggingEvent = typeof DRAG_EVENT | typeof START_DRAG_EVENT;
 type DropEvent = typeof DROP_EVENT | typeof START_DROP_EVENT;
 type DragEvent = DraggingEvent | DropEvent;
-//TODO: use number instead string
+
 enum DraggingState {
-  NOT_DRAGGING = "notDragging",
-  START_DRAGGING = "startDragging",
-  DRAGING = "dragging",
-  END_DRAGGING = "endDragging",
+  NOT_DRAGGING,
+  START_DRAGGING,
+  DRAGING,
+  END_DRAGGING,
 }
 export default function useDraggable(
   child: HTMLElement | undefined,
@@ -151,7 +156,7 @@ export default function useDraggable(
       }
     }
     if (element?.parentElement) {
-      element?.parentElement.classList.add("droppable");
+      element?.parentElement.classList.add(DROPPABLE_CLASS);
     }
   };
 
@@ -217,11 +222,11 @@ export default function useDraggable(
     if (parent.value) {
       let distances = getTranslationByDragging(
         draggedElement,
-        "startDrag",
+        START_DRAG_EVENT,
         direction
       );
       var child = document.createElement("div");
-      child.classList.add("temp-child");
+      child.classList.add(TEMP_CHILD_CLASS);
       if (direction) {
         const gap = getGapPixels(parent.value, direction);
         const { distance } = getPropByDirection(direction);
@@ -244,6 +249,7 @@ export default function useDraggable(
     }
     emitEventToSiblings(element, DRAG_EVENT);
   };
+
   const emitEventToSiblings = (
     draggedElement: HTMLElement,
     event: DragEvent
@@ -366,7 +372,7 @@ export default function useDraggable(
   };
   const removeTempChild = () => {
     if (parent.value) {
-      var lastChildren = parent.value.querySelectorAll(".temp-child");
+      var lastChildren = parent.value.querySelectorAll(`.${TEMP_CHILD_CLASS}`);
       lastChildren.forEach((lastChild) => {
         if (parent.value) {
           parent.value.removeChild(lastChild);
@@ -494,7 +500,7 @@ export default function useDraggable(
       }
       if (
         event === START_DROP_EVENT &&
-        !sibling.classList.contains("temp-child")
+        !sibling.classList.contains(TEMP_CHILD_CLASS)
       ) {
         const draggableTranslation = getTranslateBeforeDropping(
           direction,
@@ -530,7 +536,7 @@ export default function useDraggable(
   };
   const removeElementDraggingStyles = (element: HTMLElement) => {
     draggingState.value = DraggingState.NOT_DRAGGING;
-    element.classList.remove("dragging");
+    element.classList.remove(DRAGING_CLASS);
     element.style.transform = "";
     element.style.transition = "";
     element.style.top = "";
@@ -546,7 +552,7 @@ export default function useDraggable(
     const { height, width } = element.getBoundingClientRect();
     fixedHeight.value = `${height}px`;
     fixedWidth.value = `${width}px`;
-    element.classList.add("dragging");
+    element.classList.add(DRAGING_CLASS);
     element.style.transition = "";
   };
   const parent = computed(() => {

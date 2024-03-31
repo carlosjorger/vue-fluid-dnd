@@ -1,4 +1,4 @@
-const START_DRAG_EVENT = "startDrag";
+export const START_DRAG_EVENT = "startDrag";
 export const DRAG_EVENT = "drag";
 export const START_DROP_EVENT = "startDrop";
 export const DROP_EVENT = "drop";

@@ -3,11 +3,11 @@ import { DraggableElement } from "index";
 import { Ref, ref, watch } from "vue";
 import useDraggable from "./useDraggable";
 import { parseIntEmpty } from "../utils/GetStyles";
-import { Config } from ".";
+import { Config, VERTICAL } from ".";
 
-const DEFAULT_CONFIG = { direction: "vertical" } as Config;
+const DEFAULT_CONFIG = { direction: VERTICAL } as Config;
 export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
-  const { direction = "vertical" } = config ?? DEFAULT_CONFIG;
+  const { direction = VERTICAL } = config ?? DEFAULT_CONFIG;
   const INDEX_ATTR = "index";
   const parent = ref<HTMLElement | undefined>();
 

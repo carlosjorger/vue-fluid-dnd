@@ -1,5 +1,5 @@
 import { Direction } from "../composables";
-import { DragAndDropEvent } from ".";
+import { DragAndDropEvent, DRAG_EVENT } from ".";
 import { AfterMargin } from "../../index";
 import {
   draggableIsOutside,
@@ -22,7 +22,7 @@ export default function getTranslationByDraggingAndEvent(
     nextElement
   );
   const intersection = draggableIsOutside(current);
-  if (intersection && event == "drag") {
+  if (intersection && event == DRAG_EVENT) {
     height = 0;
     width = 0;
   }
