@@ -64,6 +64,4 @@ async function dragDrop(
   );
   await page.mouse.up();
 }
-//TODO: Add drag and drop from top and from bottom
 // TODO: pass playwright to main project
-// TODO: test with safari

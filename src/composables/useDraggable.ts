@@ -167,8 +167,8 @@ export default function useDraggable(
     onmousemove(eventToDragMouse);
   };
   const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
-    return (event: DragMouseTouchEvent) => {
-      const element = event.target as HTMLElement;
+    return () => {
+      const element = childRef.value;
       droppableScroll.value = getScrollElement(parent);
       if (draggingState.value === DraggingState.NOT_DRAGGING) {
         draggingState.value = DraggingState.START_DRAGGING;
@@ -189,15 +189,18 @@ export default function useDraggable(
     element: HTMLElement,
     onLeaveEvent: OnLeaveEvent
   ) => {
-    return (event: DragMouseTouchEvent) => {
-      onDropDraggingEvent(event);
+    return () => {
+      onDropDraggingEvent();
       document.removeEventListener(moveEvent, handlerMousemove);
       parent.onscroll = null;
       assignDraggingEvent(element, onLeaveEvent, null);
     };
   };
   const startDragging = (event: DragMouseTouchEvent) => {
-    const element = event.target as HTMLElement;
+    const element = childRef.value;
+    if (!element) {
+      return;
+    }
     updateDraggingStateBeforeDragging(element);
     addTempChild(element);
     emitEventToSiblings(element, START_DRAG_EVENT);
@@ -493,13 +496,16 @@ export default function useDraggable(
     const parentElement = draggable.parentElement as HTMLElement;
     return !hasIntersection(draggable, parentElement);
   };
-  const onDropDraggingEvent = (event: DragMouseTouchEvent) => {
+  const onDropDraggingEvent = () => {
     if (draggingState.value !== DraggingState.DRAGING) {
       draggingState.value = DraggingState.NOT_DRAGGING;
       return;
     }
     draggingState.value = DraggingState.END_DRAGGING;
-    const element = event.target as HTMLElement;
+    const element = childRef.value as HTMLElement;
+    if (!element) {
+      return;
+    }
     removeDraggingStyles(element);
     emitEventToSiblings(element, START_DROP_EVENT);
   };
@@ -549,4 +555,5 @@ export default function useDraggable(
   setCssStyles();
   setSlotRefElementParams(childRef.value);
 }
+// TODO: add handler class
 // TODO: drag between groups https://javascript.info/mouse-drag-and-drop
