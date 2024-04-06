@@ -87,6 +87,7 @@ export default function useDraggable(
       touch-action: none; 
       cursor: grab; 
       user-select: none;
+      -webkit-user-select: none;
     }`
     );
     AddCssStyleToElement(
