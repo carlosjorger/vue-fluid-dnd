@@ -38,7 +38,7 @@ library for lists on Vue3.
 2. **Import the composable**
 
    ```js
-   import useDragAndDrop from "../../../src/composables/useDragAndDrop";
+   import { useDragAndDrop } from "vue-fluid-dnd";
    ```
 
 3. **Create a list that your want to sort an use useDragAndDrop**

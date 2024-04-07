@@ -6,6 +6,14 @@ import { parseIntEmpty } from "../utils/GetStyles";
 import { Config, VERTICAL } from ".";
 
 const DEFAULT_CONFIG = { direction: VERTICAL } as Config;
+/**
+ * Create the parent element of the draggable children and all the drag and drop events and styles.
+ *
+ * @template T - Type of the items.
+ * @param items - List of data to drag and drop.
+ * @param config - Configuration of drag and drop tool.
+ * @returns The reference of the parent element.
+ */
 export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
   const { direction = VERTICAL } = config ?? DEFAULT_CONFIG;
   const INDEX_ATTR = "index";
