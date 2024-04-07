@@ -11,21 +11,21 @@ import ExampleOfPokemonList from "./components/ExampleOfPokemonList.vue";
 
 <template>
   <ExampleVerticalListWithChildElements
-    droppableId="example-vertical-list-with-child-elements"
+    id="example-vertical-list-with-child-elements"
   />
-  <ExampleHorizontalList droppableId="example-horizontal-list" />
-  <ExampleVertialScrollList droppableId="example-vertical-scroll-list" />
-  <ExampleHorizontalScrollList droppableId="example-horizontal-scroll-list" />
+  <ExampleHorizontalList id="example-horizontal-list-with-child-elements" />
+  <ExampleVertialScrollList id="example-vertical-scroll-list" />
+  <ExampleHorizontalScrollList id="example-horizontal-scroll-list" />
   <ExampleHorizontalListWithMixedStyles
-    droppableId="example-horizontal-with-mixed-styles"
+    id="example-horizontal-with-mixed-styles"
   />
   <div style="display: flex; flex-direction: row; column-gap: 10px">
     <ExampleVerticalListWithMixedStyles
-      droppableId="example-vertical-with-mixed-styles"
+      id="example-vertical-with-mixed-styles"
     />
     <ExampleVerticalListWithMixedStylesAndGaps
-      droppableId="example-vertical-with-mixed-styles-gaps"
+      id="example-vertical-with-mixed-styles-gaps"
     />
   </div>
-  <ExampleOfPokemonList droppableId="example-pokemon-list" />
+  <ExampleOfPokemonList id="example-pokemon-list" />
 </template>

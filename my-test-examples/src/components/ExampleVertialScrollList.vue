@@ -8,7 +8,7 @@ const numbers = ref([
 ]);
 
 defineProps<{
-  droppableId: string;
+  id: string;
 }>();
 
 const { parent } = useDragAndDrop<number>(numbers as any);

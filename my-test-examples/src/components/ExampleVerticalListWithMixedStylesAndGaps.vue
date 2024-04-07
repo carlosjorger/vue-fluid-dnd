@@ -24,7 +24,7 @@ const listWithMixedStyles = ref([
   },
 ]);
 defineProps<{
-  droppableId: string;
+  id: string;
 }>();
 
 const { parent } = useDragAndDrop<number>(listWithMixedStyles as any);

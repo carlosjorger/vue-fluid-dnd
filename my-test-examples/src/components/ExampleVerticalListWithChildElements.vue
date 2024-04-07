@@ -3,17 +3,13 @@ import { ref } from "vue";
 import useDragAndDrop from "../../../src/composables/useDragAndDrop";
 const numbers = ref([1, 2, 3, 4, 5, 6]);
 
-defineProps<{
-  droppableId: string;
+const { id } = defineProps<{
+  id: string;
 }>();
 const { parent } = useDragAndDrop<number>(numbers as any);
 </script>
 <template>
-  <ul
-    ref="parent"
-    id="example-vertical-list-with-child-elements"
-    class="vertical-list"
-  >
+  <ul ref="parent" :id="id" class="vertical-list">
     <li
       v-for="(element, index) in numbers"
       :index="index"

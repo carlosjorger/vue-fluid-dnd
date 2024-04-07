@@ -15,7 +15,7 @@ library for lists on Vue3.
 - ✅ **Work with horizontal➡️and vertical list :arrow_down:**.
 - ✅ **Mouse 🐭 and touch 👉📱 (mobile, tablet and so on) support**.
 - ✅ **Nice documentation 📑 and examples**.
-- 🔲 **Fully tested 🧪, typed and reliable**.
+- ✅ **Fully tested 🧪, typed and reliable**.
 
 ## 🚀 Getting Started
 

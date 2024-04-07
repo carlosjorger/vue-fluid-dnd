@@ -24,7 +24,7 @@ const lsitWithMixedStyles = ref([
   },
 ]);
 defineProps<{
-  droppableId: string;
+  id: string;
 }>();
 
 const { parent } = useDragAndDrop<number>(lsitWithMixedStyles as any, {

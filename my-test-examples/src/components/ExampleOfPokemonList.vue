@@ -13,7 +13,7 @@ onMounted(async () => {
 const { parent } = useDragAndDrop(pokemons as any);
 
 defineProps<{
-  droppableId: string;
+  id: string;
 }>();
 </script>
 <template>
