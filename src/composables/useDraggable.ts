@@ -26,7 +26,7 @@ import {
   MoveEvent,
   OnLeaveEvent,
   Translate,
-} from "index";
+} from "../../index";
 import { ref, watch } from "vue";
 import { Direction } from ".";
 

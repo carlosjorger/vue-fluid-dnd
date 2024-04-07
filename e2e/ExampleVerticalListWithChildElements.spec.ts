@@ -64,4 +64,3 @@ async function dragDrop(
   );
   await page.mouse.up();
 }
-// TODO: pass playwright to main project

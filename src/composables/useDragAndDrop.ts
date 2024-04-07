@@ -1,5 +1,5 @@
 import { dropDraggingElementsBetween } from "../utils/DropMethods";
-import { DraggableElement } from "index";
+import { DraggableElement } from "../../index";
 import { Ref, ref, watch } from "vue";
 import useDraggable from "./useDraggable";
 import { parseIntEmpty } from "../utils/GetStyles";

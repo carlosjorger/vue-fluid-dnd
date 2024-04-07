@@ -1,4 +1,4 @@
-import type { Pokemon, PokemonLink } from "@/components/examples/Pokemon";
+import type { Pokemon, PokemonLink } from "../components/examples/Pokemon";
 
 export const fetchPokemons = async (limit: number) => {
   const pokemons = [] as Pokemon[];
