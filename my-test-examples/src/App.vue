@@ -7,6 +7,7 @@ import ExampleHorizontalScrollList from "./components/ExampleHorizontalScrollLis
 import ExampleVerticalListWithMixedStyles from "./components/ExampleVerticalListWithMixedStyles.vue";
 import ExampleVerticalListWithMixedStylesAndGaps from "./components/ExampleVerticalListWithMixedStylesAndGaps.vue";
 import ExampleOfPokemonList from "./components/ExampleOfPokemonList.vue";
+import ExampleCounterList from "./components/ExampleCounterList.vue";
 </script>
 
 <template>
@@ -19,7 +20,7 @@ import ExampleOfPokemonList from "./components/ExampleOfPokemonList.vue";
   <ExampleHorizontalListWithMixedStyles
     id="example-horizontal-with-mixed-styles"
   />
-  <div style="display: flex; flex-direction: row; column-gap: 10px">
+  <div class="example-cols">
     <ExampleVerticalListWithMixedStyles
       id="example-vertical-with-mixed-styles"
     />
@@ -27,5 +28,15 @@ import ExampleOfPokemonList from "./components/ExampleOfPokemonList.vue";
       id="example-vertical-with-mixed-styles-gaps"
     />
   </div>
-  <ExampleOfPokemonList id="example-pokemon-list" />
+  <div class="example-cols">
+    <ExampleOfPokemonList id="example-pokemon-list" />
+    <ExampleCounterList id="example-counter-list" />
+  </div>
 </template>
+<style>
+.example-cols {
+  display: flex;
+  flex-direction: row;
+  column-gap: 10px;
+}
+</style>

@@ -53,7 +53,6 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
     }
     const observer = createObserverWithCallBack(() => {
       makeChildrensDraggable();
-      observer.disconnect();
     });
     observer.observe(parent.value, { childList: true });
   };
