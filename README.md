@@ -30,12 +30,9 @@ library for lists on Vue3.
 
    # with pnpm:
    pnpm i vue-fluid-dnd
-
-   # with ultra:
-   ultra install vue-fluid-dnd
    ```
 
-2. **Import the composable**
+2. **Import the vue composable**
 
    ```js
    import { useDragAndDrop } from "vue-fluid-dnd";
@@ -47,22 +44,19 @@ library for lists on Vue3.
    // Each element have its own styles or classes and the draggable-id
    const listToSort = ref([
      {
-       "draggable-id": "h1",
        number: 1,
        style:
          "color: white; background-color: red; width: 50px; margin: 23px 0;",
      },
      //...
    ]);
-   // crate parent element calling useDragAndDrop composable
-   const { parent } = useDragAndDrop(numbers);
+   // create the parent element and set drag and drop configuration on the parent and children elements (creating events, statees, styles, etc) calling useDragAndDrop composable
+   const { parent } = useDragAndDrop(listToSort);
    ```
 
-4. **Add references**
+4. **Create childrens**
 
    ```jsx
-   //pass setRef to child to have the reference of draggable element
-   //pass the direction of the list and droppable id
    <template>
       <div ref="parent" style="width: 40%; display: block">
          <div
@@ -75,8 +69,10 @@ library for lists on Vue3.
    </template>
    ```
 
-- 📚 [All docs here](https://vue-fluid-dnd.netlify.app/).
+📚 [Check out all the docs here!](https://vue-fluid-dnd.netlify.app/)
 
 ## 🤝 Contributing
 
 If you're interested in contributing to vue-fluid-dnd, please read our contributing docs before submitting a pull request [CONTRIBUTING](./CONTRIBUTING.md).
+
+<!-- TODO: add info about no dependencies framework and the gzip -->
