@@ -31,6 +31,7 @@ import { ref, watch } from "vue";
 import { Direction } from ".";
 
 const DRAGGABLE_CLASS = "draggable";
+const HANDLER_CLASS = "handler-class";
 const DROPPABLE_CLASS = "droppable";
 const TEMP_CHILD_CLASS = "temp-child";
 const DRAGING_CLASS = "dragging";
@@ -54,6 +55,7 @@ export default function useDraggable(
   child: HTMLElement | undefined,
   index: number,
   direction: Direction,
+  handlerClass: string,
   onDrop: (source: DraggableElement, destination: DraggableElement) => void,
   parent: HTMLElement
 ) {
@@ -79,20 +81,36 @@ export default function useDraggable(
       childRef.value.classList.add(DRAGGABLE_CLASS);
     }
   };
+  const setHandlerStyles = () => {
+    if (childRef.value) {
+      const handlerElement = childRef.value.querySelector(`.${handlerClass}`);
+      if (handlerElement) {
+        handlerElement.classList.add(HANDLER_CLASS);
+      } else {
+        childRef.value.classList.add(HANDLER_CLASS);
+      }
+    }
+  };
   const setCssStyles = () => {
     AddCssStyleToElement(
       parent,
-      `.draggable {  
+      `.${DRAGGABLE_CLASS} {  
       box-sizing: border-box !important; 
       touch-action: none; 
-      cursor: grab; 
       user-select: none;
       -webkit-user-select: none;
     }`
     );
     AddCssStyleToElement(
       parent,
-      `.draggable * {
+      `.${HANDLER_CLASS} {  
+     cursor: grab;
+    }`
+    );
+    setHandlerStyles();
+    AddCssStyleToElement(
+      parent,
+      `.${DRAGGABLE_CLASS} *:not(.${HANDLER_CLASS}) {
         pointer-events: none;
       }`
     );

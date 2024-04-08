@@ -11,4 +11,5 @@ export type Direction = typeof HORIZONTAL | typeof VERTICAL;
  */
 export type Config = {
   direction?: Direction;
+  handlerClass?: string;
 };

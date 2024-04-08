@@ -5,7 +5,12 @@ import useDraggable from "./useDraggable";
 import { parseIntEmpty } from "../utils/GetStyles";
 import { Config, VERTICAL } from ".";
 
-const DEFAULT_CONFIG = { direction: VERTICAL } as Config;
+const DRAGGABLE_CLASS = "draggable";
+
+const DEFAULT_CONFIG = {
+  direction: VERTICAL,
+  handlerClass: DRAGGABLE_CLASS,
+} as Config;
 /**
  * Create the parent element of the draggable children and all the drag and drop events and styles.
  *
@@ -15,7 +20,8 @@ const DEFAULT_CONFIG = { direction: VERTICAL } as Config;
  * @returns The reference of the parent element.
  */
 export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
-  const { direction = VERTICAL } = config ?? DEFAULT_CONFIG;
+  const { direction = VERTICAL, handlerClass = DRAGGABLE_CLASS } =
+    config ?? DEFAULT_CONFIG;
   const INDEX_ATTR = "index";
   const parent = ref<HTMLElement | undefined>();
 
@@ -41,6 +47,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
           childHTMLElement,
           numberIndex,
           direction,
+          handlerClass,
           onDrop,
           parent.value
         );

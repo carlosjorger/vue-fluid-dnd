@@ -8,6 +8,7 @@ import ExampleVerticalListWithMixedStyles from "./components/ExampleVerticalList
 import ExampleVerticalListWithMixedStylesAndGaps from "./components/ExampleVerticalListWithMixedStylesAndGaps.vue";
 import ExampleOfPokemonList from "./components/ExampleOfPokemonList.vue";
 import ExampleCounterList from "./components/ExampleCounterList.vue";
+import ExampleVerticalListWithHandler from "./components/ExampleVerticalListWithHandler.vue";
 </script>
 
 <template>
@@ -15,6 +16,7 @@ import ExampleCounterList from "./components/ExampleCounterList.vue";
     id="example-vertical-list-with-child-elements"
   />
   <ExampleHorizontalList id="example-horizontal-list-with-child-elements" />
+  <ExampleVerticalListWithHandler id="example-horizontal-list-with-handler" />
   <ExampleVertialScrollList id="example-vertical-scroll-list" />
   <ExampleHorizontalScrollList id="example-horizontal-scroll-list" />
   <ExampleHorizontalListWithMixedStyles

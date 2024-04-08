@@ -149,12 +149,12 @@ export const setEventWithInterval = (
   };
 };
 export const AddCssStyleToElement = (element: HTMLElement, cssCode: string) => {
-  var draggableClass = document.createElement("style");
-  draggableClass.innerHTML = cssCode;
+  var newStyle = document.createElement("style");
+  newStyle.innerHTML = cssCode;
   for (const child of element.children) {
     if (child.innerHTML === cssCode) {
       return;
     }
   }
-  element.appendChild(draggableClass);
+  element.appendChild(newStyle);
 };
