@@ -1,6 +1,7 @@
 {
   "name": "vue-fluid-dnd",
   "version": "0.6.1",
+  "description": "A Vue 3 drag and drop library to sort all kind of lists",
   "type": "module",
   "homepage": "https://vue-fluid-dnd.netlify.app",
   "repository": {
@@ -37,6 +38,7 @@
     "library",
     "drag",
     "drop",
+    "drag&drop",
     "draggable",
     "droppable",
     "sortable",
@@ -44,7 +46,10 @@
     "dependency-free",
     "vue-fluid-dnd"
   ],
-  "author": "Carlos Jorge Rodriguez",
+  "author": {
+    "name": "Carlos Jorge Rodriguez",
+    "email": "rodriguezcuelloc@gmail.com"
+  },
   "peerDependencies": {
     "vue": ">=3.4.0"
   },
