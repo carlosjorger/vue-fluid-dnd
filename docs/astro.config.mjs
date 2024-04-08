@@ -114,4 +114,3 @@ export default defineConfig({
   ],
   adapter: netlify(),
 });
-// TODO: improve example titles

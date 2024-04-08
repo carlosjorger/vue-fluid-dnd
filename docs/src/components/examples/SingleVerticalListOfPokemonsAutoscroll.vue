@@ -10,7 +10,7 @@ pokemons.value = await fetchPokemons(9);
 const { parent } = useDragAndDrop(pokemons);
 </script>
 <template>
-  <div class="flex justify-center items-start">
+  <div class="flex max-sm:justify-center items-start">
     <div
       ref="parent"
       class="bg-gray-200/60 border-solid border-black/40 rounded-2xl w-60 border-4 p-4 block overflow-auto max-h-[33rem]"

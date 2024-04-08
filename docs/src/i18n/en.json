@@ -1,6 +1,6 @@
 {
-  "SINGLE_VERTICAL_LIST": "Vertical list example of pokemons",
-  "SINGLE_VERTICAL_LIST_AUTOSCROLL": "Vertical list of pokemons on a scroll container",
-  "SINGLE_HORIZONTAL_LIST": "Horizontal list example of pokemons",
-  "SINGLE_HORIZONTAL_LIST_AUTOSCROLL": "Horizontal list of pokemons on a scroll container"
+  "SINGLE_VERTICAL_LIST": "Vertical list",
+  "SINGLE_VERTICAL_LIST_AUTOSCROLL": "Vertical list on a scroller",
+  "SINGLE_HORIZONTAL_LIST": "Horizontal list",
+  "SINGLE_HORIZONTAL_LIST_AUTOSCROLL": "Horizontal list on a scroller"
 }
