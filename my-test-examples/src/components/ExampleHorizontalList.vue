@@ -28,7 +28,7 @@ const { id } = defineProps<{
     </div>
   </div>
 </template>
-<style>
+<style scoped>
 .list {
   display: flex;
   padding: 10px;

@@ -26,7 +26,7 @@ const { parent } = useDragAndDrop<number>(numbers as any, {
     </li>
   </ul>
 </template>
-<style>
+<style scoped>
 .draggable-wrapper {
   border-width: 10px;
   border-style: solid;
@@ -41,10 +41,11 @@ const { parent } = useDragAndDrop<number>(numbers as any, {
 }
 .number {
   padding-left: 10px;
+  padding-right: 20px;
   text-align: start;
   border-style: solid;
   border-width: 0.8rem;
-  width: 100px;
+  width: 60%;
 }
 .drag-handle {
   float: left;

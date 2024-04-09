@@ -31,7 +31,7 @@ const { parent } = useDragAndDrop<number>(numbers as any);
     </button>
   </div>
 </template>
-<style>
+<style scoped>
 .counter-list {
   display: flex;
   flex-direction: column;

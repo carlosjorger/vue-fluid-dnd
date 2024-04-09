@@ -25,7 +25,7 @@ const { parent } = useDragAndDrop<number>(numbers as any);
     </li>
   </ul>
 </template>
-<style>
+<style scoped>
 .vertical-list {
   display: block;
   padding-inline: 10px;

@@ -40,7 +40,7 @@ const { parent } = useDragAndDrop<number>(listWithMixedStyles as any);
     </div>
   </div>
 </template>
-<style>
+<style scoped>
 .vertical-list-with-mixed-styles {
   width: 40%;
   background-color: darkgray;

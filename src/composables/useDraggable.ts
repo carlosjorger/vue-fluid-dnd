@@ -32,6 +32,7 @@ import { Direction } from ".";
 
 const DRAGGABLE_CLASS = "draggable";
 const HANDLER_CLASS = "handler-class";
+const DRAGGING_HANDLER_CLASS = "dragging-handler-class";
 const DROPPABLE_CLASS = "droppable";
 const TEMP_CHILD_CLASS = "temp-child";
 const DRAGING_CLASS = "dragging";
@@ -129,15 +130,21 @@ export default function useDraggable(
       position: relative;
     }`
     );
+
     AddCssStyleToElement(
       parent,
       `.dragging {
       position: fixed;
       z-index: 5000;
-      cursor: grabbing !important;
       width: var(--fixedWidth) !important;
       height: var(--fixedHeight) !important;
     }`
+    );
+    AddCssStyleToElement(
+      parent,
+      `.${DRAGGING_HANDLER_CLASS} {
+      cursor: grabbing !important;
+      }`
     );
     setDraggable();
   };
@@ -527,9 +534,24 @@ export default function useDraggable(
     removeDraggingStyles(element);
     emitEventToSiblings(element, START_DROP_EVENT);
   };
+  const toogleHandlerDraggingClass = (force: boolean) => {
+    if (!childRef.value) {
+      return;
+    }
+    const handlerElement = childRef.value.querySelector(`.${handlerClass}`);
+    if (handlerElement) {
+      handlerElement.classList.toggle(DRAGGING_HANDLER_CLASS, force);
+    } else {
+      childRef.value.classList.toggle(DRAGGING_HANDLER_CLASS, force);
+    }
+  };
+  const toggleDraggingClass = (element: Element, force: boolean) => {
+    element.classList.toggle(DRAGING_CLASS, force);
+    toogleHandlerDraggingClass(force);
+  };
   const removeElementDraggingStyles = (element: HTMLElement) => {
     draggingState.value = DraggingState.NOT_DRAGGING;
-    element.classList.remove(DRAGING_CLASS);
+    toggleDraggingClass(element, false);
     element.style.transform = "";
     element.style.transition = "";
     element.style.top = "";
@@ -545,7 +567,7 @@ export default function useDraggable(
     const { height, width } = element.getBoundingClientRect();
     fixedHeight.value = `${height}px`;
     fixedWidth.value = `${width}px`;
-    element.classList.add(DRAGING_CLASS);
+    toggleDraggingClass(element, true);
     element.style.transition = "";
   };
   watch(

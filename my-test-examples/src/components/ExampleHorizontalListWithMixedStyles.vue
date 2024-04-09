@@ -46,7 +46,7 @@ const { parent } = useDragAndDrop<number>(lsitWithMixedStyles as any, {
     </div>
   </div>
 </template>
-<style>
+<style scoped>
 .horizontal-list-with-mixed-styles {
   display: flex;
   flex-direction: row;
