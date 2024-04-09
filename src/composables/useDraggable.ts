@@ -110,7 +110,7 @@ export default function useDraggable(
     setHandlerStyles();
     AddCssStyleToElement(
       parent,
-      `.${DRAGGABLE_CLASS} *:not(.${HANDLER_CLASS}) {
+      `.${DRAGGABLE_CLASS} *>:not(.${HANDLER_CLASS}) {
         pointer-events: none;
       }`
     );

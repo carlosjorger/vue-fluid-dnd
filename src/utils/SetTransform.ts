@@ -139,15 +139,44 @@ export const useTransform = (childRef: Ref<HTMLElement | undefined>) => {
     updateTranlateByDirection("horizontal");
     updateTranlateByDirection("vertical");
   }
+  const getOffsetWithDraggable = (
+    direction: Direction,
+    element: Element,
+    draggable: Element
+  ) => {
+    const { borderBeforeWidth, before } = getPropByDirection(direction);
+    return (
+      element.getBoundingClientRect()[before] -
+      draggable.getBoundingClientRect()[before] -
+      getBorderWidthProperty(childRef.value, borderBeforeWidth)
+    );
+  };
+  const getOffset = (event: DragMouseTouchEvent) => {
+    let { offsetX, offsetY, target } = event;
+    if (childRef.value && target && childRef.value != target) {
+      offsetX += getOffsetWithDraggable(
+        "horizontal",
+        target as Element,
+        childRef.value
+      );
+      offsetY += getOffsetWithDraggable(
+        "vertical",
+        target as Element,
+        childRef.value
+      );
+    }
+    return { offsetX, offsetY };
+  };
   const updateTransformState = (
     event: DragMouseTouchEvent,
     element: HTMLElement
   ) => {
-    const { offsetX, offsetY } = event;
+    const { offsetX, offsetY } = getOffset(event);
     currentOffset.value = { offsetX, offsetY };
     const getPositionByDistance = (direction: Direction) => {
       const { offset, beforeMargin, page, borderBeforeWidth, scroll } =
         getPropByDirection(direction);
+
       return (
         event[page] -
         currentOffset.value[offset] -

@@ -19,21 +19,35 @@ const { parent } = useDragAndDrop<number>(numbers as any, {
       class="number"
       :key="element"
     >
-      <span class="drag-handle" style="float: left; padding: 0px 2px">☰</span>
-      {{ element }}
+      <div class="draggable-wrapper">
+        <span class="drag-handle">☰</span>
+        {{ element }}
+      </div>
     </li>
   </ul>
 </template>
 <style>
+.draggable-wrapper {
+  border-width: 10px;
+  border-style: solid;
+  margin: 2px;
+  padding-inline: 4px;
+  padding-block: 5px;
+}
 .vertical-list {
   display: block;
   padding-inline: 10px;
+  padding-block: 5px;
 }
 .number {
-  padding-left: 5px;
+  padding-left: 10px;
   text-align: start;
   border-style: solid;
   border-width: 0.8rem;
   width: 100px;
+}
+.drag-handle {
+  float: left;
+  padding: 0px 5px;
 }
 </style>
