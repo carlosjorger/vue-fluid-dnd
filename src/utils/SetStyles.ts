@@ -157,7 +157,22 @@ const getStyles = (element: HTMLElement) => {
   }
   return style;
 };
+const containRule = (sheet: CSSStyleSheet, cssCode: string) => {
+  for (const rule of sheet.cssRules) {
+    if (rule.cssText === cssCode) {
+      return true;
+    }
+  }
+  return false;
+};
 export const AddCssStyleToElement = (element: HTMLElement, cssCode: string) => {
   var style = getStyles(element);
-  style.sheet?.insertRule(cssCode, style.sheet.cssRules.length);
+  if (!style.sheet) {
+    return;
+  }
+  if (!containRule(style.sheet, cssCode)) {
+    style.sheet?.insertRule(cssCode, style.sheet.cssRules.length);
+  } else {
+    console.log(style.sheet.cssRules);
+  }
 };

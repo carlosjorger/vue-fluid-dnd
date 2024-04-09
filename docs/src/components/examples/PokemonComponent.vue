@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import Handler from "../icons/handler.vue";
 import type { Pokemon } from "./Pokemon";
 
-const { pokemon } = defineProps<{
+const { pokemon, handlerClass } = defineProps<{
   pokemon: Pokemon;
+  handlerClass?: string;
 }>();
 
 const pokeColor = {
@@ -51,6 +53,8 @@ const darkPokeColor = {
   >
     <div class="p-2 max-sm:text-sm">
       <div class="flex flex-row items-center justify-between gap-1">
+        <span v-if="handlerClass" :class="[handlerClass]"> <Handler /></span>
+
         <div class="">{{ pokemon.name }}</div>
         <div class="dark:text-gray-100/40 text-gray-800/40">
           #{{ pokemon.order }}
@@ -71,5 +75,8 @@ const darkPokeColor = {
 .pokemon {
   margin-top: 0rem !important;
   background-image: url("../../assets/pokemon-bg.svg");
+}
+.handler-class {
+  width: 0.625rem;
 }
 </style>

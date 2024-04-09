@@ -95,28 +95,26 @@ export default function useDraggable(
   const setCssStyles = () => {
     AddCssStyleToElement(
       parent,
-      `.${DRAGGABLE_CLASS} { box-sizing: border-box !important; touch-action: none; user-select: none; -webkit-user-select: none;}`
+      `.${DRAGGABLE_CLASS} { touch-action: none; user-select: none; box-sizing: border-box !important; -webkit-user-select: none; }`
     );
-    AddCssStyleToElement(parent, `.${HANDLER_CLASS} { cursor: grab;}`);
+    AddCssStyleToElement(parent, `.${HANDLER_CLASS} { cursor: grab; }`);
     setHandlerStyles();
     AddCssStyleToElement(
       parent,
-      `.${DRAGGABLE_CLASS} *>:not(.${HANDLER_CLASS}) {
-        pointer-events: none;
-      }`
+      `.${DRAGGABLE_CLASS} * > :not(.${HANDLER_CLASS}) { pointer-events: none; }`
     );
     AddCssStyleToElement(
       parent,
-      `.temp-child { box-sizing: border-box !important; touch-action: none; pointer-events: none; }`
+      ".temp-child { touch-action: none; pointer-events: none; box-sizing: border-box !important; }"
     );
     AddCssStyleToElement(
       parent,
-      `.droppable { box-sizing: border-box !important; position: relative; }`
+      `.droppable { position: relative; box-sizing: border-box !important; }`
     );
 
     AddCssStyleToElement(
       parent,
-      `.dragging { position: fixed; z-index: 5000; width: var(--fixedWidth) !important; height: var(--fixedHeight) !important;}`
+      `.dragging { position: fixed; z-index: 5000; width: var(--fixedWidth) !important; height: var(--fixedHeight) !important; }`
     );
     AddCssStyleToElement(
       parent,
