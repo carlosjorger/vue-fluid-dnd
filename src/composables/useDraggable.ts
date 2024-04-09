@@ -28,7 +28,7 @@ import {
   Translate,
 } from "../../index";
 import { ref, watch } from "vue";
-import { Direction } from ".";
+import { Config, Direction } from ".";
 
 const DRAGGABLE_CLASS = "draggable";
 const HANDLER_CLASS = "handler-class";
@@ -55,11 +55,11 @@ enum DraggingState {
 export default function useDraggable(
   child: HTMLElement | undefined,
   index: number,
-  direction: Direction,
-  handlerClass: string,
+  config: Config,
   onDrop: (source: DraggableElement, destination: DraggableElement) => void,
   parent: HTMLElement
 ) {
+  const { handlerClass = DRAGGABLE_CLASS, direction = "vertical" } = config;
   const draggingState = ref<DraggingState>(DraggingState.NOT_DRAGGING);
   const childRef = ref(child);
   const actualIndex = ref(index);
@@ -95,19 +95,9 @@ export default function useDraggable(
   const setCssStyles = () => {
     AddCssStyleToElement(
       parent,
-      `.${DRAGGABLE_CLASS} {  
-      box-sizing: border-box !important; 
-      touch-action: none; 
-      user-select: none;
-      -webkit-user-select: none;
-    }`
+      `.${DRAGGABLE_CLASS} { box-sizing: border-box !important; touch-action: none; user-select: none; -webkit-user-select: none;}`
     );
-    AddCssStyleToElement(
-      parent,
-      `.${HANDLER_CLASS} {  
-     cursor: grab;
-    }`
-    );
+    AddCssStyleToElement(parent, `.${HANDLER_CLASS} { cursor: grab;}`);
     setHandlerStyles();
     AddCssStyleToElement(
       parent,
@@ -117,34 +107,20 @@ export default function useDraggable(
     );
     AddCssStyleToElement(
       parent,
-      `.temp-child {
-        box-sizing: border-box !important;
-        touch-action: none;
-        pointer-events: none;
-      }`
+      `.temp-child { box-sizing: border-box !important; touch-action: none; pointer-events: none; }`
     );
     AddCssStyleToElement(
       parent,
-      `.droppable {
-      box-sizing: border-box !important;
-      position: relative;
-    }`
+      `.droppable { box-sizing: border-box !important; position: relative; }`
     );
 
     AddCssStyleToElement(
       parent,
-      `.dragging {
-      position: fixed;
-      z-index: 5000;
-      width: var(--fixedWidth) !important;
-      height: var(--fixedHeight) !important;
-    }`
+      `.dragging { position: fixed; z-index: 5000; width: var(--fixedWidth) !important; height: var(--fixedHeight) !important;}`
     );
     AddCssStyleToElement(
       parent,
-      `.${DRAGGING_HANDLER_CLASS} {
-      cursor: grabbing !important;
-      }`
+      `.${DRAGGING_HANDLER_CLASS} { cursor: grabbing !important; }`
     );
     setDraggable();
   };

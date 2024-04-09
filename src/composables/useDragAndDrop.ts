@@ -20,8 +20,7 @@ const DEFAULT_CONFIG = {
  * @returns The reference of the parent element.
  */
 export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
-  const { direction = VERTICAL, handlerClass = DRAGGABLE_CLASS } =
-    config ?? DEFAULT_CONFIG;
+  const configuration = config ?? DEFAULT_CONFIG;
   const INDEX_ATTR = "index";
   const parent = ref<HTMLElement | undefined>();
 
@@ -46,8 +45,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
         useDraggable(
           childHTMLElement,
           numberIndex,
-          direction,
-          handlerClass,
+          configuration,
           onDrop,
           parent.value
         );

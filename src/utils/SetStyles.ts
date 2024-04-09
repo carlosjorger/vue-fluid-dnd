@@ -148,13 +148,16 @@ export const setEventWithInterval = (
     callback();
   };
 };
-export const AddCssStyleToElement = (element: HTMLElement, cssCode: string) => {
-  var newStyle = document.createElement("style");
-  newStyle.innerHTML = cssCode;
-  for (const child of element.children) {
-    if (child.innerHTML === cssCode) {
-      return;
-    }
+const getStyles = (element: HTMLElement) => {
+  var style = element.querySelector("style");
+  if (!style) {
+    var newStyle = document.createElement("style");
+    element.appendChild(newStyle);
+    return newStyle;
   }
-  element.appendChild(newStyle);
+  return style;
+};
+export const AddCssStyleToElement = (element: HTMLElement, cssCode: string) => {
+  var style = getStyles(element);
+  style.sheet?.insertRule(cssCode, style.sheet.cssRules.length);
 };
