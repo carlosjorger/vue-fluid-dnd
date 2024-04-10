@@ -32,4 +32,7 @@ const { parent } = useDragAndDrop(pokemons, { handlerClass });
   + :not(a, strong, em, del, span, input, code, :where(.not-content *)) {
   margin-top: 0rem !important;
 }
+.pokemon-handler {
+  width: 0.625rem;
+}
 </style>

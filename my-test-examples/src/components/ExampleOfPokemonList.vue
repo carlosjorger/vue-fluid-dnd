@@ -37,7 +37,7 @@ defineProps<{
   display: block;
 }
 .pokemon-handler {
-  width: 10px;
+  width: 0.625rem;
   display: block;
 }
 </style>

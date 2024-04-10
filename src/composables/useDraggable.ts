@@ -140,14 +140,16 @@ export default function useDraggable(
     }
   };
   const setSlotRefElementParams = (element: HTMLElement | undefined) => {
-    if (element) {
+    const handlerElement =
+      (element?.querySelector(`.${HANDLER_CLASS}`) as HTMLElement) ?? element;
+    if (handlerElement) {
       assignDraggingEvent(
-        element,
+        handlerElement,
         "onmousedown",
         onmousedown("mousemove", "mouseup")
       );
       assignDraggingEvent(
-        element,
+        handlerElement,
         "ontouchstart",
         onmousedown("touchmove", "touchend")
       );

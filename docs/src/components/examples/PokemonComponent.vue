@@ -76,7 +76,4 @@ const darkPokeColor = {
   margin-top: 0rem !important;
   background-image: url("../../assets/pokemon-bg.svg");
 }
-.handler-class {
-  width: 0.625rem;
-}
 </style>
