@@ -144,12 +144,12 @@ export default function useDraggable(
       assignDraggingEvent(
         element,
         "onmousedown",
-        onmousedown("mousemove", "onmouseup")
+        onmousedown("mousemove", "mouseup")
       );
       assignDraggingEvent(
         element,
         "ontouchstart",
-        onmousedown("touchmove", "ontouchend")
+        onmousedown("touchmove", "touchend")
       );
     }
     if (element?.parentElement) {
@@ -177,25 +177,16 @@ export default function useDraggable(
         document.addEventListener(moveEvent, handlerMousemove);
         setEventWithInterval(parent, "onscroll", setTransformDragEvent);
         if (element) {
-          assignDraggingEvent(
-            element,
-            onLeaveEvent,
-            onLeave(moveEvent, element, onLeaveEvent)
-          );
+          document.addEventListener(onLeaveEvent, onLeave(moveEvent));
         }
       }
     };
   };
-  const onLeave = (
-    moveEvent: MoveEvent,
-    element: HTMLElement,
-    onLeaveEvent: OnLeaveEvent
-  ) => {
+  const onLeave = (moveEvent: MoveEvent) => {
     return () => {
       onDropDraggingEvent();
       document.removeEventListener(moveEvent, handlerMousemove);
       parent.onscroll = null;
-      assignDraggingEvent(element, onLeaveEvent, null);
     };
   };
   const startDragging = (event: DragMouseTouchEvent) => {
@@ -572,5 +563,4 @@ export default function useDraggable(
   setCssStyles();
   setSlotRefElementParams(childRef.value);
 }
-// TODO:fix dropping when element is outside
 // TODO: drag between groups https://javascript.info/mouse-drag-and-drop
