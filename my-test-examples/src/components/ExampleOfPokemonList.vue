@@ -10,7 +10,10 @@ const pokemons = ref([] as Pokemon[]);
 onMounted(async () => {
   pokemons.value = await fetchPokemons(9);
 });
-const { parent } = useDragAndDrop(pokemons as any);
+const handlerClass = "pokemon-handler";
+const { parent } = useDragAndDrop(pokemons as any, {
+  handlerClass,
+});
 
 defineProps<{
   id: string;
@@ -23,6 +26,7 @@ defineProps<{
       :index="index"
       :pokemon="pokemon"
       :key="pokemon.name"
+      :handlerClass
     />
   </div>
 </template>
@@ -30,6 +34,10 @@ defineProps<{
 .pokemon-list {
   width: 40%;
   background-color: darkgray;
+  display: block;
+}
+.pokemon-handler {
+  width: 10px;
   display: block;
 }
 </style>

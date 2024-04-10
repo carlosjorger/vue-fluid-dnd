@@ -97,11 +97,14 @@ export default function useDraggable(
       parent,
       `.${DRAGGABLE_CLASS} { touch-action: none; user-select: none; box-sizing: border-box !important; -webkit-user-select: none; }`
     );
-    AddCssStyleToElement(parent, `.${HANDLER_CLASS} { cursor: grab; }`);
+    AddCssStyleToElement(
+      parent,
+      `.${HANDLER_CLASS} { cursor: grab; pointer-events: auto !important; }`
+    );
     setHandlerStyles();
     AddCssStyleToElement(
       parent,
-      `.${DRAGGABLE_CLASS} * > :not(.${HANDLER_CLASS}) { pointer-events: none; }`
+      `.${DRAGGABLE_CLASS} * { pointer-events: none; }`
     );
     AddCssStyleToElement(
       parent,
@@ -569,5 +572,5 @@ export default function useDraggable(
   setCssStyles();
   setSlotRefElementParams(childRef.value);
 }
-// TODO: add handler class
+// TODO:fix dropping when element is outside
 // TODO: drag between groups https://javascript.info/mouse-drag-and-drop
