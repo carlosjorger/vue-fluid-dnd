@@ -1,0 +1,51 @@
+---
+title: Lista con handler
+description: Una guía de como usar Vue Fluid DnD para añadir un drag handler a una lista.
+---
+
+import SingleListWithHandler from "@/components/SingleListWithHandler.vue";
+import { Code } from "@astrojs/starlight/components";
+
+### Ejemplo de lista de números
+
+Con **Vue Fluid DnD** no tienes que arrastrar los elementos por toda su superficie, solo pasa un **selector para el handler** a `handlerClass` esto se usará para encontrar el handler en el elemento:
+
+export const listOfNumbers = `<script setup lang="ts">
+import { ref } from "vue";
+import { useDragAndDrop } from "vue-fluid-dnd";
+import Handler from "./icons/handler.vue";
+
+const list = ref([1, 2, 3, 4, 5]);
+const handlerClass = "handler";
+const { parent } = useDragAndDrop(list, { handlerClass });
+
+</script>`;
+
+<Code code={listOfNumbers} lang="vue" />
+
+### Creando la vista
+
+Después, crearemos el `template` y añadiremos la class `handlerClass` a la componente `Handler`:
+
+export const listOfNumbersDraggable = `
+
+<template>
+    <ul ref="parent" class="number-list">
+      <li class="number" v-for="(element, index) in list" :index="index">
+        <Handler class="handler" />
+        {{ element }}
+    </li>
+    </ul>
+</template>`;
+
+export const highlightsDraggable = ["handler"];
+
+<Code code={listOfNumbersDraggable} lang="vue" mark={highlightsDraggable} />
+
+### Resultado
+
+Este es el resultado:
+
+<div class="pl-8">
+  <SingleListWithHandler client:load />
+</div>

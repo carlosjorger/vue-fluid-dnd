@@ -87,6 +87,13 @@ export default defineConfig({
                 es: "Lista horizontal simple",
               },
             },
+            {
+              label: "List with handler",
+              link: "/guides/listhandler/",
+              translations: {
+                es: "Lista con handler",
+              },
+            },
           ],
           translations: {
             es: "Guía",
