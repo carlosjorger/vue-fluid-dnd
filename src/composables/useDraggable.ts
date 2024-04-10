@@ -232,7 +232,24 @@ export default function useDraggable(
     setTransform(element, parent, pagePosition, translate, direction);
     emitEventToSiblings(element, DRAG_EVENT);
   };
-
+  const onDropDraggingEvent = () => {
+    if (draggingState.value !== DraggingState.DRAGING) {
+      draggingState.value = DraggingState.NOT_DRAGGING;
+      return;
+    }
+    draggingState.value = DraggingState.END_DRAGGING;
+    const element = childRef.value as HTMLElement;
+    if (!element) {
+      return;
+    }
+    removeDraggingStyles(element);
+    emitEventToSiblings(element, START_DROP_EVENT);
+  };
+  const removeDraggingStyles = (element: HTMLElement) => {
+    setTranistion(element, duration);
+    moveTranslate(element, 0, 0);
+  };
+  // #region Events
   const emitEventToSiblings = (
     draggedElement: HTMLElement,
     event: DragEvent
@@ -491,19 +508,7 @@ export default function useDraggable(
     const parentElement = draggable.parentElement as HTMLElement;
     return !hasIntersection(draggable, parentElement);
   };
-  const onDropDraggingEvent = () => {
-    if (draggingState.value !== DraggingState.DRAGING) {
-      draggingState.value = DraggingState.NOT_DRAGGING;
-      return;
-    }
-    draggingState.value = DraggingState.END_DRAGGING;
-    const element = childRef.value as HTMLElement;
-    if (!element) {
-      return;
-    }
-    removeDraggingStyles(element);
-    emitEventToSiblings(element, START_DROP_EVENT);
-  };
+
   const toogleHandlerDraggingClass = (force: boolean) => {
     if (!childRef.value) {
       return;
@@ -529,10 +534,7 @@ export default function useDraggable(
     fixedHeight.value = "";
     fixedWidth.value = "";
   };
-  const removeDraggingStyles = (element: HTMLElement) => {
-    setTranistion(element, duration);
-    moveTranslate(element, 0, 0);
-  };
+
   const setDraggingStyles = (element: HTMLElement) => {
     const { height, width } = element.getBoundingClientRect();
     fixedHeight.value = `${height}px`;
@@ -565,4 +567,5 @@ export default function useDraggable(
   setCssStyles();
   setSlotRefElementParams(childRef.value);
 }
+// TODO: refactor (try to create a emitEvents function module)
 // TODO: drag between groups https://javascript.info/mouse-drag-and-drop
