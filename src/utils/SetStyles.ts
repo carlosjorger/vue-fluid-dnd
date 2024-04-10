@@ -158,8 +158,11 @@ const getStyles = (element: HTMLElement) => {
   return style;
 };
 const containRule = (sheet: CSSStyleSheet, cssCode: string) => {
+  const selectorTextRegex = /\.-?[_a-zA-Z0-9-*\s<>():]+/g;
+  const [selectorText] = cssCode.match(selectorTextRegex) || [];
   for (const rule of sheet.cssRules) {
-    if (rule.cssText === cssCode) {
+    const [ruleSelectorText] = rule.cssText.match(selectorTextRegex) || [];
+    if (selectorText === ruleSelectorText) {
       return true;
     }
   }
@@ -172,7 +175,5 @@ export const AddCssStyleToElement = (element: HTMLElement, cssCode: string) => {
   }
   if (!containRule(style.sheet, cssCode)) {
     style.sheet?.insertRule(cssCode, style.sheet.cssRules.length);
-  } else {
-    console.log(style.sheet.cssRules);
   }
 };
