@@ -8,7 +8,7 @@ import useDragAndDrop from "../../../src/composables/useDragAndDrop";
 
 const pokemons = ref([] as Pokemon[]);
 onMounted(async () => {
-  pokemons.value = await fetchPokemons(9);
+  // pokemons.value = await fetchPokemons(9);
 });
 const handlerClass = "pokemon-handler";
 const { parent } = useDragAndDrop(pokemons as any, {
