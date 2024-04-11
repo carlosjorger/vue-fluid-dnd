@@ -22,8 +22,9 @@ import {
 } from "../../index";
 import { ref, watch } from "vue";
 import { Config } from ".";
-import useEmitEvents from "./../utils/emitEvents";
+import useEmitEvents from "../utils/emitEvents";
 import { DraggingState } from "../utils";
+import { getConfig } from "../utils/config";
 
 const DRAGGABLE_CLASS = "draggable";
 const HANDLER_CLASS = "handler-class";
@@ -39,11 +40,11 @@ const START_DROP_EVENT = "startDrop";
 export default function useDraggable(
   child: HTMLElement | undefined,
   index: number,
-  config: Config,
+  config: Config | undefined,
   onDrop: (source: DraggableElement, destination: DraggableElement) => void,
   parent: HTMLElement
 ) {
-  const { handlerClass = DRAGGABLE_CLASS, direction = "vertical" } = config;
+  const { handlerClass, direction } = getConfig(config);
   const draggingState = ref<DraggingState>(DraggingState.NOT_DRAGGING);
   const childRef = ref(child);
   const translate = ref({ x: 0, y: 0 });

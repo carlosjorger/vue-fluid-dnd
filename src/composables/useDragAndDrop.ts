@@ -3,14 +3,7 @@ import { DraggableElement } from "../../index";
 import { Ref, ref, watch } from "vue";
 import useDraggable from "./useDraggable";
 import { parseIntEmpty } from "../utils/GetStyles";
-import { Config, VERTICAL } from ".";
-
-const DRAGGABLE_CLASS = "draggable";
-
-const DEFAULT_CONFIG = {
-  direction: VERTICAL,
-  handlerClass: DRAGGABLE_CLASS,
-} as Config;
+import { Config } from ".";
 /**
  * Create the parent element of the draggable children and all the drag and drop events and styles.
  *
@@ -20,10 +13,8 @@ const DEFAULT_CONFIG = {
  * @returns The reference of the parent element.
  */
 export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
-  const configuration = config ?? DEFAULT_CONFIG;
   const INDEX_ATTR = "index";
   const parent = ref<HTMLElement | undefined>();
-
   const getOnDrop = (items: T[]) => {
     return (source: DraggableElement, destination: DraggableElement) => {
       if (items) {
@@ -45,7 +36,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
         useDraggable(
           childHTMLElement,
           numberIndex,
-          configuration,
+          config,
           onDrop,
           parent.value
         );
