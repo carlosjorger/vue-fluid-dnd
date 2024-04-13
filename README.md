@@ -1,7 +1,16 @@
  <h1 align="center">
-    <img src="https://github.com/carlosjorger/vue-fluid-dnd/assets/50055316/cdec8638-d074-4f26-8c72-92f7280c4b26" alt="Icon" width="150" height="140" />
-  <br>vue-fluid-dnd<br>
+    <img src="https://github.com/carlosjorger/vue-fluid-dnd/assets/50055316/3e57bdcb-c5f7-4a4a-ae90-d5e0af194ee1" alt="Icon" width="150" height="140" />
+  <br>Vue Fluid DnD<br>
 </h1>
+
+<div align="center">
+
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/vue-fluid-dnd)
+[![license](https://img.shields.io/github/license/carlosjorger/vue-fluid-dnd?label=license)](https://github.com/carlosjorger/vue-fluid-dnd/blob/main/LICENSE)
+[![version](https://img.shields.io/npm/v/vue-fluid-dnd)](https://www.npmjs.com/package/vue-fluid-dnd)
+[![twitter](https://img.shields.io/twitter/follow/carlosjorgerc)](https://twitter.com/carlosjorgerc)
+
+</div>
 
 A **fluid**, **smooth** and **versatil** drag and drop
 library for lists on Vue3. It's a **lightweight** tool ~5 Kb (gzip) with no depenencies.
