@@ -27,7 +27,8 @@ export default defineConfig({
         },
       },
       logo: {
-        src: "/src/assets/logo.svg",
+        light: "/src/assets/logo.svg",
+        dark: "/src/assets/dark-logo.svg",
       },
       editLink: {
         baseUrl:

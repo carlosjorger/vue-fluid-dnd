@@ -275,5 +275,4 @@ export default function useDraggable(
   setCssStyles();
   setSlotRefElementParams(childRef.value);
 }
-// TODO: add isDraggable prop
 // TODO: drag between groups https://javascript.info/mouse-drag-and-drop
