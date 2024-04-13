@@ -44,7 +44,7 @@ export default function useDraggable(
   onDrop: (source: DraggableElement, destination: DraggableElement) => void,
   parent: HTMLElement
 ) {
-  const { handlerClass, direction } = getConfig(config);
+  const { handlerClass, direction, isDraggable } = getConfig(config);
   const draggingState = ref<DraggingState>(DraggingState.NOT_DRAGGING);
   const childRef = ref(child);
   const translate = ref({ x: 0, y: 0 });
@@ -75,7 +75,7 @@ export default function useDraggable(
     }
   };
   const setHandlerStyles = () => {
-    if (childRef.value) {
+    if (childRef.value && isDraggable(childRef.value)) {
       const handlerElement = childRef.value.querySelector(`.${handlerClass}`);
       if (handlerElement) {
         handlerElement.classList.add(HANDLER_CLASS);
@@ -89,6 +89,7 @@ export default function useDraggable(
       parent,
       `.${DRAGGABLE_CLASS} { touch-action: none; user-select: none; box-sizing: border-box !important; -webkit-user-select: none; }`
     );
+
     AddCssStyleToElement(
       parent,
       `.${HANDLER_CLASS} { cursor: grab; pointer-events: auto !important; }`
@@ -120,7 +121,7 @@ export default function useDraggable(
   const setSlotRefElementParams = (element: HTMLElement | undefined) => {
     const handlerElement =
       (element?.querySelector(`.${HANDLER_CLASS}`) as HTMLElement) ?? element;
-    if (handlerElement) {
+    if (handlerElement && element && isDraggable(element)) {
       assignDraggingEvent(
         handlerElement,
         "onmousedown",

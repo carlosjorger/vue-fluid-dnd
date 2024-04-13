@@ -11,6 +11,7 @@ const listWithMixedStyles = ref([
     number: 2,
     style:
       "color: white; background-color: blue; padding: 20px 0; margin: 12px; margin-right: 120px;",
+    class: "not-draggable",
   },
   {
     number: 3,
@@ -27,7 +28,11 @@ defineProps<{
   id: string;
 }>();
 
-const { parent } = useDragAndDrop<number>(listWithMixedStyles as any);
+const { parent } = useDragAndDrop<number>(listWithMixedStyles as any, {
+  isDraggable: (el) => {
+    return !el.classList.contains("not-draggable");
+  },
+});
 </script>
 <template>
   <div ref="parent" class="vertical-list-with-mixed-styles">
@@ -35,6 +40,8 @@ const { parent } = useDragAndDrop<number>(listWithMixedStyles as any);
       v-for="(element, index) in listWithMixedStyles"
       :index="index"
       :style="element.style"
+      :class="element.class"
+      :key="element.number"
     >
       {{ element.number }}
     </div>
@@ -52,5 +59,8 @@ const { parent } = useDragAndDrop<number>(listWithMixedStyles as any);
   border-style: solid;
   border-width: 0.8rem;
   width: 100px;
+}
+.not-draggable {
+  background-color: gray !important;
 }
 </style>
