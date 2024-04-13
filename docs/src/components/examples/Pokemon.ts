@@ -3,6 +3,7 @@ export type Pokemon = {
   order: number;
   types: PokemonTypeOrder[];
   sprites: PokemonStripes;
+  weight: number;
 };
 type PokemonTypeOrder = {
   slot: number;

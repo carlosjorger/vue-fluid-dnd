@@ -4,9 +4,11 @@ const {pathname}= Astro.url
 const { currentLocale } = Astro;
 const baseUrl= currentLocale==='en'?'/example':`/${currentLocale}/example`
 const basicHref=`${baseUrl}/vertical-list/single-vertical-list/`
-const singleHorinzontal=`${baseUrl}/horizontal-list/single-horizontal-list/`
 const singleVerticalOnScrollContainer=`${baseUrl}/vertical-list/single-vertical-list-autoscroll/`
 const singleVerticalWithHandler=`${baseUrl}/vertical-list/single-vertical-list-component-with-handler/`
+const singleVerticalWithIsDraggable=`${baseUrl}/vertical-list/single-vertical-list-component-with-is-draggable/`
+
+const singleHorinzontal=`${baseUrl}/horizontal-list/single-horizontal-list/`
 const singleHorinzontalOnScrollContainer=`${baseUrl}/horizontal-list/single-horizontal-list-autoscroll/`
 
 
@@ -25,6 +27,8 @@ const getLabel = (label:string, spanishLabel:string)=>{
 const basic = getLabel('basic','básico')
 const verticalListScrollLabel = getLabel('list on a scroller','lista en un scroller')
 const verticalListWithHandler = getLabel('list with handler','lista con un handler')
+const verticalListWithIsDraggableLabel = getLabel('IsDraggable','IsDraggable')
+
 const horizontalListScrollLabel = getLabel('list on a scroller','lista en un scroller')
 const description = getLabel('Sorting a list of pokemons with vue-fluid-dnd','Ordenar una lista de pokemones con vue-fluid-dnd') 
 
@@ -39,15 +43,15 @@ const description = getLabel('Sorting a list of pokemons with vue-fluid-dnd','Or
         items: [
           getItem(basic,basicHref),
           getItem(verticalListScrollLabel, singleVerticalOnScrollContainer),
-          getItem(verticalListWithHandler,singleVerticalWithHandler)
+          getItem(verticalListWithHandler,singleVerticalWithHandler),
+          getItem(verticalListWithIsDraggableLabel,singleVerticalWithIsDraggable)
         ],
       },
       {
         label: getLabel('Single horizontal list','Simple lista horizontal'),
         items: [
            getItem(basic, singleHorinzontal),
-           getItem(horizontalListScrollLabel, singleHorinzontalOnScrollContainer),
-
+           getItem(horizontalListScrollLabel, singleHorinzontalOnScrollContainer)
         ],
       },
     ]} 

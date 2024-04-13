@@ -1,12 +1,12 @@
 ---
-import SingleVerticalListOfPokemons from "@/components/examples/SingleVerticalListOfPokemonsWithHandler.vue";
+import SingleVerticalListOfPokemons from "@/components/examples/SingleVerticalListOfPokemonsWithIsDraggable.vue";
 import ExampleLayout from "@/components/examples/ExampleLayout.astro";
 import {getI18N} from '@/i18n/index.ts';  
 
 const { currentLocale } = Astro;
 const i18n = getI18N({ currentLocale });
 ---
-<ExampleLayout title={i18n.SINGLE_VERTICAL_WITH_HANDLER}>
+<ExampleLayout title={i18n.SINGLE_VERTICAL_IS_DRAGGABLE}>
   <SingleVerticalListOfPokemons client:load />
 </ExampleLayout>
 

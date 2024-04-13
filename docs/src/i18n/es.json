@@ -1,6 +1,8 @@
 {
   "SINGLE_VERTICAL_LIST": "Lista vertical",
   "SINGLE_VERTICAL_LIST_AUTOSCROLL": "Lista vertical en un scroller",
+  "SINGLE_VERTICAL_IS_DRAGGABLE": "IsDraggable",
+  "SINGLE_VERTICAL_WITH_HANDLER": "Lista con handlers",
   "SINGLE_HORIZONTAL_LIST": "Lista horizontal",
   "SINGLE_HORIZONTAL_LIST_AUTOSCROLL": "Lista horizontal en un scroller"
 }
