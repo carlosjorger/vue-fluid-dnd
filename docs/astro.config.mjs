@@ -95,6 +95,13 @@ export default defineConfig({
                 es: "Lista con handler",
               },
             },
+            {
+              label: "isDraggable",
+              link: "/guides/isdraggable/",
+              translations: {
+                es: "isDraggable",
+              },
+            },
           ],
           translations: {
             es: "Guía",

@@ -1,0 +1,58 @@
+---
+title: isDraggable
+description: A guide to use Vue Fluid DnD with isDraggable property.
+---
+
+import SingleListWithIsDraggable from "@/components/SingleListWithIsDraggable.vue";
+import { Code } from "@astrojs/starlight/components";
+
+### List of number example
+
+With **Vue Fluid DnD** you can control which element can be dragged and which not using `isDraggable` property:
+
+export const listOfNumbers = `<script setup lang="ts">
+import { ref } from "vue";
+import { useDragAndDrop } from "vue-fluid-dnd";
+
+const list = ref([1, 2, 3, 4], {
+isDraggable: (el) => !el.classList.contains("is-not-draggable"),
+});
+const { parent } = useDragAndDrop(list);
+
+</script>`;
+
+<Code code={listOfNumbers} lang="vue" />
+
+### Creating the view
+
+After, we'll create the `template` and add `is-not-draggable` class to the even numbers:
+
+export const listOfNumbersDraggable = `
+
+<template>
+  <ul ref="parent" class="number-list">
+    <li
+      class="number"
+      v-for="(element, index) in list"
+      :index="index"
+      :class="{
+        'is-not-draggable': element % 2 == 0,
+      }"
+      :key="element"
+    >
+      {{ element }}
+    </li>
+  </ul>
+</template>`;
+
+export const highlightsDraggable = ["is-not-draggable"];
+
+<Code code={listOfNumbersDraggable} lang="vue" mark={highlightsDraggable} />
+
+### Preview
+
+This is the result:
+
+<div class="pl-8">
+  <SingleListWithIsDraggable client:load />
+</div>
