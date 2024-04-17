@@ -1,5 +1,5 @@
  <h1 align="center">
-    <img src="https://github.com/carlosjorger/vue-fluid-dnd/assets/50055316/3e57bdcb-c5f7-4a4a-ae90-d5e0af194ee1" alt="Icon" width="150" height="140" />
+    <img src="https://github.com/carlosjorger/vue-fluid-dnd/assets/50055316/dab15832-5290-42ca-b425-db177a2e589e" alt="Icon" width="150" height="140" />
   <br>Vue Fluid DnD<br>
 </h1>
 
