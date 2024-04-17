@@ -27,7 +27,9 @@ Next, create a list of numbers on vue template:
 export const listOfNumbersHTML = `
 <template>
   <ul class="number-list">
-    <li class="number">{{ element }}</li>
+    <li class="number" v-for="(element, index) in list">
+      {{ element }}
+    </li>
   </ul>
 </template>
 <style>
@@ -55,7 +57,9 @@ export const highlightsDroppable = ["ref", "parent"];
 export const listOfNumbersDroppable = `
 <template>
    <ul ref="parent" class="number-list">
-      <li class="number">{{ element }}</li>
+      <li class="number" v-for="(element, index) in list">
+        {{ element }}
+      </li>
    </ul>
 </template>
 `;
