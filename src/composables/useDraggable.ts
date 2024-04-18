@@ -275,4 +275,5 @@ export default function useDraggable(
   setCssStyles();
   setSlotRefElementParams(childRef.value);
 }
+// TODO: make handlerClass an handler selector
 // TODO: drag between groups https://javascript.info/mouse-drag-and-drop
