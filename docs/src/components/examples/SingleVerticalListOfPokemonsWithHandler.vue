@@ -7,8 +7,8 @@ import { fetchPokemons } from "@/server/pokemonServer";
 
 const pokemons = ref([] as Pokemon[]);
 pokemons.value = await fetchPokemons(9);
-const handlerClass = "pokemon-handler";
-const { parent } = useDragAndDrop(pokemons, { handlerClass });
+const handlerSelector = ".pokemon-handler";
+const { parent } = useDragAndDrop(pokemons, { handlerSelector });
 </script>
 <template>
   <div class="flex max-sm:justify-center items-start">
@@ -21,7 +21,7 @@ const { parent } = useDragAndDrop(pokemons, { handlerClass });
         :key="pokemon.name"
         :index="index"
         :pokemon="pokemon"
-        :handler-class="handlerClass"
+        handler-class="pokemon-handler"
       />
     </div>
   </div>

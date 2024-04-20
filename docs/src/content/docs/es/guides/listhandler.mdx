@@ -8,7 +8,7 @@ import { Code } from "@astrojs/starlight/components";
 
 ### Ejemplo de lista de números
 
-Con **Vue Fluid DnD** no tienes que arrastrar los elementos por toda su superficie, solo pasa un **selector para el handler** a `handlerClass` esto se usará para encontrar el handler en el elemento:
+Con **Vue Fluid DnD** no tienes que arrastrar los elementos por toda su superficie, solo pasa un **selector para el handler** a `handlerSelector` esto se usará para encontrar el handler en el elemento:
 
 export const listOfNumbers = `<script setup lang="ts">
 import { ref } from "vue";
@@ -16,8 +16,8 @@ import { useDragAndDrop } from "vue-fluid-dnd";
 import Handler from "./icons/handler.vue";
 
 const list = ref([1, 2, 3, 4, 5]);
-const handlerClass = "handler";
-const { parent } = useDragAndDrop(list, { handlerClass });
+const handlerSelector = ".handler";
+const { parent } = useDragAndDrop(list, { handlerSelector });
 
 </script>`;
 
@@ -25,7 +25,7 @@ const { parent } = useDragAndDrop(list, { handlerClass });
 
 ### Creando la vista
 
-Después, crearemos el `template` y añadiremos la class `handlerClass` a la componente `Handler`:
+Después, crearemos el `template` y añadiremos la clase `handler` a la componente `Handler`:
 
 export const listOfNumbersDraggable = `
 
