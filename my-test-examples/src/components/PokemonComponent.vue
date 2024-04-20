@@ -4,7 +4,7 @@ import Handler from "./icons/handler.vue";
 
 const { pokemon } = defineProps<{
   pokemon: Pokemon;
-  handlerClass?: string;
+  handlerSelector?: string;
 }>();
 
 const pokeColor = {
@@ -31,7 +31,9 @@ const pokeColor = {
   <div :class="[pokeColor[pokemon.name]]">
     <div class="p-2">
       <div>
-        <span v-if="handlerClass" :class="[handlerClass]"> <Handler /></span>
+        <span v-if="handlerSelector" :class="[handlerSelector]">
+          <Handler
+        /></span>
         <div class="">{{ pokemon.name }}</div>
         <div>#{{ pokemon.order }}</div>
       </div>

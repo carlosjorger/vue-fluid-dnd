@@ -44,7 +44,7 @@ export default function useDraggable(
   onDrop: (source: DraggableElement, destination: DraggableElement) => void,
   parent: HTMLElement
 ) {
-  const { handlerClass, direction, isDraggable } = getConfig(config);
+  const { handlerSelector, direction, isDraggable } = getConfig(config);
   const draggingState = ref<DraggingState>(DraggingState.NOT_DRAGGING);
   const childRef = ref(child);
   const translate = ref({ x: 0, y: 0 });
@@ -63,7 +63,7 @@ export default function useDraggable(
     fixedHeight,
     fixedWidth,
     index,
-    handlerClass,
+    handlerSelector,
     onDrop,
     duration,
     parent,
@@ -76,7 +76,7 @@ export default function useDraggable(
   };
   const setHandlerStyles = () => {
     if (childRef.value && isDraggable(childRef.value)) {
-      const handlerElement = childRef.value.querySelector(`.${handlerClass}`);
+      const handlerElement = childRef.value.querySelector(handlerSelector);
       if (handlerElement) {
         handlerElement.classList.add(HANDLER_CLASS);
       } else {
@@ -231,7 +231,7 @@ export default function useDraggable(
     if (!childRef.value) {
       return;
     }
-    const handlerElement = childRef.value.querySelector(`.${handlerClass}`);
+    const handlerElement = childRef.value.querySelector(handlerSelector);
     if (handlerElement) {
       handlerElement.classList.toggle(DRAGGING_HANDLER_CLASS, force);
     } else {
@@ -275,5 +275,4 @@ export default function useDraggable(
   setCssStyles();
   setSlotRefElementParams(childRef.value);
 }
-// TODO: make handlerClass an handler selector
 // TODO: drag between groups https://javascript.info/mouse-drag-and-drop

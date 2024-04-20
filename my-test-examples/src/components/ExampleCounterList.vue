@@ -6,7 +6,9 @@ const currentNumber = ref(numbers.value.length);
 const { id } = defineProps<{
   id: string;
 }>();
-const { parent } = useDragAndDrop<number>(numbers as any);
+const { parent } = useDragAndDrop<number>(numbers as any, {
+  handlerSelector: ".number",
+});
 </script>
 <template>
   <div class="counter-list">
@@ -17,7 +19,9 @@ const { parent } = useDragAndDrop<number>(numbers as any);
         :id="'child-counter-' + +element.toString()"
         class="number"
       >
-        {{ element }}
+        <div class="inner-number">
+          {{ element }}
+        </div>
       </li>
     </ul>
     <button
@@ -41,10 +45,14 @@ const { parent } = useDragAndDrop<number>(numbers as any);
   padding-inline: 10px;
 }
 .number {
-  padding-left: 5px;
+  padding: 15px;
   text-align: start;
   border-style: solid;
   border-width: 0.8rem;
   width: 100px;
+  background-color: pink;
+}
+.inner-number {
+  background-color: aqua;
 }
 </style>

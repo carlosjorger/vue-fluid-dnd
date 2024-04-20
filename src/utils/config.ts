@@ -3,7 +3,7 @@ import { Config, CoreConfig, VERTICAL } from "../composables";
 export const getConfig = (config?: Config): CoreConfig => {
   const DEFAULT_CONFIG = {
     direction: VERTICAL,
-    handlerClass: "draggable",
+    handlerSelector: "draggable",
     isDraggable: () => true,
   } as CoreConfig;
   if (!config) {
@@ -12,7 +12,7 @@ export const getConfig = (config?: Config): CoreConfig => {
 
   return {
     direction: config.direction ?? DEFAULT_CONFIG.direction,
-    handlerClass: config.handlerClass ?? DEFAULT_CONFIG.handlerClass,
+    handlerSelector: config.handlerSelector ?? DEFAULT_CONFIG.handlerSelector,
     isDraggable: config.isDraggable ?? DEFAULT_CONFIG.isDraggable,
   };
 };

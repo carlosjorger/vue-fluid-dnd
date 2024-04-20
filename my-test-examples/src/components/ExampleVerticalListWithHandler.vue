@@ -7,7 +7,7 @@ const { id } = defineProps<{
   id: string;
 }>();
 const { parent } = useDragAndDrop<number>(numbers as any, {
-  handlerClass: "drag-handle",
+  handlerSelector: ".drag-handle",
 });
 </script>
 <template>

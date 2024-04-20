@@ -15,9 +15,9 @@ export type Config = {
    */
   direction?: Direction;
   /**
-   * The class name of the drag handler element inside of the draggable element.
+   * The CSS selector of the drag handler element inside of the draggable element.
    */
-  handlerClass?: string;
+  handlerSelector?: string;
   /**
    * A function that returns whether a given element of the list is draggable
    */
@@ -30,9 +30,9 @@ export type CoreConfig = {
    */
   direction: Direction;
   /**
-   * The class name of the drag handler element inside of the draggable element.
+   * The CSS selector of the drag handler element inside of the draggable element.
    */
-  handlerClass: string;
+  handlerSelector: string;
   /**
    * A function that returns whether a given element of the list is draggable
    */

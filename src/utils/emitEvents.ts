@@ -32,7 +32,7 @@ export default function useEmitEvents(
   fixedHeight: Ref<string>,
   fixedWidth: Ref<string>,
   index: number,
-  handlerClass: string,
+  handlerSelector: string,
   onDrop: (source: DraggableElement, destination: DraggableElement) => void,
   duration: number,
   parent: HTMLElement,
@@ -328,7 +328,7 @@ export default function useEmitEvents(
     if (!childRef.value) {
       return;
     }
-    const handlerElement = childRef.value.querySelector(`.${handlerClass}`);
+    const handlerElement = childRef.value.querySelector(handlerSelector);
     if (handlerElement) {
       handlerElement.classList.toggle(DRAGGING_HANDLER_CLASS, force);
     } else {
