@@ -71,7 +71,7 @@ const isMouseEvent = (x: any): x is MouseEventType => mouseEvents.includes(x);
 export const convetEventToDragMouseTouchEvent = (
   event: MouseEvent | TouchEvent
 ): DragMouseTouchEvent => {
-  let tempEvent = event instanceof TouchEvent ? event.touches[0] : event;
+  const tempEvent = getEvent(event);
   if (!tempEvent) {
     const { target } = event;
     return {
@@ -110,6 +110,14 @@ export const convetEventToDragMouseTouchEvent = (
     offsetX,
     offsetY,
   };
+};
+const getEvent = (event: MouseEvent | TouchEvent) => {
+  if (window.TouchEvent && event instanceof TouchEvent) {
+    return event.touches[0];
+  }
+  if (event instanceof MouseEvent) {
+    return event;
+  }
 };
 const getOffset = (
   event: MouseEvent | Touch,
