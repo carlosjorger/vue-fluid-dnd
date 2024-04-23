@@ -95,6 +95,7 @@ export default function useEmitEvents(
       }
     }
   };
+  // TODO: fix when is gragged form outside
   const canChangeDraggable = (
     direction: Direction,
     sourceElement: HTMLElement,
@@ -134,6 +135,13 @@ export default function useEmitEvents(
       currentPosition > targetEndPosition;
 
     if (newCondition) {
+      console.log(
+        currentPositionIsInsideTarget,
+        currentEndPositionIsInsideTarget,
+        currentPosition,
+        targetPosition,
+        targetElement
+      );
       return { height: 0, width: 0 };
     }
     return translation;
