@@ -36,6 +36,8 @@ defineProps<{
   width: 40%;
   background-color: darkgray;
   display: block;
+  overflow: auto;
+  height: 600px;
 }
 .pokemon-handler {
   width: 0.625rem;

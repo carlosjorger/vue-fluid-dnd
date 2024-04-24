@@ -1,7 +1,6 @@
 import { Ref, ref } from "vue";
 import {
   getPropByDirection,
-  getScrollElement,
   getSiblings,
   getTransform,
   getWindowScroll,
@@ -32,6 +31,10 @@ export default function useEmitEvents(
   draggingState: Ref<DraggingState>,
   fixedHeight: Ref<string>,
   fixedWidth: Ref<string>,
+  droppableScroll: Ref<{
+    scrollLeft: number;
+    scrollTop: number;
+  }>,
   index: number,
   handlerSelector: string,
   onDrop: (source: DraggableElement, destination: DraggableElement) => void,
@@ -40,7 +43,6 @@ export default function useEmitEvents(
   direction: Direction
 ) {
   const actualIndex = ref(index);
-  const droppableScroll = getScrollElement(parent);
   const emitEventToSiblings = (
     draggedElement: HTMLElement,
     event: DragAndDropEvent
@@ -194,7 +196,7 @@ export default function useEmitEvents(
           elementPosition,
           targetIndex,
           windowScroll,
-          droppableScroll
+          droppableScroll.value
         );
         startDropEventOverElement(
           childElement,

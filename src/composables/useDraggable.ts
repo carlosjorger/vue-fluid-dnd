@@ -2,6 +2,7 @@ import {
   getGapPixels,
   getPropByDirection,
   getScroll,
+  getScrollElement,
 } from "../utils/GetStyles";
 import {
   AddCssStyleToElement,
@@ -56,12 +57,15 @@ export default function useDraggable(
 
   const fixedWidth = ref("");
   const fixedHeight = ref("");
+  const droppableScroll = ref({ scrollLeft: 0, scrollTop: 0 });
+
   const { setTransform, updateTransformState } = useTransform(childRef);
   const { emitEventToSiblings } = useEmitEvents(
     childRef,
     draggingState,
     fixedHeight,
     fixedWidth,
+    droppableScroll,
     index,
     handlerSelector,
     onDrop,
@@ -152,6 +156,7 @@ export default function useDraggable(
   const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
     return () => {
       const element = childRef.value;
+      droppableScroll.value = getScrollElement(parent);
       if (draggingState.value === DraggingState.NOT_DRAGGING) {
         draggingState.value = DraggingState.START_DRAGGING;
         document.addEventListener(moveEvent, handlerMousemove);
