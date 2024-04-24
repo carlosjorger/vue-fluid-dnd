@@ -1,6 +1,5 @@
 import { Ref, ref } from "vue";
 import {
-  getNumberFromPixels,
   getPropByDirection,
   getScrollElement,
   getSiblings,
