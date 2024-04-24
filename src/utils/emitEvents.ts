@@ -1,8 +1,10 @@
 import { Ref, ref } from "vue";
 import {
+  getNumberFromPixels,
   getPropByDirection,
   getScrollElement,
   getSiblings,
+  getTransform,
   getWindowScroll,
   hasIntersection,
 } from "./GetStyles";
@@ -95,53 +97,32 @@ export default function useEmitEvents(
       }
     }
   };
-  // TODO: fix when is gragged form outside
   const canChangeDraggable = (
     direction: Direction,
     sourceElement: HTMLElement,
     targetElement: HTMLElement,
     translation: Translate
   ) => {
-    const { before, distance } = getPropByDirection(direction);
+    const { before, distance, axis } = getPropByDirection(direction);
     const currentBoundingClientRect = sourceElement.getBoundingClientRect();
     const targetBoundingClientRect = targetElement.getBoundingClientRect();
 
     const currentPosition = currentBoundingClientRect[before];
-    const currentSize = currentBoundingClientRect[distance];
 
     const targetPosition = targetBoundingClientRect[before];
     const targetSize = targetBoundingClientRect[distance];
 
-    const siblingMiddle = targetPosition + targetSize / 2;
+    const targetMiddle = targetPosition + targetSize / 2;
 
     const isTransitioned = targetElement.getAnimations().length !== 0;
 
     if (isTransitioned) {
       return;
     }
-    const targetEndPosition = targetPosition + targetSize;
-    const currentEndPosition = currentPosition + currentSize;
+    const targetTransform = getTransform(targetElement)[axis];
+    const targetMiddleWithoutTransform = targetMiddle - targetTransform;
 
-    const currentPositionIsInsideTarget =
-      currentPosition >= targetPosition && currentPosition <= targetEndPosition;
-    const currentEndPositionIsInsideTarget =
-      currentEndPosition >= targetPosition &&
-      currentEndPosition <= targetEndPosition;
-
-    const newCondition =
-      (currentPositionIsInsideTarget && currentPosition > siblingMiddle) ||
-      (currentEndPositionIsInsideTarget &&
-        currentEndPosition > siblingMiddle) ||
-      currentPosition > targetEndPosition;
-
-    if (newCondition) {
-      console.log(
-        currentPositionIsInsideTarget,
-        currentEndPositionIsInsideTarget,
-        currentPosition,
-        targetPosition,
-        targetElement
-      );
+    if (currentPosition > targetMiddleWithoutTransform) {
       return { height: 0, width: 0 };
     }
     return translation;

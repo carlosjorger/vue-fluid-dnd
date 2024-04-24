@@ -11,6 +11,7 @@
 ![GitHub issues](https://img.shields.io/github/issues/carlosjorger/vue-fluid-dnd)
 ![GitHub stars](https://img.shields.io/github/stars/carlosjorger/vue-fluid-dnd)
 [![twitter](https://img.shields.io/twitter/follow/carlosjorgerc)](https://twitter.com/carlosjorgerc)
+[![test_coverage](https://api.codeclimate.com/v1/badges/6b27047dcf150ccddfac/test_coverage)](https://codeclimate.com/github/carlosjorger/vue-fluid-dnd/test_coverage)
 
 </div>
 
@@ -93,3 +94,4 @@ If you're interested in contributing to vue-fluid-dnd, please read our contribut
 ## 🔑 License
 
 - [MIT](https://github.com/carlosjorger/vue-fluid-dnd/blob/main/LICENSE).
+<!-- TODO: take a look to those issues https://codeclimate.com/github/carlosjorger/vue-fluid-dnd/issues -->

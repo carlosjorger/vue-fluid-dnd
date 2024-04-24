@@ -45,10 +45,23 @@ export const computeGapPixels = (element: HTMLElement, gapType: GapStyle) => {
     const { width } = element.getBoundingClientRect();
     return width * (gap_percent / 100);
   }
-  const gap_px = parseFloatEmpty(gap.replace("px", ""));
+  const gap_px = getNumberFromPixels(gap);
   return gap_px;
 };
-
+export const getNumberFromPixels = (pixels: string | undefined) => {
+  if (!pixels || pixels.length == 0) {
+    return 0;
+  }
+  return parseFloatEmpty(pixels.replace("px", ""));
+};
+export const getTransform = (element: HTMLElement) => {
+  const style = window.getComputedStyle(element);
+  const matrix = new DOMMatrixReadOnly(style.transform);
+  return {
+    x: matrix.m41,
+    y: matrix.m42,
+  };
+};
 const intersection = (
   firstInterval: { x1: number; x2: number },
   secondInterval: { x1: number; x2: number }
