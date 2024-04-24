@@ -37,6 +37,7 @@ export default defineConfig({
       customCss: process.env.NO_GRADIENTS ? [] : ["/src/assets/landing.css"],
       social: {
         github: "https://github.com/carlosjorger/vue-fluid-dnd",
+        linkedin: "https://github.com/carlosjorger",
         "x.com": "https://twitter.com/carlosjorgerc",
       },
       components: {
