@@ -116,7 +116,7 @@ export const getBorderWidthProperty = (
   element: HTMLElement | Element | undefined | null,
   property: BorderWidth
 ) => {
-  if (element && element instanceof HTMLElement) {
+  if (element) {
     return parseFloatEmpty(getComputedStyle(element)[property]);
   }
   return 0;
@@ -125,7 +125,7 @@ export const getMarginStyleByProperty = (
   element: HTMLElement | Element | undefined | null,
   property: BeforeMargin | AfterMargin
 ) => {
-  if (element && element instanceof HTMLElement) {
+  if (element) {
     return parseFloatEmpty(window.getComputedStyle(element)[property]);
   }
   return 0;
@@ -154,41 +154,57 @@ export const getScrollElement = (element: HTMLElement) => {
   const { scrollLeft, scrollTop } = element;
   return { scrollLeft, scrollTop };
 };
-// TODO: refactor this function
-export const getPropByDirection = (direction: Direction) => {
+export const getPropByDirection = (
+  direction: Direction
+): {
+  beforeMargin: BeforeMargin;
+  afterMargin: AfterMargin;
+  borderBeforeWidth: BorderWidth;
+  before: Before;
+  after: After;
+  gap: GapStyle;
+  distance: Distance;
+  axis: Axis;
+  offset: Offset;
+  scroll: Scroll;
+  scrollElement: ScrollElement;
+  page: Page;
+  inner: InnerDistance;
+  offsetElement: OffsetElement;
+} => {
   if (direction == "horizontal") {
     return {
-      beforeMargin: "marginLeft" as BeforeMargin,
-      afterMargin: "marginRight" as AfterMargin,
-      borderBeforeWidth: "borderLeftWidth" as BorderWidth,
-      before: "left" as Before,
-      after: "right" as After,
-      gap: "columnGap" as GapStyle,
-      distance: "width" as Distance,
-      axis: "x" as Axis,
-      offset: "offsetX" as Offset,
-      scroll: "scrollX" as Scroll,
-      scrollElement: "scrollLeft" as ScrollElement,
-      page: "pageX" as Page,
-      inner: "innerWidth" as InnerDistance,
-      offsetElement: "offsetLeft" as OffsetElement,
+      beforeMargin: "marginLeft",
+      afterMargin: "marginRight",
+      borderBeforeWidth: "borderLeftWidth",
+      before: "left",
+      after: "right",
+      gap: "columnGap",
+      distance: "width",
+      axis: "x",
+      offset: "offsetX",
+      scroll: "scrollX",
+      scrollElement: "scrollLeft",
+      page: "pageX",
+      inner: "innerWidth",
+      offsetElement: "offsetLeft",
     };
   } else {
     return {
-      beforeMargin: "marginTop" as BeforeMargin,
-      afterMargin: "marginBottom" as AfterMargin,
-      borderBeforeWidth: "borderTopWidth" as BorderWidth,
-      before: "top" as Before,
-      after: "down" as After,
-      gap: "rowGap" as GapStyle,
-      distance: "height" as Distance,
-      axis: "y" as Axis,
-      offset: "offsetY" as Offset,
-      scroll: "scrollY" as Scroll,
-      scrollElement: "scrollTop" as ScrollElement,
-      page: "pageY" as Page,
-      inner: "innerHeight" as InnerDistance,
-      offsetElement: "offsetTop" as OffsetElement,
+      beforeMargin: "marginTop",
+      afterMargin: "marginBottom",
+      borderBeforeWidth: "borderTopWidth",
+      before: "top",
+      after: "down",
+      gap: "rowGap",
+      distance: "height",
+      axis: "y",
+      offset: "offsetY",
+      scroll: "scrollY",
+      scrollElement: "scrollTop",
+      page: "pageY",
+      inner: "innerHeight",
+      offsetElement: "offsetTop",
     };
   }
 };
@@ -205,6 +221,7 @@ export const getSiblings = (current: HTMLElement) => {
 const nextSiblingsFromElement = (current: HTMLElement) => {
   const siblings = [] as HTMLElement[];
   let sibling = current as Element | null;
+  // TODO: remove duplicate code
   while (sibling) {
     sibling = sibling.nextElementSibling;
     if (sibling instanceof HTMLElement) {

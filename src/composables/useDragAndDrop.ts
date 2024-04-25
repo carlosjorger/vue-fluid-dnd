@@ -64,7 +64,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
   });
   return { parent };
 }
-
+// TODO: remove duplicate code
 const createObserverWithCallBack = (callback: () => void) => {
   return new MutationObserver((mutations) => {
     mutations.forEach(() => {

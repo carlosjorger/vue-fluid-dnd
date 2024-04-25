@@ -21,7 +21,7 @@ import {
   MoveEvent,
   OnLeaveEvent,
 } from "../../index";
-import { ref, watch } from "vue";
+import { Ref, ref, watch } from "vue";
 import { Config } from ".";
 import useEmitEvents from "../utils/emitEvents";
 import { DraggingState } from "../utils";
@@ -32,7 +32,6 @@ const HANDLER_CLASS = "handler-class";
 const DRAGGING_HANDLER_CLASS = "dragging-handler-class";
 const DROPPABLE_CLASS = "droppable";
 const TEMP_CHILD_CLASS = "temp-child";
-const DRAGING_CLASS = "dragging";
 
 const DRAG_EVENT = "drag";
 const START_DRAG_EVENT = "startDrag";
@@ -60,7 +59,7 @@ export default function useDraggable(
   const droppableScroll = ref({ scrollLeft: 0, scrollTop: 0 });
 
   const { setTransform, updateTransformState } = useTransform(childRef);
-  const { emitEventToSiblings } = useEmitEvents(
+  const { emitEventToSiblings, toggleDraggingClass } = useEmitEvents(
     childRef,
     draggingState,
     fixedHeight,
@@ -231,24 +230,6 @@ export default function useDraggable(
     setTranistion(element, duration);
     moveTranslate(element, 0, 0);
   };
-
-  const toogleHandlerDraggingClass = (force: boolean) => {
-    if (!childRef.value) {
-      return;
-    }
-    const handlerElement = childRef.value.querySelector(handlerSelector);
-    if (handlerElement) {
-      handlerElement.classList.toggle(DRAGGING_HANDLER_CLASS, force);
-    } else {
-      childRef.value.classList.toggle(DRAGGING_HANDLER_CLASS, force);
-    }
-  };
-  // TODO: remove duplicate
-  const toggleDraggingClass = (element: Element, force: boolean) => {
-    element.classList.toggle(DRAGING_CLASS, force);
-    toogleHandlerDraggingClass(force);
-  };
-
   const setDraggingStyles = (element: HTMLElement) => {
     const { height, width } = element.getBoundingClientRect();
     fixedHeight.value = `${height}px`;
@@ -256,6 +237,7 @@ export default function useDraggable(
     toggleDraggingClass(element, true);
     element.style.transition = "";
   };
+
   watch(
     translate,
     (newTranslate) => {
@@ -266,18 +248,20 @@ export default function useDraggable(
     },
     { deep: true }
   );
-  watch(fixedWidth, (newFixedWidth) => {
-    const childElement = childRef.value;
-    if (childElement) {
-      childElement.style.setProperty("--fixedWidth", newFixedWidth);
-    }
-  });
-  watch(fixedHeight, (newFixedHeight) => {
-    const childElement = childRef.value;
-    if (childElement) {
-      childElement.style.setProperty("--fixedHeight", newFixedHeight);
-    }
-  });
+  const createWatchOfFixedSize = (
+    fixedSize: Ref<string>,
+    fixedProp: string
+  ) => {
+    watch(fixedSize, (newFixedSize) => {
+      const childElement = childRef.value;
+      if (childElement) {
+        childElement.style.setProperty(fixedProp, newFixedSize);
+      }
+    });
+  };
+  createWatchOfFixedSize(fixedWidth, "--fixedWidth");
+  createWatchOfFixedSize(fixedHeight, "--fixedHeight");
+
   setCssStyles();
   setSlotRefElementParams(childRef.value);
 }

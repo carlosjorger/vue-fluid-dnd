@@ -309,6 +309,7 @@ export default function useEmitEvents(
     fixedHeight.value = "";
     fixedWidth.value = "";
   };
+  // TODO: remove duplicate code
   const draggableIsOutside = (draggable: HTMLElement) => {
     const parentElement = draggable.parentElement as HTMLElement;
     return !hasIntersection(draggable, parentElement);
@@ -329,5 +330,5 @@ export default function useEmitEvents(
     element.classList.toggle(DRAGING_CLASS, force);
     toogleHandlerDraggingClass(force);
   };
-  return { emitEventToSiblings };
+  return { emitEventToSiblings, toggleDraggingClass };
 }

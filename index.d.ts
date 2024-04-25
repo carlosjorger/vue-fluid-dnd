@@ -17,7 +17,7 @@ export type Page = "pageX" | "pageY";
 export type MoveEvent = "mousemove" | "touchmove";
 export type OnLeaveEvent = "mouseup" | "touchend";
 export type TouchEvent = "touchstart" | "touchmove" | "touchend";
-export type OffsetElement = "offsetLeft" | "offsetLeft";
+export type OffsetElement = "offsetLeft" | "offsetTop";
 export type Translate = {
   height: number;
   width: number;
