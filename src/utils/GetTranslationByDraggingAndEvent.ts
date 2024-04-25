@@ -44,13 +44,11 @@ function getTranslationByDragging(
 
   const currentAfterMargin = getMarginStyleByProperty(current, afterMargin);
   const currentBeforeMargin = getMarginStyleByProperty(current, beforeMargin);
-
-  let nextBeforeMargin = getMarginStyleByProperty(nextElement, beforeMargin);
+  const nextBeforeMargin = getMarginStyleByProperty(nextElement, beforeMargin);
 
   const parentElement = current.parentElement as HTMLElement;
 
   const { gap, hasGaps } = gapAndDisplayInformation(parentElement, gapStyle);
-
   const space = current.getBoundingClientRect()[distance];
 
   if (hasGaps) {
@@ -59,7 +57,6 @@ function getTranslationByDragging(
       getTranslation(space, currentBeforeMargin, currentAfterMargin, gap, 0)
     );
   }
-
   const { afterSpace, beforeScace, rest } = getTranslationByDraggingWithoutGaps(
     previousElement,
     nextBeforeMargin,
@@ -67,7 +64,6 @@ function getTranslationByDragging(
     currentBeforeMargin,
     afterMargin
   );
-
   return getDistancesByDirection(
     direction,
     getTranslation(space, beforeScace, afterSpace, 0, rest)

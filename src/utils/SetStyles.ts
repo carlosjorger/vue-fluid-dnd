@@ -176,7 +176,16 @@ const containRule = (sheet: CSSStyleSheet, cssCode: string) => {
   }
   return false;
 };
-export const AddCssStyleToElement = (element: HTMLElement, cssCode: string) => {
+export const AddCssStylesToElement = (
+  element: HTMLElement,
+  cssCodes: string[]
+) => {
+  cssCodes.forEach((cssCode) => {
+    AddCssStyleToElement(element, cssCode);
+  });
+};
+
+const AddCssStyleToElement = (element: HTMLElement, cssCode: string) => {
   var style = getStyles(element);
   if (!style.sheet) {
     return;

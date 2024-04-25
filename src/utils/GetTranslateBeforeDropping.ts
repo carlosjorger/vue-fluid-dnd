@@ -146,7 +146,6 @@ const spaceWithMargins = (
       afterMarginSpace: 0,
     };
   }
-
   const beforeMarginCalc = getMarginStyleByProperty(siblings[0], beforeMargin);
   let afterMarginCalc = 0;
   let spaceCalc = 0;

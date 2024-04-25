@@ -5,7 +5,7 @@ import {
   getScrollElement,
 } from "../utils/GetStyles";
 import {
-  AddCssStyleToElement,
+  AddCssStylesToElement,
   assignDraggingEvent,
   convetEventToDragMouseTouchEvent,
   moveTranslate,
@@ -88,37 +88,16 @@ export default function useDraggable(
     }
   };
   const setCssStyles = () => {
-    AddCssStyleToElement(
-      parent,
-      `.${DRAGGABLE_CLASS} { touch-action: none; user-select: none; box-sizing: border-box !important; -webkit-user-select: none; }`
-    );
-
-    AddCssStyleToElement(
-      parent,
-      `.${HANDLER_CLASS} { cursor: grab; pointer-events: auto !important; }`
-    );
+    AddCssStylesToElement(parent, [
+      `.${DRAGGABLE_CLASS} { touch-action: none; user-select: none; box-sizing: border-box !important; -webkit-user-select: none; }`,
+      `.${HANDLER_CLASS} { cursor: grab; pointer-events: auto !important; }`,
+      `.${DRAGGABLE_CLASS} * { pointer-events: none; }`,
+      ".temp-child { touch-action: none; pointer-events: none; box-sizing: border-box !important; }",
+      `.droppable { position: relative; box-sizing: border-box !important; }`,
+      `.dragging { position: fixed; z-index: 5000; width: var(--fixedWidth) !important; height: var(--fixedHeight) !important; }`,
+      `.${DRAGGING_HANDLER_CLASS} { cursor: grabbing !important; }`,
+    ]);
     setHandlerStyles();
-    AddCssStyleToElement(
-      parent,
-      `.${DRAGGABLE_CLASS} * { pointer-events: none; }`
-    );
-    AddCssStyleToElement(
-      parent,
-      ".temp-child { touch-action: none; pointer-events: none; box-sizing: border-box !important; }"
-    );
-    AddCssStyleToElement(
-      parent,
-      `.droppable { position: relative; box-sizing: border-box !important; }`
-    );
-
-    AddCssStyleToElement(
-      parent,
-      `.dragging { position: fixed; z-index: 5000; width: var(--fixedWidth) !important; height: var(--fixedHeight) !important; }`
-    );
-    AddCssStyleToElement(
-      parent,
-      `.${DRAGGING_HANDLER_CLASS} { cursor: grabbing !important; }`
-    );
     setDraggable();
   };
   const setSlotRefElementParams = (element: HTMLElement | undefined) => {

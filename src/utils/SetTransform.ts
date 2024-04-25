@@ -36,7 +36,6 @@ export const useTransform = (childRef: Ref<HTMLElement | undefined>) => {
     direction?: Direction
   ) {
     const elementBoundingClientRect = element.getBoundingClientRect();
-
     const getTranslateWihtDirection = (translateDirection: Direction) => {
       const {
         beforeMargin,
@@ -66,9 +65,7 @@ export const useTransform = (childRef: Ref<HTMLElement | undefined>) => {
           border -
           margin -
           scrollValue;
-
         updateScroll(translateDirection);
-
         return newTranslate;
       }
       const defaultTransalation = translate.value[axis];

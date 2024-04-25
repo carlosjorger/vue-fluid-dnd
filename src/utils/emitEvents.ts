@@ -1,10 +1,10 @@
 import { Ref, ref } from "vue";
 import {
+  draggableIsOutside,
   getPropByDirection,
   getSiblings,
   getTransform,
   getWindowScroll,
-  hasIntersection,
 } from "./GetStyles";
 import { DraggableElement, Translate } from "../../index";
 import { moveTranslate, setTranistion } from "./SetStyles";
@@ -88,7 +88,6 @@ export default function useEmitEvents(
           continue;
         }
       }
-
       const siblingRealIndex = siblings.length - index;
       updateActualIndexBaseOnTranslation(translation, siblingRealIndex);
       if (event === START_DRAG_EVENT) {
@@ -309,12 +308,6 @@ export default function useEmitEvents(
     fixedHeight.value = "";
     fixedWidth.value = "";
   };
-  // TODO: remove duplicate code
-  const draggableIsOutside = (draggable: HTMLElement) => {
-    const parentElement = draggable.parentElement as HTMLElement;
-    return !hasIntersection(draggable, parentElement);
-  };
-
   const toogleHandlerDraggingClass = (force: boolean) => {
     if (!childRef.value) {
       return;

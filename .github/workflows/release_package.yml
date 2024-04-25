@@ -1,3 +1,4 @@
+# TODO: use semantic-realese https://medium.com/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
 name: Release package
 on:
   workflow_dispatch:
