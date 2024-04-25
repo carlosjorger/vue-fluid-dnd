@@ -243,6 +243,7 @@ export default function useDraggable(
       childRef.value.classList.toggle(DRAGGING_HANDLER_CLASS, force);
     }
   };
+  // TODO: remove duplicate
   const toggleDraggingClass = (element: Element, force: boolean) => {
     element.classList.toggle(DRAGING_CLASS, force);
     toogleHandlerDraggingClass(force);

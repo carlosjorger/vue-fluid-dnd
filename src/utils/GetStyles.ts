@@ -154,6 +154,7 @@ export const getScrollElement = (element: HTMLElement) => {
   const { scrollLeft, scrollTop } = element;
   return { scrollLeft, scrollTop };
 };
+// TODO: refactor this function
 export const getPropByDirection = (direction: Direction) => {
   if (direction == "horizontal") {
     return {
