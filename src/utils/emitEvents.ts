@@ -12,6 +12,7 @@ import { Direction } from "../composables";
 import getTranslationByDragging from "./GetTranslationByDraggingAndEvent";
 import getTranslateBeforeDropping from "./GetTranslateBeforeDropping";
 import { DraggingState, IsDropEvent } from ".";
+import { createObserverWithCallBack } from "./observer";
 
 const DRAGGING_HANDLER_CLASS = "dragging-handler-class";
 const DRAGING_CLASS = "dragging";
@@ -285,13 +286,7 @@ export default function useEmitEvents(
       });
     }
   };
-  const createObserverWithCallBack = (callback: () => void) => {
-    return new MutationObserver((mutations) => {
-      mutations.forEach(() => {
-        callback();
-      });
-    });
-  };
+
   const removeTranslateWhitoutTransition = (element?: HTMLElement) => {
     if (element) {
       element.style.transition = "";

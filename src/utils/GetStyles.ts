@@ -221,7 +221,6 @@ export const getSiblings = (current: HTMLElement) => {
 const nextSiblingsFromElement = (current: HTMLElement) => {
   const siblings = [] as HTMLElement[];
   let sibling = current as Element | null;
-  // TODO: remove duplicate code
   while (sibling) {
     sibling = sibling.nextElementSibling;
     if (sibling instanceof HTMLElement) {

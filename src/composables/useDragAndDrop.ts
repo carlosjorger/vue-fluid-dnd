@@ -4,6 +4,7 @@ import { Ref, ref, watch } from "vue";
 import useDraggable from "./useDraggable";
 import { parseIntEmpty } from "../utils/GetStyles";
 import { Config } from ".";
+import { createObserverWithCallBack } from "../utils/observer";
 /**
  * Create the parent element of the draggable children and all the drag and drop events and styles.
  *
@@ -64,11 +65,3 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
   });
   return { parent };
 }
-// TODO: remove duplicate code
-const createObserverWithCallBack = (callback: () => void) => {
-  return new MutationObserver((mutations) => {
-    mutations.forEach(() => {
-      callback();
-    });
-  });
-};

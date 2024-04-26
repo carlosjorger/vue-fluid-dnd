@@ -75,12 +75,10 @@ export const useTransform = (childRef: Ref<HTMLElement | undefined>) => {
       if (
         element &&
         element.classList.contains("dragging") &&
-        parent &&
         translateDirection === direction
       ) {
         const { before, distance, axis } = getPropByDirection(direction);
-        const elementBoundingClientRect = element.getBoundingClientRect();
-        const distanceValue = elementBoundingClientRect[distance];
+        const distanceValue = element.getBoundingClientRect()[distance];
 
         const parentBoundingClientRect = parent.getBoundingClientRect();
         const positionInsideParent =

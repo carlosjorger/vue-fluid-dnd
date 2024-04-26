@@ -94,4 +94,3 @@ If you're interested in contributing to vue-fluid-dnd, please read our contribut
 ## 🔑 License
 
 - [MIT](https://github.com/carlosjorger/vue-fluid-dnd/blob/main/LICENSE).
-<!-- TODO: take a look to those issues https://codeclimate.com/github/carlosjorger/vue-fluid-dnd/issues -->
