@@ -50,7 +50,7 @@ export default function useEmitEvents(
   ) => {
     let tranlation = { height: 0, width: 0 };
     tranlation = getTranslationByDragging(draggedElement, event, direction);
-    const { siblings, elementPosition } = getSiblings(draggedElement);
+    const { siblings, elementPosition } = getSiblings(draggedElement, parent);
     const dropping = IsDropEvent(event);
     if (!dropping) {
       emitDraggingEventToSiblings(draggedElement, event, siblings, tranlation);
@@ -274,7 +274,7 @@ export default function useEmitEvents(
     });
   };
   const observeDroppedElements = (element: HTMLElement) => {
-    const { siblings } = getSiblings(element);
+    const { siblings } = getSiblings(element, parent);
     for (const sibling of [...siblings, element]) {
       const observer = createObserverWithCallBack(() => {
         removeTranslateWhitoutTransition(sibling);

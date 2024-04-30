@@ -209,37 +209,18 @@ export const getPropByDirection = (
   }
 };
 
-export const getSiblings = (current: HTMLElement) => {
-  const nextSiblings = nextSiblingsFromElement(current);
-  const { previousSiblings, elementPosition } =
-    previousSiblingsFromElement(current);
+export const getSiblings = (current: HTMLElement, parent: HTMLElement) => {
+  const siblings = [...parent.children]
+    .filter((child) => !child.isEqualNode(current))
+    .map((child) => child as HTMLElement)
+    .toReversed();
+
+  const elementPosition = [...parent.children].findLastIndex((child) =>
+    child.isEqualNode(current)
+  );
+
   return {
-    siblings: [...nextSiblings, ...previousSiblings],
+    siblings,
     elementPosition,
-  };
-};
-const nextSiblingsFromElement = (current: HTMLElement) => {
-  const siblings = [] as HTMLElement[];
-  let sibling = current as Element | null;
-  while (sibling) {
-    sibling = sibling.nextElementSibling;
-    if (sibling instanceof HTMLElement) {
-      siblings.push(sibling as HTMLElement);
-    }
-  }
-  return siblings.toReversed();
-};
-const previousSiblingsFromElement = (current: HTMLElement) => {
-  const siblings = [] as HTMLElement[];
-  let previousSibling = current as Element | null;
-  while (previousSibling) {
-    previousSibling = previousSibling.previousElementSibling;
-    if (previousSibling instanceof HTMLElement) {
-      siblings.push(previousSibling as HTMLElement);
-    }
-  }
-  return {
-    previousSiblings: siblings,
-    elementPosition: siblings.length,
   };
 };
