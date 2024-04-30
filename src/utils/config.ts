@@ -14,5 +14,6 @@ export const getConfig = (config?: Config): CoreConfig => {
     direction: config.direction ?? DEFAULT_CONFIG.direction,
     handlerSelector: config.handlerSelector ?? DEFAULT_CONFIG.handlerSelector,
     isDraggable: config.isDraggable ?? DEFAULT_CONFIG.isDraggable,
+    droppableGroup: config.droppableGroup,
   };
 };

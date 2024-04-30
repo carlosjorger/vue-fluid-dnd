@@ -44,7 +44,8 @@ export default function useDraggable(
   onDrop: (source: DraggableElement, destination: DraggableElement) => void,
   parent: HTMLElement
 ) {
-  const { handlerSelector, direction, isDraggable } = getConfig(config);
+  const { handlerSelector, direction, isDraggable, droppableGroup } =
+    getConfig(config);
   const draggingState = ref<DraggingState>(DraggingState.NOT_DRAGGING);
   const childRef = ref(child);
   const translate = ref({ x: 0, y: 0 });
@@ -70,7 +71,8 @@ export default function useDraggable(
     onDrop,
     duration,
     parent,
-    direction
+    direction,
+    droppableGroup
   );
   const setDraggable = () => {
     if (childRef.value) {
@@ -99,7 +101,14 @@ export default function useDraggable(
     ]);
     setHandlerStyles();
     setDraggable();
+    setDroppableGroupClass();
   };
+  const setDroppableGroupClass = () => {
+    if (droppableGroup) {
+      parent.classList.add(`droppable-group-${droppableGroup}`);
+    }
+  };
+
   const setSlotRefElementParams = (element: HTMLElement | undefined) => {
     const handlerElement =
       (element?.querySelector(`.${HANDLER_CLASS}`) as HTMLElement) ?? element;

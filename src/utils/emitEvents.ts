@@ -41,7 +41,8 @@ export default function useEmitEvents(
   onDrop: (source: DraggableElement, destination: DraggableElement) => void,
   duration: number,
   parent: HTMLElement,
-  direction: Direction
+  direction: Direction,
+  droppableGroup?: string
 ) {
   const actualIndex = ref(index);
   const emitEventToSiblings = (

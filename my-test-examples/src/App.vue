@@ -9,6 +9,7 @@ import ExampleVerticalListWithMixedStylesAndGaps from "./components/ExampleVerti
 import ExampleOfPokemonList from "./components/ExampleOfPokemonList.vue";
 import ExampleCounterList from "./components/ExampleCounterList.vue";
 import ExampleVerticalListWithHandler from "./components/ExampleVerticalListWithHandler.vue";
+import ExampleGroupOflist from "./components/ExampleGroupOflist.vue";
 </script>
 
 <template>
@@ -34,6 +35,7 @@ import ExampleVerticalListWithHandler from "./components/ExampleVerticalListWith
     <ExampleOfPokemonList id="example-pokemon-list" />
     <ExampleCounterList id="example-counter-list" />
   </div>
+  <ExampleGroupOflist id="example-group-list" />
 </template>
 <style>
 .example-cols {

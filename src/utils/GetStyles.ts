@@ -210,6 +210,12 @@ export const getPropByDirection = (
 };
 
 export const getSiblings = (current: HTMLElement, parent: HTMLElement) => {
+  return getSiblingsByParent(current, parent);
+};
+export const getSiblingsByParent = (
+  current: HTMLElement,
+  parent: HTMLElement
+) => {
   const siblings = [...parent.children]
     .filter((child) => !child.isEqualNode(current))
     .map((child) => child as HTMLElement)

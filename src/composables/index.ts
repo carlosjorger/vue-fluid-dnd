@@ -9,7 +9,7 @@ export type Direction = typeof HORIZONTAL | typeof VERTICAL;
  * Configuration of the drag and drop.
  * @public
  */
-export type Config = {
+export interface Config {
   /**
    * The direction of the list to sort.
    */
@@ -22,7 +22,11 @@ export type Config = {
    * A function that returns whether a given element of the list is draggable
    */
   isDraggable?: (element: HTMLElement) => boolean;
-};
+  /**
+   * Name of the group of the share droppables
+   */
+  droppableGroup?: string;
+}
 
 export type CoreConfig = {
   /**
@@ -37,4 +41,8 @@ export type CoreConfig = {
    * A function that returns whether a given element of the list is draggable
    */
   isDraggable: (element: HTMLElement) => boolean;
+  /**
+   * Name of the group of the share droppables
+   */
+  droppableGroup?: string;
 };
