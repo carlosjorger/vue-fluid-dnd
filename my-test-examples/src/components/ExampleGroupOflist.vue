@@ -26,7 +26,7 @@ const { id } = defineProps<{
 </script>
 <template>
   <div :id="id" class="group">
-    <div ref="parent1">
+    <div ref="parent1" class="vertical-list">
       <div
         v-for="(element, index) in numbers1"
         :index="index"
@@ -36,7 +36,7 @@ const { id } = defineProps<{
         {{ element }}
       </div>
     </div>
-    <div ref="parent2">
+    <div ref="parent2" class="vertical-list">
       <div
         v-for="(element, index) in numbers2"
         :index="index"
@@ -62,11 +62,17 @@ const { id } = defineProps<{
 .group {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 20%;
+}
+.vertical-list {
+  background-color: aliceblue;
 }
 .list {
   display: flex;
   padding: 10px;
   flex-direction: row;
+  background-color: pink;
+  padding: 40px;
 }
 .number {
   padding-left: 5px;

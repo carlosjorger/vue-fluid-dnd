@@ -1,5 +1,6 @@
 import {
   getGapPixels,
+  getGroupDroppables,
   getPropByDirection,
   getScroll,
   getScrollElement,
@@ -71,8 +72,7 @@ export default function useDraggable(
     onDrop,
     duration,
     parent,
-    direction,
-    droppableGroup
+    direction
   );
   const setDraggable = () => {
     if (childRef.value) {
@@ -130,6 +130,7 @@ export default function useDraggable(
   };
 
   const onmousemove = function (event: DragMouseTouchEvent) {
+    console.log(getGroupDroppables(parent, droppableGroup));
     if (draggingState.value === DraggingState.START_DRAGGING) {
       startDragging(event);
     } else if (draggingState.value === DraggingState.DRAGING) {
@@ -166,14 +167,14 @@ export default function useDraggable(
     if (!element) {
       return;
     }
-    updateDraggingStateBeforeDragging(element);
+    updateDraggingStateBeforeDragging();
     addTempChild(element);
     emitEventToSiblings(element, START_DRAG_EVENT);
     updateTransformState(event, element);
     setDraggingStyles(element);
   };
-  const updateDraggingStateBeforeDragging = (element: HTMLElement) => {
-    scroll.value = getScroll(element.parentElement);
+  const updateDraggingStateBeforeDragging = () => {
+    scroll.value = getScroll(parent);
     draggingState.value = DraggingState.DRAGING;
   };
   const addTempChild = (draggedElement: HTMLElement) => {

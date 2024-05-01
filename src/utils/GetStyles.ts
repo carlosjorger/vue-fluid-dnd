@@ -212,6 +212,19 @@ export const getPropByDirection = (
 export const getSiblings = (current: HTMLElement, parent: HTMLElement) => {
   return getSiblingsByParent(current, parent);
 };
+export const getGroupDroppables = (
+  currentDroppable: HTMLElement,
+  droppableGroup?: string
+) => {
+  if (!droppableGroup) {
+    return [currentDroppable];
+  }
+  const result = [
+    ...document.querySelectorAll(`.droppable-group-${droppableGroup}`),
+  ].map((droppable) => droppable as HTMLElement);
+
+  return result;
+};
 export const getSiblingsByParent = (
   current: HTMLElement,
   parent: HTMLElement
@@ -228,5 +241,6 @@ export const getSiblingsByParent = (
   return {
     siblings,
     elementPosition,
+    parent,
   };
 };
