@@ -255,3 +255,4 @@ export default function useDraggable(
   setSlotRefElementParams(childRef.value);
 }
 // TODO: drag between groups https://javascript.info/mouse-drag-and-drop
+// TODO: use semantic-realese https://medium.com/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
