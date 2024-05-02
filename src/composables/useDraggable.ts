@@ -1,6 +1,5 @@
 import {
   getGapPixels,
-  getGroupDroppables,
   getPropByDirection,
   getScroll,
   getScrollElement,
@@ -43,10 +42,12 @@ export default function useDraggable(
   index: number,
   config: Config | undefined,
   onDrop: (source: DraggableElement, destination: DraggableElement) => void,
-  parent: HTMLElement
+  parent: HTMLElement,
+  dragOverEventName: string | null
 ) {
   const { handlerSelector, direction, isDraggable, droppableGroup } =
     getConfig(config);
+
   const draggingState = ref<DraggingState>(DraggingState.NOT_DRAGGING);
   const childRef = ref(child);
   const translate = ref({ x: 0, y: 0 });
@@ -124,13 +125,10 @@ export default function useDraggable(
         onmousedown("touchmove", "touchend")
       );
     }
-    if (element?.parentElement) {
-      element?.parentElement.classList.add(DROPPABLE_CLASS);
-    }
+    parent.classList.add(DROPPABLE_CLASS);
   };
 
   const onmousemove = function (event: DragMouseTouchEvent) {
-    console.log(getGroupDroppables(parent, droppableGroup));
     if (draggingState.value === DraggingState.START_DRAGGING) {
       startDragging(event);
     } else if (draggingState.value === DraggingState.DRAGING) {
@@ -168,16 +166,22 @@ export default function useDraggable(
       return;
     }
     updateDraggingStateBeforeDragging();
-    addTempChild(element);
     emitEventToSiblings(element, START_DRAG_EVENT);
     updateTransformState(event, element);
     setDraggingStyles(element);
+    if (dragOverEventName) {
+      const addTempChildEvent = new CustomEvent(dragOverEventName, {
+        detail: element,
+      });
+      document.dispatchEvent(addTempChildEvent);
+    }
+    addTempChild(element, parent);
   };
   const updateDraggingStateBeforeDragging = () => {
     scroll.value = getScroll(parent);
     draggingState.value = DraggingState.DRAGING;
   };
-  const addTempChild = (draggedElement: HTMLElement) => {
+  const addTempChild = (draggedElement: HTMLElement, parent: HTMLElement) => {
     let distances = getTranslationByDragging(
       draggedElement,
       START_DRAG_EVENT,
@@ -255,4 +259,4 @@ export default function useDraggable(
   setSlotRefElementParams(childRef.value);
 }
 // TODO: drag between groups https://javascript.info/mouse-drag-and-drop
-// TODO: use semantic-realese https://medium.com/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
+// TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7

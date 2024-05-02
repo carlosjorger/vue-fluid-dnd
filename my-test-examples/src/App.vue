@@ -6,7 +6,7 @@ import ExampleHorizontalListWithMixedStyles from "./components/ExampleHorizontal
 import ExampleHorizontalScrollList from "./components/ExampleHorizontalScrollList.vue";
 import ExampleVerticalListWithMixedStyles from "./components/ExampleVerticalListWithMixedStyles.vue";
 import ExampleVerticalListWithMixedStylesAndGaps from "./components/ExampleVerticalListWithMixedStylesAndGaps.vue";
-import ExampleOfPokemonList from "./components/ExampleOfPokemonList.vue";
+// import ExampleOfPokemonList from "./components/ExampleOfPokemonList.vue";
 import ExampleCounterList from "./components/ExampleCounterList.vue";
 import ExampleVerticalListWithHandler from "./components/ExampleVerticalListWithHandler.vue";
 import ExampleGroupOflist from "./components/ExampleGroupOflist.vue";
@@ -32,7 +32,7 @@ import ExampleGroupOflist from "./components/ExampleGroupOflist.vue";
     />
   </div>
   <div class="example-cols">
-    <ExampleOfPokemonList id="example-pokemon-list" />
+    <!-- <ExampleOfPokemonList id="example-pokemon-list" /> -->
     <ExampleCounterList id="example-counter-list" />
   </div>
   <ExampleGroupOflist id="example-group-list" />

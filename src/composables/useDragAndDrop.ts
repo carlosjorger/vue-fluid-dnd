@@ -16,6 +16,15 @@ import { createObserverWithCallBack } from "../utils/observer";
 export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
   const INDEX_ATTR = "index";
   const parent = ref<HTMLElement | undefined>();
+  const dragOverEventName = config?.droppableGroup
+    ? `add-drag-over-to-${config?.droppableGroup}-group`
+    : null;
+
+  if (dragOverEventName) {
+    document.addEventListener(dragOverEventName, (event) => {
+      console.log((event as CustomEvent<HTMLElement>).detail, parent);
+    });
+  }
   const getOnDrop = (items: T[]) => {
     return (source: DraggableElement, destination: DraggableElement) => {
       if (items) {
@@ -39,7 +48,8 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
           numberIndex,
           config,
           onDrop,
-          parent.value
+          parent.value,
+          dragOverEventName
         );
       }
     }
