@@ -15,7 +15,7 @@ export default class ConfigHandler {
     });
     ConfigHandler.configs = configs;
   }
-  static getConfig(curerntDroppable: HTMLElement) {
+  static getConfig(curerntDroppable: Element) {
     const config = ConfigHandler.configs.find(({ droppable }) =>
       droppable.isSameNode(curerntDroppable)
     );

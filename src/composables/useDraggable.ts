@@ -43,8 +43,7 @@ export default function useDraggable(
   index: number,
   config: Config | undefined,
   onDrop: (source: DraggableElement, destination: DraggableElement) => void,
-  parent: HTMLElement,
-  dragOverEventName: string | null
+  parent: HTMLElement
 ) {
   const { handlerSelector, direction, isDraggable, droppableGroup } =
     getConfig(config);
@@ -105,9 +104,15 @@ export default function useDraggable(
     setDraggable();
     setDroppableGroupClass();
   };
-  const setDroppableGroupClass = () => {
+  const getDroppableGroupClass = () => {
     if (droppableGroup) {
-      parent.classList.add(`droppable-group-${droppableGroup}`);
+      return `droppable-group-${droppableGroup}`;
+    }
+  };
+  const setDroppableGroupClass = () => {
+    const droppableGroupClass = getDroppableGroupClass();
+    if (droppableGroupClass) {
+      parent.classList.add(droppableGroupClass);
     }
   };
 
@@ -133,7 +138,28 @@ export default function useDraggable(
     if (draggingState.value === DraggingState.START_DRAGGING) {
       startDragging(event);
     } else if (draggingState.value === DraggingState.DRAGING) {
+      console.log(getCurrentConfig(event));
       setTransformEvent(event);
+    }
+  };
+  const getCurrentConfig = (event: DragMouseTouchEvent) => {
+    const droppableGroupClass = getDroppableGroupClass();
+    const currentElement = childRef.value;
+    if (currentElement) {
+      currentElement.hidden = true;
+    }
+    const elementBelow = document.elementFromPoint(
+      event.clientX,
+      event.clientY
+    );
+    if (currentElement) {
+      currentElement.hidden = false;
+    }
+    if (droppableGroupClass && elementBelow) {
+      const currentDroppable = elementBelow.closest(`.${droppableGroupClass}`);
+      if (currentDroppable) {
+        return ConfigHandler.getConfig(currentDroppable);
+      }
     }
   };
   const handlerMousemove = (event: MouseEvent | TouchEvent) => {
@@ -170,19 +196,13 @@ export default function useDraggable(
     emitEventToSiblings(element, START_DRAG_EVENT);
     updateTransformState(event, element);
     setDraggingStyles(element);
-    console.log(ConfigHandler.getConfig(parent));
-    if (dragOverEventName) {
-      const addTempChildEvent = new CustomEvent(dragOverEventName, {
-        detail: element,
-      });
-      document.dispatchEvent(addTempChildEvent);
-    }
     addTempChild(element, parent);
   };
   const updateDraggingStateBeforeDragging = () => {
     scroll.value = getScroll(parent);
     draggingState.value = DraggingState.DRAGING;
   };
+  // TODO: call this function in onmousemove event and using the current configuration
   const addTempChild = (draggedElement: HTMLElement, parent: HTMLElement) => {
     let distances = getTranslationByDragging(
       draggedElement,

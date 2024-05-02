@@ -18,9 +18,6 @@ import ConfigHandler from "./configHandler";
 export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
   const INDEX_ATTR = "index";
   const parent = ref<HTMLElement | undefined>();
-  const dragOverEventName = config?.droppableGroup
-    ? `add-drag-over-to-${config?.droppableGroup}-group`
-    : null;
 
   const getOnDrop = (items: T[]) => {
     return (source: DraggableElement, destination: DraggableElement) => {
@@ -45,8 +42,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
           numberIndex,
           config,
           onDrop,
-          parent.value,
-          dragOverEventName
+          parent.value
         );
       }
     }
