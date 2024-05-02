@@ -5,6 +5,8 @@ import useDraggable from "./useDraggable";
 import { parseIntEmpty } from "../utils/GetStyles";
 import { Config } from ".";
 import { createObserverWithCallBack } from "../utils/observer";
+import ConfigHandler from "./configHandler";
+
 /**
  * Create the parent element of the draggable children and all the drag and drop events and styles.
  *
@@ -20,10 +22,8 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
     ? `add-drag-over-to-${config?.droppableGroup}-group`
     : null;
 
-  if (dragOverEventName) {
-    document.addEventListener(dragOverEventName, (event) => {
-      console.log((event as CustomEvent<HTMLElement>).detail, parent);
-    });
+  if (config) {
+    ConfigHandler.triggerConfig(config);
   }
   const getOnDrop = (items: T[]) => {
     return (source: DraggableElement, destination: DraggableElement) => {

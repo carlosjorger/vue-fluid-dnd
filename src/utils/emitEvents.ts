@@ -44,7 +44,7 @@ export default function useEmitEvents(
   direction: Direction
 ) {
   const actualIndex = ref(index);
-  // TODO: pass droppableScroll param
+  // TODO: pass droppableScroll param and Config
   const emitEventToSiblings = (
     draggedElement: HTMLElement,
     event: DragAndDropEvent
