@@ -1,8 +1,24 @@
 import { Config } from ".";
-
+type droppableConfig = {
+  droppable: HTMLElement;
+  config: Config;
+};
 export default class ConfigHandler {
-  static configs = [] as Config[];
-  static triggerConfig(config: Config) {
-    ConfigHandler.configs.push(config);
+  static configs = [] as droppableConfig[];
+  static addConfig(droppable: HTMLElement, config: Config) {
+    const configs = ConfigHandler.configs.filter(
+      (configHandler) => !configHandler.droppable.isSameNode(droppable)
+    );
+    configs.push({
+      droppable,
+      config,
+    });
+    ConfigHandler.configs = configs;
+  }
+  static getConfig(curerntDroppable: HTMLElement) {
+    const config = ConfigHandler.configs.find(({ droppable }) =>
+      droppable.isSameNode(curerntDroppable)
+    );
+    return config?.config;
   }
 }

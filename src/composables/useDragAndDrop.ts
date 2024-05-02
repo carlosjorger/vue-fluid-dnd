@@ -22,9 +22,6 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
     ? `add-drag-over-to-${config?.droppableGroup}-group`
     : null;
 
-  if (config) {
-    ConfigHandler.triggerConfig(config);
-  }
   const getOnDrop = (items: T[]) => {
     return (source: DraggableElement, destination: DraggableElement) => {
       if (items) {
@@ -68,10 +65,16 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
       parent.value.classList.add("droppable");
     }
   };
+  const addConfigHandler = () => {
+    if (config && parent.value) {
+      ConfigHandler.addConfig(parent.value, config);
+    }
+  };
   watch(parent, () => {
     makeDroppable();
     observeChildrens();
     makeChildrensDraggable();
+    addConfigHandler();
   });
   return { parent };
 }

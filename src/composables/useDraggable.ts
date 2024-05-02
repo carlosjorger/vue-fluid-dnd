@@ -26,6 +26,7 @@ import { Config } from ".";
 import useEmitEvents from "../utils/emitEvents";
 import { DraggingState } from "../utils";
 import { getConfig } from "../utils/config";
+import ConfigHandler from "./configHandler";
 
 const DRAGGABLE_CLASS = "draggable";
 const HANDLER_CLASS = "handler-class";
@@ -169,6 +170,7 @@ export default function useDraggable(
     emitEventToSiblings(element, START_DRAG_EVENT);
     updateTransformState(event, element);
     setDraggingStyles(element);
+    console.log(ConfigHandler.getConfig(parent));
     if (dragOverEventName) {
       const addTempChildEvent = new CustomEvent(dragOverEventName, {
         detail: element,
