@@ -6,6 +6,7 @@ import { parseIntEmpty } from "../utils/GetStyles";
 import { Config } from ".";
 import { createObserverWithCallBack } from "../utils/observer";
 import ConfigHandler from "./configHandler";
+import { getConfig } from "../utils/config";
 
 /**
  * Create the parent element of the draggable children and all the drag and drop events and styles.
@@ -62,8 +63,8 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
     }
   };
   const addConfigHandler = () => {
-    if (config && parent.value) {
-      ConfigHandler.addConfig(parent.value, config);
+    if (parent.value) {
+      ConfigHandler.addConfig(parent.value, getConfig(config));
     }
   };
   watch(parent, () => {

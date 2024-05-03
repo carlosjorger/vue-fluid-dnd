@@ -26,7 +26,7 @@ import { Config } from ".";
 import useEmitEvents from "../utils/emitEvents";
 import { DraggingState } from "../utils";
 import { getConfig } from "../utils/config";
-import ConfigHandler from "./configHandler";
+import ConfigHandler, { DroppableConfig } from "./configHandler";
 
 const DRAGGABLE_CLASS = "draggable";
 const HANDLER_CLASS = "handler-class";
@@ -137,10 +137,16 @@ export default function useDraggable(
   const onmousemove = function (event: DragMouseTouchEvent) {
     if (draggingState.value === DraggingState.START_DRAGGING) {
       startDragging(event);
+      // TODO: add tempchild using current config
+      updateTempChildren(event);
     } else if (draggingState.value === DraggingState.DRAGING) {
-      console.log(getCurrentConfig(event));
+      updateTempChildren(event);
       setTransformEvent(event);
     }
+  };
+  const updateTempChildren = (event: DragMouseTouchEvent) => {
+    // TODO: remove all tempchilds on the group before
+    addTempChild(getCurrentConfig(event));
   };
   const getCurrentConfig = (event: DragMouseTouchEvent) => {
     const droppableGroupClass = getDroppableGroupClass();
@@ -161,6 +167,7 @@ export default function useDraggable(
         return ConfigHandler.getConfig(currentDroppable);
       }
     }
+    return ConfigHandler.getConfig(parent);
   };
   const handlerMousemove = (event: MouseEvent | TouchEvent) => {
     const eventToDragMouse = convetEventToDragMouseTouchEvent(event);
@@ -196,14 +203,22 @@ export default function useDraggable(
     emitEventToSiblings(element, START_DRAG_EVENT);
     updateTransformState(event, element);
     setDraggingStyles(element);
-    addTempChild(element, parent);
   };
   const updateDraggingStateBeforeDragging = () => {
     scroll.value = getScroll(parent);
     draggingState.value = DraggingState.DRAGING;
   };
-  // TODO: call this function in onmousemove event and using the current configuration
-  const addTempChild = (draggedElement: HTMLElement, parent: HTMLElement) => {
+  const addTempChild = (droppableConfig?: DroppableConfig) => {
+    if (!droppableConfig) {
+      return;
+    }
+    const { config, droppable } = droppableConfig;
+    const { direction } = getConfig(config);
+    const draggedElement = childRef.value;
+    if (droppable.querySelector(`.${TEMP_CHILD_CLASS}`) || !draggedElement) {
+      return;
+    }
+
     let distances = getTranslationByDragging(
       draggedElement,
       START_DRAG_EVENT,
@@ -211,12 +226,12 @@ export default function useDraggable(
     );
     var child = document.createElement("div");
     child.classList.add(TEMP_CHILD_CLASS);
-    const gap = getGapPixels(parent, direction);
+    const gap = getGapPixels(droppable, direction);
     const { distance } = getPropByDirection(direction);
     distances[distance] -= gap;
     child.style.height = `${distances.height}px`;
     child.style.minWidth = `${distances.width}px`;
-    parent.appendChild(child);
+    droppable.appendChild(child);
   };
   const setTransformEvent = (event: DragMouseTouchEvent) => {
     const { pageX, pageY } = event;

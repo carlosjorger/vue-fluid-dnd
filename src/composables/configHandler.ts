@@ -1,10 +1,10 @@
 import { Config } from ".";
-type droppableConfig = {
+export type DroppableConfig = {
   droppable: HTMLElement;
   config: Config;
 };
 export default class ConfigHandler {
-  static configs = [] as droppableConfig[];
+  static configs = [] as DroppableConfig[];
   static addConfig(droppable: HTMLElement, config: Config) {
     const configs = ConfigHandler.configs.filter(
       (configHandler) => !configHandler.droppable.isSameNode(droppable)
@@ -19,6 +19,6 @@ export default class ConfigHandler {
     const config = ConfigHandler.configs.find(({ droppable }) =>
       droppable.isSameNode(curerntDroppable)
     );
-    return config?.config;
+    return config;
   }
 }
