@@ -22,11 +22,11 @@ import {
   OnLeaveEvent,
 } from "../../index";
 import { Ref, ref, watch } from "vue";
-import { Config } from ".";
+import { Config, Direction } from ".";
 import useEmitEvents from "../utils/emitEvents";
 import { DraggingState } from "../utils";
 import { getConfig } from "../utils/config";
-import ConfigHandler, { DroppableConfig } from "./configHandler";
+import ConfigHandler from "./configHandler";
 
 const DRAGGABLE_CLASS = "draggable";
 const HANDLER_CLASS = "handler-class";
@@ -137,8 +137,7 @@ export default function useDraggable(
   const onmousemove = function (event: DragMouseTouchEvent) {
     if (draggingState.value === DraggingState.START_DRAGGING) {
       startDragging(event);
-      // TODO: add tempchild using current config
-      updateTempChildren(event);
+      addTempChild(parent, direction);
     } else if (draggingState.value === DraggingState.DRAGING) {
       updateTempChildren(event);
       setTransformEvent(event);
@@ -146,7 +145,13 @@ export default function useDraggable(
   };
   const updateTempChildren = (event: DragMouseTouchEvent) => {
     // TODO: remove all tempchilds on the group before
-    addTempChild(getCurrentConfig(event));
+    const droppableConfig = getCurrentConfig(event);
+    if (!droppableConfig) {
+      return;
+    }
+    const { droppable, config } = droppableConfig;
+    const { direction } = getConfig(config);
+    addTempChild(droppable, direction);
   };
   const getCurrentConfig = (event: DragMouseTouchEvent) => {
     const droppableGroupClass = getDroppableGroupClass();
@@ -208,12 +213,7 @@ export default function useDraggable(
     scroll.value = getScroll(parent);
     draggingState.value = DraggingState.DRAGING;
   };
-  const addTempChild = (droppableConfig?: DroppableConfig) => {
-    if (!droppableConfig) {
-      return;
-    }
-    const { config, droppable } = droppableConfig;
-    const { direction } = getConfig(config);
+  const addTempChild = (droppable: HTMLElement, direction: Direction) => {
     const draggedElement = childRef.value;
     if (droppable.querySelector(`.${TEMP_CHILD_CLASS}`) || !draggedElement) {
       return;
