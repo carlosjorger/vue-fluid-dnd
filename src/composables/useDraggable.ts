@@ -47,7 +47,9 @@ export default function useDraggable(
 ) {
   const { handlerSelector, direction, isDraggable, droppableGroup } =
     getConfig(config);
-
+  const droppableGroupClass = droppableGroup
+    ? `droppable-group-${droppableGroup}`
+    : null;
   const draggingState = ref<DraggingState>(DraggingState.NOT_DRAGGING);
   const childRef = ref(child);
   const translate = ref({ x: 0, y: 0 });
@@ -67,7 +69,6 @@ export default function useDraggable(
     draggingState,
     fixedHeight,
     fixedWidth,
-    droppableScroll,
     index,
     handlerSelector,
     onDrop,
@@ -104,13 +105,7 @@ export default function useDraggable(
     setDraggable();
     setDroppableGroupClass();
   };
-  const getDroppableGroupClass = () => {
-    if (droppableGroup) {
-      return `droppable-group-${droppableGroup}`;
-    }
-  };
   const setDroppableGroupClass = () => {
-    const droppableGroupClass = getDroppableGroupClass();
     if (droppableGroupClass) {
       parent.classList.add(droppableGroupClass);
     }
@@ -135,6 +130,8 @@ export default function useDraggable(
   };
 
   const onmousemove = function (event: DragMouseTouchEvent) {
+    const droppableConfig = getCurrentConfig(event);
+    console.log(droppableConfig);
     if (draggingState.value === DraggingState.START_DRAGGING) {
       startDragging(event);
       addTempChild(parent, direction);
@@ -154,7 +151,9 @@ export default function useDraggable(
     addTempChild(droppable, direction);
   };
   const removeTempChildrens = () => {
-    const droppableGroupClass = getDroppableGroupClass();
+    if (!droppableGroupClass) {
+      return;
+    }
     var children = document.querySelectorAll(
       `.${droppableGroupClass} .${TEMP_CHILD_CLASS}`
     );
@@ -163,7 +162,6 @@ export default function useDraggable(
     });
   };
   const getCurrentConfig = (event: DragMouseTouchEvent) => {
-    const droppableGroupClass = getDroppableGroupClass();
     const currentElement = childRef.value;
     if (currentElement) {
       currentElement.hidden = true;
@@ -214,7 +212,7 @@ export default function useDraggable(
       return;
     }
     updateDraggingStateBeforeDragging();
-    emitEventToSiblings(element, START_DRAG_EVENT);
+    emitEventToSiblings(element, START_DRAG_EVENT, droppableScroll.value);
     updateTransformState(event, element);
     setDraggingStyles(element);
   };
@@ -250,7 +248,7 @@ export default function useDraggable(
   const setTransformDragEvent = () => {
     const element = childRef.value as HTMLElement;
     setTransform(element, parent, pagePosition, translate, direction);
-    emitEventToSiblings(element, DRAG_EVENT);
+    emitEventToSiblings(element, DRAG_EVENT, droppableScroll.value);
   };
   const onDropDraggingEvent = () => {
     if (draggingState.value !== DraggingState.DRAGING) {
@@ -263,7 +261,7 @@ export default function useDraggable(
       return;
     }
     removeDraggingStyles(element);
-    emitEventToSiblings(element, START_DROP_EVENT);
+    emitEventToSiblings(element, START_DROP_EVENT, droppableScroll.value);
   };
   const removeDraggingStyles = (element: HTMLElement) => {
     setTranistion(element, duration);

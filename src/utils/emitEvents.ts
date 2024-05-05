@@ -32,10 +32,6 @@ export default function useEmitEvents(
   draggingState: Ref<DraggingState>,
   fixedHeight: Ref<string>,
   fixedWidth: Ref<string>,
-  droppableScroll: Ref<{
-    scrollLeft: number;
-    scrollTop: number;
-  }>,
   index: number,
   handlerSelector: string,
   onDrop: (source: DraggableElement, destination: DraggableElement) => void,
@@ -44,10 +40,14 @@ export default function useEmitEvents(
   direction: Direction
 ) {
   const actualIndex = ref(index);
-  // TODO: pass droppableScroll param and Config
+  // TODO: pass Config
   const emitEventToSiblings = (
     draggedElement: HTMLElement,
-    event: DragAndDropEvent
+    event: DragAndDropEvent,
+    droppableScroll: {
+      scrollLeft: number;
+      scrollTop: number;
+    }
   ) => {
     let tranlation = { height: 0, width: 0 };
     tranlation = getTranslationByDragging(draggedElement, event, direction);
@@ -61,7 +61,8 @@ export default function useEmitEvents(
         event,
         siblings,
         elementPosition,
-        tranlation
+        tranlation,
+        droppableScroll
       );
     }
   };
@@ -161,7 +162,11 @@ export default function useEmitEvents(
     event: DropEvent,
     siblings: HTMLElement[],
     elementPosition: number,
-    translation: Translate
+    translation: Translate,
+    droppableScroll: {
+      scrollLeft: number;
+      scrollTop: number;
+    }
   ) => {
     const allSiblings = siblings.toReversed();
 
@@ -197,7 +202,7 @@ export default function useEmitEvents(
           elementPosition,
           targetIndex,
           windowScroll,
-          droppableScroll.value
+          droppableScroll
         );
         startDropEventOverElement(
           childElement,

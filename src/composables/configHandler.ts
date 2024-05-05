@@ -1,4 +1,5 @@
 import { Config } from ".";
+// TODO: add droppableScroll
 export type DroppableConfig = {
   droppable: HTMLElement;
   config: Config;

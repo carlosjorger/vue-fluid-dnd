@@ -35,6 +35,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
       const index = child.getAttribute(INDEX_ATTR);
       const numberIndex = parseIntEmpty(index);
       const childHTMLElement = child as HTMLElement;
+      //TODO: pass onDrop to config
       const onDrop = getOnDrop(items.value);
 
       if (childHTMLElement && numberIndex >= 0) {
