@@ -144,14 +144,23 @@ export default function useDraggable(
     }
   };
   const updateTempChildren = (event: DragMouseTouchEvent) => {
-    // TODO: remove all tempchilds on the group before
     const droppableConfig = getCurrentConfig(event);
     if (!droppableConfig) {
       return;
     }
     const { droppable, config } = droppableConfig;
     const { direction } = getConfig(config);
+    removeTempChildrens();
     addTempChild(droppable, direction);
+  };
+  const removeTempChildrens = () => {
+    const droppableGroupClass = getDroppableGroupClass();
+    var children = document.querySelectorAll(
+      `.${droppableGroupClass} .${TEMP_CHILD_CLASS}`
+    );
+    children.forEach((tempChild) => {
+      tempChild.parentElement?.removeChild(tempChild);
+    });
   };
   const getCurrentConfig = (event: DragMouseTouchEvent) => {
     const droppableGroupClass = getDroppableGroupClass();
