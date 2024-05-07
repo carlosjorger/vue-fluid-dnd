@@ -15,17 +15,11 @@ import {
 import { useTransform } from "../utils/SetTransform";
 import getTranslationByDragging from "../utils/GetTranslationByDraggingAndEvent";
 
-import {
-  DragMouseTouchEvent,
-  DraggableElement,
-  MoveEvent,
-  OnLeaveEvent,
-} from "../../index";
+import { DragMouseTouchEvent, MoveEvent, OnLeaveEvent } from "../../index";
 import { Ref, ref, watch } from "vue";
-import { Config, Direction } from ".";
+import { CoreConfig, Direction } from ".";
 import useEmitEvents from "../utils/emitEvents";
 import { DraggingState } from "../utils";
-import { getConfig } from "../utils/config";
 import ConfigHandler from "./configHandler";
 
 const DRAGGABLE_CLASS = "draggable";
@@ -41,12 +35,11 @@ const START_DROP_EVENT = "startDrop";
 export default function useDraggable(
   child: HTMLElement | undefined,
   index: number,
-  config: Config | undefined,
-  onDrop: (source: DraggableElement, destination: DraggableElement) => void,
+  config: CoreConfig,
   parent: HTMLElement
 ) {
-  const { handlerSelector, direction, isDraggable, droppableGroup } =
-    getConfig(config);
+  const { handlerSelector, direction, isDraggable, droppableGroup, onDrop } =
+    config;
   const droppableGroupClass = droppableGroup
     ? `droppable-group-${droppableGroup}`
     : null;
@@ -146,7 +139,7 @@ export default function useDraggable(
       return;
     }
     const { droppable, config } = droppableConfig;
-    const { direction } = getConfig(config);
+    const { direction } = config;
     removeTempChildrens();
     addTempChild(droppable, direction);
   };

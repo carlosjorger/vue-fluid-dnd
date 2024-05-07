@@ -1,12 +1,13 @@
-import { Config } from ".";
+import { DraggableElement } from "index";
+import { CoreConfig } from ".";
 // TODO: add droppableScroll
 export type DroppableConfig = {
   droppable: HTMLElement;
-  config: Config;
+  config: CoreConfig;
 };
 export default class ConfigHandler {
   static configs = [] as DroppableConfig[];
-  static addConfig(droppable: HTMLElement, config: Config) {
+  static addConfig(droppable: HTMLElement, config: CoreConfig) {
     const configs = ConfigHandler.configs.filter(
       (configHandler) => !configHandler.droppable.isSameNode(droppable)
     );

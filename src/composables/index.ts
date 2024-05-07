@@ -1,3 +1,5 @@
+import { DraggableElement } from "index";
+
 export const HORIZONTAL = "horizontal";
 export const VERTICAL = "vertical";
 /**
@@ -45,4 +47,5 @@ export type CoreConfig = {
    * Name of the group of the share droppables
    */
   droppableGroup?: string;
+  onDrop: (source: DraggableElement, destination: DraggableElement) => void;
 };

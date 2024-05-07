@@ -27,6 +27,8 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
       }
     };
   };
+  const onDrop = getOnDrop(items.value);
+
   const makeChildrensDraggable = () => {
     if (!parent.value) {
       return;
@@ -35,15 +37,12 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
       const index = child.getAttribute(INDEX_ATTR);
       const numberIndex = parseIntEmpty(index);
       const childHTMLElement = child as HTMLElement;
-      //TODO: pass onDrop to config
-      const onDrop = getOnDrop(items.value);
 
       if (childHTMLElement && numberIndex >= 0) {
         useDraggable(
           childHTMLElement,
           numberIndex,
-          config,
-          onDrop,
+          getConfig(onDrop, config),
           parent.value
         );
       }
@@ -65,14 +64,14 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
   };
   const addConfigHandler = () => {
     if (parent.value) {
-      ConfigHandler.addConfig(parent.value, getConfig(config));
+      ConfigHandler.addConfig(parent.value, getConfig(onDrop, config));
     }
   };
   watch(parent, () => {
     makeDroppable();
+    addConfigHandler();
     observeChildrens();
     makeChildrensDraggable();
-    addConfigHandler();
   });
   return { parent };
 }
