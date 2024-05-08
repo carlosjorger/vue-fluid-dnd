@@ -20,7 +20,7 @@ import { Ref, ref, watch } from "vue";
 import { CoreConfig, Direction } from ".";
 import useEmitEvents from "../utils/emitEvents";
 import { DraggingState } from "../utils";
-import ConfigHandler from "./configHandler";
+import ConfigHandler, { DroppableConfig } from "./configHandler";
 
 const DRAGGABLE_CLASS = "draggable";
 const HANDLER_CLASS = "handler-class";
@@ -124,13 +124,12 @@ export default function useDraggable(
 
   const onmousemove = function (event: DragMouseTouchEvent) {
     const droppableConfig = getCurrentConfig(event);
-    console.log(droppableConfig);
     if (draggingState.value === DraggingState.START_DRAGGING) {
-      startDragging(event);
+      startDragging(event, droppableConfig);
       addTempChild(parent, direction);
     } else if (draggingState.value === DraggingState.DRAGING) {
       updateTempChildren(event);
-      setTransformEvent(event);
+      setTransformEvent(event, droppableConfig);
     }
   };
   const updateTempChildren = (event: DragMouseTouchEvent) => {
@@ -199,7 +198,10 @@ export default function useDraggable(
       parent.onscroll = null;
     };
   };
-  const startDragging = (event: DragMouseTouchEvent) => {
+  const startDragging = (
+    event: DragMouseTouchEvent,
+    droppableConfig?: DroppableConfig
+  ) => {
     const element = childRef.value;
     if (!element) {
       return;
@@ -218,7 +220,6 @@ export default function useDraggable(
     if (droppable.querySelector(`.${TEMP_CHILD_CLASS}`) || !draggedElement) {
       return;
     }
-
     let distances = getTranslationByDragging(
       draggedElement,
       START_DRAG_EVENT,
@@ -233,13 +234,19 @@ export default function useDraggable(
     child.style.minWidth = `${distances.width}px`;
     droppable.appendChild(child);
   };
-  const setTransformEvent = (event: DragMouseTouchEvent) => {
+  const setTransformEvent = (
+    event: DragMouseTouchEvent,
+    droppableConfig?: DroppableConfig
+  ) => {
     const { pageX, pageY } = event;
     pagePosition.value = { pageX, pageY };
-    setTransformDragEvent();
+    setTransformDragEvent(droppableConfig);
   };
-  const setTransformDragEvent = () => {
+  const setTransformDragEvent = (droppableConfig?: DroppableConfig) => {
     const element = childRef.value as HTMLElement;
+    if (pagePosition.value.pageX == 0 && pagePosition.value.pageY == 0) {
+      return;
+    }
     setTransform(element, parent, pagePosition, translate, direction);
     emitEventToSiblings(element, DRAG_EVENT, droppableScroll.value);
   };
