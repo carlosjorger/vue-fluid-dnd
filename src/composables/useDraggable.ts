@@ -153,7 +153,10 @@ export default function useDraggable(
       tempChild.parentElement?.removeChild(tempChild);
     });
   };
-  const getCurrentConfig = (event: DragMouseTouchEvent) => {
+  const getCurrentConfig = (event: {
+    readonly clientX: number;
+    readonly clientY: number;
+  }) => {
     const currentElement = childRef.value;
     if (currentElement) {
       currentElement.hidden = true;
@@ -260,11 +263,15 @@ export default function useDraggable(
     if (!element) {
       return;
     }
+    // const { top, left } = element.getBoundingClientRect();
+    // TODO: why drop is not working if hidden is setted
+    // const droppableConfig = getCurrentConfig({ clientX: left, clientY: top });
     removeDraggingStyles(element);
     emitEventToSiblings(element, START_DROP_EVENT, droppableScroll.value);
   };
   const removeDraggingStyles = (element: HTMLElement) => {
     setTranistion(element, duration);
+    console.log(element.style.transform);
     moveTranslate(element, 0, 0);
   };
   const setDraggingStyles = (element: HTMLElement) => {
