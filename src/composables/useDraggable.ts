@@ -1,4 +1,5 @@
 import {
+  draggableIsOutside,
   getGapPixels,
   getPropByDirection,
   getScroll,
@@ -160,16 +161,26 @@ export default function useDraggable(
     readonly clientY: number;
   }) => {
     const currentElement = childRef.value;
-    if (currentElement) {
-      currentElement.hidden = true;
+    if (!currentElement) {
+      return;
     }
+    if (currentDroppableConfig.value) {
+      const isOutside = draggableIsOutside(
+        currentElement,
+        currentDroppableConfig.value?.droppable
+      );
+      if (!isOutside) {
+        return currentDroppableConfig.value;
+      }
+    }
+
+    currentElement.hidden = true;
     const elementBelow = document.elementFromPoint(
       event.clientX,
       event.clientY
     );
-    if (currentElement) {
-      currentElement.hidden = false;
-    }
+    currentElement.hidden = false;
+
     if (droppableGroupClass && elementBelow) {
       const currentDroppable = elementBelow.closest(`.${droppableGroupClass}`);
       if (currentDroppable) {
@@ -313,13 +324,17 @@ export default function useDraggable(
       }
     });
   };
-  watch(
-    currentDroppableConfig,
-    (_, oldDroppableConfig) => {
+  const changeDroppable = (
+    newdDroppableConfig: DroppableConfig | undefined,
+    oldDroppableConfig: DroppableConfig | undefined
+  ) => {
+    if (
+      childRef.value &&
+      oldDroppableConfig &&
+      draggingState.value == DraggingState.DRAGING
+    ) {
       if (
-        childRef.value &&
-        oldDroppableConfig &&
-        draggingState.value == DraggingState.DRAGING
+        !newdDroppableConfig?.droppable.isSameNode(oldDroppableConfig.droppable)
       ) {
         emitEventToSiblings(
           childRef.value,
@@ -328,9 +343,9 @@ export default function useDraggable(
           oldDroppableConfig
         );
       }
-    },
-    { deep: true }
-  );
+    }
+  };
+  watch(currentDroppableConfig, changeDroppable, { deep: true });
   createWatchOfFixedSize(fixedWidth, "--fixedWidth");
   createWatchOfFixedSize(fixedHeight, "--fixedHeight");
 

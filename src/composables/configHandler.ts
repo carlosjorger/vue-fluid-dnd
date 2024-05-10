@@ -1,4 +1,3 @@
-import { DraggableElement } from "index";
 import { CoreConfig } from ".";
 // TODO: add droppableScroll
 export type DroppableConfig = {
