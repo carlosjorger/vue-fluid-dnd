@@ -95,7 +95,7 @@ export const useTransform = (childRef: Ref<HTMLElement | undefined>) => {
         const infLimit = 0.25;
         const upperLimit = 0.75;
         let percent = 0;
-        const isOutside = draggableIsOutside(element);
+        const isOutside = draggableIsOutside(element, parent);
         if (
           !isOutside &&
           relativePosition < infLimit &&

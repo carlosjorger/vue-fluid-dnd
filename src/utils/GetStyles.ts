@@ -77,9 +77,12 @@ const intersection = (
   }
   return firstInterval.x2 - secondInterval.x1;
 };
-export const draggableIsOutside = (draggable: HTMLElement) => {
-  const parentElement = draggable.parentElement as HTMLElement;
-  return !hasIntersection(draggable, parentElement);
+// TODO:fix draggableIsOutside using closet
+export const draggableIsOutside = (
+  draggable: HTMLElement,
+  droppable: HTMLElement
+) => {
+  return !hasIntersection(draggable, droppable);
 };
 export const hasIntersection = (
   element1: HTMLElement,

@@ -13,6 +13,7 @@ import getTranslationByDragging from "./GetTranslationByDraggingAndEvent";
 import getTranslateBeforeDropping from "./GetTranslateBeforeDropping";
 import { DraggingState, IsDropEvent } from ".";
 import { createObserverWithCallBack } from "./observer";
+import { DroppableConfig } from "../composables/configHandler";
 
 const DRAGGING_HANDLER_CLASS = "dragging-handler-class";
 const DRAGING_CLASS = "dragging";
@@ -40,21 +41,40 @@ export default function useEmitEvents(
   direction: Direction
 ) {
   const actualIndex = ref(index);
-  // TODO: pass Config
+
   const emitEventToSiblings = (
     draggedElement: HTMLElement,
     event: DragAndDropEvent,
     droppableScroll: {
       scrollLeft: number;
       scrollTop: number;
-    }
+    },
+    droppableConfig: DroppableConfig | undefined
   ) => {
+    if (!droppableConfig) {
+      return;
+    }
     let tranlation = { height: 0, width: 0 };
-    tranlation = getTranslationByDragging(draggedElement, event, direction);
-    const { siblings, elementPosition } = getSiblings(draggedElement, parent);
+    const { droppable, config } = droppableConfig;
+    tranlation = getTranslationByDragging(
+      draggedElement,
+      event,
+      config.direction,
+      droppable
+    );
+    const { siblings, elementPosition } = getSiblings(
+      draggedElement,
+      droppable
+    );
     const dropping = IsDropEvent(event);
     if (!dropping) {
-      emitDraggingEventToSiblings(draggedElement, event, siblings, tranlation);
+      emitDraggingEventToSiblings(
+        draggedElement,
+        event,
+        siblings,
+        tranlation,
+        droppableConfig
+      );
     } else {
       emitDroppingEventToSiblings(
         draggedElement,
@@ -71,16 +91,19 @@ export default function useEmitEvents(
     draggedElement: HTMLElement,
     event: DraggingEvent,
     siblings: HTMLElement[],
-    translation: Translate
+    translation: Translate,
+    droppableConfig: DroppableConfig
   ) => {
-    const isOutside = draggableIsOutside(draggedElement);
+    const { config, droppable } = droppableConfig;
+
+    const isOutside = draggableIsOutside(draggedElement, droppable);
     for (const [index, sibling] of siblings.entries()) {
       if (!sibling.classList.contains(DRAGGABLE_CLASS)) {
         continue;
       }
       if (!isOutside) {
         const siblingTransition = canChangeDraggable(
-          direction,
+          config.direction,
           draggedElement,
           sibling,
           translation
@@ -92,7 +115,11 @@ export default function useEmitEvents(
         }
       }
       const siblingRealIndex = siblings.length - index;
-      updateActualIndexBaseOnTranslation(translation, siblingRealIndex);
+      updateActualIndexBaseOnTranslation(
+        translation,
+        siblingRealIndex,
+        direction
+      );
       if (event === START_DRAG_EVENT) {
         startDragEventOverElement(sibling, translation);
       } else if (event === DRAG_EVENT) {
@@ -132,7 +159,8 @@ export default function useEmitEvents(
   };
   const updateActualIndexBaseOnTranslation = (
     translation: Translate,
-    siblingIndex: number
+    siblingIndex: number,
+    direction: Direction
   ) => {
     const { distance } = getPropByDirection(direction);
     if (translation[distance] == 0) {
@@ -156,6 +184,7 @@ export default function useEmitEvents(
     moveTranslate(element, height, width);
     setTranistion(element, duration, draggableTargetTimingFunction);
   };
+  // TODO: pass Config to drop event
   // #region Drop events
   const emitDroppingEventToSiblings = (
     draggedElement: HTMLElement,
@@ -179,6 +208,7 @@ export default function useEmitEvents(
       draggedElement,
       event,
       direction,
+      parent,
       previousElement,
       nextElement
     );
@@ -219,7 +249,10 @@ export default function useEmitEvents(
     elementPosition: number,
     allSiblings: HTMLElement[]
   ) => {
-    const isOutside = draggableIsOutside(draggedElement);
+    const isOutside = draggableIsOutside(
+      draggedElement,
+      draggedElement.parentElement as HTMLElement
+    );
 
     const targetIndex = isOutside ? elementPosition : actualIndex.value;
 

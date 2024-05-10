@@ -209,7 +209,12 @@ export default function useDraggable(
       return;
     }
     updateDraggingStateBeforeDragging();
-    emitEventToSiblings(element, START_DRAG_EVENT, droppableScroll.value);
+    emitEventToSiblings(
+      element,
+      START_DRAG_EVENT,
+      droppableScroll.value,
+      currentDroppableConfig.value
+    );
     updateTransformState(event, element);
     setDraggingStyles(element);
   };
@@ -225,7 +230,8 @@ export default function useDraggable(
     let distances = getTranslationByDragging(
       draggedElement,
       START_DRAG_EVENT,
-      direction
+      direction,
+      droppable
     );
     var child = document.createElement("div");
     child.classList.add(TEMP_CHILD_CLASS);
@@ -249,7 +255,12 @@ export default function useDraggable(
       return;
     }
     setTransform(element, parent, pagePosition, translate, direction);
-    emitEventToSiblings(element, DRAG_EVENT, droppableScroll.value);
+    emitEventToSiblings(
+      element,
+      DRAG_EVENT,
+      droppableScroll.value,
+      currentDroppableConfig.value
+    );
   };
   const onDropDraggingEvent = () => {
     if (draggingState.value !== DraggingState.DRAGING) {
@@ -261,11 +272,13 @@ export default function useDraggable(
     if (!element) {
       return;
     }
-    // const { top, left } = element.getBoundingClientRect();
-    // TODO: why drop is not working if hidden is setted
-    // const droppableConfig = getCurrentConfig({ clientX: left, clientY: top });
     removeDraggingStyles(element);
-    emitEventToSiblings(element, START_DROP_EVENT, droppableScroll.value);
+    emitEventToSiblings(
+      element,
+      START_DROP_EVENT,
+      droppableScroll.value,
+      currentDroppableConfig.value
+    );
   };
   const removeDraggingStyles = (element: HTMLElement) => {
     setTranistion(element, duration);
@@ -300,6 +313,24 @@ export default function useDraggable(
       }
     });
   };
+  watch(
+    currentDroppableConfig,
+    (_, oldDroppableConfig) => {
+      if (
+        childRef.value &&
+        oldDroppableConfig &&
+        draggingState.value == DraggingState.DRAGING
+      ) {
+        emitEventToSiblings(
+          childRef.value,
+          DRAG_EVENT,
+          droppableScroll.value,
+          oldDroppableConfig
+        );
+      }
+    },
+    { deep: true }
+  );
   createWatchOfFixedSize(fixedWidth, "--fixedWidth");
   createWatchOfFixedSize(fixedHeight, "--fixedHeight");
 
