@@ -181,13 +181,19 @@ export default function useDraggable(
     );
     currentElement.hidden = false;
 
-    if (droppableGroupClass && elementBelow) {
-      const currentDroppable = elementBelow.closest(`.${droppableGroupClass}`);
-      if (currentDroppable) {
-        return ConfigHandler.getConfig(currentDroppable);
-      }
+    if (!droppableGroupClass || !elementBelow) {
+      return ConfigHandler.getConfig(parent);
     }
-    return ConfigHandler.getConfig(parent);
+    const currentDroppable = elementBelow.closest(
+      `.${droppableGroupClass}`
+    ) as HTMLElement;
+    if (!currentDroppable) {
+      return ConfigHandler.getConfig(parent);
+    }
+    if (!currentDroppable.onscroll) {
+      makeScrollEventOnDroppable(currentDroppable);
+    }
+    return ConfigHandler.getConfig(currentDroppable);
   };
   const handlerMousemove = (event: MouseEvent | TouchEvent) => {
     const eventToDragMouse = convetEventToDragMouseTouchEvent(event);
@@ -200,7 +206,7 @@ export default function useDraggable(
       if (draggingState.value === DraggingState.NOT_DRAGGING) {
         draggingState.value = DraggingState.START_DRAGGING;
         document.addEventListener(moveEvent, handlerMousemove);
-        setEventWithInterval(parent, "onscroll", setTransformDragEvent);
+        makeScrollEventOnDroppable(parent);
         if (element) {
           document.addEventListener(onLeaveEvent, onLeave(moveEvent));
         }
@@ -260,12 +266,22 @@ export default function useDraggable(
     pagePosition.value = { pageX, pageY };
     setTransformDragEvent();
   };
+  const makeScrollEventOnDroppable = (droppable: HTMLElement) => {
+    setEventWithInterval(droppable, "onscroll", onScrollEvent);
+  };
+  const onScrollEvent = () => {
+    setTransformDragEvent();
+  };
   const setTransformDragEvent = () => {
     const element = childRef.value as HTMLElement;
     if (pagePosition.value.pageX == 0 && pagePosition.value.pageY == 0) {
       return;
     }
-    setTransform(element, parent, pagePosition, translate, direction);
+    if (!currentDroppableConfig.value) {
+      return;
+    }
+    const { droppable } = currentDroppableConfig.value;
+    setTransform(element, droppable, pagePosition, translate, direction);
     emitEventToSiblings(
       element,
       DRAG_EVENT,
