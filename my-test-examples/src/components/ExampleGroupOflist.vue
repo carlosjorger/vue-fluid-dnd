@@ -46,7 +46,7 @@ const { id } = defineProps<{
         {{ element }}
       </li>
     </ul>
-    <div ref="parent3" class="list">
+    <div ref="parent3" class="horizontal-list">
       <div
         v-for="(element, index) in numbers3"
         :index="index"
@@ -61,27 +61,33 @@ const { id } = defineProps<{
 <style scoped>
 .group {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20%;
+  grid-template-areas:
+    "vertical scrolled"
+    "horizontal  horizontal";
+  gap: 10%;
+  margin-bottom: 15%;
 }
 .vertical-list {
   background-color: aliceblue;
   height: 400px;
+  grid-area: vertical;
 }
 .scrolled-list {
   background-color: aliceblue;
   height: 400px;
-  overflow: hidden;
+  overflow: auto;
   display: block;
   padding-inline: 25px;
+  grid-area: scrolled;
 }
-.list {
+.horizontal-list {
   display: flex;
   padding: 10px;
   flex-direction: row;
   background-color: pink;
   padding: 40px;
-  width: 800px;
+  width: 100%;
+  grid-area: horizontal;
 }
 .number {
   padding-left: 5px;

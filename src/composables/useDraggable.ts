@@ -48,7 +48,7 @@ export default function useDraggable(
   const childRef = ref(child);
   const translate = ref({ x: 0, y: 0 });
   const scroll = ref({ scrollLeft: 0, scrollTop: 0 });
-
+  const windowScroll = ref(0);
   const duration = 200;
 
   const pagePosition = ref({ pageX: 0, pageY: 0 });
@@ -203,6 +203,8 @@ export default function useDraggable(
     return () => {
       const element = childRef.value;
       droppableScroll.value = getScrollElement(parent);
+      const { scroll } = getPropByDirection(direction);
+      windowScroll.value = window[scroll];
       if (draggingState.value === DraggingState.NOT_DRAGGING) {
         draggingState.value = DraggingState.START_DRAGGING;
         document.addEventListener(moveEvent, handlerMousemove);
@@ -230,6 +232,7 @@ export default function useDraggable(
       element,
       START_DRAG_EVENT,
       droppableScroll.value,
+      windowScroll.value,
       currentDroppableConfig.value
     );
     updateTransformState(event, element);
@@ -280,12 +283,13 @@ export default function useDraggable(
     if (!currentDroppableConfig.value) {
       return;
     }
-    const { droppable } = currentDroppableConfig.value;
-    setTransform(element, droppable, pagePosition, translate, direction);
+    const { droppable, config } = currentDroppableConfig.value;
+    setTransform(element, droppable, pagePosition, translate, config.direction);
     emitEventToSiblings(
       element,
       DRAG_EVENT,
       droppableScroll.value,
+      windowScroll.value,
       currentDroppableConfig.value
     );
   };
@@ -304,6 +308,7 @@ export default function useDraggable(
       element,
       START_DROP_EVENT,
       droppableScroll.value,
+      windowScroll.value,
       currentDroppableConfig.value
     );
   };
@@ -356,6 +361,7 @@ export default function useDraggable(
           childRef.value,
           DRAG_EVENT,
           droppableScroll.value,
+          windowScroll.value,
           oldDroppableConfig
         );
       }

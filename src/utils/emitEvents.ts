@@ -49,6 +49,7 @@ export default function useEmitEvents(
       scrollLeft: number;
       scrollTop: number;
     },
+    initialWindowScroll: number,
     droppableConfig: DroppableConfig | undefined
   ) => {
     if (!droppableConfig) {
@@ -82,7 +83,8 @@ export default function useEmitEvents(
         siblings,
         elementPosition,
         tranlation,
-        droppableScroll
+        droppableScroll,
+        initialWindowScroll
       );
     }
   };
@@ -195,7 +197,8 @@ export default function useEmitEvents(
     droppableScroll: {
       scrollLeft: number;
       scrollTop: number;
-    }
+    },
+    initialWindowScroll: number
   ) => {
     const allSiblings = siblings.toReversed();
 
@@ -232,7 +235,8 @@ export default function useEmitEvents(
           elementPosition,
           targetIndex,
           windowScroll,
-          droppableScroll
+          droppableScroll,
+          initialWindowScroll
         );
         startDropEventOverElement(
           childElement,

@@ -17,12 +17,18 @@ export default function getTranslateBeforeDropping(
   sourceIndex: number,
   targetIndex: number,
   scroll: { scrollY: number; scrollX: number },
-  previousScroll: { scrollLeft: number; scrollTop: number }
+  previousScroll: { scrollLeft: number; scrollTop: number },
+  initialWindowScroll: number
 ) {
   let height = 0;
   let width = 0;
   if (sourceIndex === targetIndex) {
-    return addScrollToTranslate({ height, width }, direction, scroll);
+    return addScrollToTranslate(
+      { height, width },
+      direction,
+      scroll,
+      initialWindowScroll
+    );
   }
 
   const { sourceElement, targetElement, siblingsBetween, isDraggedFoward } =
@@ -85,7 +91,12 @@ export default function getTranslateBeforeDropping(
     width = translate;
   }
 
-  return addScrollToTranslate({ height, width }, direction, scroll);
+  return addScrollToTranslate(
+    { height, width },
+    direction,
+    scroll,
+    initialWindowScroll
+  );
 }
 const getScrollChange = (
   scrollElement: ScrollElement,
@@ -174,12 +185,14 @@ const spaceWithMargins = (
 const addScrollToTranslate = (
   translate: Translate,
   direction: Direction,
-  initialScroll: { scrollY: number; scrollX: number }
+  initialScroll: { scrollY: number; scrollX: number },
+  initialWindowScroll: number
 ) => {
   const { scroll, distance } = getPropByDirection(direction);
   const actualWindowScroll = window[scroll];
   const initialScrollProp = initialScroll[scroll];
-  const scrollChange = initialScrollProp - actualWindowScroll;
+  const scrollChange =
+    initialScrollProp - 2 * actualWindowScroll + initialWindowScroll;
   translate[distance] += scrollChange;
   return translate;
 };
