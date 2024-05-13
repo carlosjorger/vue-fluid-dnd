@@ -22,6 +22,10 @@ export type Translate = {
   height: number;
   width: number;
 };
+export type ElementScroll = {
+  scrollLeft: number;
+  scrollTop: number;
+};
 export type DragMouseTouchEvent = {
   readonly clientX: number;
   readonly clientY: number;

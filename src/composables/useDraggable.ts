@@ -203,6 +203,7 @@ export default function useDraggable(
     return () => {
       const element = childRef.value;
       droppableScroll.value = getScrollElement(parent);
+      ConfigHandler.updateScrolls(parent, droppableGroupClass);
       const { scroll } = getPropByDirection(direction);
       windowScroll.value = window[scroll];
       if (draggingState.value === DraggingState.NOT_DRAGGING) {
