@@ -84,7 +84,8 @@ export default function useEmitEvents(
         elementPosition,
         tranlation,
         droppableScroll,
-        initialWindowScroll
+        initialWindowScroll,
+        droppableConfig
       );
     }
   };
@@ -198,15 +199,16 @@ export default function useEmitEvents(
       scrollLeft: number;
       scrollTop: number;
     },
-    initialWindowScroll: number
+    initialWindowScroll: number,
+    droppableConfig: DroppableConfig
   ) => {
+    const { droppable } = droppableConfig;
     const allSiblings = siblings.toReversed();
 
     allSiblings.splice(elementPosition, 0, draggedElement);
 
     const { previousElement, nextElement, targetIndex } =
       getPreviousAndNextElement(draggedElement, elementPosition, allSiblings);
-
     translation = getTranslationByDragging(
       draggedElement,
       event,
@@ -215,10 +217,23 @@ export default function useEmitEvents(
       previousElement,
       nextElement
     );
+
     const childElement = childRef.value;
     if (!childElement) {
       return;
     }
+    const windowScroll = getWindowScroll();
+    //TODO: make this function working with a foreing element
+    const draggableTranslation = getTranslateBeforeDropping(
+      direction,
+      allSiblings,
+      elementPosition,
+      targetIndex,
+      windowScroll,
+      droppableScroll,
+      initialWindowScroll,
+      droppable
+    );
     for (const [index, sibling] of siblings.toReversed().entries()) {
       let newTranslation = translation;
       if (targetIndex - 1 >= index) {
@@ -228,20 +243,10 @@ export default function useEmitEvents(
         event === START_DROP_EVENT &&
         !sibling.classList.contains(TEMP_CHILD_CLASS)
       ) {
-        const windowScroll = getWindowScroll();
-        const draggableTranslation = getTranslateBeforeDropping(
-          direction,
-          allSiblings,
-          elementPosition,
-          targetIndex,
-          windowScroll,
-          droppableScroll,
-          initialWindowScroll
-        );
         startDropEventOverElement(
-          childElement,
           sibling,
           newTranslation,
+          childElement,
           draggableTranslation
         );
       }
@@ -279,9 +284,9 @@ export default function useEmitEvents(
     };
   };
   const startDropEventOverElement = (
-    element: HTMLElement,
     targetElement: HTMLElement,
     translation: Translate,
+    element: HTMLElement,
     sourceElementTranlation: Translate
   ) => {
     moveTranslate(targetElement, translation.height, translation.width);

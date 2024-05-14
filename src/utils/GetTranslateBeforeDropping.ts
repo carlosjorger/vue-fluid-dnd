@@ -18,7 +18,8 @@ export default function getTranslateBeforeDropping(
   targetIndex: number,
   scroll: { scrollY: number; scrollX: number },
   previousScroll: { scrollLeft: number; scrollTop: number },
-  initialWindowScroll: number
+  initialWindowScroll: number,
+  droppable: HTMLElement
 ) {
   let height = 0;
   let width = 0;
@@ -33,8 +34,6 @@ export default function getTranslateBeforeDropping(
 
   const { sourceElement, targetElement, siblingsBetween, isDraggedFoward } =
     getElementsRange(siblings, sourceIndex, targetIndex);
-
-  const parentElement = sourceElement.parentElement as HTMLElement;
   const {
     scrollElement,
     beforeMargin: beforeMarginProp,
@@ -42,7 +41,7 @@ export default function getTranslateBeforeDropping(
     distance: spaceProp,
     gap: gapStyle,
   } = getPropByDirection(direction);
-  const { gap, hasGaps } = gapAndDisplayInformation(parentElement, gapStyle);
+  const { gap, hasGaps } = gapAndDisplayInformation(droppable, gapStyle);
 
   const { beforeMarginSpace, space, afterMarginSpace } = spaceWithMargins(
     beforeMarginProp,
@@ -76,7 +75,7 @@ export default function getTranslateBeforeDropping(
 
   const scrollChange = getScrollChange(
     scrollElement,
-    parentElement,
+    droppable,
     previousScroll
   );
 
