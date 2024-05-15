@@ -31,7 +31,14 @@ export default function getTranslateBeforeDropping(
       initialWindowScroll
     );
   }
-
+  if (sourceIndex < 0) {
+    sourceIndex = 0;
+    const firstElement = siblings[0];
+    const { top, left } = firstElement.getBoundingClientRect();
+    console.log(top, left);
+    //TODO call getPositionByDistance of the firstElement
+    // pass targer as the same element
+  }
   const { sourceElement, targetElement, siblingsBetween, isDraggedFoward } =
     getElementsRange(siblings, sourceIndex, targetIndex);
   const {

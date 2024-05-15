@@ -83,7 +83,6 @@ export default function useEmitEvents(
         siblings,
         elementPosition,
         tranlation,
-        droppableScroll,
         initialWindowScroll,
         droppableConfig
       );
@@ -195,20 +194,22 @@ export default function useEmitEvents(
     siblings: HTMLElement[],
     elementPosition: number,
     translation: Translate,
-    droppableScroll: {
-      scrollLeft: number;
-      scrollTop: number;
-    },
     initialWindowScroll: number,
     droppableConfig: DroppableConfig
   ) => {
-    const { droppable } = droppableConfig;
+    const { droppable, droppableScroll } = droppableConfig;
     const allSiblings = siblings.toReversed();
 
     allSiblings.splice(elementPosition, 0, draggedElement);
 
     const { previousElement, nextElement, targetIndex } =
-      getPreviousAndNextElement(draggedElement, elementPosition, allSiblings);
+      getPreviousAndNextElement(
+        draggedElement,
+        elementPosition,
+        allSiblings,
+        droppable
+      );
+
     translation = getTranslationByDragging(
       draggedElement,
       event,
@@ -256,12 +257,10 @@ export default function useEmitEvents(
   const getPreviousAndNextElement = (
     draggedElement: HTMLElement,
     elementPosition: number,
-    allSiblings: HTMLElement[]
+    allSiblings: HTMLElement[],
+    droppable: HTMLElement
   ) => {
-    const isOutside = draggableIsOutside(
-      draggedElement,
-      draggedElement.parentElement as HTMLElement
-    );
+    const isOutside = draggableIsOutside(draggedElement, droppable);
 
     const targetIndex = isOutside ? elementPosition : actualIndex.value;
 

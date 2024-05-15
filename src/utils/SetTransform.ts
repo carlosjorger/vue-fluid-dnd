@@ -162,27 +162,31 @@ export const useTransform = (childRef: Ref<HTMLElement | undefined>) => {
     }
     return { offsetX, offsetY };
   };
+  const getPositionByDistance = (
+    direction: Direction,
+    event: { pageX: number; pageY: number },
+    element: HTMLElement
+  ) => {
+    const { offset, beforeMargin, page, borderBeforeWidth, scroll } =
+      getPropByDirection(direction);
+    return (
+      event[page] -
+      currentOffset.value[offset] -
+      getMarginStyleByProperty(element, beforeMargin) -
+      getBorderWidthProperty(element, borderBeforeWidth) -
+      window[scroll]
+    );
+  };
   const updateTransformState = (
     event: DragMouseTouchEvent,
     element: HTMLElement
   ) => {
     const { offsetX, offsetY } = getOffset(event);
     currentOffset.value = { offsetX, offsetY };
-    const getPositionByDistance = (direction: Direction) => {
-      const { offset, beforeMargin, page, borderBeforeWidth, scroll } =
-        getPropByDirection(direction);
 
-      return (
-        event[page] -
-        currentOffset.value[offset] -
-        getMarginStyleByProperty(element, beforeMargin) -
-        getBorderWidthProperty(element, borderBeforeWidth) -
-        window[scroll]
-      );
-    };
     position.value = {
-      top: getPositionByDistance("vertical"),
-      left: getPositionByDistance("horizontal"),
+      top: getPositionByDistance("vertical", event, element),
+      left: getPositionByDistance("horizontal", event, element),
     };
   };
   return {
