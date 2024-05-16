@@ -36,7 +36,7 @@ export default function getTranslateBeforeDropping(
     const firstElement = siblings[0];
     const { top, left } = firstElement.getBoundingClientRect();
     console.log(top, left);
-    //TODO call getPositionByDistance of the firstElement
+    //TODO call getTransformState of the firstElement
     // pass targer as the same element
   }
   const { sourceElement, targetElement, siblingsBetween, isDraggedFoward } =
