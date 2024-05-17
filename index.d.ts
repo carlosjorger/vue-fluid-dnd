@@ -37,3 +37,10 @@ export type DragMouseTouchEvent = {
   readonly offsetX: number;
   readonly offsetY: number;
 };
+export type TransformEvent = {
+  readonly pageX: number;
+  readonly pageY: number;
+  readonly target: EventTarget | null;
+  readonly offsetX: number;
+  readonly offsetY: number;
+};

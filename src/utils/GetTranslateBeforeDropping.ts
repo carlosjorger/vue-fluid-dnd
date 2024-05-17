@@ -4,6 +4,7 @@ import {
   BeforeMargin,
   Distance,
   ScrollElement,
+  TransformEvent,
   Translate,
 } from "../../index";
 import {
@@ -35,9 +36,10 @@ export default function getTranslateBeforeDropping(
     sourceIndex = 0;
     const firstElement = siblings[0];
     const { top, left } = firstElement.getBoundingClientRect();
-    console.log(top, left);
-    //TODO call getTransformState of the firstElement
-    // pass targer as the same element
+    console.log(top, left, targetIndex);
+
+    //TODO rest transform
+    //and pass dragged element
   }
   const { sourceElement, targetElement, siblingsBetween, isDraggedFoward } =
     getElementsRange(siblings, sourceIndex, targetIndex);

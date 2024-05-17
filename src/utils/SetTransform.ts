@@ -1,4 +1,4 @@
-import { DragMouseTouchEvent } from "../../index";
+import { DragMouseTouchEvent, TransformEvent } from "../../index";
 import {
   draggableIsOutside,
   getBorderWidthProperty,
@@ -168,10 +168,7 @@ const getOffsetWithDraggable = (
     getBorderWidthProperty(draggable, borderBeforeWidth)
   );
 };
-const getOffset = (
-  event: DragMouseTouchEvent,
-  draggable: Element | undefined
-) => {
+const getOffset = (event: TransformEvent, draggable: Element | undefined) => {
   let { offsetX, offsetY, target } = event;
   if (draggable && target && draggable != target) {
     offsetX += getOffsetWithDraggable(
@@ -186,7 +183,7 @@ const getOffset = (
 
 const getPositionByDistance = (
   direction: Direction,
-  event: { pageX: number; pageY: number },
+  event: TransformEvent,
   element: HTMLElement,
   offsetEvent: {
     offsetX: number;
@@ -203,14 +200,12 @@ const getPositionByDistance = (
     window[scroll]
   );
 };
-// TODO: keep refactor getTransformState
-const getTransformState = (
-  event: DragMouseTouchEvent,
+export const getTransformState = (
+  event: TransformEvent,
   element: HTMLElement,
   draggable?: Element
 ) => {
   const { offsetX, offsetY } = getOffset(event, draggable);
-
   return {
     top: getPositionByDistance("vertical", event, element, {
       offsetX,
