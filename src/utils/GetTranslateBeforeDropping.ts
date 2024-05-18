@@ -41,8 +41,6 @@ export default function getTranslateBeforeDropping(
   let height = 0;
   let width = 0;
   let isGroupDropping = false;
-  // TODO: fix dropping in last position
-  // changing sourceIndex and sourceElement
   if (sourceIndex === targetIndex) {
     return addScrollToTranslate(
       { height, width },
@@ -53,14 +51,13 @@ export default function getTranslateBeforeDropping(
   }
   if (sourceIndex < 0 && draggable) {
     isGroupDropping = true;
-    sourceIndex = 0;
     const [firstElement] = siblings;
     const { x, y } = getGroupDraggedTranslate(firstElement, draggable);
     height += y;
     width += x;
   }
   const { sourceElement, targetElement, siblingsBetween, isDraggedFoward } =
-    getElementsRange(siblings, sourceIndex, targetIndex);
+    getElementsRange(siblings, sourceIndex, targetIndex, draggable);
   const {
     scrollElement,
     beforeMargin: beforeMarginProp,
@@ -145,18 +142,24 @@ const getSpaceBetween = (
 const getElementsRange = (
   siblings: HTMLElement[],
   sourceIndex: number,
-  targetIndex: number
+  targetIndex: number,
+  draggable?: HTMLElement
 ) => {
   const isDraggedFoward = sourceIndex < targetIndex;
 
   const [firstIndex, secondIndex] = [sourceIndex, targetIndex].toSorted(
     (a, b) => a - b
   );
-  const sourceElement = siblings[sourceIndex];
+  const sourceElement = siblings[sourceIndex] ?? draggable;
   const targetElement = siblings[targetIndex];
-  const siblingsBetween = isDraggedFoward
+
+  let siblingsBetween = isDraggedFoward
     ? siblings.slice(firstIndex + 1, secondIndex + 1)
     : siblings.slice(firstIndex, secondIndex);
+
+  if (firstIndex < 0 && draggable) {
+    siblingsBetween = siblings.slice(firstIndex + 1, secondIndex);
+  }
   return {
     sourceElement,
     targetElement,

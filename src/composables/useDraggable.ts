@@ -305,6 +305,7 @@ export default function useDraggable(
       return;
     }
     removeDraggingStyles(element);
+    console.log(index);
     emitEventToSiblings(
       element,
       START_DROP_EVENT,

@@ -29,6 +29,14 @@ export interface Config {
    */
   droppableGroup?: string;
 }
+/**
+ * onDrop event function.
+ * @public
+ */
+export type OnDropEvent = (
+  source: DraggableElement,
+  destination: DraggableElement
+) => void;
 
 export type CoreConfig = {
   /**
@@ -47,5 +55,6 @@ export type CoreConfig = {
    * Name of the group of the share droppables
    */
   droppableGroup?: string;
-  onDrop: (source: DraggableElement, destination: DraggableElement) => void;
+  onDrop: OnDropEvent;
 };
+// TODO: create onRemoveAtEvent and onInsertEvent events

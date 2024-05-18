@@ -8,7 +8,7 @@ import {
 } from "./GetStyles";
 import { DraggableElement, Translate, WindowScroll } from "../../index";
 import { moveTranslate, setTranistion } from "./SetStyles";
-import { Direction } from "../composables";
+import { Direction, OnDropEvent } from "../composables";
 import getTranslationByDragging from "./GetTranslationByDraggingAndEvent";
 import getTranslateBeforeDropping from "./GetTranslateBeforeDropping";
 import { DraggingState, IsDropEvent } from ".";
@@ -35,7 +35,7 @@ export default function useEmitEvents(
   fixedWidth: Ref<string>,
   index: number,
   handlerSelector: string,
-  onDrop: (source: DraggableElement, destination: DraggableElement) => void,
+  onDrop: OnDropEvent,
   duration: number,
   parent: HTMLElement
 ) {
@@ -218,6 +218,7 @@ export default function useEmitEvents(
       return;
     }
     const windowScroll = getWindowScroll();
+    // TODO: insert element into another list
     const draggableTranslation = getTranslateBeforeDropping(
       config.direction,
       allSiblings,

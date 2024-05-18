@@ -1,10 +1,6 @@
-import { DraggableElement } from "index";
-import { Config, CoreConfig, VERTICAL } from "../composables";
+import { Config, CoreConfig, OnDropEvent, VERTICAL } from "../composables";
 
-export const getConfig = (
-  onDrop: (source: DraggableElement, destination: DraggableElement) => void,
-  config?: Config
-): CoreConfig => {
+export const getConfig = (onDrop: OnDropEvent, config?: Config): CoreConfig => {
   const DEFAULT_CONFIG = {
     direction: VERTICAL,
     handlerSelector: "draggable",
