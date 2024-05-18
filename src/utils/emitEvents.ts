@@ -233,7 +233,8 @@ export default function useEmitEvents(
       windowScroll,
       droppableScroll,
       initialWindowScroll,
-      droppable
+      droppable,
+      childElement
     );
     for (const [index, sibling] of siblings.toReversed().entries()) {
       let newTranslation = translation;

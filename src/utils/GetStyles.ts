@@ -156,6 +156,13 @@ export const getScrollElement = (element: HTMLElement) => {
   const { scrollLeft, scrollTop } = element;
   return { scrollLeft, scrollTop };
 };
+export const getBeforeStyles = (element: HTMLElement) => {
+  const { top, left } = getComputedStyle(element);
+  return {
+    top: getNumberFromPixels(top),
+    left: getNumberFromPixels(left),
+  };
+};
 export const getPropByDirection = (
   direction: Direction
 ): {

@@ -4,14 +4,28 @@ import {
   BeforeMargin,
   Distance,
   ScrollElement,
-  TransformEvent,
   Translate,
 } from "../../index";
 import {
   gapAndDisplayInformation,
+  getBeforeStyles,
   getMarginStyleByProperty,
   getPropByDirection,
+  getTransform,
 } from "./GetStyles";
+const getGroupDraggedTranslate = (
+  firstElement: HTMLElement,
+  draggable: HTMLElement
+) => {
+  const { top, left } = getBeforeStyles(draggable);
+  const { top: firstElementTop, left: firstElementLeft } =
+    firstElement.getBoundingClientRect();
+  const { x, y } = getTransform(firstElement);
+  return {
+    height: firstElementTop - top - y,
+    width: firstElementLeft - left - x,
+  };
+};
 export default function getTranslateBeforeDropping(
   direction: Direction,
   siblings: HTMLElement[],
@@ -20,7 +34,8 @@ export default function getTranslateBeforeDropping(
   scroll: { scrollY: number; scrollX: number },
   previousScroll: { scrollLeft: number; scrollTop: number },
   initialWindowScroll: number,
-  droppable: HTMLElement
+  droppable: HTMLElement,
+  draggable?: HTMLElement
 ) {
   let height = 0;
   let width = 0;
@@ -32,12 +47,10 @@ export default function getTranslateBeforeDropping(
       initialWindowScroll
     );
   }
-  if (sourceIndex < 0) {
+  if (sourceIndex < 0 && draggable) {
     sourceIndex = 0;
-    const firstElement = siblings[0];
-    const { top, left } = firstElement.getBoundingClientRect();
-    console.log(top, left, targetIndex);
-
+    const [firstElement] = siblings;
+    console.log(getGroupDraggedTranslate(firstElement, draggable));
     //TODO rest transform
     //and pass dragged element
   }
