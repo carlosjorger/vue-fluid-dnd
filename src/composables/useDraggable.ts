@@ -48,7 +48,10 @@ export default function useDraggable(
   const childRef = ref(child);
   const translate = ref({ x: 0, y: 0 });
   const scroll = ref({ scrollLeft: 0, scrollTop: 0 });
-  const windowScroll = ref(0);
+  const windowScroll = ref({
+    scrollX: 0,
+    scrollY: 0,
+  });
   const duration = 200;
 
   const pagePosition = ref({ pageX: 0, pageY: 0 });
@@ -67,8 +70,7 @@ export default function useDraggable(
     handlerSelector,
     onDrop,
     duration,
-    parent,
-    direction
+    parent
   );
   const setDraggable = () => {
     if (childRef.value) {
@@ -204,8 +206,8 @@ export default function useDraggable(
       const element = childRef.value;
       droppableScroll.value = getScrollElement(parent);
       ConfigHandler.updateScrolls(parent, droppableGroupClass);
-      const { scroll } = getPropByDirection(direction);
-      windowScroll.value = window[scroll];
+      const { scrollX, scrollY } = window;
+      windowScroll.value = { scrollX, scrollY };
       if (draggingState.value === DraggingState.NOT_DRAGGING) {
         draggingState.value = DraggingState.START_DRAGGING;
         document.addEventListener(moveEvent, handlerMousemove);
@@ -232,7 +234,6 @@ export default function useDraggable(
     emitEventToSiblings(
       element,
       START_DRAG_EVENT,
-      droppableScroll.value,
       windowScroll.value,
       currentDroppableConfig.value
     );
@@ -289,7 +290,6 @@ export default function useDraggable(
     emitEventToSiblings(
       element,
       DRAG_EVENT,
-      droppableScroll.value,
       windowScroll.value,
       currentDroppableConfig.value
     );
@@ -308,7 +308,6 @@ export default function useDraggable(
     emitEventToSiblings(
       element,
       START_DROP_EVENT,
-      droppableScroll.value,
       windowScroll.value,
       currentDroppableConfig.value
     );
@@ -361,7 +360,6 @@ export default function useDraggable(
         emitEventToSiblings(
           childRef.value,
           DRAG_EVENT,
-          droppableScroll.value,
           windowScroll.value,
           oldDroppableConfig
         );

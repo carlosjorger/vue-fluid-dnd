@@ -6,7 +6,7 @@ import {
   getTransform,
   getWindowScroll,
 } from "./GetStyles";
-import { DraggableElement, Translate } from "../../index";
+import { DraggableElement, Translate, WindowScroll } from "../../index";
 import { moveTranslate, setTranistion } from "./SetStyles";
 import { Direction } from "../composables";
 import getTranslationByDragging from "./GetTranslationByDraggingAndEvent";
@@ -37,19 +37,14 @@ export default function useEmitEvents(
   handlerSelector: string,
   onDrop: (source: DraggableElement, destination: DraggableElement) => void,
   duration: number,
-  parent: HTMLElement,
-  direction: Direction
+  parent: HTMLElement
 ) {
   const actualIndex = ref(index);
 
   const emitEventToSiblings = (
     draggedElement: HTMLElement,
     event: DragAndDropEvent,
-    droppableScroll: {
-      scrollLeft: number;
-      scrollTop: number;
-    },
-    initialWindowScroll: number,
+    initialWindowScroll: WindowScroll,
     droppableConfig: DroppableConfig | undefined
   ) => {
     if (!droppableConfig) {
@@ -120,7 +115,7 @@ export default function useEmitEvents(
       updateActualIndexBaseOnTranslation(
         translation,
         siblingRealIndex,
-        direction
+        config.direction
       );
       if (event === START_DRAG_EVENT) {
         startDragEventOverElement(sibling, translation);
@@ -194,10 +189,10 @@ export default function useEmitEvents(
     siblings: HTMLElement[],
     elementPosition: number,
     translation: Translate,
-    initialWindowScroll: number,
+    initialWindowScroll: WindowScroll,
     droppableConfig: DroppableConfig
   ) => {
-    const { droppable, droppableScroll } = droppableConfig;
+    const { droppable, droppableScroll, config } = droppableConfig;
     const allSiblings = siblings.toReversed();
 
     allSiblings.splice(elementPosition, 0, draggedElement);
@@ -213,20 +208,18 @@ export default function useEmitEvents(
     translation = getTranslationByDragging(
       draggedElement,
       event,
-      direction,
+      config.direction,
       parent,
       previousElement,
       nextElement
     );
-
     const childElement = childRef.value;
     if (!childElement) {
       return;
     }
     const windowScroll = getWindowScroll();
-    //TODO: make this function working with a foreing element
     const draggableTranslation = getTranslateBeforeDropping(
-      direction,
+      config.direction,
       allSiblings,
       elementPosition,
       targetIndex,
