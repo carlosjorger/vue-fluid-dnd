@@ -6,9 +6,14 @@ import {
   getTransform,
   getWindowScroll,
 } from "./GetStyles";
-import { DraggableElement, Translate, WindowScroll } from "../../index";
+import { Translate, WindowScroll } from "../../index";
 import { moveTranslate, setTranistion } from "./SetStyles";
-import { Direction, OnDropEvent } from "../composables";
+import {
+  Direction,
+  OnDropEvent,
+  OnInsertEvent,
+  OnRemoveAtEvent,
+} from "../composables";
 import getTranslationByDragging from "./GetTranslationByDraggingAndEvent";
 import getTranslateBeforeDropping from "./GetTranslateBeforeDropping";
 import { DraggingState, IsDropEvent } from ".";
@@ -28,7 +33,7 @@ type DraggingEvent = typeof DRAG_EVENT | typeof START_DRAG_EVENT;
 type DragAndDropEvent = DraggingEvent | DropEvent;
 
 type DropEvent = "drop" | typeof START_DROP_EVENT;
-export default function useEmitEvents(
+export default function useEmitEvents<T>(
   childRef: Ref<HTMLElement | undefined>,
   draggingState: Ref<DraggingState>,
   fixedHeight: Ref<string>,
@@ -36,6 +41,7 @@ export default function useEmitEvents(
   index: number,
   handlerSelector: string,
   onDrop: OnDropEvent,
+  onRemoveAtEvent: OnRemoveAtEvent<T>,
   duration: number,
   parent: HTMLElement
 ) {
@@ -45,7 +51,8 @@ export default function useEmitEvents(
     draggedElement: HTMLElement,
     event: DragAndDropEvent,
     initialWindowScroll: WindowScroll,
-    droppableConfig: DroppableConfig | undefined
+    droppableConfig: DroppableConfig<T> | undefined,
+    positionOnSourceDroppable?: number
   ) => {
     if (!droppableConfig) {
       return;
@@ -58,7 +65,7 @@ export default function useEmitEvents(
       config.direction,
       droppable
     );
-    const { siblings, elementPosition } = getSiblings(
+    const { siblings, elementPosition: positionOnDroppable } = getSiblings(
       draggedElement,
       droppable
     );
@@ -76,10 +83,11 @@ export default function useEmitEvents(
         draggedElement,
         event,
         siblings,
-        elementPosition,
+        positionOnDroppable,
         tranlation,
         initialWindowScroll,
-        droppableConfig
+        droppableConfig,
+        positionOnSourceDroppable
       );
     }
   };
@@ -89,7 +97,7 @@ export default function useEmitEvents(
     event: DraggingEvent,
     siblings: HTMLElement[],
     translation: Translate,
-    droppableConfig: DroppableConfig
+    droppableConfig: DroppableConfig<T>
   ) => {
     const { config, droppable } = droppableConfig;
 
@@ -190,7 +198,8 @@ export default function useEmitEvents(
     elementPosition: number,
     translation: Translate,
     initialWindowScroll: WindowScroll,
-    droppableConfig: DroppableConfig
+    droppableConfig: DroppableConfig<T>,
+    positionOnSourceDroppable?: number
   ) => {
     const { droppable, droppableScroll, config } = droppableConfig;
     const allSiblings = siblings.toReversed();
@@ -247,7 +256,13 @@ export default function useEmitEvents(
         );
       }
     }
-    dropEventOverElement(elementPosition, targetIndex, childElement);
+    dropEventOverElement(
+      targetIndex,
+      childElement,
+      config.onInsertEvent,
+      droppable,
+      positionOnSourceDroppable
+    );
   };
   const getPreviousAndNextElement = (
     draggedElement: HTMLElement,
@@ -291,31 +306,36 @@ export default function useEmitEvents(
     );
   };
   const dropEventOverElement = (
-    sourceIndex: number,
     targetIndex: number,
-    element: HTMLElement
+    element: HTMLElement,
+    onInsertEvent: OnInsertEvent<T>,
+    droppable: HTMLElement,
+    positionOnSourceDroppable?: number
   ) => {
     setTimeout(() => {
-      removeTempChild();
-      onDrop(
-        {
-          index: sourceIndex,
-        },
-        {
-          index: targetIndex,
+      removeTempChild(parent);
+      removeTempChild(droppable);
+      if (positionOnSourceDroppable != undefined) {
+        const value = onRemoveAtEvent(positionOnSourceDroppable);
+        if (value) {
+          onInsertEvent(targetIndex, value);
         }
-      );
+      }
       removeElementDraggingStyles(element);
-      observeDroppedElements(element);
+      observeDroppedElements(element, parent);
+      observeDroppedElements(element, droppable);
     }, duration);
   };
-  const removeTempChild = () => {
+  const removeTempChild = (parent: HTMLElement) => {
     var lastChildren = parent.querySelectorAll(`.${TEMP_CHILD_CLASS}`);
     lastChildren.forEach((lastChild) => {
       parent.removeChild(lastChild);
     });
   };
-  const observeDroppedElements = (element: HTMLElement) => {
+  const observeDroppedElements = (
+    element: HTMLElement,
+    parent: HTMLElement
+  ) => {
     const { siblings } = getSiblings(element, parent);
     for (const sibling of [...siblings, element]) {
       const observer = createObserverWithCallBack(() => {

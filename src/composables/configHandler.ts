@@ -2,14 +2,14 @@ import { ElementScroll } from "../../index";
 import { CoreConfig } from ".";
 import { getScrollElement } from "../utils/GetStyles";
 
-export type DroppableConfig = {
+export type DroppableConfig<T> = {
   droppable: HTMLElement;
-  config: CoreConfig;
+  config: CoreConfig<T>;
   droppableScroll: ElementScroll;
 };
 export default class ConfigHandler {
-  static configs = [] as DroppableConfig[];
-  static addConfig(droppable: HTMLElement, config: CoreConfig) {
+  static configs = [] as DroppableConfig<any>[];
+  static addConfig<T>(droppable: HTMLElement, config: CoreConfig<T>) {
     const configs = ConfigHandler.configs.filter(
       (configHandler) => !configHandler.droppable.isSameNode(droppable)
     );

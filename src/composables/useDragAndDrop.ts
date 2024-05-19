@@ -1,4 +1,8 @@
-import { dropDraggingElementsBetween } from "../utils/DropMethods";
+import {
+  dropDraggingElementsBetween,
+  onInsertEventOnList,
+  removeAtEventOnList,
+} from "../utils/DropMethods";
 import { DraggableElement } from "../../index";
 import { Ref, ref, watch } from "vue";
 import useDraggable from "./useDraggable";
@@ -27,7 +31,19 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
       }
     };
   };
+  const getOnRemoveAtEvent = (items: T[]) => {
+    return (index: number) => {
+      return removeAtEventOnList(ref(items) as Ref<T[]>, index);
+    };
+  };
+  const getOnInsertEventOnList = (items: T[]) => {
+    return (index: number, value: T) => {
+      return onInsertEventOnList(ref(items) as Ref<T[]>, index, value);
+    };
+  };
   const onDrop = getOnDrop(items.value);
+  const onRemoveAtEvent = getOnRemoveAtEvent(items.value);
+  const onInsertEvent = getOnInsertEventOnList(items.value);
 
   const makeChildrensDraggable = () => {
     if (!parent.value) {
@@ -42,7 +58,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
         useDraggable(
           childHTMLElement,
           numberIndex,
-          getConfig(onDrop, config),
+          getConfig(onDrop, onRemoveAtEvent, onInsertEvent, config),
           parent.value
         );
       }
@@ -64,7 +80,10 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
   };
   const addConfigHandler = () => {
     if (parent.value) {
-      ConfigHandler.addConfig(parent.value, getConfig(onDrop, config));
+      ConfigHandler.addConfig(
+        parent.value,
+        getConfig(onDrop, onRemoveAtEvent, onInsertEvent, config)
+      );
     }
   };
   watch(parent, () => {

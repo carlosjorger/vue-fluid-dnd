@@ -38,7 +38,10 @@ export type OnDropEvent = (
   destination: DraggableElement
 ) => void;
 
-export type CoreConfig = {
+export type OnRemoveAtEvent<T> = (index: number) => T | undefined;
+export type OnInsertEvent<T> = (index: number, value: T) => void;
+
+export type CoreConfig<T> = {
   /**
    * The direction of the list to sort.
    */
@@ -56,5 +59,6 @@ export type CoreConfig = {
    */
   droppableGroup?: string;
   onDrop: OnDropEvent;
+  onRemoveAtEvent: OnRemoveAtEvent<T>;
+  onInsertEvent: OnInsertEvent<T>;
 };
-// TODO: create onRemoveAtEvent and onInsertEvent events

@@ -33,14 +33,20 @@ const DRAG_EVENT = "drag";
 const START_DRAG_EVENT = "startDrag";
 const START_DROP_EVENT = "startDrop";
 
-export default function useDraggable(
+export default function useDraggable<T>(
   child: HTMLElement | undefined,
   index: number,
-  config: CoreConfig,
+  config: CoreConfig<T>,
   parent: HTMLElement
 ) {
-  const { handlerSelector, direction, isDraggable, droppableGroup, onDrop } =
-    config;
+  const {
+    handlerSelector,
+    direction,
+    isDraggable,
+    droppableGroup,
+    onDrop,
+    onRemoveAtEvent,
+  } = config;
   const droppableGroupClass = droppableGroup
     ? `droppable-group-${droppableGroup}`
     : null;
@@ -59,9 +65,9 @@ export default function useDraggable(
   const fixedWidth = ref("");
   const fixedHeight = ref("");
   const droppableScroll = ref({ scrollLeft: 0, scrollTop: 0 });
-  const currentDroppableConfig = ref<DroppableConfig>();
+  const currentDroppableConfig = ref<DroppableConfig<T>>();
   const { setTransform, updateTransformState } = useTransform(childRef);
-  const { emitEventToSiblings, toggleDraggingClass } = useEmitEvents(
+  const { emitEventToSiblings, toggleDraggingClass } = useEmitEvents<T>(
     childRef,
     draggingState,
     fixedHeight,
@@ -69,6 +75,7 @@ export default function useDraggable(
     index,
     handlerSelector,
     onDrop,
+    onRemoveAtEvent,
     duration,
     parent
   );
@@ -305,12 +312,12 @@ export default function useDraggable(
       return;
     }
     removeDraggingStyles(element);
-    console.log(index);
     emitEventToSiblings(
       element,
       START_DROP_EVENT,
       windowScroll.value,
-      currentDroppableConfig.value
+      currentDroppableConfig.value,
+      index
     );
   };
   const removeDraggingStyles = (element: HTMLElement) => {
@@ -347,8 +354,8 @@ export default function useDraggable(
     });
   };
   const changeDroppable = (
-    newdDroppableConfig: DroppableConfig | undefined,
-    oldDroppableConfig: DroppableConfig | undefined
+    newdDroppableConfig: DroppableConfig<T> | undefined,
+    oldDroppableConfig: DroppableConfig<T> | undefined
   ) => {
     if (
       childRef.value &&
