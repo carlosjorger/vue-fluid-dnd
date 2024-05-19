@@ -183,7 +183,6 @@ export default function useEmitEvents<T>(
     moveTranslate(element, height, width);
     setTranistion(element, duration, draggableTargetTimingFunction);
   };
-  // TODO: pass Config to drop event
   // #region Drop events
   const emitDroppingEventToSiblings = (
     draggedElement: HTMLElement,
@@ -221,7 +220,6 @@ export default function useEmitEvents<T>(
       return;
     }
     const windowScroll = getWindowScroll();
-    // TODO: insert element into another list
     const draggableTranslation = getTranslateBeforeDropping(
       config.direction,
       allSiblings,

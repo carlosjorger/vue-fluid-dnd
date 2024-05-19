@@ -379,5 +379,6 @@ export default function useDraggable<T>(
   setCssStyles();
   setSlotRefElementParams(childRef.value);
 }
-// TODO: drag between groups https://javascript.info/mouse-drag-and-drop
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
+// TODO: reduce size of tempchild with an animation
+// TODO: refactor code and gzip
