@@ -8,12 +8,7 @@ import {
 } from "./GetStyles";
 import { Translate, WindowScroll } from "../../index";
 import { moveTranslate, setTranistion } from "./SetStyles";
-import {
-  Direction,
-  OnDropEvent,
-  OnInsertEvent,
-  OnRemoveAtEvent,
-} from "../composables";
+import { Direction, OnInsertEvent, OnRemoveAtEvent } from "../composables";
 import getTranslationByDragging from "./GetTranslationByDraggingAndEvent";
 import getTranslateBeforeDropping from "./GetTranslateBeforeDropping";
 import { DraggingState, IsDropEvent } from ".";
@@ -40,7 +35,6 @@ export default function useEmitEvents<T>(
   fixedWidth: Ref<string>,
   index: number,
   handlerSelector: string,
-  onDrop: OnDropEvent,
   onRemoveAtEvent: OnRemoveAtEvent<T>,
   duration: number,
   parent: HTMLElement

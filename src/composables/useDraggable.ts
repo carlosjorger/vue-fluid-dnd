@@ -44,7 +44,6 @@ export default function useDraggable<T>(
     direction,
     isDraggable,
     droppableGroup,
-    onDrop,
     onRemoveAtEvent,
   } = config;
   const droppableGroupClass = droppableGroup
@@ -74,7 +73,6 @@ export default function useDraggable<T>(
     fixedWidth,
     index,
     handlerSelector,
-    onDrop,
     onRemoveAtEvent,
     duration,
     parent
