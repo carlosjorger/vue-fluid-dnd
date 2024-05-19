@@ -1,11 +1,26 @@
-import { Config, CoreConfig, VERTICAL } from "../composables";
+import {
+  Config,
+  CoreConfig,
+  OnDropEvent,
+  OnInsertEvent,
+  OnRemoveAtEvent,
+  VERTICAL,
+} from "../composables";
 
-export const getConfig = (config?: Config): CoreConfig => {
+export const getConfig = <T>(
+  onDrop: OnDropEvent,
+  onRemoveAtEvent: OnRemoveAtEvent<T>,
+  onInsertEvent: OnInsertEvent<T>,
+  config?: Config
+): CoreConfig<T> => {
   const DEFAULT_CONFIG = {
     direction: VERTICAL,
     handlerSelector: "draggable",
     isDraggable: () => true,
-  } as CoreConfig;
+    onDrop,
+    onRemoveAtEvent,
+    onInsertEvent,
+  } as CoreConfig<T>;
   if (!config) {
     return DEFAULT_CONFIG;
   }
@@ -15,5 +30,8 @@ export const getConfig = (config?: Config): CoreConfig => {
     handlerSelector: config.handlerSelector ?? DEFAULT_CONFIG.handlerSelector,
     isDraggable: config.isDraggable ?? DEFAULT_CONFIG.isDraggable,
     droppableGroup: config.droppableGroup,
+    onDrop: DEFAULT_CONFIG.onDrop,
+    onRemoveAtEvent,
+    onInsertEvent,
   };
 };

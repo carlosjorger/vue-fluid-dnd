@@ -5,30 +5,59 @@ import {
   Distance,
   ScrollElement,
   Translate,
+  WindowScroll,
 } from "../../index";
 import {
   gapAndDisplayInformation,
+  getBeforeStyles,
   getMarginStyleByProperty,
   getPropByDirection,
+  getTransform,
 } from "./GetStyles";
+const getGroupDraggedTranslate = (
+  firstElement: HTMLElement,
+  draggable: HTMLElement
+) => {
+  const { top, left } = getBeforeStyles(draggable);
+  const { top: firstElementTop, left: firstElementLeft } =
+    firstElement.getBoundingClientRect();
+  const { x, y } = getTransform(firstElement);
+  return {
+    y: firstElementTop - top - y,
+    x: firstElementLeft - left - x,
+  };
+};
 export default function getTranslateBeforeDropping(
   direction: Direction,
   siblings: HTMLElement[],
   sourceIndex: number,
   targetIndex: number,
-  scroll: { scrollY: number; scrollX: number },
-  previousScroll: { scrollLeft: number; scrollTop: number }
+  scroll: WindowScroll,
+  previousScroll: { scrollLeft: number; scrollTop: number },
+  initialWindowScroll: WindowScroll,
+  droppable: HTMLElement,
+  draggable?: HTMLElement
 ) {
   let height = 0;
   let width = 0;
+  let isGroupDropping = false;
   if (sourceIndex === targetIndex) {
-    return addScrollToTranslate({ height, width }, direction, scroll);
+    return addScrollToTranslate(
+      { height, width },
+      direction,
+      scroll,
+      initialWindowScroll
+    );
   }
-
+  if (sourceIndex < 0 && draggable) {
+    isGroupDropping = true;
+    const [firstElement] = siblings;
+    const { x, y } = getGroupDraggedTranslate(firstElement, draggable);
+    height += y;
+    width += x;
+  }
   const { sourceElement, targetElement, siblingsBetween, isDraggedFoward } =
-    getElementsRange(siblings, sourceIndex, targetIndex);
-
-  const parentElement = sourceElement.parentElement as HTMLElement;
+    getElementsRange(siblings, sourceIndex, targetIndex, draggable);
   const {
     scrollElement,
     beforeMargin: beforeMarginProp,
@@ -36,7 +65,7 @@ export default function getTranslateBeforeDropping(
     distance: spaceProp,
     gap: gapStyle,
   } = getPropByDirection(direction);
-  const { gap, hasGaps } = gapAndDisplayInformation(parentElement, gapStyle);
+  const { gap, hasGaps } = gapAndDisplayInformation(droppable, gapStyle);
 
   const { beforeMarginSpace, space, afterMarginSpace } = spaceWithMargins(
     beforeMarginProp,
@@ -68,24 +97,25 @@ export default function getTranslateBeforeDropping(
     gap
   );
 
-  const scrollChange = getScrollChange(
-    scrollElement,
-    parentElement,
-    previousScroll
-  );
-
+  const scrollChange = isGroupDropping
+    ? 0
+    : getScrollChange(scrollElement, droppable, previousScroll);
   const spaceCalc = isDraggedFoward
     ? spaceBetween - spaceBeforeDraggedElement
     : spaceBeforeDraggedElement - spaceBetween;
 
   const translate = spaceCalc - scrollChange;
   if (direction === "vertical") {
-    height = translate;
+    height += translate;
   } else if (direction === "horizontal") {
-    width = translate;
+    width += translate;
   }
-
-  return addScrollToTranslate({ height, width }, direction, scroll);
+  return addScrollToTranslate(
+    { height, width },
+    direction,
+    scroll,
+    initialWindowScroll
+  );
 }
 const getScrollChange = (
   scrollElement: ScrollElement,
@@ -112,18 +142,24 @@ const getSpaceBetween = (
 const getElementsRange = (
   siblings: HTMLElement[],
   sourceIndex: number,
-  targetIndex: number
+  targetIndex: number,
+  draggable?: HTMLElement
 ) => {
   const isDraggedFoward = sourceIndex < targetIndex;
 
   const [firstIndex, secondIndex] = [sourceIndex, targetIndex].toSorted(
     (a, b) => a - b
   );
-  const sourceElement = siblings[sourceIndex];
+  const sourceElement = siblings[sourceIndex] ?? draggable;
   const targetElement = siblings[targetIndex];
-  const siblingsBetween = isDraggedFoward
+
+  let siblingsBetween = isDraggedFoward
     ? siblings.slice(firstIndex + 1, secondIndex + 1)
     : siblings.slice(firstIndex, secondIndex);
+
+  if (firstIndex < 0 && draggable) {
+    siblingsBetween = siblings.slice(firstIndex + 1, secondIndex);
+  }
   return {
     sourceElement,
     targetElement,
@@ -174,12 +210,14 @@ const spaceWithMargins = (
 const addScrollToTranslate = (
   translate: Translate,
   direction: Direction,
-  initialScroll: { scrollY: number; scrollX: number }
+  initialScroll: WindowScroll,
+  initialWindowScroll: WindowScroll
 ) => {
   const { scroll, distance } = getPropByDirection(direction);
   const actualWindowScroll = window[scroll];
   const initialScrollProp = initialScroll[scroll];
-  const scrollChange = initialScrollProp - actualWindowScroll;
+  const scrollChange =
+    initialScrollProp - 2 * actualWindowScroll + initialWindowScroll[scroll];
   translate[distance] += scrollChange;
   return translate;
 };

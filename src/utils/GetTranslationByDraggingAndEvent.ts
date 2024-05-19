@@ -12,6 +12,7 @@ export default function getTranslationByDraggingAndEvent(
   current: HTMLElement,
   event: DragAndDropEvent,
   direction: Direction,
+  droppable: HTMLElement,
   previousElement = current.previousElementSibling,
   nextElement = current.nextElementSibling
 ) {
@@ -21,7 +22,7 @@ export default function getTranslationByDraggingAndEvent(
     previousElement,
     nextElement
   );
-  const intersection = draggableIsOutside(current);
+  const intersection = draggableIsOutside(current, droppable);
   if (intersection && event == DRAG_EVENT) {
     height = 0;
     width = 0;

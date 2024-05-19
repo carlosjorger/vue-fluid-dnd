@@ -1,4 +1,4 @@
-import { DragMouseTouchEvent } from "../../index";
+import { DragMouseTouchEvent, TransformEvent } from "../../index";
 import {
   draggableIsOutside,
   getBorderWidthProperty,
@@ -95,7 +95,7 @@ export const useTransform = (childRef: Ref<HTMLElement | undefined>) => {
         const infLimit = 0.25;
         const upperLimit = 0.75;
         let percent = 0;
-        const isOutside = draggableIsOutside(element);
+        const isOutside = draggableIsOutside(element, parent);
         if (
           !isOutside &&
           relativePosition < infLimit &&
@@ -134,59 +134,88 @@ export const useTransform = (childRef: Ref<HTMLElement | undefined>) => {
     updateTranlateByDirection("horizontal");
     updateTranlateByDirection("vertical");
   }
-  const getOffsetWithDraggable = (
-    direction: Direction,
-    element: Element,
-    draggable: Element
-  ) => {
-    const { borderBeforeWidth, before } = getPropByDirection(direction);
-    return (
-      element.getBoundingClientRect()[before] -
-      draggable.getBoundingClientRect()[before] -
-      getBorderWidthProperty(childRef.value, borderBeforeWidth)
-    );
-  };
-  const getOffset = (event: DragMouseTouchEvent) => {
-    let { offsetX, offsetY, target } = event;
-    if (childRef.value && target && childRef.value != target) {
-      offsetX += getOffsetWithDraggable(
-        "horizontal",
-        target as Element,
-        childRef.value
-      );
-      offsetY += getOffsetWithDraggable(
-        "vertical",
-        target as Element,
-        childRef.value
-      );
-    }
-    return { offsetX, offsetY };
-  };
+
   const updateTransformState = (
     event: DragMouseTouchEvent,
     element: HTMLElement
   ) => {
-    const { offsetX, offsetY } = getOffset(event);
-    currentOffset.value = { offsetX, offsetY };
-    const getPositionByDistance = (direction: Direction) => {
-      const { offset, beforeMargin, page, borderBeforeWidth, scroll } =
-        getPropByDirection(direction);
-
-      return (
-        event[page] -
-        currentOffset.value[offset] -
-        getMarginStyleByProperty(element, beforeMargin) -
-        getBorderWidthProperty(element, borderBeforeWidth) -
-        window[scroll]
-      );
-    };
+    const { offsetX, offsetY, top, left } = getTransformState(
+      event,
+      element,
+      childRef.value
+    );
     position.value = {
-      top: getPositionByDistance("vertical"),
-      left: getPositionByDistance("horizontal"),
+      top,
+      left,
     };
+    currentOffset.value = { offsetX, offsetY };
   };
   return {
     setTransform,
     updateTransformState,
+  };
+};
+
+const getOffsetWithDraggable = (
+  direction: Direction,
+  element: Element,
+  draggable: Element
+) => {
+  const { borderBeforeWidth, before } = getPropByDirection(direction);
+  return (
+    element.getBoundingClientRect()[before] -
+    draggable.getBoundingClientRect()[before] -
+    getBorderWidthProperty(draggable, borderBeforeWidth)
+  );
+};
+const getOffset = (event: TransformEvent, draggable: Element | undefined) => {
+  let { offsetX, offsetY, target } = event;
+  if (draggable && target && draggable != target) {
+    offsetX += getOffsetWithDraggable(
+      "horizontal",
+      target as Element,
+      draggable
+    );
+    offsetY += getOffsetWithDraggable("vertical", target as Element, draggable);
+  }
+  return { offsetX, offsetY };
+};
+
+const getPositionByDistance = (
+  direction: Direction,
+  event: TransformEvent,
+  element: HTMLElement,
+  offsetEvent: {
+    offsetX: number;
+    offsetY: number;
+  }
+) => {
+  const { offset, beforeMargin, page, borderBeforeWidth, scroll } =
+    getPropByDirection(direction);
+  return (
+    event[page] -
+    offsetEvent[offset] -
+    getMarginStyleByProperty(element, beforeMargin) -
+    getBorderWidthProperty(element, borderBeforeWidth) -
+    window[scroll]
+  );
+};
+export const getTransformState = (
+  event: TransformEvent,
+  element: HTMLElement,
+  draggable?: Element
+) => {
+  const { offsetX, offsetY } = getOffset(event, draggable);
+  return {
+    top: getPositionByDistance("vertical", event, element, {
+      offsetX,
+      offsetY,
+    }),
+    left: getPositionByDistance("horizontal", event, element, {
+      offsetX,
+      offsetY,
+    }),
+    offsetX,
+    offsetY,
   };
 };

@@ -1,3 +1,5 @@
+import { DraggableElement } from "index";
+
 export const HORIZONTAL = "horizontal";
 export const VERTICAL = "vertical";
 /**
@@ -27,8 +29,19 @@ export interface Config {
    */
   droppableGroup?: string;
 }
+/**
+ * onDrop event function.
+ * @public
+ */
+export type OnDropEvent = (
+  source: DraggableElement,
+  destination: DraggableElement
+) => void;
 
-export type CoreConfig = {
+export type OnRemoveAtEvent<T> = (index: number) => T | undefined;
+export type OnInsertEvent<T> = (index: number, value: T) => void;
+
+export type CoreConfig<T> = {
   /**
    * The direction of the list to sort.
    */
@@ -45,4 +58,7 @@ export type CoreConfig = {
    * Name of the group of the share droppables
    */
   droppableGroup?: string;
+  onDrop: OnDropEvent;
+  onRemoveAtEvent: OnRemoveAtEvent<T>;
+  onInsertEvent: OnInsertEvent<T>;
 };

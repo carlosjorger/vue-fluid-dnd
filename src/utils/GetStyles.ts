@@ -77,9 +77,11 @@ const intersection = (
   }
   return firstInterval.x2 - secondInterval.x1;
 };
-export const draggableIsOutside = (draggable: HTMLElement) => {
-  const parentElement = draggable.parentElement as HTMLElement;
-  return !hasIntersection(draggable, parentElement);
+export const draggableIsOutside = (
+  draggable: HTMLElement,
+  droppable: HTMLElement
+) => {
+  return !hasIntersection(draggable, droppable);
 };
 export const hasIntersection = (
   element1: HTMLElement,
@@ -154,6 +156,13 @@ export const getScrollElement = (element: HTMLElement) => {
   const { scrollLeft, scrollTop } = element;
   return { scrollLeft, scrollTop };
 };
+export const getBeforeStyles = (element: HTMLElement) => {
+  const { top, left } = getComputedStyle(element);
+  return {
+    top: getNumberFromPixels(top),
+    left: getNumberFromPixels(left),
+  };
+};
 export const getPropByDirection = (
   direction: Direction
 ): {
@@ -212,6 +221,19 @@ export const getPropByDirection = (
 export const getSiblings = (current: HTMLElement, parent: HTMLElement) => {
   return getSiblingsByParent(current, parent);
 };
+export const getGroupDroppables = (
+  currentDroppable: HTMLElement,
+  droppableGroup?: string
+) => {
+  if (!droppableGroup) {
+    return [currentDroppable];
+  }
+  const result = [
+    ...document.querySelectorAll(`.droppable-group-${droppableGroup}`),
+  ].map((droppable) => droppable as HTMLElement);
+
+  return result;
+};
 export const getSiblingsByParent = (
   current: HTMLElement,
   parent: HTMLElement
@@ -228,5 +250,6 @@ export const getSiblingsByParent = (
   return {
     siblings,
     elementPosition,
+    parent,
   };
 };
