@@ -138,10 +138,12 @@ const getOffset = (
 export const setTranistion = (
   element: HTMLElement | undefined,
   duration: number,
-  timingFunction: string = "ease-out"
+  timingFunction: string = "ease-out",
+  types: string = "transform"
 ) => {
   if (element) {
-    element.style.transition = `transform ${duration}ms ${timingFunction}`;
+    element.style.transition = `${duration}ms ${timingFunction}`;
+    element.style.transitionProperty = `${types}`;
   }
 };
 export const setEventWithInterval = (

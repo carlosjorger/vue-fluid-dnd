@@ -28,6 +28,7 @@ type DraggingEvent = typeof DRAG_EVENT | typeof START_DRAG_EVENT;
 type DragAndDropEvent = DraggingEvent | DropEvent;
 
 type DropEvent = "drop" | typeof START_DROP_EVENT;
+// TODO: pass current config
 export default function useEmitEvents<T>(
   childRef: Ref<HTMLElement | undefined>,
   draggingState: Ref<DraggingState>,
@@ -37,7 +38,8 @@ export default function useEmitEvents<T>(
   handlerSelector: string,
   onRemoveAtEvent: OnRemoveAtEvent<T>,
   duration: number,
-  parent: HTMLElement
+  parent: HTMLElement,
+  direction: Direction
 ) {
   const actualIndex = ref(index);
 
@@ -304,6 +306,7 @@ export default function useEmitEvents<T>(
     droppable: HTMLElement,
     positionOnSourceDroppable?: number
   ) => {
+    reduceTempchildSize(droppable);
     setTimeout(() => {
       removeTempChild(parent);
       removeTempChild(droppable);
@@ -317,6 +320,18 @@ export default function useEmitEvents<T>(
       observeDroppedElements(element, parent);
       observeDroppedElements(element, droppable);
     }, duration);
+  };
+  const reduceTempchildSize = (droppable: HTMLElement) => {
+    if (parent.isSameNode(droppable)) {
+      return;
+    }
+    var [lastChildren] = parent.querySelectorAll(`.${TEMP_CHILD_CLASS}`);
+    if (!lastChildren) {
+      return;
+    }
+    const { distance } = getPropByDirection(direction);
+    const lastChildrenHTMLElement = lastChildren as HTMLElement;
+    lastChildrenHTMLElement.style[distance] = "0px";
   };
   const removeTempChild = (parent: HTMLElement) => {
     var lastChildren = parent.querySelectorAll(`.${TEMP_CHILD_CLASS}`);

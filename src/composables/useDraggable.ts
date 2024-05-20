@@ -32,6 +32,7 @@ const TEMP_CHILD_CLASS = "temp-child";
 const DRAG_EVENT = "drag";
 const START_DRAG_EVENT = "startDrag";
 const START_DROP_EVENT = "startDrop";
+const draggableTargetTimingFunction = "cubic-bezier(0.2, 0, 0, 1)";
 
 export default function useDraggable<T>(
   child: HTMLElement | undefined,
@@ -75,7 +76,8 @@ export default function useDraggable<T>(
     handlerSelector,
     onRemoveAtEvent,
     duration,
-    parent
+    parent,
+    direction
   );
   const setDraggable = () => {
     if (childRef.value) {
@@ -265,9 +267,14 @@ export default function useDraggable<T>(
     const gap = getGapPixels(droppable, direction);
     const { distance } = getPropByDirection(direction);
     distances[distance] -= gap;
-
     child.style.height = `${distances.height}px`;
     child.style.minWidth = `${distances.width}px`;
+    setTranistion(
+      child,
+      duration,
+      draggableTargetTimingFunction,
+      "height, width"
+    );
 
     droppable.appendChild(child);
   };
@@ -380,5 +387,4 @@ export default function useDraggable<T>(
   setSlotRefElementParams(childRef.value);
 }
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
-// TODO: reduce size of tempchild with an animation
 // TODO: refactor code and gzip
