@@ -21,6 +21,12 @@ export default class ConfigHandler {
     });
     ConfigHandler.configs = configs;
   }
+  static removeObsoleteConfigs = () => {
+    const notObsoltete = ConfigHandler.configs.filter(({ droppable }) =>
+      document.contains(droppable)
+    );
+    ConfigHandler.configs = notObsoltete;
+  };
   static updateScrolls(
     currentDroppable: Element,
     droppableGroupClass: string | null
