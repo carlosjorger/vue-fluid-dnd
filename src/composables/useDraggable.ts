@@ -40,13 +40,7 @@ export default function useDraggable<T>(
   config: CoreConfig<T>,
   parent: HTMLElement
 ) {
-  const {
-    handlerSelector,
-    direction,
-    isDraggable,
-    droppableGroup,
-    onRemoveAtEvent,
-  } = config;
+  const { handlerSelector, direction, isDraggable, droppableGroup } = config;
   const droppableGroupClass = droppableGroup
     ? `droppable-group-${droppableGroup}`
     : null;
@@ -68,16 +62,14 @@ export default function useDraggable<T>(
   const currentDroppableConfig = ref<DroppableConfig<T>>();
   const { setTransform, updateTransformState } = useTransform(childRef);
   const { emitEventToSiblings, toggleDraggingClass } = useEmitEvents<T>(
+    config,
     childRef,
     draggingState,
     fixedHeight,
     fixedWidth,
     index,
-    handlerSelector,
-    onRemoveAtEvent,
     duration,
-    parent,
-    direction
+    parent
   );
   const setDraggable = () => {
     if (childRef.value) {

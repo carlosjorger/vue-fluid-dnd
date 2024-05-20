@@ -87,6 +87,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
     }
   };
   watch(parent, () => {
+    console.log(ConfigHandler.configs);
     makeDroppable();
     addConfigHandler();
     observeChildrens();

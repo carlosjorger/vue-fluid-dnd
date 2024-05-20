@@ -8,7 +8,7 @@ import {
 } from "./GetStyles";
 import { Translate, WindowScroll } from "../../index";
 import { moveTranslate, setTranistion } from "./SetStyles";
-import { Direction, OnInsertEvent, OnRemoveAtEvent } from "../composables";
+import { CoreConfig, Direction, OnInsertEvent } from "../composables";
 import getTranslationByDragging from "./GetTranslationByDraggingAndEvent";
 import getTranslateBeforeDropping from "./GetTranslateBeforeDropping";
 import { DraggingState, IsDropEvent } from ".";
@@ -26,23 +26,20 @@ const draggableTargetTimingFunction = "cubic-bezier(0.2, 0, 0, 1)";
 
 type DraggingEvent = typeof DRAG_EVENT | typeof START_DRAG_EVENT;
 type DragAndDropEvent = DraggingEvent | DropEvent;
-
 type DropEvent = "drop" | typeof START_DROP_EVENT;
-// TODO: pass current config
+
 export default function useEmitEvents<T>(
+  currentConfig: CoreConfig<T>,
   childRef: Ref<HTMLElement | undefined>,
   draggingState: Ref<DraggingState>,
   fixedHeight: Ref<string>,
   fixedWidth: Ref<string>,
   index: number,
-  handlerSelector: string,
-  onRemoveAtEvent: OnRemoveAtEvent<T>,
   duration: number,
-  parent: HTMLElement,
-  direction: Direction
+  parent: HTMLElement
 ) {
   const actualIndex = ref(index);
-
+  const { direction, handlerSelector, onRemoveAtEvent } = currentConfig;
   const emitEventToSiblings = (
     draggedElement: HTMLElement,
     event: DragAndDropEvent,
