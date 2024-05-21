@@ -95,6 +95,11 @@ export default function useEmitEvents<T>(
     const { config, droppable } = droppableConfig;
 
     const isOutside = draggableIsOutside(draggedElement, droppable);
+
+    const itemsCount = siblings.filter((sibling) =>
+      sibling.classList.contains("draggable")
+    ).length;
+
     for (const [index, sibling] of siblings.entries()) {
       if (!sibling.classList.contains(DRAGGABLE_CLASS)) {
         continue;
@@ -116,6 +121,7 @@ export default function useEmitEvents<T>(
       updateActualIndexBaseOnTranslation(
         translation,
         siblingRealIndex,
+        itemsCount,
         config.direction
       );
       if (event === START_DRAG_EVENT) {
@@ -158,6 +164,7 @@ export default function useEmitEvents<T>(
   const updateActualIndexBaseOnTranslation = (
     translation: Translate,
     siblingIndex: number,
+    itemsCount: number,
     direction: Direction
   ) => {
     const { distance } = getPropByDirection(direction);
@@ -166,6 +173,7 @@ export default function useEmitEvents<T>(
     } else {
       actualIndex.value = Math.min(actualIndex.value, siblingIndex - 1);
     }
+    actualIndex.value = Math.min(actualIndex.value, itemsCount);
   };
   const startDragEventOverElement = (
     element: HTMLElement,
@@ -205,7 +213,6 @@ export default function useEmitEvents<T>(
         allSiblings,
         droppable
       );
-
     translation = getTranslationByDragging(
       draggedElement,
       event,

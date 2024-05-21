@@ -381,5 +381,4 @@ export default function useDraggable<T>(
   setSlotRefElementParams(childRef.value);
 }
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
-// TODO: fix position dropping at the end
 // TODO: refactor code and gzip
