@@ -12,7 +12,7 @@ En este ejemplo vamos usar **Vue Fluid DnD** para ordernar una lista horizontal.
 Primero, vamos a crear una lista de números y vamos añadir el propiedad `direction` con valor igual `horizontal`:
 
 export const listOfNumbers = `<script setup lang="ts">
-  const list = ref(1, 2, 3, 4, 5]);
+  const list = ref([1, 2, 3, 4, 5]);
   const { parent } = useDragAndDrop(list, { direction: "horizontal" });
 </script>`;
 

@@ -49,8 +49,11 @@ export default defineConfig({
           items: [
             // Each item here is one entry in the navigation menu.
             {
-              label: "Inicio rápido",
+              label: "Getting Started",
               link: "/introduction/introduction/",
+              translations: {
+                es: "Inicio rápido",
+          },
             },
           ],
           translations: {
