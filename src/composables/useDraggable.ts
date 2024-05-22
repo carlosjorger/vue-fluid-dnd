@@ -382,3 +382,5 @@ export default function useDraggable<T>(
 }
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
 // TODO: refactor code and gzip
+// TODO: add timwout on mobile drag
+// TODO: fix drop position on group with mixed styles
