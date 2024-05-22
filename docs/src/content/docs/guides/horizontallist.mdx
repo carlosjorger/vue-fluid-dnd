@@ -12,7 +12,7 @@ In this example we'll use **Vue Fluid DnD** for sorting a horizontal list.
 First, we're going to create a list of numbers and adding the property `direction` with value `horizontal`:
 
 export const listOfNumbers = `<script setup lang="ts">
-    const list = ref(1, 2, 3, 4, 5]);
+    const list = ref([1, 2, 3, 4, 5]);
     const { parent } = useDragAndDrop(list, { direction: "horizontal" });
 </script>`;
 
