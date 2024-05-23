@@ -14,17 +14,52 @@ import {
   getPropByDirection,
   getTransform,
 } from "./GetStyles";
+const getBeforeMarginIfDirectionIsEqual = (
+  direction: Direction,
+  expectedDirection: Direction,
+  beforeMargin: number
+) => {
+  if (direction == expectedDirection) {
+    return beforeMargin;
+  }
+  return 0;
+};
 const getGroupDraggedTranslate = (
   firstElement: HTMLElement,
-  draggable: HTMLElement
+  draggable: HTMLElement,
+  direction: Direction
 ) => {
+  const { beforeMargin: beforeMarginVertical } = getPropByDirection("vertical");
+  const { beforeMargin: beforeMarginHorizontal } =
+    getPropByDirection("horizontal");
+
+  const beforeMarginVerticalValue = getMarginStyleByProperty(
+    draggable,
+    beforeMarginVertical
+  );
+
+  const beforeMarginHorizontalValue = getMarginStyleByProperty(
+    firstElement,
+    beforeMarginHorizontal
+  );
+
   const { top, left } = getBeforeStyles(draggable);
   const { top: firstElementTop, left: firstElementLeft } =
     firstElement.getBoundingClientRect();
+
   const { x, y } = getTransform(firstElement);
+  // TODO: fix dropping ot first position in mixed elements
+  console.log(
+    firstElementTop -
+      getMarginStyleByProperty(firstElement, beforeMarginVertical) -
+      y -
+      (top - beforeMarginVerticalValue) -
+      13,
+    firstElementTop - top - y - beforeMarginVerticalValue - 25
+  );
   return {
-    y: firstElementTop - top - y,
-    x: firstElementLeft - left - x,
+    y: firstElementTop - top - y - beforeMarginVerticalValue,
+    x: firstElementLeft - left - x - beforeMarginHorizontalValue,
   };
 };
 export default function getTranslateBeforeDropping(
@@ -52,7 +87,11 @@ export default function getTranslateBeforeDropping(
   if (sourceIndex < 0 && draggable) {
     isGroupDropping = true;
     const [firstElement] = siblings;
-    const { x, y } = getGroupDraggedTranslate(firstElement, draggable);
+    const { x, y } = getGroupDraggedTranslate(
+      firstElement,
+      draggable,
+      direction
+    );
     height += y;
     width += x;
   }

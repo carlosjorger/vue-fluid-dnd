@@ -3,29 +3,30 @@ import { ref } from "vue";
 import useDragAndDrop from "../../../src/composables/useDragAndDrop";
 const listWithMixedStyles = ref([
   {
-    number: 1,
-    style:
-      "color: white; background-color: red; padding: 20px 0; margin: 23px 0;",
-  },
-  {
-    number: 2,
-    style:
-      "color: white; background-color: blue; padding: 20px 0; margin: 12px; margin-right: 120px;",
-  },
-  {
     number: 3,
     style:
       "color: white; background-color: green; padding: 26px 0; margin: 26px; margin-left: 100px;",
   },
+  {
+    number: 5,
+    style:
+      "color: white; background-color: crimson; padding: 26px 0; margin: 14px 0; margin-right: 100px;",
+  },
+  {
+    number: 1,
+    style:
+      "color: white; background-color: red; padding: 20px 0; margin: 23px 0;",
+  },
+
   {
     number: 4,
     style:
       "color: white; background-color: wheat; padding: 30px 0; margin: 20px 0; margin-right: 100px; width:40%",
   },
   {
-    number: 5,
+    number: 2,
     style:
-      "color: white; background-color: crimson; padding: 26px 0; margin: 14px 0; margin-right: 100px;",
+      "color: white; background-color: blue; padding: 20px 0; margin: 12px; margin-right: 120px;  margin-left: 80px;",
   },
 ]);
 defineProps<{
@@ -35,6 +36,11 @@ const { parent: parent1 } = useDragAndDrop<number>(listWithMixedStyles as any, {
   droppableGroup: "groupWithStyles",
 });
 const listWithMixedStylesAndGaps = ref([
+  {
+    number: 4,
+    style:
+      "color: white; background-color: brown; padding: 26px 0; margin: 27px;",
+  },
   {
     number: 1,
     style:
@@ -52,9 +58,9 @@ const listWithMixedStylesAndGaps = ref([
       "color: white; background-color: green; padding: 26px 0; margin: 26px; margin-left: 100px;",
   },
   {
-    number: 4,
+    number: 5,
     style:
-      "color: white; background-color: brown; padding: 26px 0; margin: 27px;",
+      "color: white; background-color: blue; padding: 20px 0; margin: 12px; margin-right: 120px;",
   },
 ]);
 const { parent: parent2 } = useDragAndDrop<number>(
