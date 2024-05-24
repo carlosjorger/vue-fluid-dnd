@@ -89,7 +89,7 @@ export default function useDraggable<T>(
   };
   const setCssStyles = () => {
     AddCssStylesToElement(parent, [
-      `.${DRAGGABLE_CLASS} { touch-action: none; user-select: none; box-sizing: border-box !important; -webkit-user-select: none; }`,
+      `.${DRAGGABLE_CLASS} { touch-action: manipulation; user-select: none; box-sizing: border-box !important; -webkit-user-select: none; }`,
       `.${HANDLER_CLASS} { cursor: grab; pointer-events: auto !important; }`,
       `.${DRAGGABLE_CLASS} * { pointer-events: none; }`,
       ".temp-child { touch-action: none; pointer-events: none; box-sizing: border-box !important; }",
@@ -198,15 +198,17 @@ export default function useDraggable<T>(
     return ConfigHandler.getConfig(currentDroppable);
   };
   const handlerMousemove = (event: MouseEvent | TouchEvent) => {
+    if (event instanceof TouchEvent) {
+      event.preventDefault();
+    }
     const eventToDragMouse = convetEventToDragMouseTouchEvent(event);
     onmousemove(eventToDragMouse);
   };
   const addTouchDeviceDelay = (event: MoveEvent, callback: () => void) => {
     if (event == "touchmove") {
       delayTimeout.value = setTimeout(() => {
-        navigator.vibrate(100);
         callback();
-      }, 500);
+      }, 300);
     } else {
       callback();
     }
@@ -220,9 +222,11 @@ export default function useDraggable<T>(
       windowScroll.value = { scrollX, scrollY };
       if (draggingState.value === DraggingState.NOT_DRAGGING) {
         draggingState.value = DraggingState.START_DRAGGING;
+        // TODO: dont launch this events if its scrolling
         addTouchDeviceDelay(moveEvent, () => {
-          // TODO: set touch-action: none; user-select: none; here
-          document.addEventListener(moveEvent, handlerMousemove);
+          document.addEventListener(moveEvent, handlerMousemove, {
+            passive: false,
+          });
         });
         makeScrollEventOnDroppable(parent);
         if (element) {
@@ -397,5 +401,4 @@ export default function useDraggable<T>(
 }
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
 // TODO: refactor code and gzip
-// TODO: add timwout on mobile drag
 // TODO: fix drop position on group with mixed styles

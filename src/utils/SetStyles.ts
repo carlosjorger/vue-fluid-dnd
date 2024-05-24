@@ -44,6 +44,9 @@ export const assignDraggingEvent = (
     element[onEvent] = callback;
   } else {
     element[onEvent] = (event: TouchEvent) => {
+      if (event.defaultPrevented) {
+        return;
+      }
       const dragMouseTouchEvent = convetEventToDragMouseTouchEvent(event);
       callback(dragMouseTouchEvent);
     };
@@ -65,6 +68,7 @@ export const addDragMouseToucEventListener = (
     });
   }
 };
+
 const isOnMouseEvent = (x: any): x is onMouseEvent => onMouseEvents.includes(x);
 const isMouseEvent = (x: any): x is MouseEventType => mouseEvents.includes(x);
 
