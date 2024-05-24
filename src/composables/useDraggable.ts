@@ -60,6 +60,7 @@ export default function useDraggable<T>(
   const fixedHeight = ref("");
   const droppableScroll = ref({ scrollLeft: 0, scrollTop: 0 });
   const currentDroppableConfig = ref<DroppableConfig<T>>();
+  const delayTimeout = ref<NodeJS.Timeout>();
   const { setTransform, updateTransformState } = useTransform(childRef);
   const { emitEventToSiblings, toggleDraggingClass } = useEmitEvents<T>(
     config,
@@ -200,6 +201,16 @@ export default function useDraggable<T>(
     const eventToDragMouse = convetEventToDragMouseTouchEvent(event);
     onmousemove(eventToDragMouse);
   };
+  const addTouchDeviceDelay = (event: MoveEvent, callback: () => void) => {
+    if (event == "touchmove") {
+      delayTimeout.value = setTimeout(() => {
+        navigator.vibrate(100);
+        callback();
+      }, 500);
+    } else {
+      callback();
+    }
+  };
   const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
     return () => {
       const element = childRef.value;
@@ -209,7 +220,10 @@ export default function useDraggable<T>(
       windowScroll.value = { scrollX, scrollY };
       if (draggingState.value === DraggingState.NOT_DRAGGING) {
         draggingState.value = DraggingState.START_DRAGGING;
-        document.addEventListener(moveEvent, handlerMousemove);
+        addTouchDeviceDelay(moveEvent, () => {
+          // TODO: set touch-action: none; user-select: none; here
+          document.addEventListener(moveEvent, handlerMousemove);
+        });
         makeScrollEventOnDroppable(parent);
         if (element) {
           document.addEventListener(onLeaveEvent, onLeave(moveEvent), {
@@ -221,6 +235,7 @@ export default function useDraggable<T>(
   };
   const onLeave = (moveEvent: MoveEvent) => {
     return () => {
+      clearTimeout(delayTimeout.value);
       onDropDraggingEvent();
       document.removeEventListener(moveEvent, handlerMousemove);
       parent.onscroll = null;
