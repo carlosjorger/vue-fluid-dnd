@@ -4,6 +4,7 @@ import {
   getPropByDirection,
   getScroll,
   getScrollElement,
+  getWindowScroll,
 } from "../utils/GetStyles";
 import {
   AddCssStylesToElement,
@@ -198,8 +199,10 @@ export default function useDraggable<T>(
     return ConfigHandler.getConfig(currentDroppable);
   };
   const handlerMousemove = (event: MouseEvent | TouchEvent) => {
-    if (event instanceof TouchEvent) {
+    if (event instanceof TouchEvent && event.cancelable) {
       event.preventDefault();
+    } else if (event instanceof TouchEvent) {
+      return;
     }
     const eventToDragMouse = convetEventToDragMouseTouchEvent(event);
     onmousemove(eventToDragMouse);
@@ -208,7 +211,7 @@ export default function useDraggable<T>(
     if (event == "touchmove") {
       delayTimeout.value = setTimeout(() => {
         callback();
-      }, 300);
+      }, 200);
     } else {
       callback();
     }
@@ -222,7 +225,6 @@ export default function useDraggable<T>(
       windowScroll.value = { scrollX, scrollY };
       if (draggingState.value === DraggingState.NOT_DRAGGING) {
         draggingState.value = DraggingState.START_DRAGGING;
-        // TODO: dont launch this events if its scrolling
         addTouchDeviceDelay(moveEvent, () => {
           document.addEventListener(moveEvent, handlerMousemove, {
             passive: false,
