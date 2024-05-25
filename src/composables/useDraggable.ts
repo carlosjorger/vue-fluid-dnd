@@ -4,7 +4,6 @@ import {
   getPropByDirection,
   getScroll,
   getScrollElement,
-  getWindowScroll,
 } from "../utils/GetStyles";
 import {
   AddCssStylesToElement,

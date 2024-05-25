@@ -14,21 +14,13 @@ import {
   getPropByDirection,
   getTransform,
 } from "./GetStyles";
-const getBeforeMarginIfDirectionIsEqual = (
-  direction: Direction,
-  expectedDirection: Direction,
-  beforeMargin: number
-) => {
-  if (direction == expectedDirection) {
-    return beforeMargin;
-  }
-  return 0;
-};
+
 const getGroupDraggedTranslate = (
   firstElement: HTMLElement,
   draggable: HTMLElement,
   direction: Direction
 ) => {
+  console.log(direction);
   const { beforeMargin: beforeMarginVertical } = getPropByDirection("vertical");
   const { beforeMargin: beforeMarginHorizontal } =
     getPropByDirection("horizontal");
