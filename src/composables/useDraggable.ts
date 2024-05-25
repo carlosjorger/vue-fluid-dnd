@@ -40,7 +40,13 @@ export default function useDraggable<T>(
   config: CoreConfig<T>,
   parent: HTMLElement
 ) {
-  const { handlerSelector, direction, isDraggable, droppableGroup } = config;
+  const {
+    handlerSelector,
+    direction,
+    isDraggable,
+    droppableGroup,
+    animationDuration,
+  } = config;
   const droppableGroupClass = droppableGroup
     ? `droppable-group-${droppableGroup}`
     : null;
@@ -52,8 +58,6 @@ export default function useDraggable<T>(
     scrollX: 0,
     scrollY: 0,
   });
-  const duration = 200;
-
   const pagePosition = ref({ pageX: 0, pageY: 0 });
 
   const fixedWidth = ref("");
@@ -69,7 +73,6 @@ export default function useDraggable<T>(
     fixedHeight,
     fixedWidth,
     index,
-    duration,
     parent
   );
   const setDraggable = () => {
@@ -243,11 +246,18 @@ export default function useDraggable<T>(
     };
   };
   const onLeave = (moveEvent: MoveEvent) => {
-    return () => {
+    return (event: MouseEvent | TouchEvent) => {
+      const convertedEvent = convetEventToDragMouseTouchEvent(event);
       clearTimeout(delayTimeout.value);
       onDropDraggingEvent();
       document.removeEventListener(moveEvent, handlerMousemove);
-      parent.onscroll = null;
+      const currentConfig = getCurrentConfig(convertedEvent);
+      if (currentConfig) {
+        const { droppable } = currentConfig;
+        droppable.onscroll = null;
+      } else {
+        parent.onscroll = null;
+      }
     };
   };
   const startDragging = (event: DragMouseTouchEvent) => {
@@ -289,7 +299,7 @@ export default function useDraggable<T>(
     child.style.minWidth = `${distances.width}px`;
     setTranistion(
       child,
-      duration,
+      animationDuration,
       draggableTargetTimingFunction,
       "height, width"
     );
@@ -344,7 +354,7 @@ export default function useDraggable<T>(
     );
   };
   const removeDraggingStyles = (element: HTMLElement) => {
-    setTranistion(element, duration);
+    setTranistion(element, animationDuration);
     moveTranslate(element, 0, 0);
   };
   const setDraggingStyles = (element: HTMLElement) => {

@@ -28,6 +28,10 @@ export interface Config {
    * Name of the group of the share droppables
    */
   droppableGroup?: string;
+  /**
+   * The duration of the animations in milisecond
+   */
+  animationDuration?: number;
 }
 /**
  * onDrop event function.
@@ -58,6 +62,10 @@ export type CoreConfig<T> = {
    * Name of the group of the share droppables
    */
   droppableGroup?: string;
+  /**
+   * The duration of the animations in milisecond
+   */
+  animationDuration: number;
   onDrop: OnDropEvent;
   onRemoveAtEvent: OnRemoveAtEvent<T>;
   onInsertEvent: OnInsertEvent<T>;

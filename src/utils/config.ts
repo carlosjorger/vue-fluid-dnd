@@ -20,6 +20,7 @@ export const getConfig = <T>(
     onDrop,
     onRemoveAtEvent,
     onInsertEvent,
+    animationDuration: 200,
   } as CoreConfig<T>;
   if (!config) {
     return DEFAULT_CONFIG;
@@ -33,5 +34,6 @@ export const getConfig = <T>(
     onDrop: DEFAULT_CONFIG.onDrop,
     onRemoveAtEvent,
     onInsertEvent,
+    animationDuration: DEFAULT_CONFIG.animationDuration,
   };
 };

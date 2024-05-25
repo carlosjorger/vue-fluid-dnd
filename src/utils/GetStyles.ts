@@ -39,7 +39,7 @@ export const parseIntEmpty = (value: string | null) => {
   return parseInt(value);
 };
 export const computeGapPixels = (element: HTMLElement, gapType: GapStyle) => {
-  const gap = getComputedStyle(element as HTMLElement)[gapType];
+  const gap = getComputedStyle(element)[gapType];
   if (gap.match("%")) {
     const gap_percent = parseFloatEmpty(gap.replace("%", ""));
     const { width } = element.getBoundingClientRect();
@@ -144,6 +144,11 @@ export const gapAndDisplayInformation = (
   element: HTMLElement,
   gapStyle: GapStyle
 ) => {
+  if (!(element instanceof Element))
+    return {
+      gap: 0,
+      hasGaps: false,
+    };
   const gap = computeGapPixels(element, gapStyle);
   const display = window.getComputedStyle(element).display;
   const hasGaps = gap > 0 || display === "flex";
@@ -243,13 +248,13 @@ export const getSiblingsByParent = (
     .map((child) => child as HTMLElement)
     .toReversed();
 
-  const elementPosition = [...parent.children].findLastIndex((child) =>
+  const positionOnDroppable = [...parent.children].findLastIndex((child) =>
     child.isEqualNode(current)
   );
 
   return {
     siblings,
-    elementPosition,
+    positionOnDroppable,
     parent,
   };
 };

@@ -8,13 +8,13 @@ const { parent: parent1 } = useDragAndDrop<number>(numbers1 as any, {
   droppableGroup: "group1",
 });
 
-const numbers2 = ref([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+const numbers2 = ref([7, 8, 9, 10, 11, 12, 13, 14, 15]);
 const { parent: parent2 } = useDragAndDrop<number>(numbers2 as any, {
   direction: "vertical",
   droppableGroup: "group1",
 });
 
-const numbers3 = ref([1, 2, 3, 4, 5, 6]);
+const numbers3 = ref([16, 17, 18, 19, 20, 21]);
 const { parent: parent3 } = useDragAndDrop<number>(numbers3 as any, {
   direction: "horizontal",
   droppableGroup: "group1",

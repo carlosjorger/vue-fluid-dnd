@@ -35,11 +35,11 @@ export default function useEmitEvents<T>(
   fixedHeight: Ref<string>,
   fixedWidth: Ref<string>,
   index: number,
-  duration: number,
   parent: HTMLElement
 ) {
   const actualIndex = ref(index);
-  const { direction, handlerSelector, onRemoveAtEvent } = currentConfig;
+  const { direction, handlerSelector, onRemoveAtEvent, animationDuration } =
+    currentConfig;
   const emitEventToSiblings = (
     draggedElement: HTMLElement,
     event: DragAndDropEvent,
@@ -50,16 +50,11 @@ export default function useEmitEvents<T>(
     if (!droppableConfig) {
       return;
     }
-    let tranlation = { height: 0, width: 0 };
     const { droppable, config } = droppableConfig;
-    tranlation = getTranslationByDragging(
+    const tranlation = getTranslationByDragging(
       draggedElement,
       event,
       config.direction,
-      droppable
-    );
-    const { siblings, elementPosition: positionOnDroppable } = getSiblings(
-      draggedElement,
       droppable
     );
     const dropping = IsDropEvent(event);
@@ -67,7 +62,6 @@ export default function useEmitEvents<T>(
       emitDraggingEventToSiblings(
         draggedElement,
         event,
-        siblings,
         tranlation,
         droppableConfig
       );
@@ -75,8 +69,6 @@ export default function useEmitEvents<T>(
       emitDroppingEventToSiblings(
         draggedElement,
         event,
-        siblings,
-        positionOnDroppable,
         tranlation,
         initialWindowScroll,
         droppableConfig,
@@ -88,12 +80,11 @@ export default function useEmitEvents<T>(
   const emitDraggingEventToSiblings = (
     draggedElement: HTMLElement,
     event: DraggingEvent,
-    siblings: HTMLElement[],
     translation: Translate,
     droppableConfig: DroppableConfig<T>
   ) => {
     const { config, droppable } = droppableConfig;
-
+    const { siblings } = getSiblings(draggedElement, droppable);
     const isOutside = draggableIsOutside(draggedElement, droppable);
 
     const itemsCount = siblings.filter((sibling) =>
@@ -188,28 +179,29 @@ export default function useEmitEvents<T>(
   ) => {
     const { width, height } = translation;
     moveTranslate(element, height, width);
-    setTranistion(element, duration, draggableTargetTimingFunction);
+    setTranistion(element, animationDuration, draggableTargetTimingFunction);
   };
   // #region Drop events
   const emitDroppingEventToSiblings = (
     draggedElement: HTMLElement,
     event: DropEvent,
-    siblings: HTMLElement[],
-    elementPosition: number,
     translation: Translate,
     initialWindowScroll: WindowScroll,
     droppableConfig: DroppableConfig<T>,
     positionOnSourceDroppable?: number
   ) => {
     const { droppable, droppableScroll, config } = droppableConfig;
+    const { siblings, positionOnDroppable } = getSiblings(
+      draggedElement,
+      droppable
+    );
     const allSiblings = siblings.toReversed();
-
-    allSiblings.splice(elementPosition, 0, draggedElement);
+    allSiblings.splice(positionOnDroppable, 0, draggedElement);
 
     const { previousElement, nextElement, targetIndex } =
       getPreviousAndNextElement(
         draggedElement,
-        elementPosition,
+        positionOnDroppable,
         allSiblings,
         droppable
       );
@@ -229,7 +221,7 @@ export default function useEmitEvents<T>(
     const draggableTranslation = getTranslateBeforeDropping(
       config.direction,
       allSiblings,
-      elementPosition,
+      positionOnDroppable,
       targetIndex,
       windowScroll,
       droppableScroll,
@@ -323,7 +315,7 @@ export default function useEmitEvents<T>(
       removeElementDraggingStyles(element);
       observeDroppedElements(element, parent);
       observeDroppedElements(element, droppable);
-    }, duration);
+    }, animationDuration);
   };
   const reduceTempchildSize = (droppable: HTMLElement) => {
     if (parent.isSameNode(droppable)) {
