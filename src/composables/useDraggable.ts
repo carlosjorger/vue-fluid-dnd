@@ -141,10 +141,10 @@ export default function useDraggable<T>(
     }
     const { droppable, config } = currentDroppableConfig.value;
     const { direction } = config;
-    removeTempChildrens();
+    removeTempChildrens(droppable);
     addTempChild(droppable, direction);
   };
-  const removeTempChildrens = () => {
+  const removeTempChildrens = (droppable: HTMLElement) => {
     if (!droppableGroupClass) {
       return;
     }
@@ -152,10 +152,14 @@ export default function useDraggable<T>(
       `.${droppableGroupClass} .${TEMP_CHILD_CLASS}`
     );
     children.forEach((tempChild) => {
-      if (tempChild.parentElement?.isSameNode(parent)) {
+      const childParent = tempChild.parentElement;
+      if (
+        childParent?.isSameNode(parent) ||
+        childParent?.isSameNode(droppable)
+      ) {
         return;
       }
-      tempChild.parentElement?.removeChild(tempChild);
+      childParent?.removeChild(tempChild);
     });
   };
   const getCurrentConfig = (event: {
@@ -210,7 +214,7 @@ export default function useDraggable<T>(
     if (event == "touchmove") {
       delayTimeout.value = setTimeout(() => {
         callback();
-      }, 150);
+      }, 200);
     } else {
       callback();
     }

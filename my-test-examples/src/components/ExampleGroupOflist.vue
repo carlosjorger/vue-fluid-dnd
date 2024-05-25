@@ -8,7 +8,7 @@ const { parent: parent1 } = useDragAndDrop<number>(numbers1 as any, {
   droppableGroup: "group1",
 });
 
-const numbers2 = ref([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+const numbers2 = ref([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 const { parent: parent2 } = useDragAndDrop<number>(numbers2 as any, {
   direction: "vertical",
   droppableGroup: "group1",
@@ -73,8 +73,9 @@ const { id } = defineProps<{
   grid-area: vertical;
 }
 .scrolled-list {
+  padding-block: 20px;
   background-color: aliceblue;
-  height: 400px;
+  height: 420px;
   overflow: auto;
   display: block;
   padding-inline: 25px;
