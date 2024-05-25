@@ -24,26 +24,26 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
   const INDEX_ATTR = "index";
   const parent = ref<HTMLElement | undefined>();
 
-  const getOnDrop = (items: T[]) => {
+  const getOnDrop = (items: Ref<T[]>) => {
     return (source: DraggableElement, destination: DraggableElement) => {
       if (items) {
-        dropDraggingElementsBetween(ref(items), source, destination);
+        dropDraggingElementsBetween(items, source, destination);
       }
     };
   };
-  const getOnRemoveAtEvent = (items: T[]) => {
+  const getOnRemoveAtEvent = (items: Ref<T[]>) => {
     return (index: number) => {
-      return removeAtEventOnList(ref(items) as Ref<T[]>, index);
+      return removeAtEventOnList(items, index);
     };
   };
-  const getOnInsertEventOnList = (items: T[]) => {
+  const getOnInsertEventOnList = (items: Ref<T[]>) => {
     return (index: number, value: T) => {
-      return onInsertEventOnList(ref(items) as Ref<T[]>, index, value);
+      return onInsertEventOnList(items, index, value);
     };
   };
-  const onDrop = getOnDrop(items.value);
-  const onRemoveAtEvent = getOnRemoveAtEvent(items.value);
-  const onInsertEvent = getOnInsertEventOnList(items.value);
+  const onDrop = getOnDrop(items);
+  const onRemoveAtEvent = getOnRemoveAtEvent(items);
+  const onInsertEvent = getOnInsertEventOnList(items);
 
   const makeChildrensDraggable = () => {
     if (!parent.value) {
