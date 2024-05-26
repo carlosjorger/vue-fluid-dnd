@@ -66,7 +66,6 @@ export type CoreConfig<T> = {
    * The duration of the animations in milisecond
    */
   animationDuration: number;
-  onDrop: OnDropEvent;
   onRemoveAtEvent: OnRemoveAtEvent<T>;
   onInsertEvent: OnInsertEvent<T>;
 };

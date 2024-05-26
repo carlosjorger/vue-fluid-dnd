@@ -3,10 +3,10 @@ import { DragAndDropEvent, DRAG_EVENT } from ".";
 import { AfterMargin } from "../../index";
 import {
   draggableIsOutside,
-  gapAndDisplayInformation,
   getMarginStyleByProperty,
   getPropByDirection,
 } from "./GetStyles";
+import { gapAndDisplayInformation } from "./ParseStyles";
 
 export default function getTranslationByDraggingAndEvent(
   current: HTMLElement,

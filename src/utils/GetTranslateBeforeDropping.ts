@@ -8,12 +8,11 @@ import {
   WindowScroll,
 } from "../../index";
 import {
-  gapAndDisplayInformation,
-  getBeforeStyles,
   getMarginStyleByProperty,
   getPropByDirection,
   getTransform,
 } from "./GetStyles";
+import { gapAndDisplayInformation, getBeforeStyles } from "./ParseStyles";
 
 const getGroupDraggedTranslate = (
   firstElement: HTMLElement,

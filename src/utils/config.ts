@@ -1,14 +1,12 @@
 import {
   Config,
   CoreConfig,
-  OnDropEvent,
   OnInsertEvent,
   OnRemoveAtEvent,
   VERTICAL,
 } from "../composables";
 
 export const getConfig = <T>(
-  onDrop: OnDropEvent,
   onRemoveAtEvent: OnRemoveAtEvent<T>,
   onInsertEvent: OnInsertEvent<T>,
   config?: Config
@@ -17,7 +15,6 @@ export const getConfig = <T>(
     direction: VERTICAL,
     handlerSelector: "draggable",
     isDraggable: () => true,
-    onDrop,
     onRemoveAtEvent,
     onInsertEvent,
     animationDuration: 200,
@@ -31,7 +28,6 @@ export const getConfig = <T>(
     handlerSelector: config.handlerSelector ?? DEFAULT_CONFIG.handlerSelector,
     isDraggable: config.isDraggable ?? DEFAULT_CONFIG.isDraggable,
     droppableGroup: config.droppableGroup,
-    onDrop: DEFAULT_CONFIG.onDrop,
     onRemoveAtEvent,
     onInsertEvent,
     animationDuration: DEFAULT_CONFIG.animationDuration,

@@ -1,9 +1,4 @@
-import {
-  dropDraggingElementsBetween,
-  onInsertEventOnList,
-  removeAtEventOnList,
-} from "../utils/DropMethods";
-import { DraggableElement } from "../../index";
+import { onInsertEventOnList, removeAtEventOnList } from "../utils/DropMethods";
 import { Ref, ref, watch } from "vue";
 import useDraggable from "./useDraggable";
 import { parseIntEmpty } from "../utils/GetStyles";
@@ -24,13 +19,6 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
   const INDEX_ATTR = "index";
   const parent = ref<HTMLElement | undefined>();
 
-  const getOnDrop = (items: Ref<T[]>) => {
-    return (source: DraggableElement, destination: DraggableElement) => {
-      if (items) {
-        dropDraggingElementsBetween(items, source, destination);
-      }
-    };
-  };
   const getOnRemoveAtEvent = (items: Ref<T[]>) => {
     return (index: number) => {
       return removeAtEventOnList(items, index);
@@ -41,7 +29,6 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
       return onInsertEventOnList(items, index, value);
     };
   };
-  const onDrop = getOnDrop(items);
   const onRemoveAtEvent = getOnRemoveAtEvent(items);
   const onInsertEvent = getOnInsertEventOnList(items);
 
@@ -58,7 +45,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
         useDraggable(
           childHTMLElement,
           numberIndex,
-          getConfig(onDrop, onRemoveAtEvent, onInsertEvent, config),
+          getConfig(onRemoveAtEvent, onInsertEvent, config),
           parent.value
         );
       }
@@ -82,7 +69,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
     if (parent.value) {
       ConfigHandler.addConfig(
         parent.value,
-        getConfig(onDrop, onRemoveAtEvent, onInsertEvent, config)
+        getConfig(onRemoveAtEvent, onInsertEvent, config)
       );
     }
   };

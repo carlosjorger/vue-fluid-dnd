@@ -71,27 +71,28 @@ export const addDragMouseToucEventListener = (
 
 const isOnMouseEvent = (x: any): x is onMouseEvent => onMouseEvents.includes(x);
 const isMouseEvent = (x: any): x is MouseEventType => mouseEvents.includes(x);
-
+const getDefaultEvent = (event: TouchEvent | MouseEvent) => {
+  const { target } = event;
+  return {
+    clientX: 0,
+    clientY: 0,
+    pageX: 0,
+    pageY: 0,
+    screenX: 0,
+    screenY: 0,
+    target,
+    offsetX: 0,
+    offsetY: 0,
+  };
+};
 export const convetEventToDragMouseTouchEvent = (
   event: MouseEvent | TouchEvent
 ): DragMouseTouchEvent => {
   const tempEvent = getEvent(event);
   if (!tempEvent) {
-    const { target } = event;
-    return {
-      clientX: 0,
-      clientY: 0,
-      pageX: 0,
-      pageY: 0,
-      screenX: 0,
-      screenY: 0,
-      target,
-      offsetX: 0,
-      offsetY: 0,
-    };
+    return getDefaultEvent(event);
   }
-  const { clientX, clientY, pageX, pageY, screenX, screenY, target } =
-    tempEvent;
+
   let offsetX = 0,
     offsetY = 0;
 
@@ -103,6 +104,8 @@ export const convetEventToDragMouseTouchEvent = (
     offsetX = getOffset(tempEvent, window, "horizontal", element);
     offsetY = getOffset(tempEvent, window, "vertical", element);
   }
+  const { clientX, clientY, pageX, pageY, screenX, screenY, target } =
+    tempEvent;
   return {
     clientX,
     clientY,

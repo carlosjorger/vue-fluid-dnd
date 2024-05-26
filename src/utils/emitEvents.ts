@@ -30,7 +30,6 @@ type DropEvent = "drop" | typeof START_DROP_EVENT;
 
 export default function useEmitEvents<T>(
   currentConfig: CoreConfig<T>,
-  childRef: Ref<HTMLElement | undefined>,
   draggingState: Ref<DraggingState>,
   fixedHeight: Ref<string>,
   fixedWidth: Ref<string>,
@@ -213,10 +212,6 @@ export default function useEmitEvents<T>(
       previousElement,
       nextElement
     );
-    const childElement = childRef.value;
-    if (!childElement) {
-      return;
-    }
     const windowScroll = getWindowScroll();
     const draggableTranslation = getTranslateBeforeDropping(
       config.direction,
@@ -227,7 +222,7 @@ export default function useEmitEvents<T>(
       droppableScroll,
       initialWindowScroll,
       droppable,
-      childElement
+      draggedElement
     );
     for (const [index, sibling] of siblings.toReversed().entries()) {
       let newTranslation = translation;
@@ -241,14 +236,14 @@ export default function useEmitEvents<T>(
         startDropEventOverElement(
           sibling,
           newTranslation,
-          childElement,
+          draggedElement,
           draggableTranslation
         );
       }
     }
     dropEventOverElement(
       targetIndex,
-      childElement,
+      draggedElement,
       config.onInsertEvent,
       droppable,
       positionOnSourceDroppable
@@ -368,20 +363,17 @@ export default function useEmitEvents<T>(
     fixedHeight.value = "";
     fixedWidth.value = "";
   };
-  const toogleHandlerDraggingClass = (force: boolean) => {
-    if (!childRef.value) {
-      return;
-    }
-    const handlerElement = childRef.value.querySelector(handlerSelector);
+  const toogleHandlerDraggingClass = (force: boolean, element: Element) => {
+    const handlerElement = element.querySelector(handlerSelector);
     if (handlerElement) {
       handlerElement.classList.toggle(DRAGGING_HANDLER_CLASS, force);
     } else {
-      childRef.value.classList.toggle(DRAGGING_HANDLER_CLASS, force);
+      element.classList.toggle(DRAGGING_HANDLER_CLASS, force);
     }
   };
   const toggleDraggingClass = (element: Element, force: boolean) => {
     element.classList.toggle(DRAGING_CLASS, force);
-    toogleHandlerDraggingClass(force);
+    toogleHandlerDraggingClass(force, element);
   };
   return { emitEventToSiblings, toggleDraggingClass };
 }

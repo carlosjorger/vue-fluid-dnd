@@ -1,9 +1,7 @@
 import {
   draggableIsOutside,
-  getGapPixels,
   getPropByDirection,
   getScroll,
-  getScrollElement,
 } from "../utils/GetStyles";
 import {
   AddCssStylesToElement,
@@ -22,6 +20,7 @@ import { CoreConfig, Direction } from ".";
 import useEmitEvents from "../utils/emitEvents";
 import { DraggingState } from "../utils";
 import ConfigHandler, { DroppableConfig } from "./configHandler";
+import { getGapPixels } from "../utils/ParseStyles";
 
 const DRAGGABLE_CLASS = "draggable";
 const HANDLER_CLASS = "handler-class";
@@ -62,13 +61,11 @@ export default function useDraggable<T>(
 
   const fixedWidth = ref("");
   const fixedHeight = ref("");
-  const droppableScroll = ref({ scrollLeft: 0, scrollTop: 0 });
   const currentDroppableConfig = ref<DroppableConfig<T>>();
   const delayTimeout = ref<NodeJS.Timeout>();
   const { setTransform, updateTransformState } = useTransform(childRef);
   const { emitEventToSiblings, toggleDraggingClass } = useEmitEvents<T>(
     config,
-    childRef,
     draggingState,
     fixedHeight,
     fixedWidth,
@@ -165,10 +162,26 @@ export default function useDraggable<T>(
       childParent?.removeChild(tempChild);
     });
   };
-  const getCurrentConfig = (event: {
-    readonly clientX: number;
-    readonly clientY: number;
-  }) => {
+  const getCurrentDroppable = (
+    currentElement: HTMLElement,
+    event: DragMouseTouchEvent
+  ) => {
+    currentElement.hidden = true;
+    const elementBelow = document.elementFromPoint(
+      event.clientX,
+      event.clientY
+    );
+    currentElement.hidden = false;
+
+    if (!droppableGroupClass || !elementBelow) {
+      return;
+    }
+    const currentDroppable = elementBelow.closest(
+      `.${droppableGroupClass}`
+    ) as HTMLElement;
+    return currentDroppable;
+  };
+  const getCurrentConfig = (event: DragMouseTouchEvent) => {
     const currentElement = childRef.value;
     if (!currentElement) {
       return;
@@ -183,19 +196,7 @@ export default function useDraggable<T>(
       }
     }
 
-    currentElement.hidden = true;
-    const elementBelow = document.elementFromPoint(
-      event.clientX,
-      event.clientY
-    );
-    currentElement.hidden = false;
-
-    if (!droppableGroupClass || !elementBelow) {
-      return ConfigHandler.getConfig(parent);
-    }
-    const currentDroppable = elementBelow.closest(
-      `.${droppableGroupClass}`
-    ) as HTMLElement;
+    const currentDroppable = getCurrentDroppable(currentElement, event);
     if (!currentDroppable) {
       return ConfigHandler.getConfig(parent);
     }
@@ -225,7 +226,6 @@ export default function useDraggable<T>(
   const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
     return () => {
       const element = childRef.value;
-      droppableScroll.value = getScrollElement(parent);
       ConfigHandler.updateScrolls(parent, droppableGroupClass);
       const { scrollX, scrollY } = window;
       windowScroll.value = { scrollX, scrollY };
@@ -417,3 +417,4 @@ export default function useDraggable<T>(
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
 // TODO: refactor code and gzip
 // TODO: fix drop position on group with mixed styles
+// TODO: organize utils
