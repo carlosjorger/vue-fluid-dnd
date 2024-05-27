@@ -1,6 +1,7 @@
 import { Direction } from "../composables";
 import { DragMouseTouchEvent } from "../../index";
 import { getBorderWidthProperty, getPropByDirection } from "./GetStyles";
+import { isTouchEvent } from "./touchDevice";
 
 type onTouchEvent = "ontouchstart" | "ontouchmove" | "ontouchend";
 const onMouseEvents = ["onmouseup", "onmousedown", "onmousemove"] as const;
@@ -119,7 +120,7 @@ export const convetEventToDragMouseTouchEvent = (
   };
 };
 const getEvent = (event: MouseEvent | TouchEvent) => {
-  if (window.TouchEvent && event instanceof TouchEvent) {
+  if (isTouchEvent(event)) {
     return event.touches[0];
   }
   if (event instanceof MouseEvent) {

@@ -21,6 +21,7 @@ import useEmitEvents from "../utils/emitEvents";
 import { DraggingState } from "../utils";
 import ConfigHandler, { DroppableConfig } from "./configHandler";
 import { getGapPixels } from "../utils/ParseStyles";
+import { isTouchEvent } from "../utils/touchDevice";
 
 const DRAGGABLE_CLASS = "draggable";
 const HANDLER_CLASS = "handler-class";
@@ -206,9 +207,9 @@ export default function useDraggable<T>(
     return ConfigHandler.getConfig(currentDroppable);
   };
   const handlerMousemove = (event: MouseEvent | TouchEvent) => {
-    if (event instanceof TouchEvent && event.cancelable) {
+    if (isTouchEvent(event) && event.cancelable) {
       event.preventDefault();
-    } else if (event instanceof TouchEvent) {
+    } else if (isTouchEvent(event)) {
       return;
     }
     const eventToDragMouse = convetEventToDragMouseTouchEvent(event);
