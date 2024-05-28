@@ -14,6 +14,7 @@ export default defineConfig({
   },
   integrations: [
     starlight({
+      favicon: "/favicon.png",
       title: "Vue Fluid DnD",
       defaultLocale: "root",
       locales: {
@@ -53,7 +54,7 @@ export default defineConfig({
               link: "/introduction/introduction/",
               translations: {
                 es: "Inicio rápido",
-          },
+              },
             },
           ],
           translations: {
