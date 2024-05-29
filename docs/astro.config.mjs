@@ -107,6 +107,13 @@ export default defineConfig({
                 es: "isDraggable",
               },
             },
+            {
+              label: "List group",
+              link: "/guides/listgroup/",
+              translations: {
+                es: "Grupo de listas",
+              },
+            },
           ],
           translations: {
             es: "Guía",

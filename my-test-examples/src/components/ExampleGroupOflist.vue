@@ -19,7 +19,17 @@ const { parent: parent3 } = useDragAndDrop<number>(numbers3 as any, {
   direction: "horizontal",
   droppableGroup: "group1",
 });
+// TODO: fix group with inner elements
+const list = ref([1, 2, 3, 4]);
+const { parent: parent4 } = useDragAndDrop<number>(list as any, {
+  droppableGroup: "group2",
+});
 
+const list2 = ref([1, 2, 3, 4]);
+const { parent: parent5 } = useDragAndDrop<number>(list2 as any, {
+  droppableGroup: "group2",
+  direction: "horizontal",
+});
 const { id } = defineProps<{
   id: string;
 }>();
@@ -57,6 +67,28 @@ const { id } = defineProps<{
       </div>
     </div>
   </div>
+  <ul ref="parent4" class="number-list p-8">
+    <li
+      class="number nested"
+      v-for="(element, index) in list"
+      :index="index"
+      :key="element"
+    >
+      {{ element }}
+    </li>
+  </ul>
+  <ul ref="parent5" class="number-list-h">
+    <li
+      class="number nested"
+      v-for="(element, index) in list2"
+      :index="index"
+      :key="element"
+    >
+      <span v-for="number in [...Array(4).keys()]">
+        {{ number + element }}
+      </span>
+    </li>
+  </ul>
 </template>
 <style scoped>
 .group {
@@ -97,5 +129,19 @@ const { id } = defineProps<{
   border-width: 0.8rem;
   min-width: 100px;
   max-width: 100px;
+}
+.number.nested {
+  display: flex;
+  flex-direction: row;
+  gap: 0.4rem;
+  align-items: center;
+}
+.number-list {
+  display: block;
+  padding-inline: 25px;
+}
+.number-list-h {
+  display: flex;
+  padding-inline: 25px;
 }
 </style>

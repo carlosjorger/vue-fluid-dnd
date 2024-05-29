@@ -1,0 +1,32 @@
+---
+title: Groups of lists
+description: Una guía para usar Vue Fluid DnD con un grupo de listas.
+---
+
+import ListGroup from "@/components/ListGroup.vue";
+import { Code } from "@astrojs/starlight/components";
+
+### List of number example
+
+With **Vue Fluid DnD** you can drag and drop element between two or more list:
+
+export const listOfNumbers = `<script setup lang="ts">
+import { ref } from "vue";
+import { useDragAndDrop } from "vue-fluid-dnd";
+
+const list = ref([1, 2, 3, 4], {
+isDraggable: (el) => !el.classList.contains("is-not-draggable"),
+});
+const { parent } = useDragAndDrop(list);
+
+</script>`;
+
+<Code code={listOfNumbers} lang="vue" />
+
+### Preview
+
+This is the result:
+
+<div class="pl-8">
+  <ListGroup client:load />
+</div>
