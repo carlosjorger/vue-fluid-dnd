@@ -163,17 +163,26 @@ export default function useDraggable<T>(
       childParent?.removeChild(tempChild);
     });
   };
+  const getDraggableAncestor = (
+    clientX: number,
+    clientY: number,
+    draggable: Element | null
+  ) => {
+    return document
+      .elementsFromPoint(clientX, clientY)
+      .filter((element) => !element.isSameNode(draggable));
+  };
   const getCurrentDroppable = (
     currentElement: HTMLElement,
     event: DragMouseTouchEvent
   ) => {
     currentElement.hidden = true;
-    const elementBelow = document.elementFromPoint(
+    const [elementBelow] = getDraggableAncestor(
       event.clientX,
-      event.clientY
+      event.clientY,
+      currentElement
     );
     currentElement.hidden = false;
-
     if (!droppableGroupClass || !elementBelow) {
       return;
     }
@@ -417,5 +426,5 @@ export default function useDraggable<T>(
 }
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
 // TODO: refactor code and gzip
-// TODO: fix drop position on group with mixed styles
+// TODO: fix dropping outside groups
 // TODO: organize utils

@@ -74,7 +74,9 @@ const { id } = defineProps<{
       :index="index"
       :key="element"
     >
-      {{ element }}
+      <span v-for="number in [...Array(4).keys()]">
+        {{ number + element }}
+      </span>
     </li>
   </ul>
   <ul ref="parent5" class="number-list-h">
