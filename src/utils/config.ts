@@ -17,7 +17,7 @@ export const getConfig = <T>(
     isDraggable: () => true,
     onRemoveAtEvent,
     onInsertEvent,
-    animationDuration: 200,
+    animationDuration: 1000,
   } as CoreConfig<T>;
   if (!config) {
     return DEFAULT_CONFIG;

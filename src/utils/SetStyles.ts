@@ -27,7 +27,7 @@ export const moveTranslate = (
     return;
   }
   if (width == 0 && height == 0) {
-    element.style.transform = ``;
+    element.style.transform = "";
   } else {
     element.style.transform = `translate(${width}px,${height}px)`;
   }

@@ -94,7 +94,7 @@ export default function useDraggable<T>(
       `.${HANDLER_CLASS} { cursor: grab; pointer-events: auto !important; }`,
       `.${DRAGGABLE_CLASS} * { pointer-events: none; }`,
       ".temp-child { touch-action: none; pointer-events: none; box-sizing: border-box !important; }",
-      `.droppable { position: relative; box-sizing: border-box !important; }`,
+      `.droppable { box-sizing: border-box !important; }`,
       `.dragging { position: fixed; z-index: 5000; width: var(--fixedWidth) !important; height: var(--fixedHeight) !important; }`,
       `.${DRAGGING_HANDLER_CLASS} { cursor: grabbing !important; }`,
     ]);
@@ -202,6 +202,7 @@ export default function useDraggable<T>(
         currentDroppableConfig.value?.droppable
       );
       if (!isOutside) {
+        // TODO: fix this
         return currentDroppableConfig.value;
       }
     }
@@ -364,7 +365,7 @@ export default function useDraggable<T>(
     );
   };
   const removeDraggingStyles = (element: HTMLElement) => {
-    setTranistion(element, animationDuration);
+    setTranistion(element, animationDuration, draggableTargetTimingFunction);
     moveTranslate(element, 0, 0);
   };
   const setDraggingStyles = (element: HTMLElement) => {
@@ -372,7 +373,6 @@ export default function useDraggable<T>(
     fixedHeight.value = `${height}px`;
     fixedWidth.value = `${width}px`;
     toggleDraggingClass(element, true);
-    element.style.transition = "";
   };
 
   watch(
