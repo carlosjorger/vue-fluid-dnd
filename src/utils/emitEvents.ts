@@ -85,7 +85,6 @@ export default function useEmitEvents<T>(
     const { config, droppable } = droppableConfig;
     const { siblings } = getSiblings(draggedElement, droppable);
     const isOutside = draggableIsOutside(draggedElement, droppable);
-
     const itemsCount = siblings.filter((sibling) =>
       sibling.classList.contains("draggable")
     ).length;
@@ -178,6 +177,7 @@ export default function useEmitEvents<T>(
   ) => {
     const { width, height } = translation;
     moveTranslate(element, height, width);
+    // TODO: avoid set transition to currentelement
     setTranistion(element, animationDuration, draggableTargetTimingFunction);
   };
   // #region Drop events

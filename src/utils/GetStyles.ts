@@ -198,7 +198,10 @@ export const getSiblingsByParent = (
   parent: HTMLElement
 ) => {
   const siblings = [...parent.children]
-    .filter((child) => !child.isEqualNode(current))
+    .filter(
+      (child) =>
+        !child.isEqualNode(current) && child.classList.contains("draggable")
+    )
     .map((child) => child as HTMLElement)
     .toReversed();
 

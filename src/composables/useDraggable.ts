@@ -191,18 +191,33 @@ export default function useDraggable<T>(
     ) as HTMLElement;
     return currentDroppable;
   };
+  const isOutsideOfAllDroppables = (currentElement: HTMLElement) => {
+    const droppables = Array.from(
+      document.querySelectorAll(`.${droppableGroupClass}`)
+    );
+    return droppables.every((droppable) =>
+      draggableIsOutside(currentElement, droppable as HTMLElement)
+    );
+  };
+  const isNotInsideAnotherDroppable = (
+    currentElement: HTMLElement,
+    droppable: HTMLElement
+  ) => {
+    const isOutside = draggableIsOutside(currentElement, droppable);
+    return !isOutside || isOutsideOfAllDroppables(currentElement);
+  };
   const getCurrentConfig = (event: DragMouseTouchEvent) => {
     const currentElement = childRef.value;
     if (!currentElement) {
       return;
     }
     if (currentDroppableConfig.value) {
-      const isOutside = draggableIsOutside(
-        currentElement,
-        currentDroppableConfig.value?.droppable
-      );
-      if (!isOutside) {
-        // TODO: fix this
+      if (
+        isNotInsideAnotherDroppable(
+          currentElement,
+          currentDroppableConfig.value?.droppable
+        )
+      ) {
         return currentDroppableConfig.value;
       }
     }
@@ -243,6 +258,7 @@ export default function useDraggable<T>(
       if (draggingState.value === DraggingState.NOT_DRAGGING) {
         draggingState.value = DraggingState.START_DRAGGING;
         addTouchDeviceDelay(moveEvent, () => {
+          // TODO: remove events
           document.addEventListener(moveEvent, handlerMousemove, {
             passive: false,
           });
@@ -373,6 +389,7 @@ export default function useDraggable<T>(
     fixedHeight.value = `${height}px`;
     fixedWidth.value = `${width}px`;
     toggleDraggingClass(element, true);
+    element.style.transition = "";
   };
 
   watch(
@@ -426,5 +443,4 @@ export default function useDraggable<T>(
 }
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
 // TODO: refactor code and gzip
-// TODO: fix dropping outside groups
 // TODO: organize utils
