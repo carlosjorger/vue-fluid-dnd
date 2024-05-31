@@ -1,12 +1,12 @@
-import { Direction } from "../composables";
-import { DragAndDropEvent, DRAG_EVENT } from ".";
-import { AfterMargin } from "../../index";
+import { Direction } from "../../composables";
+import { DragAndDropEvent, DRAG_EVENT } from "..";
+import { AfterMargin } from "../../../index";
 import {
   draggableIsOutside,
   getMarginStyleByProperty,
   getPropByDirection,
-} from "./GetStyles";
-import { gapAndDisplayInformation } from "./ParseStyles";
+} from "../GetStyles";
+import { gapAndDisplayInformation } from "../ParseStyles";
 
 export default function getTranslationByDraggingAndEvent(
   current: HTMLElement,

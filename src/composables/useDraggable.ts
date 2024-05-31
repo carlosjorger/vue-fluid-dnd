@@ -12,16 +12,17 @@ import {
   setTranistion,
 } from "../utils/SetStyles";
 import { useTransform } from "../utils/SetTransform";
-import getTranslationByDragging from "../utils/GetTranslationByDraggingAndEvent";
+import getTranslationByDragging from "../utils/translate/GetTranslationByDraggingAndEvent";
 
 import { DragMouseTouchEvent, MoveEvent, OnLeaveEvent } from "../../index";
 import { Ref, ref, watch } from "vue";
 import { CoreConfig, Direction } from ".";
-import useEmitEvents from "../utils/emitEvents";
+import useEmitEvents from "../utils/events/emitEvents";
 import { DraggingState } from "../utils";
 import ConfigHandler, { DroppableConfig } from "./configHandler";
 import { getGapPixels } from "../utils/ParseStyles";
 import { isTouchEvent } from "../utils/touchDevice";
+import { observeMutation } from "../utils/observer";
 
 const DRAGGABLE_CLASS = "draggable";
 const HANDLER_CLASS = "handler-class";
@@ -88,6 +89,7 @@ export default function useDraggable<T>(
       }
     }
   };
+  // TODO: make dragging-handler-class pointer-events: none; while grabbing
   const setCssStyles = () => {
     AddCssStylesToElement(parent, [
       `.${DRAGGABLE_CLASS} { touch-action: manipulation; user-select: none; box-sizing: border-box !important; -webkit-user-select: none; }`,
@@ -96,7 +98,7 @@ export default function useDraggable<T>(
       ".temp-child { touch-action: none; pointer-events: none; box-sizing: border-box !important; }",
       `.droppable { box-sizing: border-box !important; }`,
       `.dragging { position: fixed; z-index: 5000; width: var(--fixedWidth) !important; height: var(--fixedHeight) !important; }`,
-      `.${DRAGGING_HANDLER_CLASS} { cursor: grabbing !important; }`,
+      `.${DRAGGING_HANDLER_CLASS} { cursor: grabbing; cursor: grabbing; }`,
     ]);
     setHandlerStyles();
     setDraggable();
@@ -145,6 +147,7 @@ export default function useDraggable<T>(
     removeTempChildrens(droppable);
     addTempChild(droppable, direction);
   };
+  // TODO: create tempChild module
   const removeTempChildrens = (droppable: HTMLElement) => {
     if (!droppableGroupClass) {
       return;
@@ -160,7 +163,12 @@ export default function useDraggable<T>(
       ) {
         return;
       }
-      childParent?.removeChild(tempChild);
+      const tempChildElement = tempChild as HTMLElement;
+      tempChildElement.style.width = "0px";
+      tempChildElement.style.height = "0px";
+      setTimeout(() => {
+        childParent?.removeChild(tempChild);
+      }, animationDuration);
     });
   };
   const getDraggableAncestor = (
@@ -258,7 +266,6 @@ export default function useDraggable<T>(
       if (draggingState.value === DraggingState.NOT_DRAGGING) {
         draggingState.value = DraggingState.START_DRAGGING;
         addTouchDeviceDelay(moveEvent, () => {
-          // TODO: remove events
           document.addEventListener(moveEvent, handlerMousemove, {
             passive: false,
           });
@@ -282,9 +289,8 @@ export default function useDraggable<T>(
       if (currentConfig) {
         const { droppable } = currentConfig;
         droppable.onscroll = null;
-      } else {
-        parent.onscroll = null;
       }
+      parent.onscroll = null;
     };
   };
   const startDragging = (event: DragMouseTouchEvent) => {
@@ -322,15 +328,32 @@ export default function useDraggable<T>(
     const gap = getGapPixels(droppable, direction);
     const { distance } = getPropByDirection(direction);
     distances[distance] -= gap;
-    child.style.height = `${distances.height}px`;
-    child.style.minWidth = `${distances.width}px`;
+    child.style.height = "0px";
+    child.style.minWidth = "0px";
+
     setTranistion(
       child,
       animationDuration,
       draggableTargetTimingFunction,
       "height, width"
     );
+    // TODO: do this only in groups list
+    observeMutation(
+      (observer) => {
+        if (!droppable.contains(child)) {
+          return;
+        }
+        child.style.height = `${distances.height}px`;
+        child.style.minWidth = `${distances.width}px`;
 
+        observer.disconnect();
+      },
+      droppable,
+      {
+        childList: true,
+        subtree: true,
+      }
+    );
     droppable.appendChild(child);
   };
   const setTransformEvent = (event: DragMouseTouchEvent) => {

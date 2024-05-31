@@ -10,6 +10,7 @@ type onMouseEvent = typeof onMouseEvents[number];
 type TouchEventType = "touchstart" | "touchmove" | "touchend";
 const mouseEvents = ["mouseup", "mousedown", "mousemove"] as const;
 type MouseEventType = typeof mouseEvents[number];
+type DragEventCallback = (event: DragMouseTouchEvent) => void;
 export const fixSizeStyle = (element: HTMLElement | undefined | null) => {
   if (!element) {
     return;
@@ -36,7 +37,7 @@ export const moveTranslate = (
 export const assignDraggingEvent = (
   element: HTMLElement,
   onEvent: onMouseEvent | onTouchEvent,
-  callback: ((event: DragMouseTouchEvent) => void) | null
+  callback: DragEventCallback | null
 ) => {
   if (!callback) {
     return;
@@ -55,7 +56,7 @@ export const assignDraggingEvent = (
 };
 export const addDragMouseToucEventListener = (
   event: TouchEventType | MouseEventType,
-  callback: ((event: DragMouseTouchEvent) => void) | null
+  callback: DragEventCallback | null
 ) => {
   if (!callback) {
     return;
@@ -86,6 +87,24 @@ const getDefaultEvent = (event: TouchEvent | MouseEvent) => {
     offsetY: 0,
   };
 };
+const getOffsetFromEvent = (
+  event: MouseEvent | TouchEvent,
+  tempEvent: MouseEvent | Touch
+) => {
+  const getTouchEventOffset = (element: HTMLElement, direction: Direction) => {
+    return getOffset(tempEvent, window, direction, element);
+  };
+  if (event instanceof MouseEvent) {
+    const { offsetX, offsetY } = event;
+    return { offsetX, offsetY };
+  } else {
+    const element = event.target as HTMLElement;
+    return {
+      offsetX: getTouchEventOffset(element, "horizontal"),
+      offsetY: getTouchEventOffset(element, "vertical"),
+    };
+  }
+};
 export const convetEventToDragMouseTouchEvent = (
   event: MouseEvent | TouchEvent
 ): DragMouseTouchEvent => {
@@ -94,17 +113,7 @@ export const convetEventToDragMouseTouchEvent = (
     return getDefaultEvent(event);
   }
 
-  let offsetX = 0,
-    offsetY = 0;
-
-  if (event instanceof MouseEvent) {
-    offsetX = event.offsetX;
-    offsetY = event.offsetY;
-  } else {
-    const element = event.target as HTMLElement;
-    offsetX = getOffset(tempEvent, window, "horizontal", element);
-    offsetY = getOffset(tempEvent, window, "vertical", element);
-  }
+  const { offsetX, offsetY } = getOffsetFromEvent(event, tempEvent);
   const { clientX, clientY, pageX, pageY, screenX, screenY, target } =
     tempEvent;
   return {
@@ -131,7 +140,7 @@ const getOffset = (
   event: MouseEvent | Touch,
   window: Window,
   direction: Direction,
-  element: HTMLElement
+  element: Element
 ) => {
   const { page, scroll, before, borderBeforeWidth } =
     getPropByDirection(direction);

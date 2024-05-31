@@ -5,15 +5,15 @@ import {
   getSiblings,
   getTransform,
   getWindowScroll,
-} from "./GetStyles";
-import { Translate, WindowScroll } from "../../index";
-import { moveTranslate, setTranistion } from "./SetStyles";
-import { CoreConfig, Direction, OnInsertEvent } from "../composables";
-import getTranslationByDragging from "./GetTranslationByDraggingAndEvent";
-import getTranslateBeforeDropping from "./GetTranslateBeforeDropping";
-import { DraggingState, IsDropEvent } from ".";
-import { createObserverWithCallBack } from "./observer";
-import { DroppableConfig } from "../composables/configHandler";
+} from "../GetStyles";
+import { Translate, WindowScroll } from "../../../index";
+import { moveTranslate, setTranistion } from "../SetStyles";
+import { CoreConfig, Direction, OnInsertEvent } from "../../composables";
+import getTranslationByDragging from "../translate/GetTranslationByDraggingAndEvent";
+import getTranslateBeforeDropping from "../translate/GetTranslateBeforeDropping";
+import { DraggingState, IsDropEvent } from "..";
+import { observeMutation } from "../observer";
+import { DroppableConfig } from "../../composables/configHandler";
 
 const DRAGGING_HANDLER_CLASS = "dragging-handler-class";
 const DRAGING_CLASS = "dragging";
@@ -85,33 +85,27 @@ export default function useEmitEvents<T>(
     const { config, droppable } = droppableConfig;
     const { siblings } = getSiblings(draggedElement, droppable);
     const isOutside = draggableIsOutside(draggedElement, droppable);
-    const itemsCount = siblings.filter((sibling) =>
-      sibling.classList.contains("draggable")
-    ).length;
-
     for (const [index, sibling] of siblings.entries()) {
       if (!sibling.classList.contains(DRAGGABLE_CLASS)) {
         continue;
       }
-      if (!isOutside) {
-        const siblingTransition = canChangeDraggable(
-          config.direction,
-          draggedElement,
-          sibling,
-          translation
-        );
-        if (siblingTransition) {
-          translation = siblingTransition;
-        } else {
-          continue;
-        }
+      const siblingTransition = canChangeDraggable(
+        config.direction,
+        draggedElement,
+        sibling,
+        translation
+      );
+      if (!isOutside && siblingTransition) {
+        translation = siblingTransition;
+      } else if (!isOutside) {
+        continue;
       }
       const siblingRealIndex = siblings.length - index;
       updateActualIndexBaseOnTranslation(
         translation,
         siblingRealIndex,
-        itemsCount,
-        config.direction
+        config.direction,
+        siblings
       );
       if (event === START_DRAG_EVENT) {
         startDragEventOverElement(sibling, translation);
@@ -153,9 +147,13 @@ export default function useEmitEvents<T>(
   const updateActualIndexBaseOnTranslation = (
     translation: Translate,
     siblingIndex: number,
-    itemsCount: number,
-    direction: Direction
+    direction: Direction,
+    siblings: HTMLElement[]
   ) => {
+    const itemsCount = siblings.filter((sibling) =>
+      sibling.classList.contains("draggable")
+    ).length;
+
     const { distance } = getPropByDirection(direction);
     if (translation[distance] == 0) {
       actualIndex.value = Math.max(actualIndex.value, siblingIndex);
@@ -177,7 +175,6 @@ export default function useEmitEvents<T>(
   ) => {
     const { width, height } = translation;
     moveTranslate(element, height, width);
-    // TODO: avoid set transition to currentelement
     setTranistion(element, animationDuration, draggableTargetTimingFunction);
   };
   // #region Drop events
@@ -336,14 +333,14 @@ export default function useEmitEvents<T>(
   ) => {
     const { siblings } = getSiblings(element, parent);
     for (const sibling of [...siblings, element]) {
-      const observer = createObserverWithCallBack(() => {
-        removeTranslateWhitoutTransition(sibling);
-        observer.disconnect();
-      });
-      observer.observe(element, {
-        attributes: true,
-        attributeFilter: ["style"],
-      });
+      observeMutation(
+        (observer) => {
+          removeTranslateWhitoutTransition(sibling);
+          observer.disconnect();
+        },
+        element,
+        { attributes: true, attributeFilter: ["style"] }
+      );
     }
   };
 

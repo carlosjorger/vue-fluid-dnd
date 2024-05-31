@@ -35,7 +35,6 @@ export const useTransform = (childRef: Ref<HTMLElement | undefined>) => {
     }>,
     direction?: Direction
   ) {
-    const elementBoundingClientRect = element.getBoundingClientRect();
     const getTranslateWihtDirection = (translateDirection: Direction) => {
       const {
         beforeMargin,
@@ -51,7 +50,7 @@ export const useTransform = (childRef: Ref<HTMLElement | undefined>) => {
       const pageValue = pagePosition.value[page];
       const scrollValue = window[scroll];
       const innerDistance = window[inner];
-      const distanceValue = elementBoundingClientRect[distance];
+      const distanceValue = element.getBoundingClientRect()[distance];
       const border = getBorderWidthProperty(element, borderBeforeWidth);
       const margin = getMarginStyleByProperty(element, beforeMargin);
       const elementPosittion = pageValue - currentOffset.value[offset];

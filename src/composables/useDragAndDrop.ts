@@ -3,7 +3,7 @@ import { Ref, ref, watch } from "vue";
 import useDraggable from "./useDraggable";
 import { parseIntEmpty } from "../utils/GetStyles";
 import { Config } from ".";
-import { createObserverWithCallBack } from "../utils/observer";
+import { observeMutation } from "../utils/observer";
 import ConfigHandler from "./configHandler";
 import { getConfig } from "../utils/config";
 
@@ -55,10 +55,13 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
     if (!parent.value) {
       return;
     }
-    const observer = createObserverWithCallBack(() => {
-      makeChildrensDraggable();
-    });
-    observer.observe(parent.value, { childList: true });
+    observeMutation(
+      () => {
+        makeChildrensDraggable();
+      },
+      parent.value,
+      { childList: true }
+    );
   };
   const makeDroppable = () => {
     if (parent.value) {

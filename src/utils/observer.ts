@@ -1,7 +1,12 @@
-export const createObserverWithCallBack = (callback: () => void) => {
-  return new MutationObserver((mutations) => {
+export const observeMutation = (
+  callback: (observer: MutationObserver) => void,
+  element: Element,
+  options?: MutationObserverInit
+) => {
+  const observe = new MutationObserver((mutations) => {
     mutations.forEach(() => {
-      callback();
+      callback(observe);
     });
   });
+  observe.observe(element, options);
 };
