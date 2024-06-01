@@ -33,7 +33,7 @@ export default function getTranslationByDraggingAndEvent(
 function getTranslationByDragging(
   direction: Direction,
   current: HTMLElement,
-  previousElement: Element | null,
+  previous: Element | null,
   nextElement: Element | null
 ) {
   const {
@@ -43,32 +43,27 @@ function getTranslationByDragging(
     gap: gapStyle,
   } = getPropByDirection(direction);
 
-  const currentAfterMargin = getMarginStyleByProperty(current, afterMargin);
-  const currentBeforeMargin = getMarginStyleByProperty(current, beforeMargin);
-  const nextBeforeMargin = getMarginStyleByProperty(nextElement, beforeMargin);
+  const after = getMarginStyleByProperty(current, afterMargin);
+  const before = getMarginStyleByProperty(current, beforeMargin);
+  const nextBefore = getMarginStyleByProperty(nextElement, beforeMargin);
 
-  const parentElement = current.parentElement as HTMLElement;
+  const { gap, hasGaps } = gapAndDisplayInformation(
+    current.parentElement,
+    gapStyle
+  );
 
-  const { gap, hasGaps } = gapAndDisplayInformation(parentElement, gapStyle);
   const space = current.getBoundingClientRect()[distance];
-
   if (hasGaps) {
-    return getDistancesByDirection(
-      direction,
-      getTranslation(space, currentBeforeMargin, currentAfterMargin, gap, 0)
-    );
+    return getTranslation(space, before, after, gap, 0, direction);
   }
   const { afterSpace, beforeScace, rest } = getTranslationByDraggingWithoutGaps(
-    previousElement,
-    nextBeforeMargin,
-    currentAfterMargin,
-    currentBeforeMargin,
+    previous,
+    nextBefore,
+    after,
+    before,
     afterMargin
   );
-  return getDistancesByDirection(
-    direction,
-    getTranslation(space, beforeScace, afterSpace, 0, rest)
-  );
+  return getTranslation(space, beforeScace, afterSpace, 0, rest, direction);
 }
 const getTranslationByDraggingWithoutGaps = (
   previousElement: Element | null,
@@ -92,13 +87,14 @@ const getTranslationByDraggingWithoutGaps = (
   return { afterSpace, beforeScace, rest };
 };
 const getTranslation = (
-  space: number,
-  beforeScace: number,
-  afterSpace: number,
+  size: number,
+  before: number,
+  after: number,
   gap: number,
-  rest: number
+  rest: number,
+  direction: Direction
 ) => {
-  return space + beforeScace + afterSpace + gap - rest;
+  return getDistancesByDirection(direction, size + before + after + gap - rest);
 };
 const getDistancesByDirection = (direction: Direction, value: number) => {
   if (direction == "horizontal") {

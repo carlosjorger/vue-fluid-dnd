@@ -15,7 +15,7 @@ import {
 import { gapAndDisplayInformation, getBeforeStyles } from "../ParseStyles";
 
 const getGroupDraggedTranslate = (
-  firstElement: HTMLElement,
+  firstElement: Element,
   draggable: HTMLElement,
   direction: Direction
 ) => {
@@ -55,7 +55,7 @@ const getGroupDraggedTranslate = (
 };
 export default function getTranslateBeforeDropping(
   direction: Direction,
-  siblings: HTMLElement[],
+  siblings: Element[],
   sourceIndex: number,
   targetIndex: number,
   scroll: WindowScroll,
@@ -169,7 +169,7 @@ const getSpaceBetween = (
   return afterMarginCalc + innerSpace + beforeMarginCalc + gap;
 };
 const getElementsRange = (
-  siblings: HTMLElement[],
+  siblings: Element[],
   sourceIndex: number,
   targetIndex: number,
   draggable?: HTMLElement
@@ -200,7 +200,7 @@ const spaceWithMargins = (
   beforeMargin: BeforeMargin,
   afterMargin: AfterMargin,
   distance: Distance,
-  siblings: HTMLElement[],
+  siblings: Element[],
   gap: number,
   hasGaps: boolean
 ) => {
@@ -214,8 +214,7 @@ const spaceWithMargins = (
   const beforeSpace = getMarginStyleByProperty(siblings[0], beforeMargin);
   let afterSpace = 0;
   let space = -beforeSpace;
-  for (let index = 0; index < siblings.length; index++) {
-    const sibling = siblings[index];
+  for (const [index, sibling] of siblings.entries()) {
     const siblingSpace = sibling.getBoundingClientRect()[distance];
     const siblingBeforeMargin = getMarginStyleByProperty(sibling, beforeMargin);
     if (hasGaps) {
@@ -248,7 +247,7 @@ const addScrollToTranslate = (
 const getBeforeAfterMarginBaseOnDraggedDirection = (
   beforeMarginProp: BeforeMargin,
   afterMarginProp: AfterMargin,
-  draggedElement: HTMLElement,
+  draggedElement: Element,
   previousElement: Element | null,
   isDraggedFoward: boolean,
   hasGaps: boolean

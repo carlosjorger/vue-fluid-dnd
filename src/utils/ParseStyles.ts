@@ -8,7 +8,7 @@ export const getNumberFromPixels = (pixels: string | undefined) => {
   }
   return parseFloatEmpty(pixels.replace("px", ""));
 };
-export const computeGapPixels = (element: HTMLElement, gapType: GapStyle) => {
+export const computeGapPixels = (element: Element, gapType: GapStyle) => {
   const gap = getComputedStyle(element)[gapType];
   if (gap.match("%")) {
     const gap_percent = parseFloatEmpty(gap.replace("%", ""));
@@ -19,7 +19,7 @@ export const computeGapPixels = (element: HTMLElement, gapType: GapStyle) => {
   return gap_px;
 };
 export const gapAndDisplayInformation = (
-  element: HTMLElement,
+  element: Element | null,
   gapStyle: GapStyle
 ) => {
   if (!(element instanceof Element))
@@ -28,7 +28,7 @@ export const gapAndDisplayInformation = (
       hasGaps: false,
     };
   const gap = computeGapPixels(element, gapStyle);
-  const display = window.getComputedStyle(element).display;
+  const display = getComputedStyle(element).display;
   const hasGaps = gap > 0 || display === "flex";
   return {
     gap,

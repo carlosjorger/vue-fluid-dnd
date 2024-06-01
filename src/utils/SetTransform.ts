@@ -10,7 +10,18 @@ import { Direction } from "../composables";
 export const useTransform = (childRef: Ref<HTMLElement | undefined>) => {
   const currentOffset = ref({ offsetX: 0, offsetY: 0 });
   const position = ref({ top: 0, left: 0 });
+  const translate = ref({ x: 0, y: 0 });
 
+  watch(
+    translate,
+    (newTranslate) => {
+      const childElement = childRef.value;
+      if (childElement) {
+        childElement.style.transform = `translate( ${newTranslate.x}px, ${newTranslate.y}px)`;
+      }
+    },
+    { deep: true }
+  );
   watch(
     position,
     (newPosition) => {
@@ -22,16 +33,13 @@ export const useTransform = (childRef: Ref<HTMLElement | undefined>) => {
     },
     { deep: true }
   );
+
   function setTransform(
     element: HTMLElement,
     parent: HTMLElement,
     pagePosition: Ref<{
       pageX: number;
       pageY: number;
-    }>,
-    translate: Ref<{
-      x: number;
-      y: number;
     }>,
     direction?: Direction
   ) {

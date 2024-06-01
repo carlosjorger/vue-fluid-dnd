@@ -1,7 +1,7 @@
 import { Direction } from "../composables";
 import { DragMouseTouchEvent } from "../../index";
 import { getBorderWidthProperty, getPropByDirection } from "./GetStyles";
-import { isTouchEvent } from "./touchDevice";
+import { IsHTMLElement, isTouchEvent } from "./touchDevice";
 
 type onTouchEvent = "ontouchstart" | "ontouchmove" | "ontouchend";
 const onMouseEvents = ["onmouseup", "onmousedown", "onmousemove"] as const;
@@ -20,11 +20,11 @@ export const fixSizeStyle = (element: HTMLElement | undefined | null) => {
   element.style.width = `${width}px`;
 };
 export const moveTranslate = (
-  element: HTMLElement | undefined | null,
+  element: Element | undefined | null,
   height: number,
   width: number
 ) => {
-  if (!element) {
+  if (!element || !IsHTMLElement(element)) {
     return;
   }
   if (width == 0 && height == 0) {
@@ -33,25 +33,31 @@ export const moveTranslate = (
     element.style.transform = `translate(${width}px,${height}px)`;
   }
 };
-
-export const assignDraggingEvent = (
+const assignDraggingTouchEvent = (
   element: HTMLElement,
+  onEvent: onTouchEvent,
+  callback: DragEventCallback
+) => {
+  element[onEvent] = (event: TouchEvent) => {
+    if (event.defaultPrevented) {
+      return;
+    }
+    const dragMouseTouchEvent = convetEventToDragMouseTouchEvent(event);
+    callback(dragMouseTouchEvent);
+  };
+};
+export const assignDraggingEvent = (
+  element: Element,
   onEvent: onMouseEvent | onTouchEvent,
   callback: DragEventCallback | null
 ) => {
-  if (!callback) {
+  if (!callback || !IsHTMLElement(element)) {
     return;
   }
   if (isOnMouseEvent(onEvent)) {
     element[onEvent] = callback;
   } else {
-    element[onEvent] = (event: TouchEvent) => {
-      if (event.defaultPrevented) {
-        return;
-      }
-      const dragMouseTouchEvent = convetEventToDragMouseTouchEvent(event);
-      callback(dragMouseTouchEvent);
-    };
+    assignDraggingTouchEvent(element, onEvent, callback);
   }
 };
 export const addDragMouseToucEventListener = (
@@ -91,14 +97,14 @@ const getOffsetFromEvent = (
   event: MouseEvent | TouchEvent,
   tempEvent: MouseEvent | Touch
 ) => {
-  const getTouchEventOffset = (element: HTMLElement, direction: Direction) => {
+  const getTouchEventOffset = (element: Element, direction: Direction) => {
     return getOffset(tempEvent, window, direction, element);
   };
   if (event instanceof MouseEvent) {
     const { offsetX, offsetY } = event;
     return { offsetX, offsetY };
   } else {
-    const element = event.target as HTMLElement;
+    const element = event.target as Element;
     return {
       offsetX: getTouchEventOffset(element, "horizontal"),
       offsetY: getTouchEventOffset(element, "vertical"),
@@ -116,6 +122,7 @@ export const convetEventToDragMouseTouchEvent = (
   const { offsetX, offsetY } = getOffsetFromEvent(event, tempEvent);
   const { clientX, clientY, pageX, pageY, screenX, screenY, target } =
     tempEvent;
+
   return {
     clientX,
     clientY,
@@ -153,22 +160,22 @@ const getOffset = (
   );
 };
 export const setTranistion = (
-  element: HTMLElement | undefined,
+  element: Element | undefined,
   duration: number,
   timingFunction: string = "ease-out",
   types: string = "transform"
 ) => {
-  if (element) {
+  if (IsHTMLElement(element)) {
     element.style.transition = `${duration}ms ${timingFunction}`;
     element.style.transitionProperty = `${types}`;
   }
 };
 export const setEventWithInterval = (
-  element: HTMLElement | undefined,
+  element: Element | undefined,
   eventName: "onscroll",
   callback: () => void
 ) => {
-  if (!element) {
+  if (!element || !IsHTMLElement(element)) {
     return;
   }
   element[eventName] = () => {

@@ -39,8 +39,8 @@ export const parseIntEmpty = (value: string | null) => {
   return parseInt(value);
 };
 
-export const getTransform = (element: HTMLElement) => {
-  const style = window.getComputedStyle(element);
+export const getTransform = (element: Element) => {
+  const style = getComputedStyle(element);
   const matrix = new DOMMatrixReadOnly(style.transform);
   return {
     x: matrix.m41,
@@ -62,16 +62,10 @@ const intersection = (
   }
   return firstInterval.x2 - secondInterval.x1;
 };
-export const draggableIsOutside = (
-  draggable: HTMLElement,
-  droppable: HTMLElement
-) => {
+export const draggableIsOutside = (draggable: Element, droppable: Element) => {
   return !hasIntersection(draggable, droppable);
 };
-export const hasIntersection = (
-  element1: HTMLElement,
-  element2: HTMLElement
-) => {
+export const hasIntersection = (element1: Element, element2: Element) => {
   const rect1 = element1.getBoundingClientRect();
   const rect2 = element2.getBoundingClientRect();
 
@@ -113,7 +107,7 @@ export const getMarginStyleByProperty = (
   property: BeforeMargin | AfterMargin
 ) => {
   if (element) {
-    return parseFloatEmpty(window.getComputedStyle(element)[property]);
+    return parseFloatEmpty(getComputedStyle(element)[property]);
   }
   return 0;
 };
@@ -176,7 +170,6 @@ export const getPropByDirection = (
     };
   }
 };
-
 export const getSiblings = (current: HTMLElement, parent: HTMLElement) => {
   return getSiblingsByParent(current, parent);
 };
@@ -187,11 +180,9 @@ export const getGroupDroppables = (
   if (!droppableGroup) {
     return [currentDroppable];
   }
-  const result = [
-    ...document.querySelectorAll(`.droppable-group-${droppableGroup}`),
-  ].map((droppable) => droppable as HTMLElement);
-
-  return result;
+  return Array.from(
+    document.querySelectorAll(`.droppable-group-${droppableGroup}`)
+  );
 };
 export const getSiblingsByParent = (
   current: HTMLElement,
@@ -202,7 +193,6 @@ export const getSiblingsByParent = (
       (child) =>
         !child.isEqualNode(current) && child.classList.contains("draggable")
     )
-    .map((child) => child as HTMLElement)
     .toReversed();
 
   const positionOnDroppable = [...parent.children].findLastIndex((child) =>

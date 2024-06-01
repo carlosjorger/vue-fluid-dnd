@@ -21,7 +21,7 @@ import useEmitEvents from "../utils/events/emitEvents";
 import { DraggingState } from "../utils";
 import ConfigHandler, { DroppableConfig } from "./configHandler";
 import { getGapPixels } from "../utils/ParseStyles";
-import { isTouchEvent } from "../utils/touchDevice";
+import { IsHTMLElement, isTouchEvent } from "../utils/touchDevice";
 import { observeMutation } from "../utils/observer";
 
 const DRAGGABLE_CLASS = "draggable";
@@ -53,7 +53,6 @@ export default function useDraggable<T>(
     : null;
   const draggingState = ref<DraggingState>(DraggingState.NOT_DRAGGING);
   const childRef = ref(child);
-  const translate = ref({ x: 0, y: 0 });
   const scroll = ref({ scrollLeft: 0, scrollTop: 0 });
   const windowScroll = ref({
     scrollX: 0,
@@ -112,7 +111,7 @@ export default function useDraggable<T>(
 
   const setSlotRefElementParams = (element: HTMLElement | undefined) => {
     const handlerElement =
-      (element?.querySelector(`.${HANDLER_CLASS}`) as HTMLElement) ?? element;
+      element?.querySelector(`.${HANDLER_CLASS}`) ?? element;
     if (handlerElement && element && isDraggable(element)) {
       assignDraggingEvent(
         handlerElement,
@@ -194,9 +193,7 @@ export default function useDraggable<T>(
     if (!droppableGroupClass || !elementBelow) {
       return;
     }
-    const currentDroppable = elementBelow.closest(
-      `.${droppableGroupClass}`
-    ) as HTMLElement;
+    const currentDroppable = elementBelow.closest(`.${droppableGroupClass}`);
     return currentDroppable;
   };
   const isOutsideOfAllDroppables = (currentElement: HTMLElement) => {
@@ -204,7 +201,7 @@ export default function useDraggable<T>(
       document.querySelectorAll(`.${droppableGroupClass}`)
     );
     return droppables.every((droppable) =>
-      draggableIsOutside(currentElement, droppable as HTMLElement)
+      draggableIsOutside(currentElement, droppable)
     );
   };
   const isNotInsideAnotherDroppable = (
@@ -234,7 +231,7 @@ export default function useDraggable<T>(
     if (!currentDroppable) {
       return ConfigHandler.getConfig(parent);
     }
-    if (!currentDroppable.onscroll) {
+    if (IsHTMLElement(currentDroppable) && !currentDroppable.onscroll) {
       makeScrollEventOnDroppable(currentDroppable);
     }
     return ConfigHandler.getConfig(currentDroppable);
@@ -361,7 +358,7 @@ export default function useDraggable<T>(
     pagePosition.value = { pageX, pageY };
     setTransformDragEvent();
   };
-  const makeScrollEventOnDroppable = (droppable: HTMLElement) => {
+  const makeScrollEventOnDroppable = (droppable: Element) => {
     setEventWithInterval(droppable, "onscroll", onScrollEvent);
   };
   const onScrollEvent = () => {
@@ -376,7 +373,7 @@ export default function useDraggable<T>(
       return;
     }
     const { droppable, config } = currentDroppableConfig.value;
-    setTransform(element, droppable, pagePosition, translate, config.direction);
+    setTransform(element, droppable, pagePosition, config.direction);
     emitEventToSiblings(
       element,
       DRAG_EVENT,
@@ -403,7 +400,7 @@ export default function useDraggable<T>(
       index
     );
   };
-  const removeDraggingStyles = (element: HTMLElement) => {
+  const removeDraggingStyles = (element: Element) => {
     setTranistion(element, animationDuration, draggableTargetTimingFunction);
     moveTranslate(element, 0, 0);
   };
@@ -415,16 +412,6 @@ export default function useDraggable<T>(
     element.style.transition = "";
   };
 
-  watch(
-    translate,
-    (newTranslate) => {
-      const childElement = childRef.value;
-      if (childElement) {
-        childElement.style.transform = `translate( ${newTranslate.x}px, ${newTranslate.y}px)`;
-      }
-    },
-    { deep: true }
-  );
   const createWatchOfFixedSize = (
     fixedSize: Ref<string>,
     fixedProp: string

@@ -14,6 +14,7 @@ import getTranslateBeforeDropping from "../translate/GetTranslateBeforeDropping"
 import { DraggingState, IsDropEvent } from "..";
 import { observeMutation } from "../observer";
 import { DroppableConfig } from "../../composables/configHandler";
+import { IsHTMLElement } from "../touchDevice";
 
 const DRAGGING_HANDLER_CLASS = "dragging-handler-class";
 const DRAGING_CLASS = "dragging";
@@ -116,8 +117,8 @@ export default function useEmitEvents<T>(
   };
   const canChangeDraggable = (
     direction: Direction,
-    sourceElement: HTMLElement,
-    targetElement: HTMLElement,
+    sourceElement: Element,
+    targetElement: Element,
     translation: Translate
   ) => {
     const { before, distance, axis } = getPropByDirection(direction);
@@ -148,7 +149,7 @@ export default function useEmitEvents<T>(
     translation: Translate,
     siblingIndex: number,
     direction: Direction,
-    siblings: HTMLElement[]
+    siblings: Element[]
   ) => {
     const itemsCount = siblings.filter((sibling) =>
       sibling.classList.contains("draggable")
@@ -163,16 +164,13 @@ export default function useEmitEvents<T>(
     actualIndex.value = Math.min(actualIndex.value, itemsCount);
   };
   const startDragEventOverElement = (
-    element: HTMLElement,
+    element: Element,
     translation: Translate
   ) => {
     const { width, height } = translation;
     moveTranslate(element, height, width);
   };
-  const dragEventOverElement = (
-    element: HTMLElement,
-    translation: Translate
-  ) => {
+  const dragEventOverElement = (element: Element, translation: Translate) => {
     const { width, height } = translation;
     moveTranslate(element, height, width);
     setTranistion(element, animationDuration, draggableTargetTimingFunction);
@@ -249,7 +247,7 @@ export default function useEmitEvents<T>(
   const getPreviousAndNextElement = (
     draggedElement: HTMLElement,
     elementPosition: number,
-    allSiblings: HTMLElement[],
+    allSiblings: Element[],
     droppable: HTMLElement
   ) => {
     const isOutside = draggableIsOutside(draggedElement, droppable);
@@ -275,7 +273,7 @@ export default function useEmitEvents<T>(
     };
   };
   const startDropEventOverElement = (
-    targetElement: HTMLElement,
+    targetElement: Element,
     translation: Translate,
     element: HTMLElement,
     sourceElementTranlation: Translate
@@ -318,8 +316,9 @@ export default function useEmitEvents<T>(
       return;
     }
     const { distance } = getPropByDirection(direction);
-    const lastChildrenHTMLElement = lastChildren as HTMLElement;
-    lastChildrenHTMLElement.style[distance] = "0px";
+    if (IsHTMLElement(lastChildren)) {
+      lastChildren.style[distance] = "0px";
+    }
   };
   const removeTempChild = (parent: HTMLElement) => {
     var lastChildren = parent.querySelectorAll(`.${TEMP_CHILD_CLASS}`);
@@ -344,8 +343,8 @@ export default function useEmitEvents<T>(
     }
   };
 
-  const removeTranslateWhitoutTransition = (element?: HTMLElement) => {
-    if (element) {
+  const removeTranslateWhitoutTransition = (element?: Element) => {
+    if (IsHTMLElement(element)) {
       element.style.transition = "";
       element.style.transform = "";
     }
