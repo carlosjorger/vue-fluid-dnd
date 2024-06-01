@@ -16,7 +16,7 @@
 </div>
 
 A **fluid**, **smooth** and **versatil** drag and drop
-library for lists on Vue3. It's a **lightweight** tool ~5 Kb (gzip) with no depenencies.
+library for lists on Vue3. It's a **lightweight** tool ~7 Kb (gzip) with no depenencies.
 
 <img src="https://github.com/carlosjorger/vue-fluid-dnd/assets/50055316/4b25fd5e-4815-4a24-afe4-6f41d34be820" width="100%"/>
 
