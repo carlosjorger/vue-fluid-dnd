@@ -8,7 +8,7 @@ import getTranslationByDragging from "./translate/GetTranslationByDraggingAndEve
 
 const TEMP_CHILD_CLASS = "temp-child";
 const START_DRAG_EVENT = "startDrag";
-const draggableTargetTimingFunction = "cubic-bezier(0.2, 0, 0, 1)";
+const timingFunction = "cubic-bezier(0.2, 0, 0, 1)";
 const getDistance = (
   droppable: HTMLElement,
   draggedElement: HTMLElement,
@@ -56,13 +56,8 @@ export const addTempChild = <T>(
   child.classList.add(TEMP_CHILD_CLASS);
   setSizes(child, 0, 0);
   const distances = getDistance(droppable, draggedElement, direction);
+  setTranistion(child, animationDuration, timingFunction, "height, width");
 
-  setTranistion(
-    child,
-    animationDuration,
-    draggableTargetTimingFunction,
-    "height, width"
-  );
   if (parent.isSameNode(droppable)) {
     setSizes(child, distances.height, distances.width);
   }
