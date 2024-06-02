@@ -1,3 +1,4 @@
+import { Translate } from "../../index";
 import { CoreConfig, Direction } from "../composables";
 import { getPropByDirection } from "./GetStyles";
 import { getGapPixels } from "./ParseStyles";
@@ -28,6 +29,19 @@ const setSizes = (element: HTMLElement, height: number, width: number) => {
   element.style.height = `${height}px`;
   element.style.minWidth = `${width}px`;
 };
+const updateChildAfterCreated = (
+  child: HTMLElement,
+  droppable: HTMLElement,
+  distances: Translate
+) => {
+  return (observer: MutationObserver) => {
+    if (!droppable.contains(child)) {
+      return;
+    }
+    setSizes(child, distances.height, distances.width);
+    observer.disconnect();
+  };
+};
 export const addTempChild = <T>(
   droppable: HTMLElement,
   draggedElement: HTMLElement | undefined,
@@ -40,7 +54,6 @@ export const addTempChild = <T>(
   }
   var child = document.createElement("div");
   child.classList.add(TEMP_CHILD_CLASS);
-
   setSizes(child, 0, 0);
   const distances = getDistance(droppable, draggedElement, direction);
 
@@ -54,13 +67,7 @@ export const addTempChild = <T>(
     setSizes(child, distances.height, distances.width);
   }
   observeMutation(
-    (observer) => {
-      if (!droppable.contains(child)) {
-        return;
-      }
-      setSizes(child, distances.height, distances.width);
-      observer.disconnect();
-    },
+    updateChildAfterCreated(child, droppable, distances),
     droppable,
     {
       childList: true,
