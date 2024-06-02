@@ -2,3 +2,73 @@
 title: Grupos de listas
 description: A guide to use Vue Fluid DnD with a single horizontal list.
 ---
+
+import ListGroup from "@/components/ListGroup.vue";
+import { Code } from "@astrojs/starlight/components";
+
+### Ejemplo de listas de números
+
+Con **Vue Fluid DnD** tu puedes hacer drag and drop entre dos listas o más.\
+Definiremos dos listas y pasamos al parametro `droppableGroup` el mismo nombre de grupo:
+
+export const highlightsListOfNumbers = ["droppableGroup", "group1"];
+
+export const listOfNumbers = `<script setup lang="ts">
+...
+const list = ref([1, 2, 3, 4]);
+const { parent: parent1 } = useDragAndDrop(list, {
+  droppableGroup: "group1",
+});
+...
+const list2 = ref([5, 6, 7, 8]);
+const { parent: parent2 } = useDragAndDrop(list2, {
+  droppableGroup: "group1",
+  direction: "horizontal",
+});
+</script>`;
+
+<Code code={listOfNumbers} lang="vue" mark={highlightsListOfNumbers} />
+
+### Creando la vista
+
+Después, creamos las dos listas en la vista:
+
+export const listOfNumbersDraggable = `
+<template>
+  <div class="group-list">
+    <ul ref="parent1" class="number-list">
+      <li
+        class="number"
+        v-for="(element, index) in list"
+        :index
+        :key="element"
+      >
+        {{ element }}
+      </li>
+    </ul>
+    <div ref="parent2" class="number-list-h">
+      <div
+        class="number"
+        v-for="(element, index) in list2"
+        :index
+        :key="element"
+      >
+        {{ element }}
+      </div>
+    </div>
+  </div>
+</template>
+<style>
+ ...
+</style>
+`;
+
+export const highlightsDraggable = ["parent1", "parent2"];
+
+<Code code={listOfNumbersDraggable} lang="vue" mark={highlightsDraggable} />
+
+### Resultado
+
+<div class="pl-8">
+  <ListGroup client:load />
+</div>

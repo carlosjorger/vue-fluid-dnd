@@ -376,3 +376,6 @@ export default function useDraggable<T>(
 // TODO: refactor code and gzip
 // TODO: organize utils
 // TODO: set touch-event: none while dragging
+
+// Bugs
+// TODO: fix handler with hadler class on svg

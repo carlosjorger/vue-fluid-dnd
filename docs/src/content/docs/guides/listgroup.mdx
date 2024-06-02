@@ -8,24 +8,66 @@ import { Code } from "@astrojs/starlight/components";
 
 ### List of number example
 
-With **Vue Fluid DnD** you can drag and drop element between two or more list:
+With **Vue Fluid DnD** you can drag and drop element between two or more list.\
+We'll define two list and pass to `droppableGroup` parameter the same group name:
+
+export const highlightsListOfNumbers = ["droppableGroup", "group1"];
 
 export const listOfNumbers = `<script setup lang="ts">
-import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
-
-const list = ref([1, 2, 3, 4], {
-isDraggable: (el) => !el.classList.contains("is-not-draggable"),
+...
+const list = ref([1, 2, 3, 4]);
+const { parent: parent1 } = useDragAndDrop(list, {
+  droppableGroup: "group1",
 });
-const { parent } = useDragAndDrop(list);
-
+...
+const list2 = ref([5, 6, 7, 8]);
+const { parent: parent2 } = useDragAndDrop(list2, {
+  droppableGroup: "group1",
+  direction: "horizontal",
+});
 </script>`;
 
-<Code code={listOfNumbers} lang="vue" />
+<Code code={listOfNumbers} lang="vue" mark={highlightsListOfNumbers} />
+
+### Creating the view
+
+After, we'll create the two lists on the view:
+
+export const listOfNumbersDraggable = `
+<template>
+  <div class="group-list">
+    <ul ref="parent1" class="number-list">
+      <li
+        class="number"
+        v-for="(element, index) in list"
+        :index
+        :key="element"
+      >
+        {{ element }}
+      </li>
+    </ul>
+    <div ref="parent2" class="number-list-h">
+      <div
+        class="number"
+        v-for="(element, index) in list2"
+        :index
+        :key="element"
+      >
+        {{ element }}
+      </div>
+    </div>
+  </div>
+</template>
+<style>
+ ...
+</style>
+`;
+
+export const highlightsDraggable = ["parent1", "parent2"];
+
+<Code code={listOfNumbersDraggable} lang="vue" mark={highlightsDraggable} />
 
 ### Preview
-
-This is the result:
 
 <div class="pl-8">
   <ListGroup client:load />
