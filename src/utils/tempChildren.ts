@@ -1,4 +1,4 @@
-import { CoreConfig } from "../composables";
+import { CoreConfig, Direction } from "../composables";
 import { getPropByDirection } from "./GetStyles";
 import { getGapPixels } from "./ParseStyles";
 import { setTranistion } from "./SetStyles";
@@ -8,7 +8,26 @@ import getTranslationByDragging from "./translate/GetTranslationByDraggingAndEve
 const TEMP_CHILD_CLASS = "temp-child";
 const START_DRAG_EVENT = "startDrag";
 const draggableTargetTimingFunction = "cubic-bezier(0.2, 0, 0, 1)";
-
+const getDistance = (
+  droppable: HTMLElement,
+  draggedElement: HTMLElement,
+  direction: Direction
+) => {
+  let distances = getTranslationByDragging(
+    draggedElement,
+    START_DRAG_EVENT,
+    direction,
+    droppable
+  );
+  const gap = getGapPixels(droppable, direction);
+  const { distance } = getPropByDirection(direction);
+  distances[distance] -= gap;
+  return distances;
+};
+const setSizes = (element: HTMLElement, height: number, width: number) => {
+  element.style.height = `${height}px`;
+  element.style.minWidth = `${width}px`;
+};
 export const addTempChild = <T>(
   droppable: HTMLElement,
   draggedElement: HTMLElement | undefined,
@@ -19,20 +38,11 @@ export const addTempChild = <T>(
   if (droppable.querySelector(`.${TEMP_CHILD_CLASS}`) || !draggedElement) {
     return;
   }
-  let distances = getTranslationByDragging(
-    draggedElement,
-    START_DRAG_EVENT,
-    direction,
-    droppable
-  );
   var child = document.createElement("div");
   child.classList.add(TEMP_CHILD_CLASS);
-  const gap = getGapPixels(droppable, direction);
-  const { distance } = getPropByDirection(direction);
-  distances[distance] -= gap;
 
-  child.style.height = "0px";
-  child.style.minWidth = "0px";
+  setSizes(child, 0, 0);
+  const distances = getDistance(droppable, draggedElement, direction);
 
   setTranistion(
     child,
@@ -41,16 +51,14 @@ export const addTempChild = <T>(
     "height, width"
   );
   if (parent.isSameNode(droppable)) {
-    child.style.height = `${distances.height}px`;
-    child.style.minWidth = `${distances.width}px`;
+    setSizes(child, distances.height, distances.width);
   }
   observeMutation(
     (observer) => {
       if (!droppable.contains(child)) {
         return;
       }
-      child.style.height = `${distances.height}px`;
-      child.style.minWidth = `${distances.width}px`;
+      setSizes(child, distances.height, distances.width);
       observer.disconnect();
     },
     droppable,
