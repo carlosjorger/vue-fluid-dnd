@@ -21,7 +21,7 @@ const DRAGGABLE_CLASS = "draggable";
 const HANDLER_CLASS = "handler-class";
 const DRAGGING_HANDLER_CLASS = "dragging-handler-class";
 const DROPPABLE_CLASS = "droppable";
-
+const DROPPING_CLASS = "dropping";
 const DRAG_EVENT = "drag";
 const START_DRAG_EVENT = "startDrag";
 const START_DROP_EVENT = "startDrop";
@@ -84,6 +84,7 @@ export default function useDraggable<T>(
       `.droppable { box-sizing: border-box !important; }`,
       `.dragging { position: fixed; z-index: 5000; width: var(--fixedWidth) !important; height: var(--fixedHeight) !important; }`,
       `.${DRAGGING_HANDLER_CLASS} { cursor: grabbing; cursor: grabbing; }`,
+      `.${DROPPING_CLASS} { pointer-events: none !important; }`,
     ]);
     setHandlerStyles();
     setDraggable();
@@ -376,7 +377,3 @@ export default function useDraggable<T>(
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
 // TODO: refactor code and gzip
 // TODO: organize utils
-// TODO: set touch-event: none while dragging
-
-// Bugs
-// TODO: fix handler with hadler class on svg

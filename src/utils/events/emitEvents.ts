@@ -12,7 +12,6 @@ import { CoreConfig, Direction, OnInsertEvent } from "../../composables";
 import getTranslationByDragging from "../translate/GetTranslationByDraggingAndEvent";
 import getTranslateBeforeDropping from "../translate/GetTranslateBeforeDropping";
 import { DraggingState, IsDropEvent } from "..";
-import { observeMutation } from "../observer";
 import { DroppableConfig } from "../../composables/configHandler";
 import { IsHTMLElement } from "../touchDevice";
 
@@ -23,6 +22,7 @@ const TEMP_CHILD_CLASS = "temp-child";
 const START_DROP_EVENT = "startDrop";
 const DRAG_EVENT = "drag";
 const START_DRAG_EVENT = "startDrag";
+const DROPPING_CLASS = "dropping";
 const draggableTargetTimingFunction = "cubic-bezier(0.2, 0, 0, 1)";
 
 type DraggingEvent = typeof DRAG_EVENT | typeof START_DRAG_EVENT;
@@ -292,8 +292,10 @@ export default function useEmitEvents<T>(
     droppable: HTMLElement,
     positionOnSourceDroppable?: number
   ) => {
+    element.classList.add(DROPPING_CLASS);
     reduceTempchildSize(droppable);
     setTimeout(() => {
+      element.classList.remove(DROPPING_CLASS);
       removeTempChild(parent);
       removeTempChild(droppable);
       if (positionOnSourceDroppable != undefined) {
@@ -303,8 +305,8 @@ export default function useEmitEvents<T>(
         }
       }
       removeElementDraggingStyles(element);
-      observeDroppedElements(element, parent);
-      observeDroppedElements(element, droppable);
+      removeTranslateFromSiblings(element, parent);
+      removeTranslateFromSiblings(element, droppable);
     }, animationDuration);
   };
   const reduceTempchildSize = (droppable: HTMLElement) => {
@@ -326,23 +328,15 @@ export default function useEmitEvents<T>(
       parent.removeChild(lastChild);
     });
   };
-  const observeDroppedElements = (
+  const removeTranslateFromSiblings = (
     element: HTMLElement,
     parent: HTMLElement
   ) => {
     const { siblings } = getSiblings(element, parent);
     for (const sibling of [...siblings, element]) {
-      observeMutation(
-        (observer) => {
-          removeTranslateWhitoutTransition(sibling);
-          observer.disconnect();
-        },
-        element,
-        { attributes: true, attributeFilter: ["style"] }
-      );
+      removeTranslateWhitoutTransition(sibling);
     }
   };
-
   const removeTranslateWhitoutTransition = (element?: Element) => {
     if (IsHTMLElement(element)) {
       element.style.transition = "";
