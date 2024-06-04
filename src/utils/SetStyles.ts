@@ -47,11 +47,11 @@ const assignDraggingTouchEvent = (
   };
 };
 export const assignDraggingEvent = (
-  element: Element,
+  element: HTMLElement,
   onEvent: onMouseEvent | onTouchEvent,
   callback: DragEventCallback | null
 ) => {
-  if (!callback || !IsHTMLElement(element)) {
+  if (!callback) {
     return;
   }
   if (isOnMouseEvent(onEvent)) {

@@ -31,8 +31,8 @@ const pokeColor = {
   <div :class="[pokeColor[pokemon.name]]">
     <div class="p-2">
       <div>
-        <span v-if="handlerSelector" :class="[handlerSelector]">
-          <Handler
+        <span v-if="handlerSelector">
+          <Handler :class="[handlerSelector]"
         /></span>
         <div class="">{{ pokemon.name }}</div>
         <div>#{{ pokemon.order }}</div>

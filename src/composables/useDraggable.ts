@@ -96,8 +96,9 @@ export default function useDraggable<T>(
   };
 
   const setSlotRefElementParams = (element: HTMLElement | undefined) => {
-    const handlerElement =
-      element?.querySelector(`.${HANDLER_CLASS}`) ?? element;
+    const handlerElement = (element?.querySelector(`.${HANDLER_CLASS}`) ??
+      element) as HTMLElement;
+
     if (handlerElement && element && isDraggable(element)) {
       assignDraggingEvent(
         handlerElement,
