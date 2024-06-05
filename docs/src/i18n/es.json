@@ -3,6 +3,7 @@
   "SINGLE_VERTICAL_LIST_AUTOSCROLL": "Lista vertical en un scroller",
   "SINGLE_VERTICAL_IS_DRAGGABLE": "IsDraggable",
   "SINGLE_VERTICAL_WITH_HANDLER": "Lista con handlers",
+  "GROUP_VERTICAL_GROUP": "Grupo de listas verticales",
   "SINGLE_HORIZONTAL_LIST": "Lista horizontal",
   "SINGLE_HORIZONTAL_LIST_AUTOSCROLL": "Lista horizontal en un scroller"
 }

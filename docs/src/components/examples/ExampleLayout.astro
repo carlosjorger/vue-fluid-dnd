@@ -7,6 +7,7 @@ const basicHref=`${baseUrl}/vertical-list/single-vertical-list/`
 const singleVerticalOnScrollContainer=`${baseUrl}/vertical-list/single-vertical-list-autoscroll/`
 const singleVerticalWithHandler=`${baseUrl}/vertical-list/single-vertical-list-component-with-handler/`
 const singleVerticalWithIsDraggable=`${baseUrl}/vertical-list/single-vertical-list-component-with-is-draggable/`
+const verticalListgroups=`${baseUrl}/vertical-list/group-vertical-lists/`
 
 const singleHorinzontal=`${baseUrl}/horizontal-list/single-horizontal-list/`
 const singleHorinzontalOnScrollContainer=`${baseUrl}/horizontal-list/single-horizontal-list-autoscroll/`
@@ -28,6 +29,7 @@ const basic = getLabel('basic','básico')
 const verticalListScrollLabel = getLabel('list on a scroller','lista en un scroller')
 const verticalListWithHandler = getLabel('list with handler','lista con un handler')
 const verticalListWithIsDraggableLabel = getLabel('IsDraggable','IsDraggable')
+const verticalListgroupsLabel = getLabel('group of lists','grupo de listas')
 
 const horizontalListScrollLabel = getLabel('list on a scroller','lista en un scroller')
 const description = getLabel('Sorting a list of pokemons with vue-fluid-dnd','Ordenar una lista de pokemones con vue-fluid-dnd') 
@@ -44,7 +46,8 @@ const description = getLabel('Sorting a list of pokemons with vue-fluid-dnd','Or
           getItem(basic,basicHref),
           getItem(verticalListScrollLabel, singleVerticalOnScrollContainer),
           getItem(verticalListWithHandler,singleVerticalWithHandler),
-          getItem(verticalListWithIsDraggableLabel,singleVerticalWithIsDraggable)
+          getItem(verticalListWithIsDraggableLabel,singleVerticalWithIsDraggable),
+          getItem(verticalListgroupsLabel,verticalListgroups)
         ],
       },
       {
