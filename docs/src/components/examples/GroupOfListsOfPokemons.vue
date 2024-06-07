@@ -27,7 +27,7 @@ const { parent: parent3 } = useDragAndDrop(pokemon3G, {
   <div class="flex max-sm:justify-center gap-4 max-sm:gap-0.5 items-start">
     <div
       ref="parent"
-      class="bg-gray-200/60 border-solid border-black/40 rounded-2xl w-60 border-4 p-4 block overflow-auto max-h-[33rem] max-sm:p-0.5"
+      class="bg-gray-200/60 border-solid border-black/40 rounded-2xl w-60 border-4 p-4 block overflow-auto max-h-[33rem] max-lg:p-1 max-sm:p-0.5 max-sm:border-2"
     >
       <PokemonComponent
         v-for="(pokemon, index) in pokemons"
@@ -38,7 +38,7 @@ const { parent: parent3 } = useDragAndDrop(pokemon3G, {
     </div>
     <div
       ref="parent2"
-      class="bg-gray-200/60 border-solid border-black/40 rounded-2xl w-60 border-4 p-4 block overflow-auto max-h-[33rem] max-sm:p-0.5"
+      class="bg-gray-200/60 border-solid border-black/40 rounded-2xl w-60 border-4 p-4 block overflow-auto max-h-[33rem] max-lg:p-1 max-sm:p-0.5 max-sm:border-2"
     >
       <PokemonComponent
         v-for="(pokemon, index) in pokemon2G"
@@ -49,7 +49,7 @@ const { parent: parent3 } = useDragAndDrop(pokemon3G, {
     </div>
     <div
       ref="parent3"
-      class="bg-gray-200/60 border-solid border-black/40 rounded-2xl w-60 border-4 p-4 block overflow-auto max-h-[33rem] max-sm:p-0.5"
+      class="bg-gray-200/60 border-solid border-black/40 rounded-2xl w-60 border-4 p-4 block overflow-auto max-h-[33rem] max-lg:p-1 max-sm:p-0.5 max-sm:border-2"
     >
       <PokemonComponent
         v-for="(pokemon, index) in pokemon3G"

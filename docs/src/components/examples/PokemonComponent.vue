@@ -88,11 +88,11 @@ const darkPokeColor = {
 
 <template>
   <div
-    class="rounded-xl border-solid border-black/40 border-4 mb-4 max-sm:mb-0.5 dark:text-gray-100 text-gray-800 pokemon bg-no-repeat p-0.5"
+    class="rounded-xl border-solid border-black/40 border-4 mb-4 max-sm:mb-0.5 max-lg:mb-1 dark:text-gray-100 text-gray-800 pokemon bg-no-repeat p-0.5 max-sm:border-2"
     :class="[pokeColor[pokemon.name], darkPokeColor[pokemon.name]]"
   >
-    <div class="p-2 max-sm:text-xs">
-      <div class="flex flex-row items-center justify-between gap-1">
+    <div class="p-2 max-sm:text-xs max-sm:p-0.5">
+      <div class="flex flex-row items-center justify-between">
         <span v-if="handlerClass" :class="[handlerClass]"> <Handler /></span>
 
         <div class="">{{ pokemon.name }}</div>
