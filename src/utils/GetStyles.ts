@@ -133,6 +133,8 @@ export const getPropByDirection = (
   page: Page;
   inner: InnerDistance;
   offsetElement: OffsetElement;
+  scrollDistance: ScrollDistance;
+  clientDistance: ClientDistance;
 } => {
   if (direction == "horizontal") {
     return {
@@ -150,6 +152,8 @@ export const getPropByDirection = (
       page: "pageX",
       inner: "innerWidth",
       offsetElement: "offsetLeft",
+      scrollDistance: "scrollWidth",
+      clientDistance: "clientWidth",
     };
   } else {
     return {
@@ -167,6 +171,8 @@ export const getPropByDirection = (
       page: "pageY",
       inner: "innerHeight",
       offsetElement: "offsetTop",
+      scrollDistance: "scrollHeight",
+      clientDistance: "clientHeight",
     };
   }
 };

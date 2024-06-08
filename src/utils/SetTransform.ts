@@ -7,6 +7,7 @@ import {
 } from "./GetStyles";
 import { Ref, ref, watch } from "vue";
 import { Direction } from "../composables";
+import { scrollByDirection } from "./scroll";
 export const useTransform = (childRef: Ref<HTMLElement | undefined>) => {
   const currentOffset = ref({ offsetX: 0, offsetY: 0 });
   const position = ref({ top: 0, left: 0 });
@@ -99,8 +100,8 @@ export const useTransform = (childRef: Ref<HTMLElement | undefined>) => {
         const relativeDistanceValue = distanceValue / totalDistance;
 
         const velocity = 0.1;
-        const infLimit = 0.25;
-        const upperLimit = 0.75;
+        const infLimit = 0.2;
+        const upperLimit = 0.8;
         let percent = 0;
         const isOutside = draggableIsOutside(element, parent);
         if (
@@ -118,20 +119,6 @@ export const useTransform = (childRef: Ref<HTMLElement | undefined>) => {
         }
         const scrollAmount = velocity * distanceValue * percent;
         scrollByDirection(parent, direction, scrollAmount);
-      }
-    };
-    const scrollByDirection = (
-      element: HTMLElement,
-      direction: Direction,
-      scrollAmount: number
-    ) => {
-      if (scrollAmount == 0) {
-        return;
-      }
-      if (direction === "vertical") {
-        element.scrollBy(0, scrollAmount);
-      } else {
-        element.scrollBy(scrollAmount, 0);
       }
     };
     const updateTranlateByDirection = (direction: Direction) => {
