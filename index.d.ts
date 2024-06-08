@@ -18,6 +18,8 @@ export type MoveEvent = "mousemove" | "touchmove";
 export type OnLeaveEvent = "mouseup" | "touchend";
 export type TouchEvent = "touchstart" | "touchmove" | "touchend";
 export type OffsetElement = "offsetLeft" | "offsetTop";
+export type ScrollDistance = "scrollHeight" | "scrollWidth";
+export type ClientDistance = "clientHeight" | "clientWidth";
 export type Translate = {
   height: number;
   width: number;

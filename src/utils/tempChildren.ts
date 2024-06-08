@@ -4,6 +4,7 @@ import { getPropByDirection } from "./GetStyles";
 import { getGapPixels } from "./ParseStyles";
 import { setTranistion } from "./SetStyles";
 import { observeMutation } from "./observer";
+// import { scrollByDirection } from "./scroll";
 import getTranslationByDragging from "./translate/GetTranslationByDraggingAndEvent";
 
 const TEMP_CHILD_CLASS = "temp-child";
@@ -23,10 +24,21 @@ const getDistance = (
   const gap = getGapPixels(droppable, direction);
   const { distance } = getPropByDirection(direction);
   distances[distance] -= gap;
+  const { large, largeDistance } = getlarge(direction, draggedElement);
+  distances[largeDistance] = large;
   return distances;
+};
+const getlarge = (direction: Direction, draggedElement: HTMLElement) => {
+  const largeDirection = direction == "horizontal" ? "vertical" : "horizontal";
+  const { distance } = getPropByDirection(largeDirection);
+  return {
+    large: draggedElement.getBoundingClientRect()[distance],
+    largeDistance: distance,
+  };
 };
 const setSizes = (element: HTMLElement, height: number, width: number) => {
   element.style.height = `${height}px`;
+  element.style.width = `${width}px`;
   element.style.minWidth = `${width}px`;
 };
 const updateChildAfterCreated = (
@@ -57,10 +69,10 @@ export const addTempChild = <T>(
   setSizes(child, 0, 0);
   const distances = getDistance(droppable, draggedElement, direction);
   setTranistion(child, animationDuration, timingFunction, "height, width");
-
   if (parent.isSameNode(droppable)) {
     setSizes(child, distances.height, distances.width);
   }
+  droppable.appendChild(child);
   observeMutation(
     updateChildAfterCreated(child, droppable, distances),
     droppable,
@@ -69,7 +81,6 @@ export const addTempChild = <T>(
       subtree: true,
     }
   );
-  droppable.appendChild(child);
 };
 export const removeTempChildrens = (
   droppable: HTMLElement,

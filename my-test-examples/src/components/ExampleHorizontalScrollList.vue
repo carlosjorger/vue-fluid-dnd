@@ -30,8 +30,8 @@ const { parent } = useDragAndDrop<number>(numbers as any, {
 .horizontal-scroll-list {
   display: flex;
   flex-direction: row;
-  width: 40%;
+  width: 420px;
   height: 200px;
-  overflow: auto;
+  overflow-x: auto;
 }
 </style>
