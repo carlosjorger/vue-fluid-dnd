@@ -378,3 +378,4 @@ export default function useDraggable<T>(
 // TODO: refactor code and gzip
 // TODO: organize utils
 // TODO: animation is still setted
+// TODO: scroll at the end is moved in a horizontal list

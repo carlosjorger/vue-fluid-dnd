@@ -1,17 +1,11 @@
 ---
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+
 const {pathname}= Astro.url
 const { currentLocale } = Astro;
-const baseUrl= currentLocale==='en'?'/example':`/${currentLocale}/example`
-const basicHref=`${baseUrl}/vertical-list/single-vertical-list/`
-const singleVerticalOnScrollContainer=`${baseUrl}/vertical-list/single-vertical-list-autoscroll/`
-const singleVerticalWithHandler=`${baseUrl}/vertical-list/single-vertical-list-component-with-handler/`
-const singleVerticalWithIsDraggable=`${baseUrl}/vertical-list/single-vertical-list-component-with-is-draggable/`
-const verticalListgroups=`${baseUrl}/vertical-list/group-vertical-lists/`
-
-const singleHorinzontal=`${baseUrl}/horizontal-list/single-horizontal-list/`
-const singleHorinzontalOnScrollContainer=`${baseUrl}/horizontal-list/single-horizontal-list-autoscroll/`
-
+const baseUrl = currentLocale==='en'?'/example':`/${currentLocale}/example`
+const verticalBaseUrl = `${baseUrl}/vertical-list`
+const horizontalBaseUrl =  `${baseUrl}/horizontal-list`
 
 interface Props {
    title: string;
@@ -25,13 +19,43 @@ const getLabel = (label:string, spanishLabel:string)=>{
   }
   return label
 }
-const basic = getLabel('basic','básico')
-const verticalListScrollLabel = getLabel('list on a scroller','lista en un scroller')
-const verticalListWithHandler = getLabel('list with handler','lista con un handler')
-const verticalListWithIsDraggableLabel = getLabel('IsDraggable','IsDraggable')
-const verticalListgroupsLabel = getLabel('group of lists','grupo de listas')
+const verticalItems=[
+   {
+    link:`${verticalBaseUrl}/single-vertical-list/`,
+    label: getLabel('basic','básico')
+  },
+  {
+    link:`${verticalBaseUrl}/single-vertical-list-autoscroll/`,
+    label: getLabel('list on a scroller','lista en un scroller')
+  },
+  {
+    link: `${verticalBaseUrl}/single-vertical-list-component-with-handler/`,
+    label: getLabel('list with handler','lista con un handler')
+  },
+  {
+    link: `${verticalBaseUrl}/single-vertical-list-component-with-is-draggable/`,
+    label: getLabel('IsDraggable','IsDraggable')
+  },
+  {
+    link: `${verticalBaseUrl}/group-vertical-lists/`,
+    label: getLabel('group of lists','grupo de listas')
+  }
+]
 
-const horizontalListScrollLabel = getLabel('list on a scroller','lista en un scroller')
+const horizontalItems=[
+  {
+    link:`${horizontalBaseUrl}/single-horizontal-list/`,
+    label: getLabel('basic','básico')
+  },
+  {
+    link: `${horizontalBaseUrl}/single-horizontal-list-autoscroll/`,
+    label: getLabel('list on a scroller','lista en un scroller')
+  },
+   {
+    link: `${horizontalBaseUrl}/group-horizontal-lists/`,
+    label: getLabel('group of lists','grupo de listas')
+  },
+]
 const description = getLabel('Sorting a list of pokemons with vue-fluid-dnd','Ordenar una lista de pokemones con vue-fluid-dnd') 
 
 ---
@@ -42,20 +66,11 @@ const description = getLabel('Sorting a list of pokemons with vue-fluid-dnd','Or
       { label: 'Vue Fluid DnD', href: '/' },
       {
         label: getLabel('Single vertical list','Simple lista vertical'),
-        items: [
-          getItem(basic,basicHref),
-          getItem(verticalListScrollLabel, singleVerticalOnScrollContainer),
-          getItem(verticalListWithHandler,singleVerticalWithHandler),
-          getItem(verticalListWithIsDraggableLabel,singleVerticalWithIsDraggable),
-          getItem(verticalListgroupsLabel,verticalListgroups)
-        ],
+        items: verticalItems.map(({link, label})=>getItem(label,link)),
       },
       {
         label: getLabel('Single horizontal list','Simple lista horizontal'),
-        items: [
-           getItem(basic, singleHorinzontal),
-           getItem(horizontalListScrollLabel, singleHorinzontalOnScrollContainer)
-        ],
+        items: horizontalItems.map(({link, label})=>getItem(label,link)),
       },
     ]} 
   frontmatter={{ ...Astro.props, description ,tableOfContents:false }}  >
