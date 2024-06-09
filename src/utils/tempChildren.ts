@@ -26,17 +26,7 @@ const getDistance = (
   distances[distance] -= gap;
   const { large, largeDistance } = getlarge(direction, draggedElement);
   distances[largeDistance] = large;
-  const { large, largeDistance } = getlarge(direction, draggedElement);
-  distances[largeDistance] = large;
   return distances;
-};
-const getlarge = (direction: Direction, draggedElement: HTMLElement) => {
-  const largeDirection = direction == "horizontal" ? "vertical" : "horizontal";
-  const { distance } = getPropByDirection(largeDirection);
-  return {
-    large: draggedElement.getBoundingClientRect()[distance],
-    largeDistance: distance,
-  };
 };
 const getlarge = (direction: Direction, draggedElement: HTMLElement) => {
   const largeDirection = direction == "horizontal" ? "vertical" : "horizontal";

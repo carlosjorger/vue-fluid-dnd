@@ -17,7 +17,6 @@ import ConfigHandler, { DroppableConfig } from "./configHandler";
 import { IsHTMLElement, isTouchEvent } from "../utils/touchDevice";
 import { addTempChild, removeTempChildrens } from "../utils/tempChildren";
 import { scrollPercent } from "../utils/scroll";
-import { scrollPercent } from "../utils/scroll";
 const DRAGGABLE_CLASS = "draggable";
 const HANDLER_CLASS = "handler-class";
 const DRAGGING_HANDLER_CLASS = "dragging-handler-class";
@@ -398,5 +397,4 @@ export default function useDraggable<T>(
 // TODO: organize utils
 // TODO: animation is still setted
 // TODO: scroll at the end is moved in a horizontal list
-// TODO: drop after scroll screen
 // TODO: drop after scroll screen
