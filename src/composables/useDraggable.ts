@@ -17,6 +17,7 @@ import ConfigHandler, { DroppableConfig } from "./configHandler";
 import { IsHTMLElement, isTouchEvent } from "../utils/touchDevice";
 import { addTempChild, removeTempChildrens } from "../utils/tempChildren";
 import { scrollPercent } from "../utils/scroll";
+import { scrollPercent } from "../utils/scroll";
 const DRAGGABLE_CLASS = "draggable";
 const HANDLER_CLASS = "handler-class";
 const DRAGGING_HANDLER_CLASS = "dragging-handler-class";
@@ -80,6 +81,7 @@ export default function useDraggable<T>(
       `.${DRAGGABLE_CLASS} { touch-action: manipulation; user-select: none; box-sizing: border-box !important; -webkit-user-select: none; }`,
       `.${HANDLER_CLASS} { cursor: grab; pointer-events: auto !important; }`,
       `.${DRAGGABLE_CLASS} * { pointer-events: none; }`,
+      ".temp-child { display: block ;touch-action: none; pointer-events: none; box-sizing: border-box !important; }",
       ".temp-child { display: block ;touch-action: none; pointer-events: none; box-sizing: border-box !important; }",
       `.droppable { box-sizing: border-box !important; }`,
       `.dragging { position: fixed; z-index: 5000; width: var(--fixedWidth) !important; height: var(--fixedHeight) !important; }`,
@@ -194,6 +196,15 @@ export default function useDraggable<T>(
     const currentElement = childRef.value;
     if (!currentElement) {
       return;
+    }
+    if (
+      currentDroppableConfig.value &&
+      isNotInsideAnotherDroppable(
+        currentElement,
+        currentDroppableConfig.value?.droppable
+      )
+    ) {
+      return currentDroppableConfig.value;
     }
     if (
       currentDroppableConfig.value &&
@@ -387,4 +398,5 @@ export default function useDraggable<T>(
 // TODO: organize utils
 // TODO: animation is still setted
 // TODO: scroll at the end is moved in a horizontal list
+// TODO: drop after scroll screen
 // TODO: drop after scroll screen

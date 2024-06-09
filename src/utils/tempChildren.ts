@@ -26,7 +26,17 @@ const getDistance = (
   distances[distance] -= gap;
   const { large, largeDistance } = getlarge(direction, draggedElement);
   distances[largeDistance] = large;
+  const { large, largeDistance } = getlarge(direction, draggedElement);
+  distances[largeDistance] = large;
   return distances;
+};
+const getlarge = (direction: Direction, draggedElement: HTMLElement) => {
+  const largeDirection = direction == "horizontal" ? "vertical" : "horizontal";
+  const { distance } = getPropByDirection(largeDirection);
+  return {
+    large: draggedElement.getBoundingClientRect()[distance],
+    largeDistance: distance,
+  };
 };
 const getlarge = (direction: Direction, draggedElement: HTMLElement) => {
   const largeDirection = direction == "horizontal" ? "vertical" : "horizontal";
@@ -38,6 +48,7 @@ const getlarge = (direction: Direction, draggedElement: HTMLElement) => {
 };
 const setSizes = (element: HTMLElement, height: number, width: number) => {
   element.style.height = `${height}px`;
+  element.style.width = `${width}px`;
   element.style.width = `${width}px`;
   element.style.minWidth = `${width}px`;
 };
@@ -72,6 +83,7 @@ export const addTempChild = <T>(
   if (parent.isSameNode(droppable)) {
     setSizes(child, distances.height, distances.width);
   }
+  droppable.appendChild(child);
   droppable.appendChild(child);
   observeMutation(
     updateChildAfterCreated(child, droppable, distances),
