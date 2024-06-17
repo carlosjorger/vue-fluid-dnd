@@ -118,17 +118,14 @@ export default function useDraggable<T>(
 
   const onmousemove = function (event: DragMouseTouchEvent) {
     currentDroppableConfig.value = getCurrentConfig(event);
-    if (currentDroppableConfig.value) {
-      const scrollCompleted =
-        scrollPercent(
-          config.direction,
-          parent,
-          currentDroppableConfig.value?.droppableScroll
-        ) > 0.99;
-      console.log(scrollCompleted);
-    }
+
     if (draggingState.value === DraggingState.START_DRAGGING) {
-      addTempChild(parent, childRef.value, parent, config);
+      addTempChild(
+        childRef.value,
+        parent,
+        draggingState.value,
+        currentDroppableConfig.value
+      );
       startDragging(event);
     } else if (draggingState.value === DraggingState.DRAGING) {
       updateTempChildren();
@@ -140,14 +137,19 @@ export default function useDraggable<T>(
     if (!currentDroppableConfig.value) {
       return;
     }
-    const { droppable, config } = currentDroppableConfig.value;
+    const { droppable } = currentDroppableConfig.value;
     removeTempChildrens(
       droppable,
       parent,
       droppableGroupClass,
       animationDuration
     );
-    addTempChild(droppable, childRef.value, parent, config);
+    addTempChild(
+      childRef.value,
+      parent,
+      draggingState.value,
+      currentDroppableConfig.value
+    );
   };
 
   const getDraggableAncestor = (
@@ -396,5 +398,4 @@ export default function useDraggable<T>(
 // TODO: refactor code and gzip
 // TODO: organize utils
 // TODO: animation is still setted
-// TODO: scroll at the end is moved in a horizontal list
 // TODO: drop after scroll screen

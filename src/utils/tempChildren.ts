@@ -1,3 +1,4 @@
+import { DroppableConfig } from "../composables/configHandler";
 import { Translate } from "../../index";
 import { CoreConfig, Direction } from "../composables";
 import { getPropByDirection } from "./GetStyles";
@@ -6,6 +7,8 @@ import { setTranistion } from "./SetStyles";
 import { observeMutation } from "./observer";
 // import { scrollByDirection } from "./scroll";
 import getTranslationByDragging from "./translate/GetTranslationByDraggingAndEvent";
+import { scrollPercent } from "./scroll";
+import { DraggingState } from ".";
 
 const TEMP_CHILD_CLASS = "temp-child";
 const START_DRAG_EVENT = "startDrag";
@@ -55,13 +58,39 @@ const updateChildAfterCreated = (
     observer.disconnect();
   };
 };
+const fixScrollInitialChange = <T>(
+  droppableConfig: DroppableConfig<T>,
+  state: DraggingState
+) => {
+  if (state != DraggingState.START_DRAGGING) {
+    return;
+  }
+  const { droppable, config, droppableScroll } = droppableConfig;
+  const { direction } = config;
+
+  const scrollCompleted =
+    scrollPercent(config.direction, droppable, droppableScroll) > 0.99;
+  const { scrollDistance, clientDistance, scrollElement } =
+    getPropByDirection(direction);
+  if (scrollCompleted) {
+    droppable[scrollElement] =
+      droppable[scrollDistance] - droppable[clientDistance];
+  }
+};
 export const addTempChild = <T>(
-  droppable: HTMLElement,
   draggedElement: HTMLElement | undefined,
   parent: Element,
-  config: CoreConfig<T>
+  state: DraggingState,
+  droppableConfig?: DroppableConfig<T>
 ) => {
+  if (!droppableConfig) {
+    return;
+  }
+  const { droppable, config } = droppableConfig;
   const { direction, animationDuration } = config;
+
+  fixScrollInitialChange(droppableConfig, state);
+
   if (droppable.querySelector(`.${TEMP_CHILD_CLASS}`) || !draggedElement) {
     return;
   }
@@ -73,8 +102,6 @@ export const addTempChild = <T>(
   if (parent.isSameNode(droppable)) {
     setSizes(child, distances.height, distances.width);
   }
-  droppable.appendChild(child);
-  droppable.appendChild(child);
   observeMutation(
     updateChildAfterCreated(child, droppable, distances),
     droppable,
@@ -83,6 +110,7 @@ export const addTempChild = <T>(
       subtree: true,
     }
   );
+  droppable.appendChild(child);
 };
 export const removeTempChildrens = (
   droppable: HTMLElement,
