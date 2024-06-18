@@ -67,12 +67,14 @@ export default function getTranslateBeforeDropping(
   let height = 0;
   let width = 0;
   let isGroupDropping = false;
+
   if (sourceIndex === targetIndex) {
     return addScrollToTranslate(
       { height, width },
       direction,
       scroll,
-      initialWindowScroll
+      initialWindowScroll,
+      isGroupDropping
     );
   }
   if (sourceIndex < 0 && draggable) {
@@ -143,7 +145,8 @@ export default function getTranslateBeforeDropping(
     { height, width },
     direction,
     scroll,
-    initialWindowScroll
+    initialWindowScroll,
+    isGroupDropping
   );
 }
 const getScrollChange = (
@@ -234,13 +237,15 @@ const addScrollToTranslate = (
   translate: Translate,
   direction: Direction,
   initialScroll: WindowScroll,
-  initialWindowScroll: WindowScroll
+  initialWindowScroll: WindowScroll,
+  isGroupDropping: Boolean
 ) => {
   const { scroll, distance } = getPropByDirection(direction);
   const actualWindowScroll = window[scroll];
   const initialScrollProp = initialScroll[scroll];
-  const scrollChange =
-    initialScrollProp - 2 * actualWindowScroll + initialWindowScroll[scroll];
+  const scrollChange = isGroupDropping
+    ? 0
+    : initialScrollProp - 2 * actualWindowScroll + initialWindowScroll[scroll];
   translate[distance] += scrollChange;
   return translate;
 };

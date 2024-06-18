@@ -1,6 +1,6 @@
 import { DroppableConfig } from "../composables/configHandler";
 import { Translate } from "../../index";
-import { CoreConfig, Direction } from "../composables";
+import { Direction } from "../composables";
 import { getPropByDirection } from "./GetStyles";
 import { getGapPixels } from "./ParseStyles";
 import { setTranistion } from "./SetStyles";
