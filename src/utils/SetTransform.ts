@@ -8,6 +8,8 @@ import {
 import { Ref, ref, watch } from "vue";
 import { Direction } from "../composables";
 import { scrollByDirection } from "./scroll";
+const HANDLER_CLASS = "handler-class";
+
 export const useTransform = (childRef: Ref<HTMLElement | undefined>) => {
   const currentOffset = ref({ offsetX: 0, offsetY: 0 });
   const position = ref({ top: 0, left: 0 });
@@ -164,17 +166,23 @@ const getOffsetWithDraggable = (
 };
 const getOffset = (event: TransformEvent, draggable: Element | undefined) => {
   let { offsetX, offsetY, target } = event;
-  if (draggable && target && draggable != target) {
-    offsetX += getOffsetWithDraggable(
-      "horizontal",
-      target as Element,
-      draggable
-    );
-    offsetY += getOffsetWithDraggable("vertical", target as Element, draggable);
+  let targetHandler = getHandlerElementAncestor(target, draggable);
+  if (draggable && targetHandler && draggable != target) {
+    offsetX += getOffsetWithDraggable("horizontal", targetHandler, draggable);
+    offsetY += getOffsetWithDraggable("vertical", targetHandler, draggable);
   }
   return { offsetX, offsetY };
 };
-
+const getHandlerElementAncestor = (
+  target: EventTarget | null,
+  draggable?: Element
+) => {
+  const targetHandler = (target as Element)?.closest(`.${HANDLER_CLASS}`);
+  if (targetHandler && draggable && targetHandler.isSameNode(draggable)) {
+    return target as Element;
+  }
+  return targetHandler;
+};
 const getPositionByDistance = (
   direction: Direction,
   event: TransformEvent,

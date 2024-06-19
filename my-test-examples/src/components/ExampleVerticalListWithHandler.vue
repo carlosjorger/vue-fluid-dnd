@@ -49,6 +49,6 @@ const { parent } = useDragAndDrop<number>(numbers as any, {
 }
 .drag-handle {
   float: left;
-  padding: 0px 5px;
+  padding: 0px 50px;
 }
 </style>

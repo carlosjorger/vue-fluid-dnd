@@ -78,7 +78,6 @@ export default function useDraggable<T>(
     AddCssStylesToElement(parent, [
       `.${DRAGGABLE_CLASS} { touch-action: manipulation; user-select: none; box-sizing: border-box !important; -webkit-user-select: none; }`,
       `.${HANDLER_CLASS} { cursor: grab; pointer-events: auto !important; }`,
-      `.${DRAGGABLE_CLASS} * { pointer-events: none; }`,
       ".temp-child { display: block ;touch-action: none; pointer-events: none; box-sizing: border-box !important; }",
       ".temp-child { display: block ;touch-action: none; pointer-events: none; box-sizing: border-box !important; }",
       `.droppable { box-sizing: border-box !important; }`,
@@ -99,7 +98,6 @@ export default function useDraggable<T>(
   const setSlotRefElementParams = (element: HTMLElement | undefined) => {
     const handlerElement = (element?.querySelector(`.${HANDLER_CLASS}`) ??
       element) as HTMLElement;
-
     if (handlerElement && element && isDraggable(element)) {
       assignDraggingEvent(
         handlerElement,
@@ -397,3 +395,5 @@ export default function useDraggable<T>(
 // TODO: refactor code and gzip
 // TODO: organize utils
 // TODO: animation is still setted
+// TODO: add doc for case with input
+// TODO: add code for doc example

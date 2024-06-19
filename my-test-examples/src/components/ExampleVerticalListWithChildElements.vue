@@ -7,6 +7,9 @@ const { id } = defineProps<{
   id: string;
 }>();
 const { parent } = useDragAndDrop<number>(numbers as any);
+const triggerClick = () => {
+  console.log("click");
+};
 </script>
 <template>
   <ul ref="parent" :id="id" class="vertical-list">
@@ -17,10 +20,8 @@ const { parent } = useDragAndDrop<number>(numbers as any);
       class="number"
     >
       {{ element }}
-      <div style="display: flex; flex-direction: row">
-        <span v-for="number in [...Array(4).keys()]">
-          {{ number + element }}
-        </span>
+      <div style="display: flex; flex-direction: column">
+        <input type="number" v-model="numbers[index]" @click="triggerClick" />
       </div>
     </li>
   </ul>
