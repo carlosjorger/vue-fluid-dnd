@@ -109,10 +109,17 @@ export default function useDraggable<T>(
         "ontouchstart",
         onmousedown("touchmove", "touchend")
       );
+      disableMousedownEventFromImages(handlerElement);
     }
     parent.classList.add(DROPPABLE_CLASS);
   };
-
+  function disableMousedownEventFromImages(handlerElement: Element) {
+    // Avoid dragging inner images
+    const images = handlerElement.querySelectorAll("img");
+    Array.from(images).forEach((image) => {
+      image.onmousedown = () => false;
+    });
+  }
   const onmousemove = function (event: DragMouseTouchEvent) {
     currentDroppableConfig.value = getCurrentConfig(event);
 

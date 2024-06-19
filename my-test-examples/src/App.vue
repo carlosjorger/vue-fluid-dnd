@@ -8,7 +8,7 @@ import ExampleCounterList from "./components/ExampleCounterList.vue";
 import ExampleVerticalListWithHandler from "./components/ExampleVerticalListWithHandler.vue";
 import ExampleGroupOflist from "./components/ExampleGroupOflist.vue";
 import ExampleGroupOfListWithStyles from "./components/ExampleGroupOfListWithStyles.vue";
-// import ExampleOfPokemonList from "./components/ExampleOfPokemonList.vue";
+import ExampleOfPokemonList from "./components/ExampleOfPokemonList.vue";
 </script>
 
 <template>
@@ -27,7 +27,7 @@ import ExampleGroupOfListWithStyles from "./components/ExampleGroupOfListWithSty
     <ExampleCounterList id="example-counter-list" />
   </div>
   <ExampleGroupOflist id="example-group-list" />
-  <!-- <ExampleOfPokemonList id="example-pokemon-list" /> -->
+  <ExampleOfPokemonList id="example-pokemon-list" />
 </template>
 <style>
 .example-cols {
