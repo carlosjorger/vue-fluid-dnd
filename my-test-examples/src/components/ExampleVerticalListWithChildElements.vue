@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import useDragAndDrop from "../../../src/composables/useDragAndDrop";
-const numbers = ref([1, 2, 3, 4, 5, 6]);
+const numbers = ref([
+  { label: "a", value: 1 },
+  { label: "b", value: 2 },
+  { label: "c", value: 3 },
+  { label: "d", value: 4 },
+  { label: "e", value: 5 },
+  { label: "f", value: 6 },
+]);
 
 const { id } = defineProps<{
   id: string;
@@ -16,12 +23,12 @@ const triggerClick = () => {
     <li
       v-for="(element, index) in numbers"
       :index="index"
-      :id="'child-with-children-' + +element.toString()"
+      :id="'child-with-children-' + +element.label.toString()"
       class="number"
     >
-      {{ element }}
+      {{ element.label }}
       <div style="display: flex; flex-direction: column">
-        <input type="number" v-model="numbers[index]" @click="triggerClick" />
+        <input type="number" v-model="element.value" @click="triggerClick" />
       </div>
     </li>
   </ul>
