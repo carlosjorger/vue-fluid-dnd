@@ -278,10 +278,24 @@ export default function useDraggable<T>(
       const currentConfig = getCurrentConfig(convertedEvent);
       if (currentConfig) {
         const { droppable } = currentConfig;
-        droppable.onscroll = null;
+        removeOnScrollEvents(droppable);
       }
       parent.onscroll = null;
     };
+  };
+  const removeOnScrollEvents = (droppable: HTMLElement) => {
+    droppable.onscroll = null;
+    if (!droppableGroupClass) {
+      return;
+    }
+    const droppables = Array.from(
+      document.querySelectorAll(`.${droppableGroupClass}`)
+    );
+    for (const droppable of droppables) {
+      if (droppable instanceof HTMLElement) {
+        droppable.onscroll = null;
+      }
+    }
   };
   const startDragging = (event: DragMouseTouchEvent) => {
     const element = childRef.value;
@@ -403,4 +417,3 @@ export default function useDraggable<T>(
 // TODO: organize utils
 // TODO: add doc for case with input
 // TODO: add code for doc example
-// TODO: animation is still setted

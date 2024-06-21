@@ -19,7 +19,13 @@ const { parent: parent3 } = useDragAndDrop<number>(numbers3 as any, {
   direction: "horizontal",
   droppableGroup: "group1",
 });
-// TODO: fix group with inner elements
+
+const numbers4 = ref([22, 23, 24, 25, 26, 27]);
+const { parent: parent41 } = useDragAndDrop<number>(numbers4 as any, {
+  direction: "horizontal",
+  droppableGroup: "group1",
+});
+
 const list = ref([1, 2, 3, 4]);
 const { parent: parent4 } = useDragAndDrop<number>(list as any, {
   droppableGroup: "group2",
@@ -65,6 +71,16 @@ const { id } = defineProps<{
       >
         {{ element }}
       </div>
+    </div>
+  </div>
+  <div ref="parent41" class="horizontal-list">
+    <div
+      v-for="(element, index) in numbers4"
+      :index="index"
+      :id="'group-child-' + +element.toString()"
+      class="number"
+    >
+      {{ element }}
     </div>
   </div>
   <ul ref="parent4" class="number-list p-8">
@@ -123,7 +139,7 @@ const { id } = defineProps<{
   padding: 40px;
   grid-area: horizontal;
   overflow: auto;
-  max-width: 500px;
+  max-width: 600px;
   height: 150px;
 }
 .number {
