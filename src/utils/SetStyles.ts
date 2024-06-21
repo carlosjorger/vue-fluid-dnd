@@ -166,7 +166,8 @@ export const setTranistion = (
   types: string = "transform"
 ) => {
   if (IsHTMLElement(element)) {
-    element.style.transition = `${duration}ms ${timingFunction}`;
+    element.style.transitionDuration = `${duration}ms`;
+    element.style.transitionTimingFunction = `${timingFunction}`;
     element.style.transitionProperty = `${types}`;
   }
 };

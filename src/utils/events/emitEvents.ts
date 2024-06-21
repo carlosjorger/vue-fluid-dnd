@@ -14,6 +14,7 @@ import getTranslateBeforeDropping from "../translate/GetTranslateBeforeDropping"
 import { DraggingState, IsDropEvent } from "..";
 import { DroppableConfig } from "../../composables/configHandler";
 import { IsHTMLElement } from "../touchDevice";
+import { removeTempChild } from "../tempChildren";
 
 const DRAGGING_HANDLER_CLASS = "dragging-handler-class";
 const DRAGING_CLASS = "dragging";
@@ -296,8 +297,8 @@ export default function useEmitEvents<T>(
     reduceTempchildSize(droppable);
     setTimeout(() => {
       element.classList.remove(DROPPING_CLASS);
-      removeTempChild(parent);
-      removeTempChild(droppable);
+      removeTempChild(parent, animationDuration);
+      removeTempChild(droppable, animationDuration);
       if (positionOnSourceDroppable != undefined) {
         const value = onRemoveAtEvent(positionOnSourceDroppable);
         if (value) {
@@ -321,12 +322,6 @@ export default function useEmitEvents<T>(
     if (IsHTMLElement(lastChildren)) {
       lastChildren.style[distance] = "0px";
     }
-  };
-  const removeTempChild = (parent: HTMLElement) => {
-    var lastChildren = parent.querySelectorAll(`.${TEMP_CHILD_CLASS}`);
-    lastChildren.forEach((lastChild) => {
-      parent.removeChild(lastChild);
-    });
   };
   const removeTranslateFromSiblings = (
     element: HTMLElement,

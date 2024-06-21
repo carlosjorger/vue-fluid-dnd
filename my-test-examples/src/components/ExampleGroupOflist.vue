@@ -121,8 +121,10 @@ const { id } = defineProps<{
   flex-direction: row;
   background-color: pink;
   padding: 40px;
-  width: 100%;
   grid-area: horizontal;
+  overflow: auto;
+  max-width: 500px;
+  height: 150px;
 }
 .number {
   padding-left: 5px;

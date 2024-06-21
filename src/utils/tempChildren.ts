@@ -42,7 +42,6 @@ const getlarge = (direction: Direction, draggedElement: HTMLElement) => {
 const setSizes = (element: HTMLElement, height: number, width: number) => {
   element.style.height = `${height}px`;
   element.style.width = `${width}px`;
-  element.style.width = `${width}px`;
   element.style.minWidth = `${width}px`;
 };
 const updateChildAfterCreated = (
@@ -98,7 +97,12 @@ export const addTempChild = <T>(
   child.classList.add(TEMP_CHILD_CLASS);
   setSizes(child, 0, 0);
   const distances = getDistance(droppable, draggedElement, direction);
-  setTranistion(child, animationDuration, timingFunction, "height, width");
+  setTranistion(
+    child,
+    animationDuration,
+    timingFunction,
+    "width, min-width, height"
+  );
   if (parent.isSameNode(droppable)) {
     setSizes(child, distances.height, distances.width);
   }
@@ -130,10 +134,23 @@ export const removeTempChildrens = (
       return;
     }
     const tempChildElement = tempChild as HTMLElement;
-    tempChildElement.style.width = "0px";
-    tempChildElement.style.height = "0px";
+    setSizes(tempChildElement, 0, 0);
     setTimeout(() => {
       tempChild.parentNode?.removeChild(tempChild);
+    }, animationDuration);
+  });
+};
+
+export const removeTempChild = (
+  parent: HTMLElement,
+  animationDuration: number
+) => {
+  var lastChildren = parent.querySelectorAll(`.${TEMP_CHILD_CLASS}`);
+  lastChildren.forEach((lastChild) => {
+    const tempChildElement = lastChild as HTMLElement;
+    setSizes(tempChildElement, 0, 0);
+    setTimeout(() => {
+      parent.removeChild(lastChild);
     }, animationDuration);
   });
 };
