@@ -143,14 +143,19 @@ export const removeTempChildrens = (
 
 export const removeTempChild = (
   parent: HTMLElement,
-  animationDuration: number
+  animationDuration: number,
+  isAnimated: boolean = false
 ) => {
   var lastChildren = parent.querySelectorAll(`.${TEMP_CHILD_CLASS}`);
   lastChildren.forEach((lastChild) => {
     const tempChildElement = lastChild as HTMLElement;
-    setSizes(tempChildElement, 0, 0);
-    setTimeout(() => {
+    if (isAnimated) {
+      setSizes(tempChildElement, 0, 0);
+      setTimeout(() => {
+        parent.removeChild(lastChild);
+      }, animationDuration);
+    } else {
       parent.removeChild(lastChild);
-    }, animationDuration);
+    }
   });
 };

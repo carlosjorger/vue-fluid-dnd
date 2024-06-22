@@ -413,7 +413,6 @@ export default function useDraggable<T>(
 }
 
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
-// TODO: refactor code and gzip
-// TODO: organize utils
+// TODO: refactor code and gzip, organize utils
 // TODO: add doc for case with input
 // TODO: add code for doc example

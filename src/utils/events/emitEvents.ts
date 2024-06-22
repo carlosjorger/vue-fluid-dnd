@@ -297,8 +297,7 @@ export default function useEmitEvents<T>(
     reduceTempchildSize(droppable);
     setTimeout(() => {
       element.classList.remove(DROPPING_CLASS);
-      removeTempChild(parent, animationDuration);
-      removeTempChild(droppable, animationDuration);
+      removeTempChildOnDroppables(parent, droppable);
       if (positionOnSourceDroppable != undefined) {
         const value = onRemoveAtEvent(positionOnSourceDroppable);
         if (value) {
@@ -310,6 +309,17 @@ export default function useEmitEvents<T>(
       removeTranslateFromSiblings(element, droppable);
     }, animationDuration);
   };
+  function removeTempChildOnDroppables(
+    parent: HTMLElement,
+    droppable: HTMLElement
+  ) {
+    if (parent.isSameNode(droppable)) {
+      removeTempChild(parent, animationDuration);
+    } else {
+      removeTempChild(parent, animationDuration, true);
+      removeTempChild(droppable, animationDuration);
+    }
+  }
   const reduceTempchildSize = (droppable: HTMLElement) => {
     if (parent.isSameNode(droppable)) {
       return;
