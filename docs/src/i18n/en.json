@@ -6,5 +6,6 @@
   "GROUP_VERTICAL_GROUP": "Group of vertical lists",
   "SINGLE_HORIZONTAL_LIST": "Horizontal list",
   "SINGLE_HORIZONTAL_LIST_AUTOSCROLL": "Horizontal list on a scroller",
-  "GROUP_HORIZONTAL_GROUP": "Group of horizontal lists"
+  "GROUP_HORIZONTAL_GROUP": "Group of horizontal lists",
+  "CODE_MESSAGE": "Vue + Tailwind code"
 }

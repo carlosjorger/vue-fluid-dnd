@@ -6,5 +6,6 @@
   "GROUP_VERTICAL_GROUP": "Grupo de listas verticales",
   "SINGLE_HORIZONTAL_LIST": "Lista horizontal",
   "SINGLE_HORIZONTAL_LIST_AUTOSCROLL": "Lista horizontal en un scroller",
-  "GROUP_HORIZONTAL_GROUP": "Grupo de listas horizontales"
+  "GROUP_HORIZONTAL_GROUP": "Grupo de listas horizontales",
+  "CODE_MESSAGE": "código Vue + Tailwind"
 }

@@ -197,6 +197,7 @@ export default function useDraggable<T>(
     const isOutside = draggableIsOutside(currentElement, droppable);
     return !isOutside || isOutsideOfAllDroppables(currentElement);
   };
+  //TODO: create a module about current config
   const getCurrentConfig = (event: DragMouseTouchEvent) => {
     const currentElement = childRef.value;
     if (!currentElement) {
@@ -415,4 +416,3 @@ export default function useDraggable<T>(
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
 // TODO: refactor code and gzip, organize utils
 // TODO: add doc for case with input
-// TODO: add code for doc example
