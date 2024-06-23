@@ -1,0 +1,14 @@
+---
+import AccordionVue from "@/components/Accordion.vue";
+import { Code } from "@astrojs/starlight/components";
+
+interface Props {
+   code: string;
+   buttonText:string;
+   fileName:string
+}
+const {code,buttonText, fileName}=Astro.props
+---
+<AccordionVue client:load buttonText={buttonText} >
+       <Code code={code} title={fileName} lang="vue" />
+</AccordionVue>
