@@ -1,4 +1,4 @@
-import { draggableIsOutside, getScroll } from "../utils/GetStyles";
+import { getScroll } from "../utils/GetStyles";
 import {
   AddCssStylesToElement,
   assignDraggingEvent,
@@ -14,8 +14,9 @@ import { CoreConfig } from ".";
 import useEmitEvents from "../utils/events/emitEvents";
 import { DraggingState } from "../utils";
 import ConfigHandler, { DroppableConfig } from "./configHandler";
-import { IsHTMLElement, isTouchEvent } from "../utils/touchDevice";
+import { isTouchEvent } from "../utils/touchDevice";
 import { addTempChild, removeTempChildrens } from "../utils/tempChildren";
+import { useConfig } from "../utils/useConfig";
 const DRAGGABLE_CLASS = "draggable";
 const HANDLER_CLASS = "handler-class";
 const DRAGGING_HANDLER_CLASS = "dragging-handler-class";
@@ -48,7 +49,6 @@ export default function useDraggable<T>(
 
   const fixedWidth = ref("");
   const fixedHeight = ref("");
-  const currentDroppableConfig = ref<DroppableConfig<T>>();
   const delayTimeout = ref<NodeJS.Timeout>();
   const { setTransform, updateTransformState } = useTransform(childRef);
   const { emitEventToSiblings, toggleDraggingClass } = useEmitEvents<T>(
@@ -120,9 +120,27 @@ export default function useDraggable<T>(
       image.onmousedown = () => false;
     });
   }
+  const setTransformDragEvent = () => {
+    const element = childRef.value as HTMLElement;
+    if (pagePosition.value.pageX == 0 && pagePosition.value.pageY == 0) {
+      return;
+    }
+    if (!currentDroppableConfig.value) {
+      return;
+    }
+    const { droppable, config } = currentDroppableConfig.value;
+    setTransform(element, droppable, pagePosition, config.direction);
+    emitEventToSiblings(
+      element,
+      DRAG_EVENT,
+      windowScroll.value,
+      currentDroppableConfig.value
+    );
+  };
+  const { updateConfig, currentDroppableConfig, getCurrentConfig } =
+    useConfig<T>(childRef, droppableGroupClass, parent, setTransformDragEvent);
   const onmousemove = function (event: DragMouseTouchEvent) {
-    currentDroppableConfig.value = getCurrentConfig(event);
-
+    updateConfig(event);
     if (draggingState.value === DraggingState.START_DRAGGING) {
       addTempChild(
         childRef.value,
@@ -154,81 +172,6 @@ export default function useDraggable<T>(
       draggingState.value,
       currentDroppableConfig.value
     );
-  };
-
-  const getDraggableAncestor = (
-    clientX: number,
-    clientY: number,
-    draggable: Element | null
-  ) => {
-    return document
-      .elementsFromPoint(clientX, clientY)
-      .filter((element) => !element.isSameNode(draggable));
-  };
-  const getCurrentDroppable = (
-    currentElement: HTMLElement,
-    event: DragMouseTouchEvent
-  ) => {
-    currentElement.hidden = true;
-    const [elementBelow] = getDraggableAncestor(
-      event.clientX,
-      event.clientY,
-      currentElement
-    );
-    currentElement.hidden = false;
-    if (!droppableGroupClass || !elementBelow) {
-      return;
-    }
-    const currentDroppable = elementBelow.closest(`.${droppableGroupClass}`);
-    return currentDroppable;
-  };
-  const isOutsideOfAllDroppables = (currentElement: HTMLElement) => {
-    const droppables = Array.from(
-      document.querySelectorAll(`.${droppableGroupClass}`)
-    );
-    return droppables.every((droppable) =>
-      draggableIsOutside(currentElement, droppable)
-    );
-  };
-  const isNotInsideAnotherDroppable = (
-    currentElement: HTMLElement,
-    droppable: HTMLElement
-  ) => {
-    const isOutside = draggableIsOutside(currentElement, droppable);
-    return !isOutside || isOutsideOfAllDroppables(currentElement);
-  };
-  //TODO: create a module about current config
-  const getCurrentConfig = (event: DragMouseTouchEvent) => {
-    const currentElement = childRef.value;
-    if (!currentElement) {
-      return;
-    }
-    if (
-      currentDroppableConfig.value &&
-      isNotInsideAnotherDroppable(
-        currentElement,
-        currentDroppableConfig.value?.droppable
-      )
-    ) {
-      return currentDroppableConfig.value;
-    }
-    if (
-      currentDroppableConfig.value &&
-      isNotInsideAnotherDroppable(
-        currentElement,
-        currentDroppableConfig.value?.droppable
-      )
-    ) {
-      return currentDroppableConfig.value;
-    }
-    const currentDroppable = getCurrentDroppable(currentElement, event);
-    if (!currentDroppable) {
-      return ConfigHandler.getConfig(parent);
-    }
-    if (IsHTMLElement(currentDroppable) && !currentDroppable.onscroll) {
-      makeScrollEventOnDroppable(currentDroppable);
-    }
-    return ConfigHandler.getConfig(currentDroppable);
   };
   const handlerMousemove = (event: MouseEvent | TouchEvent) => {
     if (isTouchEvent(event) && event.cancelable) {
@@ -276,6 +219,7 @@ export default function useDraggable<T>(
       clearTimeout(delayTimeout.value);
       onDropDraggingEvent();
       document.removeEventListener(moveEvent, handlerMousemove);
+      updateConfig(convertedEvent);
       const currentConfig = getCurrentConfig(convertedEvent);
       if (currentConfig) {
         const { droppable } = currentConfig;
@@ -327,23 +271,6 @@ export default function useDraggable<T>(
   };
   const onScrollEvent = () => {
     setTransformDragEvent();
-  };
-  const setTransformDragEvent = () => {
-    const element = childRef.value as HTMLElement;
-    if (pagePosition.value.pageX == 0 && pagePosition.value.pageY == 0) {
-      return;
-    }
-    if (!currentDroppableConfig.value) {
-      return;
-    }
-    const { droppable, config } = currentDroppableConfig.value;
-    setTransform(element, droppable, pagePosition, config.direction);
-    emitEventToSiblings(
-      element,
-      DRAG_EVENT,
-      windowScroll.value,
-      currentDroppableConfig.value
-    );
   };
   const onDropDraggingEvent = () => {
     if (draggingState.value !== DraggingState.DRAGING) {
