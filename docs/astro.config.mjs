@@ -114,6 +114,13 @@ export default defineConfig({
                 es: "Grupo de listas",
               },
             },
+            {
+              label: "List with inputs",
+              link: "/guides/listinputs/",
+              translations: {
+                es: "Listas con inputs",
+              },
+            },
           ],
           translations: {
             es: "Guía",
