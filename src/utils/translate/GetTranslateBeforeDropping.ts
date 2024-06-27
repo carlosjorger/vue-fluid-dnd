@@ -13,14 +13,19 @@ import {
   getTransform,
 } from "../GetStyles";
 import { gapAndDisplayInformation, getBeforeStyles } from "../ParseStyles";
-
 const getGroupDraggedTranslate = (
   firstElement: Element,
-  draggable: HTMLElement,
-  direction: Direction
+  draggable: HTMLElement
 ) => {
-  console.log(direction);
-  const { beforeMargin: beforeMarginVertical } = getPropByDirection("vertical");
+  const droppableSource = draggable.parentElement;
+  const prevDraggable = draggable.previousElementSibling;
+  if (!droppableSource) {
+    return { x: 0, y: 0 };
+  }
+  const {
+    beforeMargin: beforeMarginVertical,
+    afterMargin: afterMarginVertical,
+  } = getPropByDirection("vertical");
   const { beforeMargin: beforeMarginHorizontal } =
     getPropByDirection("horizontal");
 
@@ -29,7 +34,22 @@ const getGroupDraggedTranslate = (
     beforeMarginVertical
   );
 
+  const afterMarginVerticalPrevDraggable = getMarginStyleByProperty(
+    prevDraggable,
+    afterMarginVertical
+  );
+
+  const beforeMarginVerticalFirstElement = getMarginStyleByProperty(
+    firstElement,
+    beforeMarginVertical
+  );
+
   const beforeMarginHorizontalValue = getMarginStyleByProperty(
+    draggable,
+    beforeMarginHorizontal
+  );
+
+  const beforeMarginHorizontalFirstElement = getMarginStyleByProperty(
     firstElement,
     beforeMarginHorizontal
   );
@@ -39,18 +59,29 @@ const getGroupDraggedTranslate = (
     firstElement.getBoundingClientRect();
 
   const { x, y } = getTransform(firstElement);
-  // TODO: fix dropping ot first position in mixed elements
-  console.log(
-    firstElementTop -
-      getMarginStyleByProperty(firstElement, beforeMarginVertical) -
-      y -
-      (top - beforeMarginVerticalValue) -
-      13,
-    firstElementTop - top - y - beforeMarginVerticalValue - 25
-  );
+  // TODO: calcultate space of prev siblings before draggable
+  const marginDiffVertical =
+    beforeMarginVerticalFirstElement -
+    Math.max(beforeMarginVerticalValue - afterMarginVerticalPrevDraggable, 0);
+
+  const marginDiffHorizontal =
+    beforeMarginHorizontalFirstElement -
+    Math.max(
+      beforeMarginHorizontalValue - beforeMarginHorizontalFirstElement,
+      0
+    );
+
   return {
-    y: firstElementTop - top - y - beforeMarginVerticalValue,
-    x: firstElementLeft - left - x - beforeMarginHorizontalValue,
+    y:
+      firstElementTop -
+      y -
+      (top + beforeMarginVerticalValue) -
+      marginDiffVertical,
+    x:
+      firstElementLeft -
+      x -
+      (left + beforeMarginHorizontalValue) -
+      marginDiffHorizontal,
   };
 };
 export default function getTranslateBeforeDropping(
@@ -80,11 +111,7 @@ export default function getTranslateBeforeDropping(
   if (sourceIndex < 0 && draggable) {
     isGroupDropping = true;
     const [firstElement] = siblings;
-    const { x, y } = getGroupDraggedTranslate(
-      firstElement,
-      draggable,
-      direction
-    );
+    const { x, y } = getGroupDraggedTranslate(firstElement, draggable);
     height += y;
     width += x;
   }

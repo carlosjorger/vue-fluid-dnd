@@ -5,7 +5,7 @@ const listWithMixedStyles = ref([
   {
     number: 3,
     style:
-      "color: white; background-color: green; padding: 26px 0; margin: 26px; margin-left: 100px;",
+      "color: white; background-color: green; padding: 26px 0; margin-top: 26px; margin-bottom: 40px; ,margin-left: 0px;",
   },
   {
     number: 5,
@@ -15,7 +15,7 @@ const listWithMixedStyles = ref([
   {
     number: 1,
     style:
-      "color: white; background-color: red; padding: 20px 0; margin: 23px 0;",
+      "color: white; background-color: red; padding: 10px 0; margin: 23px;",
   },
 
   {
@@ -39,7 +39,7 @@ const listWithMixedStylesAndGaps = ref([
   {
     number: 4,
     style:
-      "color: white; background-color: brown; padding: 26px 0; margin: 27px;",
+      "color: white; background-color: brown; padding: 26px 0; margin-bottom: 100px; margin-top:100px",
   },
   {
     number: 1,
