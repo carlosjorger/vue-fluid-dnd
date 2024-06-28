@@ -14,6 +14,7 @@ export const getConfig = <T>(
   const DEFAULT_CONFIG = {
     direction: VERTICAL,
     handlerSelector: "draggable",
+    draggingClass: "dragging",
     isDraggable: () => true,
     onRemoveAtEvent,
     onInsertEvent,
@@ -26,6 +27,7 @@ export const getConfig = <T>(
   return {
     direction: config.direction ?? DEFAULT_CONFIG.direction,
     handlerSelector: config.handlerSelector ?? DEFAULT_CONFIG.handlerSelector,
+    draggingClass: config.draggingClass ?? DEFAULT_CONFIG.draggingClass,
     isDraggable: config.isDraggable ?? DEFAULT_CONFIG.isDraggable,
     droppableGroup: config.droppableGroup,
     onRemoveAtEvent,

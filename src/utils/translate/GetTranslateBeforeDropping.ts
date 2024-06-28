@@ -60,6 +60,7 @@ const getGroupDraggedTranslate = (
 
   const { x, y } = getTransform(firstElement);
   // TODO: calcultate space of prev siblings before draggable
+
   const marginDiffVertical =
     beforeMarginVerticalFirstElement -
     Math.max(beforeMarginVerticalValue - afterMarginVerticalPrevDraggable, 0);

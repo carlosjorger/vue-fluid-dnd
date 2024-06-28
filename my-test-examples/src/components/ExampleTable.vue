@@ -11,7 +11,9 @@ const table = ref<Person[]>([
   { name: "Jorgito", age: 34, alias: "Pipo" },
   { name: "Ivis", age: 68, alias: "Mamá" },
 ]);
-const { parent } = useDragAndDrop<Person>(table);
+const { parent } = useDragAndDrop<Person>(table, {
+  draggingClass: "drag-row",
+});
 </script>
 <template>
   <table>
@@ -31,17 +33,27 @@ const { parent } = useDragAndDrop<Person>(table);
     </tbody>
   </table>
 </template>
-<style>
+<style scoped>
 table {
   width: 400px;
+  /*border-collapse: collapse;*/
+  border-spacing: 5px;
+  background-color: pink;
 }
 .dragging {
   display: table;
 }
 table tbody tr {
   display: table-row;
+  background-color: red;
+  transition: background-color 200ms ease;
 }
 table tbody tr td {
   width: 80px;
+}
+.drag-row {
+  display: table;
+  background-color: aqua;
+  transition: background-color 200ms ease;
 }
 </style>

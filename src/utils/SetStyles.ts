@@ -183,11 +183,11 @@ export const setEventWithInterval = (
     callback();
   };
 };
-const getStyles = () => {
-  var style = document.querySelector("style");
+const getStyles = (node: ParentNode) => {
+  var style = node.querySelector("style");
   if (!style) {
     var newStyle = document.createElement("style");
-    document.appendChild(newStyle);
+    node.appendChild(newStyle);
     return newStyle;
   }
   return style;
@@ -203,14 +203,14 @@ const containRule = (sheet: CSSStyleSheet, cssCode: string) => {
   }
   return false;
 };
-export const AddCssStylesToElement = (cssCodes: string[]) => {
+export const AddCssStylesToElement = (node: ParentNode, cssCodes: string[]) => {
   cssCodes.forEach((cssCode) => {
-    AddCssStyleToElement(cssCode);
+    AddCssStyleToElement(node, cssCode);
   });
 };
 
-const AddCssStyleToElement = (cssCode: string) => {
-  var style = getStyles();
+const AddCssStyleToElement = (node: ParentNode, cssCode: string) => {
+  var style = getStyles(node);
   if (!style.sheet) {
     return;
   }

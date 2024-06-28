@@ -17,7 +17,6 @@ import { IsHTMLElement } from "../touchDevice";
 import { removeTempChild } from "../tempChildren";
 
 const DRAGGING_HANDLER_CLASS = "dragging-handler-class";
-const DRAGING_CLASS = "dragging";
 const DRAGGABLE_CLASS = "draggable";
 const TEMP_CHILD_CLASS = "temp-child";
 const START_DROP_EVENT = "startDrop";
@@ -39,8 +38,13 @@ export default function useEmitEvents<T>(
   parent: HTMLElement
 ) {
   const actualIndex = ref(index);
-  const { direction, handlerSelector, onRemoveAtEvent, animationDuration } =
-    currentConfig;
+  const {
+    direction,
+    handlerSelector,
+    onRemoveAtEvent,
+    animationDuration,
+    draggingClass,
+  } = currentConfig;
   const emitEventToSiblings = (
     draggedElement: HTMLElement,
     event: DragAndDropEvent,
@@ -367,7 +371,7 @@ export default function useEmitEvents<T>(
     }
   };
   const toggleDraggingClass = (element: Element, force: boolean) => {
-    element.classList.toggle(DRAGING_CLASS, force);
+    element.classList.toggle(draggingClass, force);
     toogleHandlerDraggingClass(force, element);
   };
   return { emitEventToSiblings, toggleDraggingClass };

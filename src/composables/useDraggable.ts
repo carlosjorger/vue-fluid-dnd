@@ -33,8 +33,13 @@ export default function useDraggable<T>(
   config: CoreConfig<T>,
   parent: HTMLElement
 ) {
-  const { handlerSelector, isDraggable, droppableGroup, animationDuration } =
-    config;
+  const {
+    handlerSelector,
+    isDraggable,
+    droppableGroup,
+    animationDuration,
+    draggingClass,
+  } = config;
   const droppableGroupClass = droppableGroup
     ? `droppable-group-${droppableGroup}`
     : null;
@@ -50,7 +55,10 @@ export default function useDraggable<T>(
   const fixedWidth = ref("");
   const fixedHeight = ref("");
   const delayTimeout = ref<NodeJS.Timeout>();
-  const { setTransform, updateTransformState } = useTransform(childRef);
+  const { setTransform, updateTransformState } = useTransform(
+    childRef,
+    draggingClass
+  );
   const { emitEventToSiblings, toggleDraggingClass } = useEmitEvents<T>(
     config,
     draggingState,
@@ -75,12 +83,12 @@ export default function useDraggable<T>(
     }
   };
   const setCssStyles = () => {
-    AddCssStylesToElement([
+    AddCssStylesToElement(document, [
       `.${DRAGGABLE_CLASS} { touch-action: manipulation; user-select: none; box-sizing: border-box !important; -webkit-user-select: none; }`,
       `.${HANDLER_CLASS} { cursor: grab; pointer-events: auto !important; }`,
       ".temp-child { touch-action: none; pointer-events: none; box-sizing: border-box !important; }",
       `.droppable { box-sizing: border-box !important; }`,
-      `.dragging { position: fixed; z-index: 5000; width: var(--fixedWidth) !important; height: var(--fixedHeight) !important; }`,
+      `.${draggingClass} { position: fixed; z-index: 5000; width: var(--fixedWidth) !important; height: var(--fixedHeight) !important; }`,
       `.${DRAGGING_HANDLER_CLASS} { cursor: grabbing; cursor: grabbing; }`,
       `.${DROPPING_CLASS} { pointer-events: none !important; }`,
     ]);
@@ -341,5 +349,4 @@ export default function useDraggable<T>(
 
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
 // TODO: refactor code and gzip, organize utils
-// TODO: make works with border-spacing
-// TODO: order table rows
+// TODO: make works with border-spacing https://stackoverflow.com/questions/61086152/why-does-a-fixed-position-table-move-the-first-1px-of-a-border-when-scrolling

@@ -10,7 +10,10 @@ import { Direction } from "../composables";
 import { scrollByDirection } from "./scroll";
 const HANDLER_CLASS = "handler-class";
 
-export const useTransform = (childRef: Ref<HTMLElement | undefined>) => {
+export const useTransform = (
+  childRef: Ref<HTMLElement | undefined>,
+  draggingClass: string
+) => {
   const currentOffset = ref({ offsetX: 0, offsetY: 0 });
   const position = ref({ top: 0, left: 0 });
   const translate = ref({ x: 0, y: 0 });
@@ -84,7 +87,7 @@ export const useTransform = (childRef: Ref<HTMLElement | undefined>) => {
     const updateScroll = (translateDirection: Direction) => {
       if (
         element &&
-        element.classList.contains("dragging") &&
+        element.classList.contains(draggingClass) &&
         translateDirection === direction
       ) {
         const { before, distance, axis } = getPropByDirection(direction);
