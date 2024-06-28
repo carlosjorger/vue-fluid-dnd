@@ -93,7 +93,8 @@ export const addTempChild = <T>(
   if (droppable.querySelector(`.${TEMP_CHILD_CLASS}`) || !draggedElement) {
     return;
   }
-  var child = document.createElement("div");
+
+  var child = document.createElement(draggedElement.tagName);
   child.classList.add(TEMP_CHILD_CLASS);
   setSizes(child, 0, 0);
   const distances = getDistance(droppable, draggedElement, direction);

@@ -183,11 +183,11 @@ export const setEventWithInterval = (
     callback();
   };
 };
-const getStyles = (element: HTMLElement) => {
-  var style = element.querySelector("style");
+const getStyles = () => {
+  var style = document.querySelector("style");
   if (!style) {
     var newStyle = document.createElement("style");
-    element.appendChild(newStyle);
+    document.appendChild(newStyle);
     return newStyle;
   }
   return style;
@@ -203,17 +203,14 @@ const containRule = (sheet: CSSStyleSheet, cssCode: string) => {
   }
   return false;
 };
-export const AddCssStylesToElement = (
-  element: HTMLElement,
-  cssCodes: string[]
-) => {
+export const AddCssStylesToElement = (cssCodes: string[]) => {
   cssCodes.forEach((cssCode) => {
-    AddCssStyleToElement(element, cssCode);
+    AddCssStyleToElement(cssCode);
   });
 };
 
-const AddCssStyleToElement = (element: HTMLElement, cssCode: string) => {
-  var style = getStyles(element);
+const AddCssStyleToElement = (cssCode: string) => {
+  var style = getStyles();
   if (!style.sheet) {
     return;
   }

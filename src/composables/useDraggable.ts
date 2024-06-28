@@ -75,11 +75,10 @@ export default function useDraggable<T>(
     }
   };
   const setCssStyles = () => {
-    AddCssStylesToElement(parent, [
+    AddCssStylesToElement([
       `.${DRAGGABLE_CLASS} { touch-action: manipulation; user-select: none; box-sizing: border-box !important; -webkit-user-select: none; }`,
       `.${HANDLER_CLASS} { cursor: grab; pointer-events: auto !important; }`,
-      ".temp-child { display: block ;touch-action: none; pointer-events: none; box-sizing: border-box !important; }",
-      ".temp-child { display: block ;touch-action: none; pointer-events: none; box-sizing: border-box !important; }",
+      ".temp-child { touch-action: none; pointer-events: none; box-sizing: border-box !important; }",
       `.droppable { box-sizing: border-box !important; }`,
       `.dragging { position: fixed; z-index: 5000; width: var(--fixedWidth) !important; height: var(--fixedHeight) !important; }`,
       `.${DRAGGING_HANDLER_CLASS} { cursor: grabbing; cursor: grabbing; }`,
@@ -342,4 +341,5 @@ export default function useDraggable<T>(
 
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
 // TODO: refactor code and gzip, organize utils
+// TODO: make works with border-spacing
 // TODO: order table rows
