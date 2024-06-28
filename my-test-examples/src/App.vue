@@ -9,6 +9,7 @@ import ExampleVerticalListWithHandler from "./components/ExampleVerticalListWith
 import ExampleGroupOflist from "./components/ExampleGroupOflist.vue";
 import ExampleGroupOfListWithStyles from "./components/ExampleGroupOfListWithStyles.vue";
 // import ExampleOfPokemonList from "./components/ExampleOfPokemonList.vue";
+import ExampleTable from "./components/ExampleTable.vue";
 </script>
 
 <template>
@@ -28,6 +29,7 @@ import ExampleGroupOfListWithStyles from "./components/ExampleGroupOfListWithSty
   </div>
   <ExampleGroupOflist id="example-group-list" />
   <!-- <ExampleOfPokemonList id="example-pokemon-list" /> -->
+  <ExampleTable />
 </template>
 <style>
 .example-cols {
