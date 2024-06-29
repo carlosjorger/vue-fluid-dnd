@@ -54,6 +54,9 @@ export default function useDraggable<T>(
 
   const fixedWidth = ref("");
   const fixedHeight = ref("");
+  const fixedBorderSpacingHorizontal = ref("");
+  const fixedBorderSpacingVertical = ref("");
+
   const delayTimeout = ref<NodeJS.Timeout>();
   const { setTransform, updateTransformState } = useTransform(
     childRef,
@@ -303,17 +306,16 @@ export default function useDraggable<T>(
     moveTranslate(element, 0, 0);
   };
   const setDraggingStyles = (element: HTMLElement) => {
+    const { borderSpacing } = getComputedStyle(parent);
     const { height, width } = element.getBoundingClientRect();
     fixedHeight.value = `${height}px`;
     fixedWidth.value = `${width}px`;
+    fixedBorderSpacingHorizontal.value = borderSpacing;
     toggleDraggingClass(element, true);
     element.style.transition = "";
   };
 
-  const createWatchOfFixedSize = (
-    fixedSize: Ref<string>,
-    fixedProp: string
-  ) => {
+  const createWatchOfStyle = (fixedSize: Ref<string>, fixedProp: string) => {
     watch(fixedSize, (newFixedSize) => {
       const childElement = childRef.value;
       if (childElement) {
@@ -340,8 +342,16 @@ export default function useDraggable<T>(
     }
   };
   watch(currentDroppableConfig, changeDroppable, { deep: true });
-  createWatchOfFixedSize(fixedWidth, "--fixedWidth");
-  createWatchOfFixedSize(fixedHeight, "--fixedHeight");
+  createWatchOfStyle(fixedWidth, "--fixedWidth");
+  createWatchOfStyle(fixedHeight, "--fixedHeight");
+  createWatchOfStyle(
+    fixedBorderSpacingHorizontal,
+    "--fixedBorderSpacingHorizontal"
+  );
+  createWatchOfStyle(
+    fixedBorderSpacingVertical,
+    "--fixedBorderSpacingVertical"
+  );
 
   setCssStyles();
   setSlotRefElementParams(childRef.value);
