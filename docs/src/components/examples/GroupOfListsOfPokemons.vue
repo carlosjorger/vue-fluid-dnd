@@ -14,13 +14,18 @@ pokemon2G.value = await fetchPokemons(9, 151);
 const pokemon3G = ref([] as Pokemon[]);
 pokemon3G.value = await fetchPokemons(9, 251);
 
-const { parent } = useDragAndDrop(pokemons, { droppableGroup: "group" });
+const { parent } = useDragAndDrop(pokemons, {
+  droppableGroup: "group",
+  draggingClass: "dragging-pokemon",
+});
 const { parent: parent2 } = useDragAndDrop(pokemon2G, {
   droppableGroup: "group",
+  draggingClass: "dragging-pokemon",
 });
 
 const { parent: parent3 } = useDragAndDrop(pokemon3G, {
   droppableGroup: "group",
+  draggingClass: "dragging-pokemon",
 });
 </script>
 <template>

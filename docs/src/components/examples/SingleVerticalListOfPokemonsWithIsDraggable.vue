@@ -22,6 +22,7 @@ const getSize = (weight: number) => {
 };
 const { parent } = useDragAndDrop(pokemons, {
   isDraggable: (el) => !el.classList.contains("is-not-draggable"),
+  draggingClass: "dragging-pokemon",
 });
 </script>
 <template>
