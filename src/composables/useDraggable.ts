@@ -54,8 +54,6 @@ export default function useDraggable<T>(
 
   const fixedWidth = ref("");
   const fixedHeight = ref("");
-  const fixedBorderSpacingHorizontal = ref("");
-  const fixedBorderSpacingVertical = ref("");
 
   const delayTimeout = ref<NodeJS.Timeout>();
   const { setTransform, updateTransformState } = useTransform(
@@ -306,11 +304,9 @@ export default function useDraggable<T>(
     moveTranslate(element, 0, 0);
   };
   const setDraggingStyles = (element: HTMLElement) => {
-    const { borderSpacing } = getComputedStyle(parent);
     const { height, width } = element.getBoundingClientRect();
     fixedHeight.value = `${height}px`;
     fixedWidth.value = `${width}px`;
-    fixedBorderSpacingHorizontal.value = borderSpacing;
     toggleDraggingClass(element, true);
     element.style.transition = "";
   };
@@ -344,19 +340,9 @@ export default function useDraggable<T>(
   watch(currentDroppableConfig, changeDroppable, { deep: true });
   createWatchOfStyle(fixedWidth, "--fixedWidth");
   createWatchOfStyle(fixedHeight, "--fixedHeight");
-  createWatchOfStyle(
-    fixedBorderSpacingHorizontal,
-    "--fixedBorderSpacingHorizontal"
-  );
-  createWatchOfStyle(
-    fixedBorderSpacingVertical,
-    "--fixedBorderSpacingVertical"
-  );
-
   setCssStyles();
   setSlotRefElementParams(childRef.value);
 }
 
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
 // TODO: refactor code and gzip, organize utils
-// TODO: make works with border-spacing https://stackoverflow.com/questions/61086152/why-does-a-fixed-position-table-move-the-first-1px-of-a-border-when-scrolling

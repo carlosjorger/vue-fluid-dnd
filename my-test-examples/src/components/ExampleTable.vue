@@ -36,8 +36,7 @@ const { parent } = useDragAndDrop<Person>(table, {
 <style scoped>
 table {
   width: 400px;
-  /*border-collapse: collapse;*/
-  border-spacing: 5px;
+  border-collapse: collapse;
   background-color: pink;
 }
 .dragging {
