@@ -121,6 +121,13 @@ export default defineConfig({
                 es: "Listas con inputs",
               },
             },
+            {
+              label: "Dragging styles",
+              link: "/guides/draggingclass/",
+              translations: {
+                es: "Estilos al arrastrar",
+              },
+            },
           ],
           translations: {
             es: "Guía",
