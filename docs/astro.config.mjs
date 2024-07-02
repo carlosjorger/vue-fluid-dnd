@@ -128,6 +128,13 @@ export default defineConfig({
                 es: "Estilos al arrastrar",
               },
             },
+            {
+              label: "Sorting tables",
+              link: "/guides/sortingtable/",
+              translations: {
+                es: "Ordenar tablas",
+              },
+            },
           ],
           translations: {
             es: "Guía",
