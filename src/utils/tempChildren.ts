@@ -9,6 +9,7 @@ import { observeMutation } from "./observer";
 import getTranslationByDragging from "./translate/GetTranslationByDraggingAndEvent";
 import { scrollPercent } from "./scroll";
 import { DraggingState } from ".";
+import { getClassesSelector } from "./dom/classList";
 
 const TEMP_CHILD_CLASS = "temp-child";
 const START_DRAG_EVENT = "startDrag";
@@ -127,7 +128,7 @@ export const removeTempChildrens = (
     return;
   }
   var children = document.querySelectorAll(
-    `.${droppableGroupClass} .${TEMP_CHILD_CLASS}`
+    `${getClassesSelector(droppableGroupClass)}.${TEMP_CHILD_CLASS}`
   );
   children.forEach((tempChild) => {
     const childParent = tempChild.parentElement;

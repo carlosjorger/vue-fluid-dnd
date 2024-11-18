@@ -1,6 +1,7 @@
 import { ElementScroll } from "../../index";
 import { CoreConfig } from ".";
 import { getScrollElement } from "../utils/GetStyles";
+import { containstClasses } from "../utils/dom/classList";
 
 export type DroppableConfig<T> = {
   droppable: HTMLElement;
@@ -33,9 +34,10 @@ export default class ConfigHandler {
   ) {
     for (const configHandler of ConfigHandler.configs) {
       const { droppable } = configHandler;
+
       if (
         (droppableGroupClass &&
-          droppable.classList.contains(droppableGroupClass)) ||
+          containstClasses(droppable, droppableGroupClass)) ||
         droppable.isSameNode(currentDroppable)
       ) {
         configHandler.droppableScroll = getScrollElement(droppable);

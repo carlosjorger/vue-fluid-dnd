@@ -17,6 +17,7 @@ import ConfigHandler, { DroppableConfig } from "./configHandler";
 import { isTouchEvent } from "../utils/touchDevice";
 import { addTempChild, removeTempChildrens } from "../utils/tempChildren";
 import { useConfig } from "../utils/useConfig";
+import { getClassesSelector } from "../utils/dom/classList";
 const DRAGGABLE_CLASS = "draggable";
 const HANDLER_CLASS = "handler-class";
 const DRAGGING_HANDLER_CLASS = "dragging-handler-class";
@@ -242,7 +243,7 @@ export default function useDraggable<T>(
       return;
     }
     const droppables = Array.from(
-      document.querySelectorAll(`.${droppableGroupClass}`)
+      document.querySelectorAll(getClassesSelector(droppableGroupClass))
     );
     for (const droppable of droppables) {
       if (droppable instanceof HTMLElement) {
@@ -346,4 +347,4 @@ export default function useDraggable<T>(
 
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
 //https://github.com/iamstevendao/vue-tel-input/blob/main/.github/workflows/deploy.yml
-// TODO: refactor code and gzip, organize utils
+// TODO: use multiple droppableGroupClass classes

@@ -4,6 +4,7 @@ import { DragMouseTouchEvent } from "../../index";
 import { draggableIsOutside } from "./GetStyles";
 import { IsHTMLElement } from "./touchDevice";
 import { setEventWithInterval } from "./SetStyles";
+import { getClassesSelector } from "./dom/classList";
 
 export function useConfig<T>(
   childRef: Ref<HTMLElement | undefined>,
@@ -35,12 +36,14 @@ export function useConfig<T>(
     if (!droppableGroupClass || !elementBelow) {
       return;
     }
-    const currentDroppable = elementBelow.closest(`.${droppableGroupClass}`);
+    const currentDroppable = elementBelow.closest(
+      getClassesSelector(droppableGroupClass)
+    );
     return currentDroppable;
   }
   function isOutsideOfAllDroppables(currentElement: HTMLElement) {
     const droppables = Array.from(
-      document.querySelectorAll(`.${droppableGroupClass}`)
+      document.querySelectorAll(getClassesSelector(droppableGroupClass))
     );
     return droppables.every((droppable) =>
       draggableIsOutside(currentElement, droppable)
