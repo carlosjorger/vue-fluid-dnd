@@ -28,7 +28,7 @@ const { parent: parent41 } = useDragAndDrop<number>(numbers4 as any, {
 
 const list = ref([1, 2, 3, 4]);
 const { parent: parent4 } = useDragAndDrop<number>(list as any, {
-  droppableGroup: "group2",
+  droppableGroup: "group2 group3",
 });
 
 const list2 = ref([1, 2, 3, 4]);

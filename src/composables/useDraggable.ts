@@ -17,7 +17,11 @@ import ConfigHandler, { DroppableConfig } from "./configHandler";
 import { isTouchEvent } from "../utils/touchDevice";
 import { addTempChild, removeTempChildrens } from "../utils/tempChildren";
 import { useConfig } from "../utils/useConfig";
-import { getClassesSelector } from "../utils/dom/classList";
+import {
+  addMultipleClasses,
+  getClassesList,
+  getClassesSelector,
+} from "../utils/dom/classList";
 const DRAGGABLE_CLASS = "draggable";
 const HANDLER_CLASS = "handler-class";
 const DRAGGING_HANDLER_CLASS = "dragging-handler-class";
@@ -41,9 +45,9 @@ export default function useDraggable<T>(
     animationDuration,
     draggingClass,
   } = config;
-  const droppableGroupClass = droppableGroup
-    ? `droppable-group-${droppableGroup}`
-    : null;
+  const droppableGroupClass = getClassesList(droppableGroup)
+    .map((classGroup) => `droppable-group-${classGroup}`)
+    .join(" ");
   const draggingState = ref<DraggingState>(DraggingState.NOT_DRAGGING);
   const childRef = ref(child);
   const scroll = ref({ scrollLeft: 0, scrollTop: 0 });
@@ -100,7 +104,7 @@ export default function useDraggable<T>(
   };
   const setDroppableGroupClass = () => {
     if (droppableGroupClass) {
-      parent.classList.add(droppableGroupClass);
+      addMultipleClasses(parent, droppableGroupClass);
     }
   };
 
