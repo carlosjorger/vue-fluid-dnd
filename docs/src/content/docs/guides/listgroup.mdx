@@ -4,6 +4,8 @@ description: A guide to use Vue Fluid DnD with group of lists.
 ---
 
 import ListGroup from "@/components/ListGroup.vue";
+import ListGroups from "@/components/ListGroups.vue";
+
 import { Code } from "@astrojs/starlight/components";
 
 ### List of number example
@@ -15,8 +17,8 @@ export const highlightsListOfNumbers = ["droppableGroup", "group1"];
 
 export const listOfNumbers = `<script setup lang="ts">
 ...
-const list = ref([1, 2, 3, 4]);
-const { parent: parent1 } = useDragAndDrop(list, {
+const list1 = ref([1, 2, 3, 4]);
+const { parent: parent1 } = useDragAndDrop(list1, {
   droppableGroup: "group1",
 });
 ...
@@ -39,7 +41,7 @@ export const listOfNumbersDraggable = `
     <ul ref="parent1" class="number-list">
       <li
         class="number"
-        v-for="(element, index) in list"
+        v-for="(element, index) in list1"
         :index
         :key="element"
       >
@@ -71,4 +73,44 @@ export const highlightsDraggable = ["parent1", "parent2"];
 
 <div class="pl-8">
   <ListGroup client:load />
+</div>
+
+## More than one group
+
+A list can belong to more than one group. So, you can only drag and drop element from one list to another
+if the groups to which the list belongs are found in the other.
+
+Example: If the list **A** belongs to **G1** group and the list **B** belongs to **G1** and **G2** groups.
+You can only drag elements from the list **A** to **B** not the other way around.
+
+### Example
+
+We'll change the early code adding another group:
+
+export const highlightsListOfNumbersGroups = ["group2"];
+
+export const listOfNumbersGroups = `<script setup lang="ts">
+...
+const list1 = ref([1, 2, 3, 4]);
+const { parent: parent1 } = useDragAndDrop(list1, {
+  droppableGroup: "group1",
+});
+...
+const list2 = ref([5, 6, 7, 8]);
+const { parent: parent2 } = useDragAndDrop(list2, {
+  droppableGroup: "group1 group2",
+  direction: "horizontal",
+});
+</script>`;
+
+<Code
+  code={listOfNumbersGroups}
+  lang="vue"
+  mark={highlightsListOfNumbersGroups}
+/>
+
+### Preview
+
+<div class="pl-8">
+  <ListGroups client:load />
 </div>
