@@ -4,6 +4,7 @@ description: Una guía para usar Vue Fluid DnD con un grupo de listas.
 ---
 
 import ListGroup from "@/components/ListGroup.vue";
+import ListGroups from "@/components/ListGroups.vue";
 import { Code } from "@astrojs/starlight/components";
 
 ### Ejemplo de listas de números
@@ -71,4 +72,44 @@ export const highlightsDraggable = ["parent1", "parent2"];
 
 <div class="pl-8">
   <ListGroup client:load />
+</div>
+
+## Más de un grupo
+
+Una lista puede pertenecer a más de un grupo. Tu solo puedes arrastrar elementos de una lista a otra
+si estos grupos a los cuales pertenece se encuentran en la otra lista.
+
+Ejemplo: Si la lista **A** pertenece al grupo **G1** y la lista **B** a los grupos **G1** y **G2**.
+Tu solo puede arrastrar elementos de la lista **A** a la **B** no al revés.
+
+### Ejemplo
+
+Cambiaremos el código anterior adding otro grupo:
+
+export const highlightsListOfNumbersGroups = ["group2"];
+
+export const listOfNumbersGroups = `<script setup lang="ts">
+...
+const list1 = ref([1, 2, 3, 4]);
+const { parent: parent1 } = useDragAndDrop(list1, {
+  droppableGroup: "group1",
+});
+...
+const list2 = ref([5, 6, 7, 8]);
+const { parent: parent2 } = useDragAndDrop(list2, {
+  droppableGroup: "group1 group2",
+  direction: "horizontal",
+});
+</script>`;
+
+<Code
+  code={listOfNumbersGroups}
+  lang="vue"
+  mark={highlightsListOfNumbersGroups}
+/>
+
+### Preview
+
+<div class="pl-8">
+  <ListGroups client:load />
 </div>
