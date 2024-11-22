@@ -10,6 +10,7 @@ import ExampleGroupOflist from "./components/ExampleGroupOflist.vue";
 import ExampleGroupOfListWithStyles from "./components/ExampleGroupOfListWithStyles.vue";
 // import ExampleOfPokemonList from "./components/ExampleOfPokemonList.vue";
 import ExampleTable from "./components/ExampleTable.vue";
+import ExampleListWithRemove from "./components/ExampleListWithRemove.vue";
 </script>
 
 <template>
@@ -30,6 +31,7 @@ import ExampleTable from "./components/ExampleTable.vue";
   <ExampleGroupOflist id="example-group-list" />
   <!-- <ExampleOfPokemonList id="example-pokemon-list" /> -->
   <ExampleTable />
+  <ExampleListWithRemove id="example-lists-with-remove" />
 </template>
 <style>
 .example-cols {

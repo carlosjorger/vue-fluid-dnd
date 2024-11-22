@@ -342,11 +342,18 @@ export default function useDraggable<T>(
       );
     }
   };
+
+  function removeAtFromElement(targetIndex: number) {
+    console.log(
+      `remove element on positom ${targetIndex} from element ${index}`
+    );
+  }
   watch(currentDroppableConfig, changeDroppable, { deep: true });
   createWatchOfStyle(fixedWidth, "--fixedWidth");
   createWatchOfStyle(fixedHeight, "--fixedHeight");
   setCssStyles();
   setSlotRefElementParams(childRef.value);
+  return { removeAtFromElement };
 }
 
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7

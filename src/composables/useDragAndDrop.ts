@@ -13,12 +13,17 @@ import { getConfig } from "../utils/config";
  * @template T - Type of the items.
  * @param items - List of data to drag and drop.
  * @param config - Configuration of drag and drop tool.
- * @returns The reference of the parent element.
+ * @returns The reference of the parent element and function to remove an element.
  */
 export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
   const INDEX_ATTR = "index";
   const parent = ref<HTMLElement | undefined>();
-
+  const removeAtFromElements = [] as ((index: number) => void)[];
+  function removeAt(index: number) {
+    for (const removeAtFromElement of removeAtFromElements) {
+      removeAtFromElement(index);
+    }
+  }
   const getOnRemoveAtEvent = (items: Ref<T[]>) => {
     return (index: number) => {
       return removeAtEventOnList(items, index);
@@ -42,12 +47,13 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
       const childHTMLElement = child as HTMLElement;
 
       if (childHTMLElement && numberIndex >= 0) {
-        useDraggable(
+        const { removeAtFromElement } = useDraggable(
           childHTMLElement,
           numberIndex,
           getConfig(onRemoveAtEvent, onInsertEvent, config),
           parent.value
         );
+        removeAtFromElements.push(removeAtFromElement);
       }
     }
   };
@@ -83,5 +89,5 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
     makeChildrensDraggable();
     ConfigHandler.removeObsoleteConfigs();
   });
-  return { parent };
+  return { parent, removeAt };
 }
