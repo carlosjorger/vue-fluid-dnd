@@ -69,6 +69,7 @@ export default function useDraggable<T>(
   const {
     emitEventToSiblings,
     emitRemoveEventToSiblings,
+    emitFinishRemoveEventToSiblings,
     toggleDraggingClass,
   } = useEmitEvents<T>(
     config,
@@ -357,6 +358,10 @@ export default function useDraggable<T>(
       );
       onRemoveAtEvent(index);
     }
+    setTimeout(() => {
+      removeDraggingStyles(childRef.value);
+      emitFinishRemoveEventToSiblings(childRef.value);
+    }, animationDuration);
   }
   watch(currentDroppableConfig, changeDroppable, { deep: true });
   createWatchOfStyle(fixedWidth, "--fixedWidth");

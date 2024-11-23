@@ -101,6 +101,9 @@ export default function useEmitEvents<T>(
       }
     }
   }
+  function emitFinishRemoveEventToSiblings(draggedElement: HTMLElement) {
+    removeStytes(draggedElement, parent, parent);
+  }
   // #region Drag events
   const emitDraggingEventToSiblings = (
     draggedElement: HTMLElement,
@@ -318,21 +321,31 @@ export default function useEmitEvents<T>(
     positionOnSourceDroppable?: number
   ) => {
     element.classList.add(DROPPING_CLASS);
-    reduceTempchildSize(droppable);
-    setTimeout(() => {
+    removeStytes(element, parent, droppable, () => {
       element.classList.remove(DROPPING_CLASS);
-      removeTempChildOnDroppables(parent, droppable);
       if (positionOnSourceDroppable != undefined) {
         const value = onRemoveAtEvent(positionOnSourceDroppable);
         if (value) {
           onInsertEvent(targetIndex, value);
         }
       }
+    });
+  };
+  function removeStytes(
+    element: HTMLElement,
+    parent: HTMLElement,
+    droppable: HTMLElement,
+    func?: () => void
+  ) {
+    setTimeout(() => {
+      func && func();
+      removeTempChildOnDroppables(parent, droppable);
+      reduceTempchildSize(droppable);
       removeElementDraggingStyles(element);
       removeTranslateFromSiblings(element, parent);
       removeTranslateFromSiblings(element, droppable);
     }, animationDuration);
-  };
+  }
   function removeTempChildOnDroppables(
     parent: HTMLElement,
     droppable: HTMLElement
@@ -397,6 +410,7 @@ export default function useEmitEvents<T>(
   return {
     emitEventToSiblings,
     emitRemoveEventToSiblings,
+    emitFinishRemoveEventToSiblings,
     toggleDraggingClass,
   };
 }
