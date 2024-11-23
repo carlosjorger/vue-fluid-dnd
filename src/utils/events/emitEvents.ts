@@ -81,6 +81,26 @@ export default function useEmitEvents<T>(
       );
     }
   };
+  function emitRemoveEventToSiblings(
+    targetIndex: number,
+    draggedElement: HTMLElement,
+    droppableConfig: DroppableConfig<T>
+  ) {
+    const { droppable, config } = droppableConfig;
+    let { siblings } = getSiblings(draggedElement, droppable);
+    siblings = [draggedElement, ...siblings].toReversed();
+    const translation = getTranslationByDragging(
+      draggedElement,
+      "remove",
+      config.direction,
+      droppable
+    );
+    for (const [index, sibling] of siblings.entries()) {
+      if (index >= targetIndex) {
+        startDragEventOverElement(sibling, translation);
+      }
+    }
+  }
   // #region Drag events
   const emitDraggingEventToSiblings = (
     draggedElement: HTMLElement,
@@ -374,5 +394,9 @@ export default function useEmitEvents<T>(
     element.classList.toggle(draggingClass, force);
     toogleHandlerDraggingClass(force, element);
   };
-  return { emitEventToSiblings, toggleDraggingClass };
+  return {
+    emitEventToSiblings,
+    emitRemoveEventToSiblings,
+    toggleDraggingClass,
+  };
 }

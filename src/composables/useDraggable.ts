@@ -66,7 +66,11 @@ export default function useDraggable<T>(
     childRef,
     draggingClass
   );
-  const { emitEventToSiblings, toggleDraggingClass } = useEmitEvents<T>(
+  const {
+    emitEventToSiblings,
+    emitRemoveEventToSiblings,
+    toggleDraggingClass,
+  } = useEmitEvents<T>(
     config,
     draggingState,
     fixedHeight,
@@ -346,6 +350,11 @@ export default function useDraggable<T>(
 
   function removeAtFromElement(targetIndex: number) {
     if (targetIndex == index && child) {
+      emitRemoveEventToSiblings(
+        targetIndex,
+        childRef.value,
+        currentDroppableConfig.value
+      );
       onRemoveAtEvent(index);
     }
   }
