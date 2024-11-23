@@ -44,6 +44,7 @@ export default function useDraggable<T>(
     droppableGroup,
     animationDuration,
     draggingClass,
+    onRemoveAtEvent,
   } = config;
   const droppableGroupClass = getClassesList(droppableGroup)
     .map((classGroup) => `droppable-group-${classGroup}`)
@@ -317,7 +318,7 @@ export default function useDraggable<T>(
   };
 
   const createWatchOfStyle = (fixedSize: Ref<string>, fixedProp: string) => {
-    watch(fixedSize, (newFixedSize) => {
+    watch(fixedSize, (newFixedSize: string) => {
       const childElement = childRef.value;
       if (childElement) {
         childElement.style.setProperty(fixedProp, newFixedSize);
@@ -344,9 +345,9 @@ export default function useDraggable<T>(
   };
 
   function removeAtFromElement(targetIndex: number) {
-    console.log(
-      `remove element on positom ${targetIndex} from element ${index}`
-    );
+    if (targetIndex == index && child) {
+      onRemoveAtEvent(index);
+    }
   }
   watch(currentDroppableConfig, changeDroppable, { deep: true });
   createWatchOfStyle(fixedWidth, "--fixedWidth");

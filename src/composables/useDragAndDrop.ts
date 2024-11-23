@@ -18,7 +18,7 @@ import { getConfig } from "../utils/config";
 export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
   const INDEX_ATTR = "index";
   const parent = ref<HTMLElement | undefined>();
-  const removeAtFromElements = [] as ((index: number) => void)[];
+  let removeAtFromElements = [] as ((index: number) => void)[];
   function removeAt(index: number) {
     for (const removeAtFromElement of removeAtFromElements) {
       removeAtFromElement(index);
@@ -41,6 +41,9 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
     if (!parent.value) {
       return;
     }
+
+    removeAtFromElements = [];
+
     for (const child of parent.value!.children) {
       const index = child.getAttribute(INDEX_ATTR);
       const numberIndex = parseIntEmpty(index);
