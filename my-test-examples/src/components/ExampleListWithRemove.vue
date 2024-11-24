@@ -5,6 +5,7 @@ import useDragAndDrop from "../../../src/composables/useDragAndDrop";
 const numbers = ref([1, 2, 3, 4, 5, 6]);
 const { parent, removeAt } = useDragAndDrop<number>(numbers as any, {
   direction: "horizontal",
+  removingClass: "removed",
 });
 
 const { id } = defineProps<{
@@ -36,8 +37,10 @@ const { id } = defineProps<{
   border-style: solid;
   border-width: 0.8rem;
   width: 100px;
+  opacity: 1;
+  transition: opacity 200ms ease;
 }
-.number.removing {
-  background-color: red;
+.number.removed {
+  opacity: 0;
 }
 </style>

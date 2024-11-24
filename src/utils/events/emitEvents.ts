@@ -84,7 +84,8 @@ export default function useEmitEvents<T>(
   function emitRemoveEventToSiblings(
     targetIndex: number,
     draggedElement: HTMLElement,
-    droppableConfig: DroppableConfig<T>
+    droppableConfig: DroppableConfig<T>,
+    onFinishRemoveEvent: (element: HTMLElement) => void
   ) {
     const { droppable, config } = droppableConfig;
     let { siblings } = getSiblings(draggedElement, droppable);
@@ -98,6 +99,9 @@ export default function useEmitEvents<T>(
     for (const [index, sibling] of siblings.entries()) {
       if (index >= targetIndex) {
         startDragEventOverElement(sibling, translation);
+        setTimeout(() => {
+          onFinishRemoveEvent(sibling as HTMLElement);
+        }, animationDuration);
       }
     }
   }

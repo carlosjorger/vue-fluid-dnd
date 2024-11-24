@@ -5,11 +5,11 @@ import { IsHTMLElement, isTouchEvent } from "./touchDevice";
 
 type onTouchEvent = "ontouchstart" | "ontouchmove" | "ontouchend";
 const onMouseEvents = ["onmouseup", "onmousedown", "onmousemove"] as const;
-type onMouseEvent = typeof onMouseEvents[number];
+type onMouseEvent = (typeof onMouseEvents)[number];
 
 type TouchEventType = "touchstart" | "touchmove" | "touchend";
 const mouseEvents = ["mouseup", "mousedown", "mousemove"] as const;
-type MouseEventType = typeof mouseEvents[number];
+type MouseEventType = (typeof mouseEvents)[number];
 type DragEventCallback = (event: DragMouseTouchEvent) => void;
 export const fixSizeStyle = (element: HTMLElement | undefined | null) => {
   if (!element) {

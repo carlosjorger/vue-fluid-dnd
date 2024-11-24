@@ -355,19 +355,21 @@ export default function useDraggable<T>(
     const element = childRef.value as HTMLElement;
     if (targetIndex == index && child) {
       element.classList.add(removingClass);
-      //TODO:  is there is a transitin fire removing
-      onRemoveAtEvent(index);
-      element.classList.remove(removingClass);
-      emitRemoveEventToSiblings(
-        targetIndex,
-        childRef.value,
-        currentDroppableConfig.value
-      );
+      setTimeout(() => {
+        // TODO: remove flashing animation
+        onRemoveAtEvent(index);
+        element.classList.remove(removingClass);
+        emitRemoveEventToSiblings(
+          targetIndex,
+          childRef.value,
+          currentDroppableConfig.value,
+          (sibling: HTMLElement) => {
+            removeDraggingStyles(sibling);
+            emitFinishRemoveEventToSiblings(element);
+          }
+        );
+      }, animationDuration);
     }
-    setTimeout(() => {
-      removeDraggingStyles(childRef.value);
-      emitFinishRemoveEventToSiblings(childRef.value);
-    }, animationDuration);
   }
   watch(currentDroppableConfig, changeDroppable, { deep: true });
   createWatchOfStyle(fixedWidth, "--fixedWidth");
