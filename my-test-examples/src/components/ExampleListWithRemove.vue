@@ -37,4 +37,7 @@ const { id } = defineProps<{
   border-width: 0.8rem;
   width: 100px;
 }
+.number.removing {
+  background-color: red;
+}
 </style>

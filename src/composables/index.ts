@@ -25,6 +25,10 @@ export interface Config {
    */
   draggingClass?: string;
   /**
+   * The CSS class that is setted when a element is removed.
+   */
+  removingClass?: string;
+  /**
    * A function that returns whether a given element of the list is draggable
    */
   isDraggable?: (element: HTMLElement) => boolean;
@@ -62,6 +66,10 @@ export type CoreConfig<T> = {
    * The CSS class that is setted when a element is dragged.
    */
   draggingClass: string;
+  /**
+   * The CSS class that is setted when a element is removed.
+   */
+  removingClass: string;
   /**
    * A function that returns whether a given element of the list is draggable
    */

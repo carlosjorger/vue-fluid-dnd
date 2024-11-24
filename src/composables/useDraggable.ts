@@ -22,6 +22,7 @@ import {
   getClassesList,
   getClassesSelector,
 } from "../utils/dom/classList";
+import { observeMutation } from "../utils/observer";
 const DRAGGABLE_CLASS = "draggable";
 const HANDLER_CLASS = "handler-class";
 const DRAGGING_HANDLER_CLASS = "dragging-handler-class";
@@ -44,6 +45,7 @@ export default function useDraggable<T>(
     droppableGroup,
     animationDuration,
     draggingClass,
+    removingClass,
     onRemoveAtEvent,
   } = config;
   const droppableGroupClass = getClassesList(droppableGroup)
@@ -350,13 +352,17 @@ export default function useDraggable<T>(
   };
 
   function removeAtFromElement(targetIndex: number) {
+    const element = childRef.value as HTMLElement;
     if (targetIndex == index && child) {
+      element.classList.add(removingClass);
+      //TODO:  is there is a transitin fire removing
+      onRemoveAtEvent(index);
+      element.classList.remove(removingClass);
       emitRemoveEventToSiblings(
         targetIndex,
         childRef.value,
         currentDroppableConfig.value
       );
-      onRemoveAtEvent(index);
     }
     setTimeout(() => {
       removeDraggingStyles(childRef.value);

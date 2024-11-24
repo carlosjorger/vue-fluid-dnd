@@ -15,6 +15,7 @@ export const getConfig = <T>(
     direction: VERTICAL,
     handlerSelector: "draggable",
     draggingClass: "dragging",
+    removingClass: "removing",
     isDraggable: () => true,
     onRemoveAtEvent,
     onInsertEvent,
@@ -33,5 +34,6 @@ export const getConfig = <T>(
     onRemoveAtEvent,
     onInsertEvent,
     animationDuration: DEFAULT_CONFIG.animationDuration,
+    removingClass: config.removingClass ?? DEFAULT_CONFIG.removingClass,
   };
 };

@@ -1,11 +1,11 @@
 export const observeMutation = (
-  callback: (observer: MutationObserver) => void,
+  callback: (observer: MutationObserver, mutation: MutationRecord) => void,
   element: Element,
   options?: MutationObserverInit
 ) => {
   const observe = new MutationObserver((mutations) => {
-    mutations.forEach(() => {
-      callback(observe);
+    mutations.forEach((mutation) => {
+      callback(observe, mutation);
     });
   });
   observe.observe(element, options);
