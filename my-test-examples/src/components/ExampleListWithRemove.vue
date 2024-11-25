@@ -16,6 +16,7 @@ const { id } = defineProps<{
   <div ref="parent" :id="id" class="list">
     <div
       v-for="(element, index) in numbers"
+      :key="element"
       :index="index"
       :id="'horizontal-child-' + +element.toString()"
       class="number"

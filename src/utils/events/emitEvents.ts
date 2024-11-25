@@ -87,6 +87,13 @@ export default function useEmitEvents<T>(
     droppableConfig: DroppableConfig<T>,
     onFinishRemoveEvent: (element: HTMLElement) => void
   ) {
+    if (
+      !droppableConfig ||
+      !droppableConfig.droppable ||
+      !droppableConfig.config
+    ) {
+      return;
+    }
     const { droppable, config } = droppableConfig;
     let { siblings } = getSiblings(draggedElement, droppable);
     siblings = [draggedElement, ...siblings].toReversed();
