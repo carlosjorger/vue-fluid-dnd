@@ -22,7 +22,6 @@ import {
   getClassesList,
   getClassesSelector,
 } from "../utils/dom/classList";
-import { observeMutation } from "../utils/observer";
 const DRAGGABLE_CLASS = "draggable";
 const HANDLER_CLASS = "handler-class";
 const DRAGGING_HANDLER_CLASS = "dragging-handler-class";
@@ -362,7 +361,7 @@ export default function useDraggable<T>(
         element.classList.remove(removingClass);
         emitRemoveEventToSiblings(
           targetIndex,
-          childRef.value,
+          element,
           currentDroppableConfig.value,
           (sibling: HTMLElement) => {
             removeDraggingStyles(sibling);
