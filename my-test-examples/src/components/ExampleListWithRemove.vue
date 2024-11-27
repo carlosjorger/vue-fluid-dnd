@@ -8,10 +8,21 @@ const { parent, removeAt } = useDragAndDrop<number>(numbers as any, {
   removingClass: "removed",
   delayBeforeRemove: 500,
 });
+const verticalNumbers = ref([
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+]);
 
-const { id } = defineProps<{
+defineProps<{
   id: string;
 }>();
+
+const { parent: parent2, removeAt: removeAt2 } = useDragAndDrop<number>(
+  verticalNumbers as any,
+  {
+    removingClass: "removed",
+    delayBeforeRemove: 500,
+  }
+);
 </script>
 <template>
   <div ref="parent" :id="id" class="list">
@@ -26,6 +37,18 @@ const { id } = defineProps<{
       <button class="remove-button" @click="removeAt(index)">X</button>
     </div>
   </div>
+  <ul ref="parent2" class="vertical-scroll-list">
+    <li
+      v-for="(element, index) in verticalNumbers"
+      :key="element"
+      :index="index"
+      :id="'verticak-child-' + +element.toString()"
+      class="number"
+    >
+      {{ element }}
+      <button class="remove-button" @click="removeAt2(index)">X</button>
+    </li>
+  </ul>
 </template>
 <style scoped>
 .list {
