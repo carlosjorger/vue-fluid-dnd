@@ -20,6 +20,7 @@ export const getConfig = <T>(
     onRemoveAtEvent,
     onInsertEvent,
     animationDuration: 200,
+    delayBeforeRemove: 200,
   } as CoreConfig<T>;
   if (!config) {
     return DEFAULT_CONFIG;
@@ -35,5 +36,7 @@ export const getConfig = <T>(
     onInsertEvent,
     animationDuration: DEFAULT_CONFIG.animationDuration,
     removingClass: config.removingClass ?? DEFAULT_CONFIG.removingClass,
+    delayBeforeRemove:
+      config.delayBeforeRemove ?? DEFAULT_CONFIG.delayBeforeRemove,
   };
 };

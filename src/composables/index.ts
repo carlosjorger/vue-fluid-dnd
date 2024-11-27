@@ -29,15 +29,19 @@ export interface Config {
    */
   removingClass?: string;
   /**
-   * A function that returns whether a given element of the list is draggable
+   * Delay time before removing an element in milisecond.
+   */
+  delayBeforeRemove?: number;
+  /**
+   * A function that returns whether a given element of the list is draggable.
    */
   isDraggable?: (element: HTMLElement) => boolean;
   /**
-   * Name of the group of the share droppables
+   * Name of the group of the share droppables.
    */
   droppableGroup?: string;
   /**
-   * The duration of the animations in milisecond
+   * The duration of the animations in milisecond.
    */
   animationDuration?: number;
 }
@@ -70,6 +74,10 @@ export type CoreConfig<T> = {
    * The CSS class that is setted when a element is removed.
    */
   removingClass: string;
+  /**
+   * Delay time before removing an element in milisecond.
+   */
+  delayBeforeRemove: number;
   /**
    * A function that returns whether a given element of the list is draggable
    */

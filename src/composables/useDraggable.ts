@@ -44,6 +44,7 @@ export default function useDraggable<T>(
     isDraggable,
     droppableGroup,
     animationDuration,
+    delayBeforeRemove,
     draggingClass,
     removingClass,
     onRemoveAtEvent,
@@ -368,7 +369,7 @@ export default function useDraggable<T>(
             emitFinishRemoveEventToSiblings(element);
           }
         );
-      }, animationDuration);
+      }, delayBeforeRemove);
     }
   }
   watch(currentDroppableConfig, changeDroppable, { deep: true });

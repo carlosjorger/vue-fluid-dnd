@@ -6,6 +6,7 @@ const numbers = ref([1, 2, 3, 4, 5, 6]);
 const { parent, removeAt } = useDragAndDrop<number>(numbers as any, {
   direction: "horizontal",
   removingClass: "removed",
+  delayBeforeRemove: 500,
 });
 
 const { id } = defineProps<{
