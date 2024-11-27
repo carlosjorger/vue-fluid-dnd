@@ -353,6 +353,9 @@ export default function useDraggable<T>(
 
   function removeAtFromElement(targetIndex: number) {
     const element = childRef.value as HTMLElement;
+    if (!currentDroppableConfig.value) {
+      return;
+    }
     if (targetIndex == index && child) {
       element.classList.add(removingClass);
       setTimeout(() => {
