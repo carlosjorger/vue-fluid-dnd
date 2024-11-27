@@ -356,6 +356,8 @@ export default function useDraggable<T>(
     if (!currentDroppableConfig.value) {
       return;
     }
+    const config = currentDroppableConfig.value as DroppableConfig<T>;
+
     if (targetIndex == index && child) {
       element.classList.add(removingClass);
       setTimeout(() => {
@@ -365,7 +367,7 @@ export default function useDraggable<T>(
         emitRemoveEventToSiblings(
           targetIndex,
           element,
-          currentDroppableConfig.value,
+          config,
           (sibling: HTMLElement) => {
             removeDraggingStyles(sibling);
             emitFinishRemoveEventToSiblings(element);
