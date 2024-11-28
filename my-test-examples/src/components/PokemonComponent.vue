@@ -1,11 +1,20 @@
 <script setup lang="ts">
 import type { Pokemon } from "../../../docs/src/components/examples/Pokemon";
 import Handler from "./icons/handler.vue";
+import { computed } from "vue";
+import Trash from "./icons/trash.vue";
 
-const { pokemon } = defineProps<{
+const { pokemon, removeEvent, index } = defineProps<{
   pokemon: Pokemon;
   handlerSelector?: string;
+  hasRemove: boolean;
+  removeEvent?: (index: number) => void;
+  index: number;
 }>();
+const remove = (index: number) => {};
+const removeEventNotUndefined = computed(() => {
+  return removeEvent ?? remove;
+});
 
 const pokeColor = {
   bulbasaur: "bg-[#64dbb2]",
@@ -28,7 +37,7 @@ const pokeColor = {
 </script>
 
 <template>
-  <div :class="[pokeColor[pokemon.name]]">
+  <div :index :class="[pokeColor[pokemon.name]]">
     <div class="p-2">
       <div>
         <span v-if="handlerSelector">
@@ -44,11 +53,17 @@ const pokeColor = {
         {{ pokemonType.type.name }}
       </div>
     </div>
+    <div class="px-1 mx-2 py-1 remove" v-if="hasRemove">
+      <Trash color="red" @click="removeEventNotUndefined(index)" />
+    </div>
   </div>
 </template>
 <style>
 .pokemon {
   margin-top: 0rem !important;
   background-image: url("../../assets/pokemon-bg.svg");
+}
+.remove {
+  cursor: pointer;
 }
 </style>

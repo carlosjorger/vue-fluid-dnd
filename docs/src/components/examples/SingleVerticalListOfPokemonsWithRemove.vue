@@ -7,15 +7,10 @@ import { fetchPokemons } from "@/server/pokemonServer";
 
 const pokemons = ref([] as Pokemon[]);
 pokemons.value = await fetchPokemons(9);
-const { parent } = useDragAndDrop(pokemons, {
-  draggingClass: "dragging-pokemon",
+const { parent, removeAt: removeEvent } = useDragAndDrop(pokemons, {
+  removingClass: "removed",
+  delayBeforeRemove: 300,
 });
-const removeEvent = (index: number) => {
-  pokemons.value = [
-    ...pokemons.value.slice(0, index),
-    ...pokemons.value.slice(index + 1, pokemons.value.length),
-  ];
-};
 </script>
 <template>
   <div class="flex max-sm:justify-center items-start">

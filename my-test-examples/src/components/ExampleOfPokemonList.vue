@@ -7,12 +7,14 @@ import type { Pokemon } from "../../../docs/src/components/examples/Pokemon";
 import useDragAndDrop from "../../../src/composables/useDragAndDrop";
 
 const pokemons = ref([] as Pokemon[]);
+
 onMounted(async () => {
   pokemons.value = await fetchPokemons(9);
 });
 const handlerSelector = ".pokemon-handler";
-const { parent } = useDragAndDrop(pokemons as any, {
+const { parent, removeAt: removeEvent } = useDragAndDrop(pokemons as any, {
   handlerSelector,
+  delayBeforeRemove: 300,
 });
 
 defineProps<{
@@ -28,6 +30,8 @@ defineProps<{
       :pokemon="pokemon"
       :key="pokemon.name"
       handlerSelector="pokemon-handler"
+      :removeEvent
+      has-remove
     />
   </div>
 </template>

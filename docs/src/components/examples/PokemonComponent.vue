@@ -2,7 +2,7 @@
 import Handler from "../icons/handler.vue";
 import Trash from "../icons/trash.vue";
 import type { Pokemon } from "./Pokemon";
-
+import { computed } from "vue";
 const { pokemon, handlerClass, hasRemove, index, removeEvent } = defineProps<{
   pokemon: Pokemon;
   handlerClass?: string;
@@ -12,8 +12,9 @@ const { pokemon, handlerClass, hasRemove, index, removeEvent } = defineProps<{
 }>();
 
 const remove = (index: number) => {};
-const removeEventNotUndefined = removeEvent ?? remove;
-
+const removeEventNotUndefined = computed(() => {
+  return removeEvent ?? remove;
+});
 const pokeColor = {
   bulbasaur: "bg-[#64dbb2]",
   ivysaur: "bg-[#64dbb2]",
