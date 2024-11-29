@@ -132,6 +132,9 @@ export default function useDraggable<T>(
       );
       disableMousedownEventFromImages(handlerElement);
     }
+    if (element && !element?.isSameNode(handlerElement)) {
+      assignDraggingEvent(element, "onmousedown", mousedownOnDraggablefunction);
+    }
     parent.classList.add(DROPPABLE_CLASS);
   };
   function disableMousedownEventFromImages(handlerElement: Element) {
@@ -234,6 +237,9 @@ export default function useDraggable<T>(
       }
     };
   };
+  function mousedownOnDraggablefunction(event: DragMouseTouchEvent) {
+    updateConfig(event);
+  }
   const onLeave = (moveEvent: MoveEvent) => {
     return (event: MouseEvent | TouchEvent) => {
       const convertedEvent = convetEventToDragMouseTouchEvent(event);
@@ -361,7 +367,6 @@ export default function useDraggable<T>(
     if (targetIndex == index && child) {
       element.classList.add(removingClass);
       setTimeout(() => {
-        // TODO: remove flashing animation
         onRemoveAtEvent(index);
         element.classList.remove(removingClass);
         emitRemoveEventToSiblings(
@@ -385,5 +390,4 @@ export default function useDraggable<T>(
 }
 
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
-//TODO: fix remove with handler
 //https://github.com/iamstevendao/vue-tel-input/blob/main/.github/workflows/deploy.yml

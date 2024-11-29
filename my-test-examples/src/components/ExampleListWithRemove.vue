@@ -28,7 +28,7 @@ const { parent: parent3, removeAt: removeAt3 } = useDragAndDrop<number>(
   {
     handlerSelector: ".drag-handle",
     removingClass: "removed",
-    delayBeforeRemove: 300,
+    delayBeforeRemove: 500,
   }
 );
 </script>
@@ -59,7 +59,7 @@ const { parent: parent3, removeAt: removeAt3 } = useDragAndDrop<number>(
   </ul>
   <ul ref="parent3" class="vertical-list">
     <li
-      v-for="(element, index) in numbers"
+      v-for="(element, index) in numbersWithHandler"
       :index="index"
       :id="'child-with-children-' + +element.toString()"
       class="number-handler"
@@ -68,7 +68,7 @@ const { parent: parent3, removeAt: removeAt3 } = useDragAndDrop<number>(
       <div class="draggable-wrapper">
         <span class="drag-handle"><i>☰</i></span>
         <span>{{ element }}</span>
-        <button class="remove-button" @click="removeAt2(index)">X</button>
+        <button class="remove-button" @click="removeAt3(index)">X</button>
       </div>
     </li>
   </ul>
@@ -95,10 +95,9 @@ const { parent: parent3, removeAt: removeAt3 } = useDragAndDrop<number>(
   border-style: solid;
   border-width: 0.8rem;
   width: 60%;
+  transition: opacity 200ms ease;
 }
-.number.removed {
-  opacity: 0;
-}
+.number.removed,
 .number-handler.removed {
   opacity: 0;
 }
