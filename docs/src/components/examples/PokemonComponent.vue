@@ -102,6 +102,7 @@ const darkPokeColor = {
       darkPokeColor[pokemon.name],
       pokemon.name,
     ]"
+    :index
   >
     <div class="p-2 max-sm:text-xs max-sm:p-0.5">
       <div class="flex flex-row items-center justify-between">
@@ -135,6 +136,7 @@ const darkPokeColor = {
   margin-top: 0rem !important;
   background-image: url("../../assets/pokemon-bg.svg");
   transition: background-color 200ms ease-in;
+  transition: opacity 200ms ease;
 }
 :is([data-theme="dark"] .bulbasaur.dragging-pokemon),
 :is([data-theme="dark"] .ivysaur.dragging-pokemon),
@@ -146,6 +148,9 @@ const darkPokeColor = {
 :is([data-theme="dark"] .grovyle.dragging-pokemon),
 :is([data-theme="dark"] .sceptile.dragging-pokemon) {
   background-color: #5ec8a3 !important;
+}
+.pokemon.removed {
+  opacity: 0;
 }
 
 .bulbasaur.dragging-pokemon,
