@@ -53,6 +53,7 @@
     "name": "Carlos Jorge Rodriguez",
     "email": "rodriguezcuelloc@gmail.com"
   },
+  "license": "MIT",
   "peerDependencies": {
     "vue": ">=3.4.0"
   },

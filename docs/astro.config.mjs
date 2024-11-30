@@ -5,9 +5,9 @@ import tailwind from "@astrojs/tailwind";
 import netlify from "@astrojs/netlify";
 
 const site = "https://vue-fluid-dnd.netlify.app/";
-
-// https://astro.build/config
+// TODO: add pr to starlight https://github.com/withastro/starlight/blob/main/CONTRIBUTING.md#showcase
 export default defineConfig({
+  site: "https://vue-fluid-dnd.netlify.app/",
   i18n: {
     defaultLocale: "en",
     locales: ["en", "es"],
@@ -16,6 +16,8 @@ export default defineConfig({
     starlight({
       favicon: "/favicon.png",
       title: "Vue Fluid DnD",
+      description:
+        "Official documentation for Vue Fluid DnD, a fluid, smooth and versatil drag and drop library for lists with Vue.",
       defaultLocale: "root",
       locales: {
         root: {
