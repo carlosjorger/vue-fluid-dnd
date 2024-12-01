@@ -113,7 +113,12 @@ export default function useEmitEvents<T>(
     }
   }
   function emitFinishRemoveEventToSiblings(draggedElement: HTMLElement) {
-    removeStytes(draggedElement, parent, parent);
+    removeTempChild(parent, animationDuration, true);
+    setTimeout(() => {
+      removeElementDraggingStyles(draggedElement);
+      removeTranslateFromSiblings(draggedElement, parent);
+      removeTranslateFromSiblings(draggedElement, parent);
+    }, animationDuration);
   }
   // #region Drag events
   const emitDraggingEventToSiblings = (

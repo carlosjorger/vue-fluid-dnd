@@ -95,9 +95,12 @@ export const addTempChild = <T>(
     return;
   }
 
-  var child = document.createElement(draggedElement.tagName);
+  var tempChildTag =
+    draggedElement.tagName == "LI" ? "DIV" : draggedElement.tagName;
+  var child = document.createElement(tempChildTag);
   child.classList.add(TEMP_CHILD_CLASS);
   setSizes(child, 0, 0);
+
   const distances = getDistance(droppable, draggedElement, direction);
   setTranistion(
     child,
@@ -154,7 +157,9 @@ export const removeTempChild = (
     if (isAnimated) {
       setSizes(tempChildElement, 0, 0);
       setTimeout(() => {
-        parent.removeChild(lastChild);
+        if (parent.contains(lastChild)) {
+          parent.removeChild(lastChild);
+        }
       }, animationDuration);
     } else {
       parent.removeChild(lastChild);

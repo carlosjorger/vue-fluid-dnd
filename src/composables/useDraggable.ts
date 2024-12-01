@@ -369,6 +369,12 @@ export default function useDraggable<T>(
       setTimeout(() => {
         onRemoveAtEvent(index);
         element.classList.remove(removingClass);
+        addTempChild(
+          element,
+          parent,
+          draggingState.value,
+          currentDroppableConfig.value
+        );
         emitRemoveEventToSiblings(
           targetIndex,
           element,
