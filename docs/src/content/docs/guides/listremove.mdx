@@ -1,0 +1,116 @@
+---
+title: Remove on list
+description: A guide on how to use Vue Fluid DnD for removing elements on a list.
+---
+
+import ListWithRemove from "@/components/ListWithRemove.vue";
+import { Code } from "@astrojs/starlight/components";
+
+### List of number example
+
+To showing how to use **Vue Fluid DnD** for removing elements on a list.
+First, we're going to create a list and extract the removeAt function:
+
+export const listOfNumbers = `<script setup lang="ts">
+import { ref } from "vue";
+import { useDragAndDrop } from "vue-fluid-dnd";
+
+const list = ref([1, 2, 3, 4, 5]);
+const { parent, removeAt } = useDragAndDrop(list);
+});
+
+</script>`;
+
+<Code code={listOfNumbers} lang="vue" />
+
+### Creating the view
+
+After, we’ll create the list with an remove button that call the `removeAt`:
+
+export const highlightsDroppable = ["removeAt"];
+
+export const listOfNumbersDroppable = `
+<template>
+   <ul ref="parent" class="number-list">
+    <li class="number" v-for="(element, index) in list" :index="index" :key="element">
+      {{ element }}
+      <button class="remove-button" @click="removeAt(index)">x</button>
+    </li>
+  </ul>
+</template>
+`;
+
+<Code code={listOfNumbersDroppable} lang="vue" mark={highlightsDroppable} />
+
+### Preview
+
+<div class="p-8 bg-[var(--sl-color-gray-6)]">
+  <ListWithRemove client:load />
+</div>
+
+## Add removing Class
+
+You can add the css class setted when an element is removed:
+
+export const listOfNumbersWithRemovingClass = `<script setup lang="ts">
+// ...
+const { parent, removeAt } = useDragAndDrop(list,{
+  removingClass: "removed"
+});
+
+</script>`;
+export const highlightsRemovingClass = ["removingClass"];
+
+<Code code={listOfNumbersWithRemovingClass} lang="vue" mark={highlightsRemovingClass}/>
+
+### Changing styles
+
+After, we’ll add the `removed` styles and transition when the class is setted:
+
+export const highlightsStylesRemovingClass = ["removed","transition"];
+
+export const stylesRemovingClass = `
+<style scoped>
+.number{
+  /*
+      ...
+  */
+  opacity: 1;
+  transition: opacity 200ms ease;
+}
+.number.removed{
+  opacity: 0;
+}
+</style>
+`;
+
+<Code code={stylesRemovingClass} lang="vue" mark={highlightsStylesRemovingClass} />
+
+### Preview
+
+<div class="p-8 bg-[var(--sl-color-gray-6)]">
+  <ListWithRemove removingClass="removed" client:load  />
+</div>
+
+
+## Add delay before remove
+
+You can add the amount of delay time in miliseconds before removing the element (the default is 200 miliseconds):
+
+export const listOfNumbersDelay = `<script setup lang="ts">
+// ...
+const { parent, removeAt } = useDragAndDrop(list,{
+  removingClass: "removed",
+  delayBeforeRemove: 500
+});});
+
+</script>`;
+export const highlightsDelay = ["delayBeforeRemove"];
+
+<Code code={listOfNumbersDelay} lang="vue" mark={highlightsDelay}/>
+
+### Preview
+
+<div class="p-8 bg-[var(--sl-color-gray-6)]">
+  <ListWithRemove removingClass="removed" delayBeforeRemove={800} client:load  />
+</div>

@@ -137,6 +137,13 @@ export default defineConfig({
                 es: "Ordenar tablas",
               },
             },
+            {
+              label: "Remove on list",
+              link: "/guides/listremove/",
+              translations: {
+                es: "Remover en listas",
+              },
+            },
           ],
           translations: {
             es: "Guía",
