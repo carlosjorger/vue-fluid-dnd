@@ -9,7 +9,7 @@ import { Code } from "@astrojs/starlight/components";
 ### List of number example
 
 To showing how to use **Vue Fluid DnD** for removing elements on a list.
-First, we're going to create a list and extract the removeAt function:
+First, we're going to create a list and extract the `removeAt` function:
 
 export const listOfNumbers = `<script setup lang="ts">
 import { ref } from "vue";
@@ -21,13 +21,16 @@ const { parent, removeAt } = useDragAndDrop(list);
 
 </script>`;
 
-<Code code={listOfNumbers} lang="vue" />
+export const highlightsListOfNumbers = ["removeAt"];
+
+
+<Code code={listOfNumbers} lang="vue" mark={highlightsListOfNumbers} />
 
 ### Creating the view
 
-After, we’ll create the list with an remove button that call the `removeAt`:
+After, we’ll create the list with an remove button for each element that call the `removeAt`:
 
-export const highlightsDroppable = ["removeAt"];
+export const highlightsDroppable = ['<button','button>',"removeAt"];
 
 export const listOfNumbersDroppable = `
 <template>
@@ -50,7 +53,7 @@ export const listOfNumbersDroppable = `
 
 ## Add removing Class
 
-You can add the css class setted when an element is removed:
+You can add the css class setted when an element is `removed`:
 
 export const listOfNumbersWithRemovingClass = `<script setup lang="ts">
 // ...
@@ -59,7 +62,7 @@ const { parent, removeAt } = useDragAndDrop(list,{
 });
 
 </script>`;
-export const highlightsRemovingClass = ["removingClass"];
+export const highlightsRemovingClass = ["removingClass",'removed'];
 
 <Code code={listOfNumbersWithRemovingClass} lang="vue" mark={highlightsRemovingClass}/>
 
@@ -101,7 +104,7 @@ export const listOfNumbersDelay = `<script setup lang="ts">
 // ...
 const { parent, removeAt } = useDragAndDrop(list,{
   removingClass: "removed",
-  delayBeforeRemove: 500
+  delayBeforeRemove: 800
 });});
 
 </script>`;
