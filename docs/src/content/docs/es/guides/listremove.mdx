@@ -1,15 +1,15 @@
 ---
-title: Remove on list
-description: A guide on how to use Vue Fluid DnD to remove elements from a list.
+title: Remover en listas
+description: Una guía de como usar Vue Fluid DnD para remover elemntos en una lista.
 ---
 
 import ListWithRemove from "@/components/ListWithRemove.vue";
 import { Code } from "@astrojs/starlight/components";
 
-### List of number example
+### Ejemplo de lista de números
 
-To showing how to use **Vue Fluid DnD** for removing elements from a list.
-First, we're going to create a list and extract the `removeAt` function from `useDragAndDrop`:
+Para mostrar como usar **Vue Fluid DnD** para remover elementos de un lista.
+Primero, vamos a crear una lista y extraer la función `removeAt` de `useDragAndDrop`:
 
 export const listOfNumbers = `<script setup lang="ts">
 import { ref } from "vue";
@@ -28,7 +28,7 @@ export const highlightsListOfNumbers = ["removeAt"];
 
 ### Creating the view
 
-After, we’ll create the list with an remove button for each element that call `removeAt`:
+Después, crearemos la lista con un botón `remove` por cada elemento que llama `removeAt`:
 
 export const highlightsDroppable = ['<button','button>',"removeAt"];
 
@@ -45,15 +45,15 @@ export const listOfNumbersDroppable = `
 
 <Code code={listOfNumbersDroppable} lang="vue" mark={highlightsDroppable} />
 
-### Preview
+### Resultado
 
 <div class="p-8 bg-[var(--sl-color-gray-6)]">
   <ListWithRemove client:load />
 </div>
 
-## Add removing Class
+## Añadiendo la clase removing
 
-You can add the css class setted when an element is removed using the parameter `removingClass`:
+Tu puedes añadir la clase css que se fija cuando un elemento es removido con el parámetro `removingClass`:
 
 export const listOfNumbersWithRemovingClass = `<script setup lang="ts">
 // ...
@@ -66,9 +66,9 @@ export const highlightsRemovingClass = ["removingClass",'removed'];
 
 <Code code={listOfNumbersWithRemovingClass} lang="vue" mark={highlightsRemovingClass}/>
 
-### Changing styles
+### Cambiando los estilos
 
-After, we’ll add the `removed` styles and transition when the class is setted:
+Después, añadiremos los estilos `removed` y transiciones cuando la clase es fijada:
 
 export const highlightsStylesRemovingClass = ["removed","transition"];
 
@@ -89,16 +89,16 @@ export const stylesRemovingClass = `
 
 <Code code={stylesRemovingClass} lang="vue" mark={highlightsStylesRemovingClass} />
 
-### Preview
+### Resultado
 
 <div class="p-8 bg-[var(--sl-color-gray-6)]">
   <ListWithRemove removingClass="removed" client:load  />
 </div>
 
 
-## Add delay before remove
+## Añadiendo el tiempo de demora antes de remover
 
-You can add the amount of delay time in miliseconds before removing the element (the default is 200 miliseconds):
+Puedes añadir la cantidad de tiempo en milisegundos antes de remover el elemento (el tiempo por defecto es de 200 milisegundos):
 
 export const listOfNumbersDelay = `<script setup lang="ts">
 // ...
@@ -112,7 +112,7 @@ export const highlightsDelay = ["delayBeforeRemove"];
 
 <Code code={listOfNumbersDelay} lang="vue" mark={highlightsDelay}/>
 
-### Preview
+### Resultado
 
 <div class="p-8 bg-[var(--sl-color-gray-6)]">
   <ListWithRemove removingClass="removed" delayBeforeRemove={800} client:load  />
