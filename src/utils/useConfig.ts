@@ -42,9 +42,9 @@ export function useConfig<T>(
     return currentDroppable;
   }
   function isOutsideOfAllDroppables(currentElement: HTMLElement) {
-    const droppables = Array.from(
+    const droppables = droppableGroupClass? Array.from(
       document.querySelectorAll(getClassesSelector(droppableGroupClass))
-    );
+    ):[parent];
     return droppables.every((droppable) =>
       draggableIsOutside(currentElement, droppable)
     );
