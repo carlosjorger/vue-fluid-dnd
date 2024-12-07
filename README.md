@@ -16,11 +16,11 @@
 </div>
 
 Vue Fluid DnD is a [**fluid**, **smooth** and **versatil** drag and drop
-library for lists on Vue3](https://vue-fluid-dnd.netlify.app/). It's a**lightweight** tool ~7 Kb (gzip) with no depenencies. This library is a **Vue Draggable** alternative if you looking for a better ui experience.
+library for lists on Vue3](https://vue-fluid-dnd.netlify.app/). It's a**lightweight** tool ~7 Kb (gzip) with no depenencies. This library is a **Vue Draggable Next** alternative if you looking for a better ui experience.
 
 <img src="https://github.com/carlosjorger/vue-fluid-dnd/assets/50055316/4b25fd5e-4815-4a24-afe4-6f41d34be820" width="100%"/>
 
-## ✨ Features
+## 🧰 Features
 
 - ✅ **Fully customizable 🎨**.
 - ✅ **Zero dependencies 🪶**.
@@ -28,6 +28,12 @@ library for lists on Vue3](https://vue-fluid-dnd.netlify.app/). It's a**lightwei
 - ✅ **Mouse 🐭 and touch 👉📱 (mobile, tablet and so on) support**.
 - ✅ **Nice documentation 📑 and examples**.
 - ✅ **Fully tested 🧪, typed and reliable**.
+
+## ✨ Inspirations
+
+- ✅ 🎥 Animations by [react-beautiful-dnd](https://github.com/atlassian/react-beautiful-dnd)
+- ✅ 🎨 Api by [Drag & Drop by Formkit](https://drag-and-drop.formkit.com/)
+- ✅ 🧰 Features by [Vue.Draggable](https://github.com/SortableJS/Vue.Draggable)
 
 ## 🚀 Getting Started
 
@@ -89,7 +95,7 @@ library for lists on Vue3](https://vue-fluid-dnd.netlify.app/). It's a**lightwei
 
 ## 🤝 Contributing
 
-If you're interested in contributing to vue-fluid-dnd, please read our contributing docs before submitting a pull request [CONTRIBUTING](./CONTRIBUTING.md).
+If you're interested in contributing to [vue-fluid-dnd](https://github.com/carlosjorger/vue-fluid-dnd), please read our contributing docs before submitting a pull request [CONTRIBUTING](./CONTRIBUTING.md).
 
 ## 🔑 License
 
