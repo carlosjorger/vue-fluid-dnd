@@ -1,5 +1,6 @@
 {
   "SINGLE_VERTICAL_LIST": "Vertical list",
+  "SINGLE_VERTICAL_LIST_WITH_REMOVE": "Vertical list with remove",
   "SINGLE_VERTICAL_LIST_AUTOSCROLL": "Vertical list on a scroller",
   "SINGLE_VERTICAL_IS_DRAGGABLE": "IsDraggable",
   "SINGLE_VERTICAL_WITH_HANDLER": "List with handlers",

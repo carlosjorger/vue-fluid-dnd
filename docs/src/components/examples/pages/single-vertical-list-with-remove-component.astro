@@ -16,8 +16,9 @@ import { fetchPokemons } from "@/server/pokemonServer";
 
 const pokemons = ref([] as Pokemon[]);
 pokemons.value = await fetchPokemons(9);
-const { parent } = useDragAndDrop(pokemons,{
-  draggingClass: "dragging-pokemon"
+const { parent, removeAt: removeEvent } = useDragAndDrop(pokemons, {
+  draggingClass: "dragging-pokemon",
+  delayBeforeRemove: 300,
 });
 </script>
 <template>
@@ -31,6 +32,8 @@ const { parent } = useDragAndDrop(pokemons,{
         :key="pokemon.name"
         :index="index"
         :pokemon="pokemon"
+        has-remove
+        :removeEvent
       />
     </div>
   </div>
@@ -38,7 +41,7 @@ const { parent } = useDragAndDrop(pokemons,{
 `
 const fileName = 'SingleVerticalListOfPokemons.vue';
 ---
-<ExampleLayout title={i18n.SINGLE_VERTICAL_LIST}>
+<ExampleLayout title={i18n.SINGLE_VERTICAL_LIST_WITH_REMOVE}>
   <SingleVerticalListOfPokemons client:load />
    <Accordion  buttonText={i18n.CODE_MESSAGE} code={verticalList} fileName={fileName}/>
 </ExampleLayout>
