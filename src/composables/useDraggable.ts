@@ -270,6 +270,7 @@ export default function useDraggable<T>(
     }
   };
   const startDragging = (event: DragMouseTouchEvent) => {
+    // TODO: add clone
     const element = childRef.value;
     if (!element) {
       return;

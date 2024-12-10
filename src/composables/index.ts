@@ -44,6 +44,10 @@ export interface Config {
    * The duration of the animations in milisecond.
    */
   animationDuration?: number;
+    /**
+   * A function that return whether a given element of the list is cloned when is dragged
+   */
+  clone?: (element: HTMLElement) => boolean;
 }
 /**
  * onDrop event function.
@@ -90,6 +94,10 @@ export type CoreConfig<T> = {
    * The duration of the animations in milisecond
    */
   animationDuration: number;
+  /**
+   * A function that return whether a given element of the list is cloned when is dragged
+   */
+  clone: (element: HTMLElement) => boolean;
   onRemoveAtEvent: OnRemoveAtEvent<T>;
   onInsertEvent: OnInsertEvent<T>;
 };
