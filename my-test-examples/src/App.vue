@@ -11,6 +11,7 @@ import ExampleGroupOfListWithStyles from "./components/ExampleGroupOfListWithSty
 // import ExampleOfPokemonList from "./components/ExampleOfPokemonList.vue";
 import ExampleTable from "./components/ExampleTable.vue";
 import ExampleListWithRemove from "./components/ExampleListWithRemove.vue";
+import ExampleListGroupDroppableAndDraggableClasses from './components/ExampleListGroupDroppableAndDraggableClasses.vue'
 </script>
 
 <template>
@@ -32,6 +33,7 @@ import ExampleListWithRemove from "./components/ExampleListWithRemove.vue";
   <!-- <ExampleOfPokemonList id="example-pokemon-list" /> -->
   <ExampleTable />
   <ExampleListWithRemove id="example-lists-with-remove" />
+  <ExampleListGroupDroppableAndDraggableClasses id="example-list-group-droppable-and-draggable-classes" />
 </template>
 <style>
 .example-cols {

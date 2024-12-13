@@ -336,6 +336,7 @@ export default function useEmitEvents<T>(
     droppable: HTMLElement,
     positionOnSourceDroppable?: number
   ) => {
+    // TODO: remove draggingClass
     element.classList.add(DROPPING_CLASS);
     removeStytes(element, parent, droppable, () => {
       element.classList.remove(DROPPING_CLASS);
