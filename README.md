@@ -16,7 +16,7 @@
 </div>
 
 Vue Fluid DnD is a [**fluid**, **smooth** and **versatil** drag and drop
-library for lists on Vue3](https://vue-fluid-dnd.netlify.app/). It's a**lightweight** tool ~7 Kb (gzip) with no depenencies. This library is a **Vue Draggable Next** alternative if you looking for a better ui experience.
+library for lists on Vue 3](https://vue-fluid-dnd.netlify.app/). It's a**lightweight** tool ~7 Kb (gzip) with no depenencies. This library is a **Vue Draggable Next** alternative if you looking for a better ui experience.
 
 <img src="https://github.com/carlosjorger/vue-fluid-dnd/assets/50055316/4b25fd5e-4815-4a24-afe4-6f41d34be820" width="100%"/>
 

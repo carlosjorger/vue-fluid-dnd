@@ -39,6 +39,7 @@ const { id } = defineProps<{
         :index="index"
         :id="'group-child-' + +element.toString()"
         class="number"
+        :key="element"
       >
         {{ element }}
       </li>
