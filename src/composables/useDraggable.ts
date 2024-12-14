@@ -31,7 +31,7 @@ const DRAG_EVENT = "drag";
 const START_DRAG_EVENT = "startDrag";
 const START_DROP_EVENT = "startDrop";
 const draggableTargetTimingFunction = "cubic-bezier(0.2, 0, 0, 1)";
-
+const DRAGGING_CLASS='dragging'
 export default function useDraggable<T>(
   child: HTMLElement | undefined,
   index: number,
@@ -65,8 +65,7 @@ export default function useDraggable<T>(
 
   const delayTimeout = ref<NodeJS.Timeout>();
   const { setTransform, updateTransformState } = useTransform(
-    childRef,
-    draggingClass
+    childRef
   );
   const {
     emitEventToSiblings,
@@ -102,7 +101,7 @@ export default function useDraggable<T>(
       `.${HANDLER_CLASS} { cursor: grab; pointer-events: auto !important; }`,
       ".temp-child { touch-action: none; pointer-events: none; box-sizing: border-box !important; }",
       `.droppable { box-sizing: border-box !important; }`,
-      `.${draggingClass} { position: fixed; z-index: 5000; width: var(--fixedWidth) !important; height: var(--fixedHeight) !important; }`,
+      `.${DRAGGING_CLASS} { position: fixed; z-index: 5000; width: var(--fixedWidth) !important; height: var(--fixedHeight) !important; }`,
       `.${DRAGGING_HANDLER_CLASS} { cursor: grabbing; cursor: grabbing; }`,
       `.${DROPPING_CLASS} { pointer-events: none !important; }`,
     ]);
@@ -310,6 +309,7 @@ export default function useDraggable<T>(
       return;
     }
     removeDraggingStyles(element);
+    // element.classList.remove(draggingClass);
     emitEventToSiblings(
       element,
       START_DROP_EVENT,
@@ -327,6 +327,7 @@ export default function useDraggable<T>(
     fixedHeight.value = `${height}px`;
     fixedWidth.value = `${width}px`;
     toggleDraggingClass(element, true);
+    element.classList.toggle(draggingClass,true);
     element.style.transition = "";
   };
 

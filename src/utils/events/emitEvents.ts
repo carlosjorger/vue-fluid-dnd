@@ -24,6 +24,8 @@ const DRAG_EVENT = "drag";
 const START_DRAG_EVENT = "startDrag";
 const DROPPING_CLASS = "dropping";
 const draggableTargetTimingFunction = "cubic-bezier(0.2, 0, 0, 1)";
+const DRAGGING_CLASS='dragging'
+const DELAY_TIME_TO_SWAP=50
 
 type DraggingEvent = typeof DRAG_EVENT | typeof START_DRAG_EVENT;
 type DragAndDropEvent = DraggingEvent | DropEvent;
@@ -43,7 +45,7 @@ export default function useEmitEvents<T>(
     handlerSelector,
     onRemoveAtEvent,
     animationDuration,
-    draggingClass,
+    draggingClass
   } = currentConfig;
   const emitEventToSiblings = (
     draggedElement: HTMLElement,
@@ -345,9 +347,15 @@ export default function useEmitEvents<T>(
         if (value) {
           onInsertEvent(targetIndex, value);
         }
+        manageDraggingClass(element)
       }
     });
   };
+  function manageDraggingClass(element: HTMLElement){
+    setTimeout(() => {
+      element.classList.remove(draggingClass);
+    }, DELAY_TIME_TO_SWAP);
+  }
   function removeStytes(
     element: HTMLElement,
     parent: HTMLElement,
@@ -361,6 +369,7 @@ export default function useEmitEvents<T>(
       removeElementDraggingStyles(element);
       removeTranslateFromSiblings(element, parent);
       removeTranslateFromSiblings(element, droppable);
+      
     }, animationDuration);
   }
   function removeTempChildOnDroppables(
@@ -421,7 +430,7 @@ export default function useEmitEvents<T>(
     }
   };
   const toggleDraggingClass = (element: Element, force: boolean) => {
-    element.classList.toggle(draggingClass, force);
+    element.classList.toggle(DRAGGING_CLASS, force);
     toogleHandlerDraggingClass(force, element);
   };
   return {

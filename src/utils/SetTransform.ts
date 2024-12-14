@@ -9,10 +9,10 @@ import { Ref, ref, watch } from "vue";
 import { Direction } from "../composables";
 import { scrollByDirection } from "./scroll";
 const HANDLER_CLASS = "handler-class";
+const DRAGGING_CLASS='dragging'
 
 export const useTransform = (
-  childRef: Ref<HTMLElement | undefined>,
-  draggingClass: string
+  childRef: Ref<HTMLElement | undefined>
 ) => {
   const currentOffset = ref({ offsetX: 0, offsetY: 0 });
   const position = ref({ top: 0, left: 0 });
@@ -87,7 +87,7 @@ export const useTransform = (
     const updateScroll = (translateDirection: Direction) => {
       if (
         element &&
-        element.classList.contains(draggingClass) &&
+        element.classList.contains(DRAGGING_CLASS) &&
         translateDirection === direction
       ) {
         const { before, distance, axis } = getPropByDirection(direction);
