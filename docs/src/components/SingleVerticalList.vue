@@ -7,7 +7,7 @@ const { parent } = useDragAndDrop(list);
 </script>
 <template>
   <ul ref="parent" class="number-list p-8 bg-[var(--sl-color-gray-6)]">
-    <li class="number" v-for="(element, index) in list" :index="index">
+    <li class="number" v-for="(element, index) in list" :index="index" :key="element">
       {{ element }}
     </li>
   </ul>

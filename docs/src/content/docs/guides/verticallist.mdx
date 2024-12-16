@@ -68,19 +68,19 @@ export const listOfNumbersDroppable = `
 
 ### Adding reference to children
 
-For each `<li>` element we'll only pass the `index` **attribute** to knowing the actual position:
+For each `<li>` element we'll pass the `index` **attribute** to knowing the actual position and the `key` **attribute** that uniquely identify each element:
 
 export const listOfNumbersDraggable = `
 
 <template>
     <ul ref="parent" class="number-list">
-      <li class="number" v-for="(element, index) in list" :index="index">
+      <li class="number" v-for="(element, index) in list" :index="index" :key="element">
         {{ element }}
       </li>
     </ul>
 </template>`;
 
-export const highlightsDraggable = [':index="index"'];
+export const highlightsDraggable = [':index="index"',':key="element"'];
 
 <Code code={listOfNumbersDraggable} lang="vue" mark={highlightsDraggable} />
 
