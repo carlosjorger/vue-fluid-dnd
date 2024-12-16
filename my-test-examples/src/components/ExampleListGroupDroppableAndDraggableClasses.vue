@@ -59,6 +59,10 @@ const { id } = defineProps<{
   background-color:antiquewhite;
   height: 400px;
   grid-area: vertical;
+  transition: background-color 150ms ease-in;
+}
+.vertical-list.droppable-hover{
+  background-color:burlywood ;
 }
 .scrolled-list {
   padding-block: 20px;
@@ -68,6 +72,10 @@ const { id } = defineProps<{
   display: block;
   padding-inline: 25px;
   grid-area: scrolled;
+  transition: background-color 150ms ease-in;
+}
+.scrolled-list.droppable-hover{
+  background-color:burlywood ;
 }
 .horizontal-list {
   display: flex;

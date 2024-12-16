@@ -88,5 +88,12 @@ export function useConfig<T>(
   function updateConfig(event: DragMouseTouchEvent) {
     currentDroppableConfig.value = getCurrentConfig(event);
   }
-  return { currentDroppableConfig, updateConfig, getCurrentConfig };
+  function isOutsideOfDroppable(event: DragMouseTouchEvent){
+    const currentElement = childRef.value;
+    if (!currentElement) {
+      return true;
+    }
+    return !Boolean(getCurrentDroppable(currentElement,event))
+  }
+  return { currentDroppableConfig, updateConfig, getCurrentConfig, isOutsideOfDroppable };
 }

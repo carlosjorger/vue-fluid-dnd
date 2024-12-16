@@ -47,6 +47,7 @@ export default function useDraggable<T>(
     draggingClass,
     removingClass,
     onRemoveAtEvent,
+    droppableClass
   } = config;
   const droppableGroupClass = getClassesList(droppableGroup)
     .map((classGroup) => `droppable-group-${classGroup}`)
@@ -160,10 +161,29 @@ export default function useDraggable<T>(
       currentDroppableConfig.value
     );
   };
-  const { updateConfig, currentDroppableConfig, getCurrentConfig } =
+  const { updateConfig, currentDroppableConfig, getCurrentConfig, isOutsideOfDroppable } =
     useConfig<T>(childRef, droppableGroupClass, parent, setTransformDragEvent);
+  function toggleDroppableClass(isOutside:boolean){
+    if (!currentDroppableConfig.value) {
+      return
+    }
+    const droppables = droppableGroupClass? Array.from(
+      document.querySelectorAll(getClassesSelector(droppableGroupClass))
+    ):[parent];
+    for (const droppable of droppables) {
+        droppable
+          .classList
+            .toggle(droppableClass, 
+                    !isOutside && droppable.isSameNode(currentDroppableConfig.value.droppable))
+    }
+  }
   const onmousemove = function (event: DragMouseTouchEvent) {
     updateConfig(event);
+    const currentElement = childRef.value;
+    if (!currentElement) {
+      return;
+    }
+    toggleDroppableClass(isOutsideOfDroppable(event))
     if (draggingState.value === DraggingState.START_DRAGGING) {
       addTempChild(
         childRef.value,
@@ -241,6 +261,7 @@ export default function useDraggable<T>(
   }
   const onLeave = (moveEvent: MoveEvent) => {
     return (event: MouseEvent | TouchEvent) => {
+      toggleDroppableClass(true);
       const convertedEvent = convetEventToDragMouseTouchEvent(event);
       clearTimeout(delayTimeout.value);
       onDropDraggingEvent();

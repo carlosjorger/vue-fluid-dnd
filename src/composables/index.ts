@@ -25,6 +25,10 @@ export interface Config {
    */
   draggingClass?: string;
   /**
+   * The CSS class that is setted on a droppable element when the current element is dragged over it.
+   */
+  droppableClass?: string;
+  /**
    * The CSS class that is setted when a element is removed.
    */
   removingClass?: string;
@@ -70,6 +74,10 @@ export type CoreConfig<T> = {
    * The CSS class that is setted when a element is dragged.
    */
   draggingClass: string;
+  /**
+   * The CSS class that is setted on a droppable element when the current element is dragged over it.
+   */
+  droppableClass: string;
   /**
    * The CSS class that is setted when a element is removed.
    */
