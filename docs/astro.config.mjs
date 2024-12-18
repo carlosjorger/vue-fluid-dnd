@@ -130,6 +130,13 @@ export default defineConfig({
                 es: "Estilos al arrastrar",
               },
             },
+             {
+              label: "Dropping styles",
+              link: "/guides/droppableclass/",
+              translations: {
+                es: "Estilos al soltar",
+              },
+            },
             {
               label: "Sorting tables",
               link: "/guides/sortingtable/",

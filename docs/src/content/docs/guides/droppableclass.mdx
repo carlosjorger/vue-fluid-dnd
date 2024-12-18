@@ -1,0 +1,76 @@
+---
+title: Dropping styles
+description: A guide to use Vue Fluid DnD with custom dropping styles.
+---
+
+import { Code } from "@astrojs/starlight/components";
+import DroppableStyles from "@/components/DroppableStyles.vue";
+
+
+### List of number example
+First, We'll define the `group1` group of two list and pass to `droppableClass` parameter the name of the class that is setted on a **droppable** element when a draggable element is dragged over it:
+
+export const highlightsListOfNumbers = ["droppableClass", "'droppable-hover'"];
+
+export const listOfNumbers = `<script setup lang="ts">
+...
+const list1 = ref([1, 2, 3, 4]);
+const { parent: parent1 } = useDragAndDrop(list1, {
+  droppableGroup: "group1",
+  droppableClass: 'droppable-hover'
+});
+...
+const list2 = ref([5, 6, 7, 8]);
+const { parent: parent2 } = useDragAndDrop(list2, {
+  droppableGroup: "group1",
+  direction: "horizontal",
+  droppableClass: 'droppable-hover'
+});
+</script>`;
+
+<Code code={listOfNumbers} lang="vue"  mark={highlightsListOfNumbers} />
+
+### Creating the view
+
+After, we'll create the two lists on the view and add the `.number-list.droppable-hover` and `.number-list-h.droppable-hover` styles:
+
+export const listOfNumbersDraggable = `
+<template>
+  <div class="group-list">
+    <ul ref="parent1" class="number-list">
+      <!-- ...  -->
+    </ul>
+    <div ref="parent2" class="number-list-h">
+      <!-- ...  -->
+    </div>
+  </div>
+</template>
+<style>
+ /*...*/
+ .number-list {
+  /*...*/
+  transition: background-color 150ms ease-in;
+}
+.number-list.droppable-hover{
+  /*...*/
+  background-color: var(--sl-color-gray-3);
+}
+.number-list-h {
+  /*...*/
+  transition: background-color 150ms ease-in;
+}
+.number-list-h.droppable-hover{
+  background-color: var(--sl-color-gray-3);
+}
+</style>
+`;
+
+export const highlightsDraggable = ["parent1", "parent2",".droppable-hover",".droppable-hover"];
+
+<Code code={listOfNumbersDraggable} lang="vue" mark={highlightsDraggable} />
+
+### Preview
+
+<div class="pl-8">
+  <DroppableStyles client:load />
+</div>
