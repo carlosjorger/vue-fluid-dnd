@@ -12,6 +12,7 @@ import ExampleGroupOfListWithStyles from "./components/ExampleGroupOfListWithSty
 import ExampleTable from "./components/ExampleTable.vue";
 import ExampleListWithRemove from "./components/ExampleListWithRemove.vue";
 import ExampleListGroupDroppableAndDraggableClasses from './components/ExampleListGroupDroppableAndDraggableClasses.vue'
+import ExampleCompoundDroppable from './components/ExampleCompoundDroppable.vue'
 </script>
 
 <template>
@@ -34,6 +35,7 @@ import ExampleListGroupDroppableAndDraggableClasses from './components/ExampleLi
   <ExampleTable />
   <ExampleListWithRemove id="example-lists-with-remove" />
   <ExampleListGroupDroppableAndDraggableClasses id="example-list-group-droppable-and-draggable-classes" />
+  <ExampleCompoundDroppable id="example-compound-droppable" />
 </template>
 <style>
 .example-cols {
