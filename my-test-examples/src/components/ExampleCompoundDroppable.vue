@@ -7,9 +7,7 @@ const droppables = ref(['A', 'B']);
 const { parent } = useDragAndDrop<number>(droppables as any, {
   direction: "horizontal",
 });
-function getList(droppable: string){
-    return Array.from({length:3}, (_,index)=>index).map(number=>`${droppable}-${number}`)
-}
+
 const { id } = defineProps<{
   id: string;
 }>();
@@ -20,11 +18,12 @@ const { id } = defineProps<{
     <div
       v-for="(element, index) in droppables"
       :index="index"
-      :id="'horizontal-child-' + +element.toString()"
+      :id="'horizontal-child-' + element"
       class="droppable-child"
+      :key="element"
     >
       {{ element }}
-      <Droppable :list="getList(element)" />
+      <Droppable />
     </div>
   </div>
 </template>

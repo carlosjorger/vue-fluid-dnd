@@ -1,19 +1,17 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import useDragAndDrop from "../../../src/composables/useDragAndDrop";
-const { list } = defineProps<{
-  list: string[];
-}>();
-const listRef = ref(list)
-const { parent } = useDragAndDrop<number>(listRef as any);
+
+const list = ref([1, 2, 3])
+const { parent } = useDragAndDrop<number>(list as any);
 </script>
 <template>
     <ul ref="parent" class="vertical-list">
         <li
-        v-for="(element, index) in listRef"
+        v-for="(element, index) in list"
         :index="index"
-        :id="'child-with-children-' + +element"
         class="number"
+        :value="element"
         >
         {{ element }}
         </li>

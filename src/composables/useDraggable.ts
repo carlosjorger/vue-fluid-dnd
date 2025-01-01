@@ -115,10 +115,18 @@ export default function useDraggable<T>(
       addMultipleClasses(parent, droppableGroupClass);
     }
   };
-
+  function getHandler(element: HTMLElement | undefined){
+    const handler = element?.querySelector(`.${HANDLER_CLASS}`)
+    const handlerParent = handler?.parentElement
+    if (handler && handlerParent 
+        && handlerParent.classList.contains(DROPPABLE_CLASS) 
+        && !handlerParent.isSameNode(parent)) {
+      return null
+    }
+    return handler
+  }
   const setSlotRefElementParams = (element: HTMLElement | undefined) => {
-    const handlerElement = (element?.querySelector(`.${HANDLER_CLASS}`) ??
-      element) as HTMLElement;
+    const handlerElement = (getHandler(element) ?? element) as HTMLElement;
     if (handlerElement && element && isDraggable(element)) {
       assignDraggingEvent(
         handlerElement,
@@ -234,9 +242,26 @@ export default function useDraggable<T>(
       callback();
     }
   };
+  function clickOnChildDraggable(event: DragMouseTouchEvent, element: HTMLElement | undefined){
+    const {clientX, clientY} = event
+    const elementBelow = document.elementFromPoint(clientX, clientY)
+    if (!elementBelow|| !element) {
+      return false
+    }
+    if (!elementBelow?.classList.contains(DRAGGABLE_CLASS)) {
+      return false
+    }
+    if (element.isSameNode(elementBelow)) {
+      return false
+    }
+    return true
+  }
   const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
-    return () => {
+    return (event: DragMouseTouchEvent) => {
       const element = childRef.value;
+      if(clickOnChildDraggable(event, element)){
+        return
+      }
       ConfigHandler.updateScrolls(parent, droppableGroupClass);
       const { scrollX, scrollY } = window;
       windowScroll.value = { scrollX, scrollY };
@@ -330,7 +355,7 @@ export default function useDraggable<T>(
       return;
     }
     removeDraggingStyles(element);
-    // element.classList.remove(draggingClass);
+    
     emitEventToSiblings(
       element,
       START_DROP_EVENT,
