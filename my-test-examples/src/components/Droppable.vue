@@ -14,6 +14,9 @@ const { parent } = useDragAndDrop<number>(list as any);
         :value="element"
         >
         {{ element }}
+        <div v-if="element%2==0">
+          {{ element+1 }}
+        </div>
         </li>
     </ul>
 </template>

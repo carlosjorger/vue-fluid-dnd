@@ -245,13 +245,15 @@ export default function useDraggable<T>(
   function clickOnChildDraggable(event: DragMouseTouchEvent, element: HTMLElement | undefined){
     const {clientX, clientY} = event
     const elementBelow = document.elementFromPoint(clientX, clientY)
+    const draggableAncestor = elementBelow?.closest(`.${DRAGGABLE_CLASS}`)
+    
     if (!elementBelow|| !element) {
       return false
     }
-    if (!elementBelow?.classList.contains(DRAGGABLE_CLASS)) {
+    if (!draggableAncestor) {
       return false
     }
-    if (element.isSameNode(elementBelow)) {
+    if (element.isSameNode(draggableAncestor)) {
       return false
     }
     return true
