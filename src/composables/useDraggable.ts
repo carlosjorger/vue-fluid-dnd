@@ -22,7 +22,7 @@ import {
   getClassesList,
   getClassesSelector,
 } from "../utils/dom/classList";
-import { DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS, HANDLER_CLASS } from "../utils/classes";
+import { DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS, GRABBING_CLASS, HANDLER_CLASS } from "../utils/classes";
 
 const DROPPABLE_CLASS = "droppable";
 
@@ -97,8 +97,9 @@ export default function useDraggable<T>(
       ".temp-child { touch-action: none; pointer-events: none; box-sizing: border-box !important; }",
       `.droppable { box-sizing: border-box !important; }`,
       `.${DRAGGING_CLASS} { position: fixed; z-index: 5000; width: var(--fixedWidth) !important; height: var(--fixedHeight) !important; }`,
-      `.${DRAGGING_HANDLER_CLASS} { cursor: grabbing; }`,
+      `.${DRAGGING_HANDLER_CLASS} { pointer-events: none !important; }`,
       `.${DROPPING_CLASS} { pointer-events: none !important; }`,
+      `.${GRABBING_CLASS} { cursor: grabbing; }`,
     ]);
     setHandlerStyles();
     setDraggable();
@@ -187,19 +188,12 @@ export default function useDraggable<T>(
     }
     toggleDroppableClass(isOutsideOfDroppable(event))
     if (draggingState.value === DraggingState.START_DRAGGING) {
-      addTempChild(
-        childRef.value,
-        parent,
-        draggingState.value,
-        currentDroppableConfig.value
-      );
       startDragging(event);
     } else if (draggingState.value === DraggingState.DRAGING) {
       updateTempChildren();
       setTransformEvent(event);
     }
   };
-
   const updateTempChildren = () => {
     if (!currentDroppableConfig.value) {
       return;
@@ -264,6 +258,11 @@ export default function useDraggable<T>(
       if (draggingState.value === DraggingState.NOT_DRAGGING) {
         draggingState.value = DraggingState.START_DRAGGING;
         addTouchDeviceDelay(moveEvent, () => {
+          if (moveEvent == 'touchmove') {
+            updateConfig(event);
+            toggleDroppableClass(isOutsideOfDroppable(event))
+            startDragging(event)
+          }
           document.addEventListener(moveEvent, handlerMousemove, {
             passive: false,
           });
@@ -311,6 +310,12 @@ export default function useDraggable<T>(
     }
   };
   const startDragging = (event: DragMouseTouchEvent) => {
+    addTempChild(
+      childRef.value,
+      parent,
+      draggingState.value,
+      currentDroppableConfig.value
+    );
     const element = childRef.value;
     if (!element) {
       return;

@@ -15,7 +15,7 @@ import { DRAG_EVENT, draggableTargetTimingFunction, DraggingState, IsDropEvent, 
 import { DroppableConfig } from "../../composables/configHandler";
 import { IsHTMLElement } from "../touchDevice";
 import { removeTempChild } from "../tempChildren";
-import { DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS } from "../classes";
+import { DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS, GRABBING_CLASS } from "../classes";
 
 const DELAY_TIME_TO_SWAP=50
 
@@ -415,6 +415,7 @@ export default function useEmitEvents<T>(
   };
   const toogleHandlerDraggingClass = (force: boolean, element: Element) => {
     const handlerElement = element.querySelector(handlerSelector);
+    document.body.classList.toggle(GRABBING_CLASS, force);
     if (handlerElement) {
       handlerElement.classList.toggle(DRAGGING_HANDLER_CLASS, force);
     } else {
