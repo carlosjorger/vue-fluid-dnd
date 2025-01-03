@@ -11,20 +11,12 @@ import { moveTranslate, setTranistion } from "../SetStyles";
 import { CoreConfig, Direction, OnInsertEvent } from "../../composables";
 import getTranslationByDragging from "../translate/GetTranslationByDraggingAndEvent";
 import getTranslateBeforeDropping from "../translate/GetTranslateBeforeDropping";
-import { DraggingState, IsDropEvent } from "..";
+import { DRAG_EVENT, draggableTargetTimingFunction, DraggingState, IsDropEvent, START_DRAG_EVENT, START_DROP_EVENT, TEMP_CHILD_CLASS } from "..";
 import { DroppableConfig } from "../../composables/configHandler";
 import { IsHTMLElement } from "../touchDevice";
 import { removeTempChild } from "../tempChildren";
+import { DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS } from "../classes";
 
-const DRAGGING_HANDLER_CLASS = "dragging-handler-class";
-const DRAGGABLE_CLASS = "draggable";
-const TEMP_CHILD_CLASS = "temp-child";
-const START_DROP_EVENT = "startDrop";
-const DRAG_EVENT = "drag";
-const START_DRAG_EVENT = "startDrag";
-const DROPPING_CLASS = "dropping";
-const draggableTargetTimingFunction = "cubic-bezier(0.2, 0, 0, 1)";
-const DRAGGING_CLASS='dragging'
 const DELAY_TIME_TO_SWAP=50
 
 type DraggingEvent = typeof DRAG_EVENT | typeof START_DRAG_EVENT;

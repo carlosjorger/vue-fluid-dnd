@@ -8,8 +8,7 @@ import {
 import { Ref, ref, watch } from "vue";
 import { Direction } from "../composables";
 import { scrollByDirection } from "./scroll";
-const HANDLER_CLASS = "handler-class";
-const DRAGGING_CLASS='dragging'
+import { HANDLER_CLASS, DRAGGING_CLASS } from "./classes";
 
 export const useTransform = (
   childRef: Ref<HTMLElement | undefined>

@@ -8,10 +8,9 @@ import { observeMutation } from "./observer";
 // import { scrollByDirection } from "./scroll";
 import getTranslationByDragging from "./translate/GetTranslationByDraggingAndEvent";
 import { scrollPercent } from "./scroll";
-import { DraggingState } from ".";
+import { DraggingState, TEMP_CHILD_CLASS } from ".";
 import { getClassesSelector } from "./dom/classList";
 
-const TEMP_CHILD_CLASS = "temp-child";
 const START_DRAG_EVENT = "startDrag";
 const timingFunction = "cubic-bezier(0.2, 0, 0, 1)";
 const getDistance = (

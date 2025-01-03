@@ -12,7 +12,7 @@ import { DragMouseTouchEvent, MoveEvent, OnLeaveEvent } from "../../index";
 import { Ref, ref, watch } from "vue";
 import { CoreConfig } from ".";
 import useEmitEvents from "../utils/events/emitEvents";
-import { DraggingState } from "../utils";
+import { DRAG_EVENT, draggableTargetTimingFunction, DraggingState, START_DRAG_EVENT, START_DROP_EVENT } from "../utils";
 import ConfigHandler, { DroppableConfig } from "./configHandler";
 import { isTouchEvent } from "../utils/touchDevice";
 import { addTempChild, removeTempChildrens } from "../utils/tempChildren";
@@ -22,16 +22,10 @@ import {
   getClassesList,
   getClassesSelector,
 } from "../utils/dom/classList";
-const DRAGGABLE_CLASS = "draggable";
-const HANDLER_CLASS = "handler-class";
-const DRAGGING_HANDLER_CLASS = "dragging-handler-class";
+import { DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS, HANDLER_CLASS } from "../utils/classes";
+
 const DROPPABLE_CLASS = "droppable";
-const DROPPING_CLASS = "dropping";
-const DRAG_EVENT = "drag";
-const START_DRAG_EVENT = "startDrag";
-const START_DROP_EVENT = "startDrop";
-const draggableTargetTimingFunction = "cubic-bezier(0.2, 0, 0, 1)";
-const DRAGGING_CLASS='dragging'
+
 export default function useDraggable<T>(
   child: HTMLElement | undefined,
   index: number,
@@ -103,7 +97,7 @@ export default function useDraggable<T>(
       ".temp-child { touch-action: none; pointer-events: none; box-sizing: border-box !important; }",
       `.droppable { box-sizing: border-box !important; }`,
       `.${DRAGGING_CLASS} { position: fixed; z-index: 5000; width: var(--fixedWidth) !important; height: var(--fixedHeight) !important; }`,
-      `.${DRAGGING_HANDLER_CLASS} { cursor: grabbing; cursor: grabbing; }`,
+      `.${DRAGGING_HANDLER_CLASS} { cursor: grabbing; }`,
       `.${DROPPING_CLASS} { pointer-events: none !important; }`,
     ]);
     setHandlerStyles();
