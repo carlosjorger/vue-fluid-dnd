@@ -115,7 +115,7 @@ const darkPokeColor = {
       </div>
       <img
         :src="pokemon.sprites.front_default"
-        class="aspect-square"
+        class="aspect-square select-none"
         alt="pokemon"
       />
     </div>
