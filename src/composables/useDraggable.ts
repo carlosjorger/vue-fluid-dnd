@@ -73,7 +73,8 @@ export default function useDraggable<T>(
     fixedHeight,
     fixedWidth,
     index,
-    parent
+    parent,
+    droppableGroupClass
   );
   const setDraggable = () => {
     if (childRef.value) {
@@ -445,5 +446,5 @@ export default function useDraggable<T>(
 
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
 //https://github.com/iamstevendao/vue-tel-input/blob/main/.github/workflows/deploy.yml
-// TODO: fix bugs when the element is dragged on header on a table
+
 // TODO: add warning on docs with tranform animation

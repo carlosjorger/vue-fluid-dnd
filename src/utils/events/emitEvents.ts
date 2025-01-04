@@ -16,6 +16,7 @@ import { DroppableConfig } from "../../composables/configHandler";
 import { IsHTMLElement } from "../touchDevice";
 import { removeTempChild } from "../tempChildren";
 import { DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS, GRABBING_CLASS } from "../classes";
+import { getClassesSelector } from "../dom/classList";
 
 const DELAY_TIME_TO_SWAP=50
 
@@ -29,7 +30,8 @@ export default function useEmitEvents<T>(
   fixedHeight: Ref<string>,
   fixedWidth: Ref<string>,
   index: number,
-  parent: HTMLElement
+  parent: HTMLElement,
+  droppableGroupClass: string | null,
 ) {
   const actualIndex = ref(index);
   const {
@@ -330,7 +332,6 @@ export default function useEmitEvents<T>(
     droppable: HTMLElement,
     positionOnSourceDroppable?: number
   ) => {
-    // TODO: remove draggingClass
     element.classList.add(DROPPING_CLASS);
     removeStytes(element, parent, droppable, () => {
       element.classList.remove(DROPPING_CLASS);
@@ -340,9 +341,21 @@ export default function useEmitEvents<T>(
           onInsertEvent(targetIndex, value);
         }
         manageDraggingClass(element)
+        clearExcessTranslateStyles();
       }
     });
   };
+  function clearExcessTranslateStyles(){
+    if (!droppableGroupClass) {
+      return
+    }
+    var children = document.querySelectorAll(
+        `${getClassesSelector(droppableGroupClass)} > .${DRAGGABLE_CLASS}`
+    );
+    for (const element of children) {
+      removeTranslateWhitoutTransition(element)
+    }
+  }
   function manageDraggingClass(element: HTMLElement){
     setTimeout(() => {
       element.classList.remove(draggingClass);
