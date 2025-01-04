@@ -130,8 +130,9 @@ export const removeTempChildrens = (
     return;
   }
   var children = document.querySelectorAll(
-    `${getClassesSelector(droppableGroupClass)}.${TEMP_CHILD_CLASS}`
+    `${getClassesSelector(droppableGroupClass)} > .${TEMP_CHILD_CLASS}`
   );
+
   children.forEach((tempChild) => {
     const childParent = tempChild.parentElement;
     if (childParent?.isSameNode(parent) || childParent?.isSameNode(droppable)) {
