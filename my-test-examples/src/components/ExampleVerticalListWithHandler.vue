@@ -20,7 +20,9 @@ const { parent } = useDragAndDrop<number>(numbers as any, {
       :key="element"
     >
       <div class="draggable-wrapper">
-        <span class="drag-handle"><i>☰</i></span>
+        <span class="drag-handle">
+          <div><i>☰</i></div>
+        </span>
         <span>{{ element }}</span>
       </div>
     </li>

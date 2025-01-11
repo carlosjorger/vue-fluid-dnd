@@ -1,4 +1,4 @@
-import { getScroll } from "../utils/GetStyles";
+import { getScroll, isDescendant } from "../utils/GetStyles";
 import {
   AddCssStylesToElement,
   assignDraggingEvent,
@@ -22,7 +22,7 @@ import {
   getClassesList,
   getClassesSelector,
 } from "../utils/dom/classList";
-import { DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS, GRABBING_CLASS, HANDLER_CLASS } from "../utils/classes";
+import { DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS, GRABBING_CLASS, HANDLER_CLASS, START_DRAGGING_CLASS } from "../utils/classes";
 
 const DROPPABLE_CLASS = "droppable";
 
@@ -101,6 +101,9 @@ export default function useDraggable<T>(
       `.${DRAGGING_HANDLER_CLASS} { pointer-events: none !important; }`,
       `.${DROPPING_CLASS} { pointer-events: none !important; }`,
       `.${GRABBING_CLASS} { cursor: grabbing; }`,
+      `.${START_DRAGGING_CLASS} * { pointer-events: none; }`,
+
+
     ]);
     setHandlerStyles();
     setDraggable();
@@ -219,6 +222,13 @@ export default function useDraggable<T>(
     } else if (isTouchEvent(event)) {
       return;
     }
+    const element = childRef.value
+    const handlerElement = (getHandler(element) ?? element) as HTMLElement;
+    const target = event.target as HTMLElement 
+    if (handlerElement&&isDescendant(handlerElement,target)) {
+        element?.classList.add(START_DRAGGING_CLASS)
+        return
+      }
     const eventToDragMouse = convetEventToDragMouseTouchEvent(event);
     onmousemove(eventToDragMouse);
   };
@@ -250,6 +260,7 @@ export default function useDraggable<T>(
   const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
     return (event: DragMouseTouchEvent) => {
       const element = childRef.value;
+      
       if(clickOnChildDraggable(event, element)){
         return
       }
@@ -282,6 +293,7 @@ export default function useDraggable<T>(
   }
   const onLeave = (moveEvent: MoveEvent) => {
     return (event: MouseEvent | TouchEvent) => {
+      childRef.value?.classList.remove(START_DRAGGING_CLASS)
       toggleDroppableClass(true);
       const convertedEvent = convetEventToDragMouseTouchEvent(event);
       clearTimeout(delayTimeout.value);

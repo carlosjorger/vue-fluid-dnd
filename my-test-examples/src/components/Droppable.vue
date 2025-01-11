@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import useDragAndDrop from "../../../src/composables/useDragAndDrop";
 
-const list = ref([1, 2, 3])
+const list = ref([111, 222, 333])
 const { parent } = useDragAndDrop<number>(list as any);
 </script>
 <template>
@@ -13,7 +13,7 @@ const { parent } = useDragAndDrop<number>(list as any);
         class="number"
         :value="element"
         >
-        {{ element }}
+        <span>{{ element }}</span>
         <div v-if="element%2==0">
           {{ element+1 }}
         </div>

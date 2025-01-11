@@ -213,3 +213,13 @@ export const getSiblingsByParent = (
     parent,
   };
 };
+export function isDescendant(parent:Element, child:Element) {
+     var node = child.parentNode;
+     while (node != null) {
+         if (node.isSameNode(parent)) {
+             return true;
+         }
+         node = node.parentNode;
+     }
+     return false;
+}
