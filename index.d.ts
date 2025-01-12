@@ -45,6 +45,8 @@ export type TransformEvent = {
   readonly target: EventTarget | null;
   readonly offsetX: number;
   readonly offsetY: number;
+  readonly clientX: number;
+  readonly clientY: number;
 };
 export type WindowScroll = {
   readonly scrollX: number;

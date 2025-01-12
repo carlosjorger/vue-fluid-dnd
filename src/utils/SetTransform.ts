@@ -4,6 +4,7 @@ import {
   getBorderWidthProperty,
   getMarginStyleByProperty,
   getPropByDirection,
+  isDescendant,
 } from "./GetStyles";
 import { Ref, ref, watch } from "vue";
 import { Direction } from "../composables";
@@ -137,11 +138,12 @@ export const useTransform = (
     event: DragMouseTouchEvent,
     element: HTMLElement
   ) => {
-    const { offsetX, offsetY, top, left } = getTransformState(
+    let { offsetX, offsetY, top, left } = getTransformState(
       event,
       element,
       childRef.value
     );
+ 
     position.value = {
       top,
       left,
@@ -167,8 +169,19 @@ const getOffsetWithDraggable = (
   );
 };
 const getOffset = (event: TransformEvent, draggable: Element | undefined) => {
-  let { offsetX, offsetY, target } = event;
+  let { offsetX, offsetY, target} = event;
   let targetHandler = getHandlerElementAncestor(target, draggable);
+  var [innerOffsetX, innerOffsetY] =[0,0];
+  let targetElement = target as HTMLElement;
+  if (draggable&&targetElement&&isDescendant(draggable,targetElement)) {
+    const targetBounds = targetElement.getBoundingClientRect();
+    const dragganbleBounds = draggable.getBoundingClientRect();
+    innerOffsetX = targetBounds.left - dragganbleBounds.left ;
+    innerOffsetY = targetBounds.top - dragganbleBounds.top ;
+    offsetX-=innerOffsetX
+    offsetY-=innerOffsetY;
+    console.log(targetHandler, draggable)
+  }
   if (draggable && targetHandler && draggable != target) {
     offsetX += getOffsetWithDraggable("horizontal", targetHandler, draggable);
     offsetY += getOffsetWithDraggable("vertical", targetHandler, draggable);

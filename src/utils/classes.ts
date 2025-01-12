@@ -4,4 +4,3 @@ export const DRAGGING_CLASS = 'dragging'
 export const DRAGGING_HANDLER_CLASS = "dragging-handler-class";
 export const DROPPING_CLASS = "dropping"; 
 export const GRABBING_CLASS = "grabbing"; 
-export const START_DRAGGING_CLASS='a'
