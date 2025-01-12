@@ -66,7 +66,7 @@ const { parent: parent3, removeAt: removeAt3 } = useDragAndDrop<number>(
       :key="element"
     >
       <div class="draggable-wrapper">
-        <span class="drag-handle"><i>☰</i></span>
+        <div class="drag-handle"><div><div>☰</div></div></div>
         <span>{{ element }}</span>
         <button class="remove-button" @click="removeAt3(index)">X</button>
       </div>
@@ -74,6 +74,9 @@ const { parent: parent3, removeAt: removeAt3 } = useDragAndDrop<number>(
   </ul>
 </template>
 <style scoped>
+.drag-handle>div{
+  padding: 0 5px;
+}
 .list {
   display: flex;
   padding: 10px;

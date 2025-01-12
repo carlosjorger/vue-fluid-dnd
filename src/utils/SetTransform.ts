@@ -169,6 +169,11 @@ const getOffsetWithDraggable = (
 const getOffset = (event: TransformEvent, draggable: Element | undefined) => {
   let { offsetX, offsetY, target } = event;
   let targetHandler = getHandlerElementAncestor(target, draggable);
+  const targetElement = target as HTMLElement;
+  if (targetElement && targetHandler && !targetElement.isSameNode(targetHandler)) {
+    offsetX += getOffsetWithDraggable("horizontal", targetElement, targetHandler);
+    offsetY += getOffsetWithDraggable("vertical", targetElement, targetHandler);
+  }
   if (draggable && targetHandler && draggable != target) {
     offsetX += getOffsetWithDraggable("horizontal", targetHandler, draggable);
     offsetY += getOffsetWithDraggable("vertical", targetHandler, draggable);

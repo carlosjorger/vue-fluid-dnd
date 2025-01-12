@@ -20,8 +20,10 @@ const { parent } = useDragAndDrop<number>(numbers as any, {
       :key="element"
     >
       <div class="draggable-wrapper">
-        <span class="drag-handle"><i>☰</i></span>
-        <span>{{ element }}</span>
+        <div class="drag-handle">
+          <div><div>☰</div></div>
+        </div>
+        <div>{{ element }}</div>
       </div>
     </li>
   </ul>
@@ -50,5 +52,6 @@ const { parent } = useDragAndDrop<number>(numbers as any, {
 .drag-handle {
   float: left;
   padding: 0px 50px;
+  background-color: rgba(225, 225, 225, 0.2);
 }
 </style>
