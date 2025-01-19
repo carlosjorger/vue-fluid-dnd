@@ -3,7 +3,14 @@ import { ref } from "vue";
 import useDragAndDrop from "../../../src/composables/useDragAndDrop";
 
 const list = ref([111, 222, 333])
-const { parent } = useDragAndDrop<number>(list as any);
+const { droppableGroup } = defineProps<{
+  droppableGroup: string;
+}>();
+const { parent } = useDragAndDrop<number>(list as any,
+  {
+    droppableGroup
+  }
+);
 </script>
 <template>
     <ul ref="parent" class="vertical-list">
@@ -24,6 +31,8 @@ const { parent } = useDragAndDrop<number>(list as any);
 .vertical-list {
   display: block;
   padding-inline: 10px;
+  min-height: 200px;
+  background-color: rgba(255, 255, 255, 0.2);
 }
 .number {
   padding-left: 5px;

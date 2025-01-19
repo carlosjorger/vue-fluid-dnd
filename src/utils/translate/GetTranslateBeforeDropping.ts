@@ -8,7 +8,9 @@ import {
   WindowScroll,
 } from "../../../index";
 import {
+  getBorderWidthProperty,
   getMarginStyleByProperty,
+  getPaddingWidthProperty,
   getPropByDirection,
   getTransform,
 } from "../GetStyles";
@@ -59,7 +61,6 @@ const getGroupDraggedTranslate = (
     firstElement.getBoundingClientRect();
 
   const { x, y } = getTransform(firstElement);
-  // TODO: calcultate space of prev siblings before draggable
 
   const marginDiffVertical =
     beforeMarginVerticalFirstElement -
@@ -85,6 +86,48 @@ const getGroupDraggedTranslate = (
       marginDiffHorizontal,
   };
 };
+const getGroupTranslate = (
+  droppable: HTMLElement,
+  draggable: HTMLElement,
+) =>{
+    const {
+    beforeMargin: beforeMarginVertical,
+    borderBeforeWidth: borderBeforeWidthVertical,
+    paddingBefore: paddingBeforeVertical
+  } = getPropByDirection("vertical");
+
+const { 
+  beforeMargin: beforeMarginHorizontal,
+  borderBeforeWidth: borderBeforeWidthHorizontal,
+  paddingBefore: paddingBeforeHorizontal
+ } =
+  getPropByDirection("horizontal");
+
+const beforeMarginVerticalValue = getMarginStyleByProperty(
+  draggable,
+  beforeMarginVertical
+);
+const beforeMarginHorizontalValue = getMarginStyleByProperty(
+  draggable,
+  beforeMarginHorizontal
+);
+
+
+const { top, left } = getBeforeStyles(draggable);
+const {x: xDroppable, y: yDroppable} = droppable.getBoundingClientRect()
+
+const borderBeforeWidthDroppableVertical =  getBorderWidthProperty(droppable, borderBeforeWidthVertical)
+const borderBeforeWidthDroppableHorizontal =  getBorderWidthProperty(droppable, borderBeforeWidthHorizontal)
+
+const paddingBeforeDroppableVertical =  getPaddingWidthProperty(droppable, paddingBeforeVertical)
+const paddingBeforeDroppableHorizontal =  getPaddingWidthProperty(droppable, paddingBeforeHorizontal)
+
+return {
+  x: xDroppable + paddingBeforeDroppableHorizontal + borderBeforeWidthDroppableHorizontal - (left + beforeMarginHorizontalValue),
+  y: yDroppable + paddingBeforeDroppableVertical + borderBeforeWidthDroppableVertical  - (top + beforeMarginVerticalValue)
+}
+
+}
 export default function getTranslateBeforeDropping(
   direction: Direction,
   siblings: Element[],
@@ -111,8 +154,8 @@ export default function getTranslateBeforeDropping(
   }
   if (sourceIndex < 0 && draggable) {
     isGroupDropping = true;
-    const [firstElement] = siblings;
-    const { x, y } = getGroupDraggedTranslate(firstElement, draggable);
+    const { x, y } = getGroupTranslate(droppable, draggable);
+    
     height += y;
     width += x;
   }
@@ -157,7 +200,7 @@ export default function getTranslateBeforeDropping(
   );
 
   const scrollChange = isGroupDropping
-    ? 0
+    ? droppable[scrollElement]
     : getScrollChange(scrollElement, droppable, previousScroll);
   const spaceCalc = isDraggedFoward
     ? spaceBetween - spaceBeforeDraggedElement

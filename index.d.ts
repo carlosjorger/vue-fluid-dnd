@@ -5,6 +5,7 @@ export type BeforeMargin = "marginTop" | "marginLeft";
 export type AfterMargin = "marginBottom" | "marginRight";
 export type GapStyle = "columnGap" | "rowGap";
 export type BorderWidth = "borderTopWidth" | "borderLeftWidth";
+export type PaddingBefore = "paddingLeft" | "paddingTop";
 export type Distance = "width" | "height";
 export type Before = "left" | "top";
 export type After = "right" | "down";

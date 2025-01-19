@@ -16,6 +16,7 @@ import {
   ScrollElement,
   ScrollDistance,
   ClientDistance,
+  PaddingBefore,
 } from "../../index";
 export const getScroll = (element: HTMLElement | undefined | null) => {
   if (element) {
@@ -95,6 +96,15 @@ const intersectionByDirection = (
     }
   );
 };
+export const getPaddingWidthProperty = (
+  element: HTMLElement | Element | undefined | null,
+  property: PaddingBefore
+) => {
+  if (element) {
+    return parseFloatEmpty(getComputedStyle(element)[property]);
+  }
+  return 0;
+};
 export const getBorderWidthProperty = (
   element: HTMLElement | Element | undefined | null,
   property: BorderWidth
@@ -137,6 +147,7 @@ export const getPropByDirection = (
   offsetElement: OffsetElement;
   scrollDistance: ScrollDistance;
   clientDistance: ClientDistance;
+  paddingBefore: PaddingBefore;
 } => {
   if (direction == "horizontal") {
     return {
@@ -156,6 +167,7 @@ export const getPropByDirection = (
       offsetElement: "offsetLeft",
       scrollDistance: "scrollWidth",
       clientDistance: "clientWidth",
+      paddingBefore: 'paddingLeft'
     };
   } else {
     return {
@@ -175,6 +187,7 @@ export const getPropByDirection = (
       offsetElement: "offsetTop",
       scrollDistance: "scrollHeight",
       clientDistance: "clientHeight",
+      paddingBefore: 'paddingTop'
     };
   }
 };

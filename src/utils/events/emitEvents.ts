@@ -239,14 +239,14 @@ export default function useEmitEvents<T>(
         allSiblings,
         droppable
       );
-    translation = getTranslationByDragging(
-      draggedElement,
-      event,
-      config.direction,
-      parent,
-      previousElement,
-      nextElement
-    );
+      translation = getTranslationByDragging(
+        draggedElement,
+        event,
+        config.direction,
+        parent,
+        previousElement,
+        nextElement
+      );
     const windowScroll = getWindowScroll();
     const draggableTranslation = getTranslateBeforeDropping(
       config.direction,
@@ -259,6 +259,15 @@ export default function useEmitEvents<T>(
       droppable,
       draggedElement
     );
+    if (siblings.length==0) {
+      startDropEventOverElement(
+          undefined,
+          translation,
+          draggedElement,
+          draggableTranslation
+        );
+    }
+
     for (const [index, sibling] of siblings.toReversed().entries()) {
       let newTranslation = translation;
       if (targetIndex - 1 >= index) {
@@ -313,7 +322,7 @@ export default function useEmitEvents<T>(
     };
   };
   const startDropEventOverElement = (
-    targetElement: Element,
+    targetElement: Element|undefined,
     translation: Translate,
     element: HTMLElement,
     sourceElementTranlation: Translate

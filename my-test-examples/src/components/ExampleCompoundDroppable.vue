@@ -23,7 +23,7 @@ const { id } = defineProps<{
       :key="element"
     >
       {{ element }}
-      <Droppable />
+      <Droppable droppableGroup="nested-group"/>
     </div>
   </div>
 </template>
