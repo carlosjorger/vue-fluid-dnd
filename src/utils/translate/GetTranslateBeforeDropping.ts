@@ -71,11 +71,10 @@ export default function getTranslateBeforeDropping(
 ) {
   let height = 0;
   let width = 0;
-  let isGroupDropping = false;
+  const isGroupDropping = Boolean(sourceIndex < 0 && draggable);
 
-  if (sourceIndex < 0 && draggable) {
-    isGroupDropping = true;
-    const { x, y } = getGroupTranslate(droppable, draggable);
+  if (isGroupDropping) {
+    const { x, y } = getGroupTranslate(droppable, draggable!);
     height += y;
     width += x;
   }
@@ -127,7 +126,7 @@ export default function getTranslateBeforeDropping(
     afterMarginOutside,
     gap
   );
-  
+
   const scrollChange = isGroupDropping
     ? droppable[scrollElement]
     : getScrollChange(scrollElement, droppable, previousScroll);
