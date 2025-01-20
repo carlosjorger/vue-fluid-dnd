@@ -126,6 +126,14 @@ export default function useEmitEvents<T>(
     const { config, droppable } = droppableConfig;
     const { siblings } = getSiblings(draggedElement, droppable);
     const isOutside = draggableIsOutside(draggedElement, droppable);
+    if (siblings.length == 0) {
+       updateActualIndexBaseOnTranslation(
+        translation,
+        0,
+        config.direction,
+        siblings
+      );
+    }
     for (const [index, sibling] of siblings.entries()) {
       if (!sibling.classList.contains(DRAGGABLE_CLASS)) {
         continue;
@@ -194,7 +202,7 @@ export default function useEmitEvents<T>(
     const itemsCount = siblings.filter((sibling) =>
       sibling.classList.contains("draggable")
     ).length;
-
+    
     const { distance } = getPropByDirection(direction);
     if (translation[distance] == 0) {
       actualIndex.value = Math.max(actualIndex.value, siblingIndex);

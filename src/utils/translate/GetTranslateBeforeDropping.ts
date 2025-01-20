@@ -12,120 +12,50 @@ import {
   getMarginStyleByProperty,
   getPaddingWidthProperty,
   getPropByDirection,
-  getTransform,
 } from "../GetStyles";
 import { gapAndDisplayInformation, getBeforeStyles } from "../ParseStyles";
-const getGroupDraggedTranslate = (
-  firstElement: Element,
-  draggable: HTMLElement
-) => {
-  const droppableSource = draggable.parentElement;
-  const prevDraggable = draggable.previousElementSibling;
-  if (!droppableSource) {
-    return { x: 0, y: 0 };
-  }
+
+// TODO: fix cases with margins
+const getGroupTranslate = (
+  droppable: HTMLElement,
+  draggable: HTMLElement,
+) =>{
   const {
     beforeMargin: beforeMarginVertical,
-    afterMargin: afterMarginVertical,
+    borderBeforeWidth: borderBeforeWidthVertical,
+    paddingBefore: paddingBeforeVertical
   } = getPropByDirection("vertical");
-  const { beforeMargin: beforeMarginHorizontal } =
+
+  const { 
+    beforeMargin: beforeMarginHorizontal,
+    borderBeforeWidth: borderBeforeWidthHorizontal,
+    paddingBefore: paddingBeforeHorizontal
+  } =
     getPropByDirection("horizontal");
 
   const beforeMarginVerticalValue = getMarginStyleByProperty(
     draggable,
     beforeMarginVertical
   );
-
-  const afterMarginVerticalPrevDraggable = getMarginStyleByProperty(
-    prevDraggable,
-    afterMarginVertical
-  );
-
-  const beforeMarginVerticalFirstElement = getMarginStyleByProperty(
-    firstElement,
-    beforeMarginVertical
-  );
-
   const beforeMarginHorizontalValue = getMarginStyleByProperty(
     draggable,
     beforeMarginHorizontal
   );
 
-  const beforeMarginHorizontalFirstElement = getMarginStyleByProperty(
-    firstElement,
-    beforeMarginHorizontal
-  );
 
   const { top, left } = getBeforeStyles(draggable);
-  const { top: firstElementTop, left: firstElementLeft } =
-    firstElement.getBoundingClientRect();
+  const {x: xDroppable, y: yDroppable} = droppable.getBoundingClientRect()
 
-  const { x, y } = getTransform(firstElement);
+  const borderBeforeWidthDroppableVertical =  getBorderWidthProperty(droppable, borderBeforeWidthVertical)
+  const borderBeforeWidthDroppableHorizontal =  getBorderWidthProperty(droppable, borderBeforeWidthHorizontal)
 
-  const marginDiffVertical =
-    beforeMarginVerticalFirstElement -
-    Math.max(beforeMarginVerticalValue - afterMarginVerticalPrevDraggable, 0);
-
-  const marginDiffHorizontal =
-    beforeMarginHorizontalFirstElement -
-    Math.max(
-      beforeMarginHorizontalValue - beforeMarginHorizontalFirstElement,
-      0
-    );
+  const paddingBeforeDroppableVertical =  getPaddingWidthProperty(droppable, paddingBeforeVertical)
+  const paddingBeforeDroppableHorizontal =  getPaddingWidthProperty(droppable, paddingBeforeHorizontal)
 
   return {
-    y:
-      firstElementTop -
-      y -
-      (top + beforeMarginVerticalValue) -
-      marginDiffVertical,
-    x:
-      firstElementLeft -
-      x -
-      (left + beforeMarginHorizontalValue) -
-      marginDiffHorizontal,
-  };
-};
-const getGroupTranslate = (
-  droppable: HTMLElement,
-  draggable: HTMLElement,
-) =>{
-    const {
-    beforeMargin: beforeMarginVertical,
-    borderBeforeWidth: borderBeforeWidthVertical,
-    paddingBefore: paddingBeforeVertical
-  } = getPropByDirection("vertical");
-
-const { 
-  beforeMargin: beforeMarginHorizontal,
-  borderBeforeWidth: borderBeforeWidthHorizontal,
-  paddingBefore: paddingBeforeHorizontal
- } =
-  getPropByDirection("horizontal");
-
-const beforeMarginVerticalValue = getMarginStyleByProperty(
-  draggable,
-  beforeMarginVertical
-);
-const beforeMarginHorizontalValue = getMarginStyleByProperty(
-  draggable,
-  beforeMarginHorizontal
-);
-
-
-const { top, left } = getBeforeStyles(draggable);
-const {x: xDroppable, y: yDroppable} = droppable.getBoundingClientRect()
-
-const borderBeforeWidthDroppableVertical =  getBorderWidthProperty(droppable, borderBeforeWidthVertical)
-const borderBeforeWidthDroppableHorizontal =  getBorderWidthProperty(droppable, borderBeforeWidthHorizontal)
-
-const paddingBeforeDroppableVertical =  getPaddingWidthProperty(droppable, paddingBeforeVertical)
-const paddingBeforeDroppableHorizontal =  getPaddingWidthProperty(droppable, paddingBeforeHorizontal)
-
-return {
-  x: xDroppable + paddingBeforeDroppableHorizontal + borderBeforeWidthDroppableHorizontal - (left + beforeMarginHorizontalValue),
-  y: yDroppable + paddingBeforeDroppableVertical + borderBeforeWidthDroppableVertical  - (top + beforeMarginVerticalValue)
-}
+    x: xDroppable + paddingBeforeDroppableHorizontal + borderBeforeWidthDroppableHorizontal - (left + beforeMarginHorizontalValue),
+    y: yDroppable + paddingBeforeDroppableVertical + borderBeforeWidthDroppableVertical  - (top + beforeMarginVerticalValue)
+  }
 
 }
 export default function getTranslateBeforeDropping(
@@ -143,7 +73,13 @@ export default function getTranslateBeforeDropping(
   let width = 0;
   let isGroupDropping = false;
 
-  if (sourceIndex === targetIndex) {
+  if (sourceIndex < 0 && draggable) {
+    isGroupDropping = true;
+    const { x, y } = getGroupTranslate(droppable, draggable);
+    height += y;
+    width += x;
+  }
+  if (sourceIndex === targetIndex && !isGroupDropping) {
     return addScrollToTranslate(
       { height, width },
       direction,
@@ -152,15 +88,8 @@ export default function getTranslateBeforeDropping(
       isGroupDropping
     );
   }
-  if (sourceIndex < 0 && draggable) {
-    isGroupDropping = true;
-    const { x, y } = getGroupTranslate(droppable, draggable);
-    
-    height += y;
-    width += x;
-  }
   const { sourceElement, targetElement, siblingsBetween, isDraggedFoward } =
-    getElementsRange(siblings, sourceIndex, targetIndex, draggable);
+  getElementsRange(siblings, sourceIndex, targetIndex, draggable);
   const {
     scrollElement,
     beforeMargin: beforeMarginProp,
@@ -198,7 +127,7 @@ export default function getTranslateBeforeDropping(
     afterMarginOutside,
     gap
   );
-
+  
   const scrollChange = isGroupDropping
     ? droppable[scrollElement]
     : getScrollChange(scrollElement, droppable, previousScroll);
