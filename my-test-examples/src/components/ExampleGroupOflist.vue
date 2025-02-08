@@ -31,7 +31,7 @@ const { parent: parent4 } = useDragAndDrop<number>(list as any, {
   droppableGroup: "group2 group3",
 });
 
-const list2 = ref([1, 2, 3, 4]);
+const list2 = ref([5, 6, 7, 8]);
 const { parent: parent5 } = useDragAndDrop<number>(list2 as any, {
   droppableGroup: "group2",
   direction: "horizontal",

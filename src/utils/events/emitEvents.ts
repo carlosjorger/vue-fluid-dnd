@@ -129,7 +129,7 @@ export default function useEmitEvents<T>(
     if (siblings.length == 0) {
        updateActualIndexBaseOnTranslation(
         translation,
-        0,
+        1,
         config.direction,
         siblings
       );
@@ -209,6 +209,7 @@ export default function useEmitEvents<T>(
     } else {
       actualIndex.value = Math.min(actualIndex.value, siblingIndex - 1);
     }
+    console.log(siblingIndex)
     actualIndex.value = Math.min(actualIndex.value, itemsCount);
   };
   const startDragEventOverElement = (

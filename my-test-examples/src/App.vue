@@ -13,6 +13,8 @@ import ExampleTable from "./components/ExampleTable.vue";
 import ExampleListWithRemove from "./components/ExampleListWithRemove.vue";
 import ExampleListGroupDroppableAndDraggableClasses from './components/ExampleListGroupDroppableAndDraggableClasses.vue'
 import ExampleCompoundDroppable from './components/ExampleCompoundDroppable.vue'
+import ExampleHorizontalCounterList from "./components/ExampleHorizontalCounterList.vue";
+
 </script>
 
 <template>
@@ -36,6 +38,8 @@ import ExampleCompoundDroppable from './components/ExampleCompoundDroppable.vue'
   <ExampleListWithRemove id="example-lists-with-remove" />
   <ExampleListGroupDroppableAndDraggableClasses id="example-list-group-droppable-and-draggable-classes" />
   <ExampleCompoundDroppable id="example-compound-droppable" />
+  <ExampleHorizontalCounterList id="example-horizontal-counter-list" />
+
 </template>
 <style>
 .example-cols {
