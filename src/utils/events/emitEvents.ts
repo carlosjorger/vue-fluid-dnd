@@ -238,7 +238,9 @@ export default function useEmitEvents<T>(
       droppable
     );
     const allSiblings = siblings.toReversed();
-    allSiblings.splice(positionOnDroppable, 0, draggedElement);
+    const realPositionOnDroppable = (positionOnDroppable === -1)? allSiblings.length: positionOnDroppable 
+
+    allSiblings.splice(realPositionOnDroppable, 0, draggedElement);
 
     const { previousElement, nextElement, targetIndex } =
       getPreviousAndNextElement(

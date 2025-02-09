@@ -15,40 +15,20 @@ import {
 } from "../GetStyles";
 import { gapAndDisplayInformation, getBeforeStyles } from "../ParseStyles";
 
-// TODO: fix cases with margins
 const getGroupTranslate = (
   droppable: HTMLElement,
   draggable: HTMLElement,
-  targetElement: Element
 ) =>{
   const {
-    beforeMargin: beforeMarginVertical,
     borderBeforeWidth: borderBeforeWidthVertical,
     paddingBefore: paddingBeforeVertical
   } = getPropByDirection("vertical");
 
   const { 
-    beforeMargin: beforeMarginHorizontal,
     borderBeforeWidth: borderBeforeWidthHorizontal,
     paddingBefore: paddingBeforeHorizontal
   } =
     getPropByDirection("horizontal");
-
-  const beforeMarginVerticalValue = getMarginStyleByProperty(
-    draggable,
-    beforeMarginVertical
-  );
-  const beforeMarginHorizontalValue = getMarginStyleByProperty(
-    draggable,
-    beforeMarginHorizontal
-  );
-
-  const beforeTarget = targetElement
-  
-  const beforeMarginVerticalValuePreviousTarget = getMarginStyleByProperty(
-    beforeTarget,
-    beforeMarginVertical
-  );
 
   const { top, left } = getBeforeStyles(draggable);
   const {x: xDroppable, y: yDroppable} = droppable.getBoundingClientRect()
@@ -58,11 +38,9 @@ const getGroupTranslate = (
 
   const paddingBeforeDroppableVertical =  getPaddingWidthProperty(droppable, paddingBeforeVertical)
   const paddingBeforeDroppableHorizontal =  getPaddingWidthProperty(droppable, paddingBeforeHorizontal)
-  // console.log({beforeMarginVerticalValue, beforeMarginVerticalValuePreviousTarget }, Math.abs(beforeMarginVerticalValue - beforeMarginVerticalValuePreviousTarget))
   return {
-    x: xDroppable + paddingBeforeDroppableHorizontal + borderBeforeWidthDroppableHorizontal - (left),
-    y: yDroppable + paddingBeforeDroppableVertical + borderBeforeWidthDroppableVertical  - 
-    (top)
+    x: xDroppable + paddingBeforeDroppableHorizontal + borderBeforeWidthDroppableHorizontal - left,
+    y: yDroppable + paddingBeforeDroppableVertical + borderBeforeWidthDroppableVertical  - top
   }
 
 }
@@ -94,8 +72,9 @@ export default function getTranslateBeforeDropping(
   const { sourceElement, targetElement, siblingsBetween, isDraggedFoward } =
   getElementsRange(siblings, sourceIndex, targetIndex, draggable);
 
+
   if (isGroupDropping) {
-    const { x, y } = getGroupTranslate(droppable, draggable!, targetElement);
+    const { x, y } = getGroupTranslate(droppable, draggable!);
     height += y;
     width += x;
   }
@@ -138,7 +117,6 @@ export default function getTranslateBeforeDropping(
     afterMarginOutside,
     gap
   );
-
   const scrollChange = isGroupDropping
     ? droppable[scrollElement]
     : getScrollChange(scrollElement, droppable, previousScroll);

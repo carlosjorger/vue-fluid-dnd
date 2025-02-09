@@ -219,7 +219,7 @@ export const getSiblingsByParent = (
   const positionOnDroppable = [...parent.children].findLastIndex((child) =>
     child.isEqualNode(current)
   );
-
+  
   return {
     siblings,
     positionOnDroppable,
