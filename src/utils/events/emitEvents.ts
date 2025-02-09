@@ -209,7 +209,6 @@ export default function useEmitEvents<T>(
     } else {
       actualIndex.value = Math.min(actualIndex.value, siblingIndex - 1);
     }
-    console.log(siblingIndex)
     actualIndex.value = Math.min(actualIndex.value, itemsCount);
   };
   const startDragEventOverElement = (

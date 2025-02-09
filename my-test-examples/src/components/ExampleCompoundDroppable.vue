@@ -7,7 +7,10 @@ const droppables = ref(['A', 'B']);
 const { parent } = useDragAndDrop<number>(droppables as any, {
   direction: "horizontal",
 });
-
+const dict={
+  'A':['a', 'b', 'c'],
+  'B':['d', 'e', 'f']
+}
 const { id } = defineProps<{
   id: string;
 }>();
@@ -23,7 +26,7 @@ const { id } = defineProps<{
       :key="element"
     >
       {{ element }}
-      <Droppable droppableGroup="nested-group"/>
+      <Droppable :elements="dict[element]" droppableGroup="nested-group"/>
     </div>
   </div>
 </template>

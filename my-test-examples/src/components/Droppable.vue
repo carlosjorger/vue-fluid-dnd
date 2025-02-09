@@ -2,10 +2,12 @@
 import { ref } from "vue";
 import useDragAndDrop from "../../../src/composables/useDragAndDrop";
 
-const list = ref([111, 222, 333])
-const { droppableGroup } = defineProps<{
+const list = ref([] as string[])
+const { droppableGroup, elements } = defineProps<{
   droppableGroup: string;
+  elements: string[]
 }>();
+list.value = elements
 const { parent } = useDragAndDrop<number>(list as any,
   {
     droppableGroup
@@ -21,9 +23,6 @@ const { parent } = useDragAndDrop<number>(list as any,
         :value="element"
         >
         <div>{{ element }}</div>
-        <div v-if="element%2==0">
-       {{ element+1 }}
-        </div>
         </li>
     </ul>
 </template>
@@ -40,5 +39,6 @@ const { parent } = useDragAndDrop<number>(list as any,
   border-style: solid;
   border-width: 0.8rem;
   width: 100px;
+  margin: 5px;
 }
 </style>

@@ -19,6 +19,7 @@ import { gapAndDisplayInformation, getBeforeStyles } from "../ParseStyles";
 const getGroupTranslate = (
   droppable: HTMLElement,
   draggable: HTMLElement,
+  targetElement: Element
 ) =>{
   const {
     beforeMargin: beforeMarginVertical,
@@ -42,6 +43,12 @@ const getGroupTranslate = (
     beforeMarginHorizontal
   );
 
+  const beforeTarget = targetElement
+  
+  const beforeMarginVerticalValuePreviousTarget = getMarginStyleByProperty(
+    beforeTarget,
+    beforeMarginVertical
+  );
 
   const { top, left } = getBeforeStyles(draggable);
   const {x: xDroppable, y: yDroppable} = droppable.getBoundingClientRect()
@@ -51,10 +58,11 @@ const getGroupTranslate = (
 
   const paddingBeforeDroppableVertical =  getPaddingWidthProperty(droppable, paddingBeforeVertical)
   const paddingBeforeDroppableHorizontal =  getPaddingWidthProperty(droppable, paddingBeforeHorizontal)
-
+  // console.log({beforeMarginVerticalValue, beforeMarginVerticalValuePreviousTarget }, Math.abs(beforeMarginVerticalValue - beforeMarginVerticalValuePreviousTarget))
   return {
-    x: xDroppable + paddingBeforeDroppableHorizontal + borderBeforeWidthDroppableHorizontal - (left + beforeMarginHorizontalValue),
-    y: yDroppable + paddingBeforeDroppableVertical + borderBeforeWidthDroppableVertical  - (top + beforeMarginVerticalValue)
+    x: xDroppable + paddingBeforeDroppableHorizontal + borderBeforeWidthDroppableHorizontal - (left),
+    y: yDroppable + paddingBeforeDroppableVertical + borderBeforeWidthDroppableVertical  - 
+    (top)
   }
 
 }
@@ -73,11 +81,6 @@ export default function getTranslateBeforeDropping(
   let width = 0;
   const isGroupDropping = Boolean(sourceIndex < 0 && draggable);
 
-  if (isGroupDropping) {
-    const { x, y } = getGroupTranslate(droppable, draggable!);
-    height += y;
-    width += x;
-  }
   if (sourceIndex === targetIndex && !isGroupDropping) {
     return addScrollToTranslate(
       { height, width },
@@ -87,8 +90,16 @@ export default function getTranslateBeforeDropping(
       isGroupDropping
     );
   }
+  
   const { sourceElement, targetElement, siblingsBetween, isDraggedFoward } =
   getElementsRange(siblings, sourceIndex, targetIndex, draggable);
+
+  if (isGroupDropping) {
+    const { x, y } = getGroupTranslate(droppable, draggable!, targetElement);
+    height += y;
+    width += x;
+  }
+
   const {
     scrollElement,
     beforeMargin: beforeMarginProp,
@@ -108,7 +119,8 @@ export default function getTranslateBeforeDropping(
     sourceElement,
     targetElement?.previousElementSibling,
     isDraggedFoward,
-    hasGaps
+    hasGaps,
+    isGroupDropping
   );
   const { beforeSpace, space, afterSpace } = spaceWithMargins(
     beforeMarginProp,
@@ -167,7 +179,6 @@ const getSpaceBetween = (
 ) => {
   const beforeMarginCalc = Math.max(beforeMarginSpace, afterMarginOutside);
   const afterMarginCalc = Math.max(afterMarginSpace, beforeMarginOutside);
-
   return afterMarginCalc + innerSpace + beforeMarginCalc + gap;
 };
 const getElementsRange = (
@@ -254,7 +265,8 @@ const getBeforeAfterMarginBaseOnDraggedDirection = (
   draggedElement: Element,
   previousElement: Element | null,
   isDraggedFoward: boolean,
-  hasGaps: boolean
+  hasGaps: boolean,
+  isGroupDropping: boolean
 ) => {
   const previousElementByDirection = isDraggedFoward
     ? draggedElement.previousElementSibling
@@ -264,7 +276,8 @@ const getBeforeAfterMarginBaseOnDraggedDirection = (
     afterMarginProp,
     previousElementByDirection,
     draggedElement,
-    hasGaps
+    hasGaps,
+    isGroupDropping
   );
 };
 const getBeforeAfterMargin = (
@@ -272,7 +285,8 @@ const getBeforeAfterMargin = (
   afterMarginProp: AfterMargin,
   previousElement: HTMLElement | Element | null,
   nextElement: HTMLElement | Element | null,
-  hasGaps: boolean
+  hasGaps: boolean,
+  isGroupDropping: boolean
 ) => {
   if (hasGaps) {
     return {
@@ -282,7 +296,7 @@ const getBeforeAfterMargin = (
     };
   }
   const afterMargin = getMarginStyleByProperty(
-    previousElement,
+    isGroupDropping? null: previousElement,
     afterMarginProp
   );
   const beforeMargin = getMarginStyleByProperty(nextElement, beforeMarginProp);
