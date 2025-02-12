@@ -17,7 +17,7 @@ import { IsHTMLElement } from "../touchDevice";
 import { removeTempChild } from "../tempChildren";
 import { DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS, GRABBING_CLASS } from "../classes";
 import { getClassesSelector } from "../dom/classList";
-
+import HandlerPublisher from '../../composables/HandlerPublisher'
 const DELAY_TIME_TO_SWAP=50
 
 type DraggingEvent = typeof DRAG_EVENT | typeof START_DRAG_EVENT;
@@ -32,6 +32,7 @@ export default function useEmitEvents<T>(
   index: number,
   parent: HTMLElement,
   droppableGroupClass: string | null,
+  handlerPublisher: HandlerPublisher
 ) {
   const actualIndex = ref(index);
   const {
@@ -46,7 +47,7 @@ export default function useEmitEvents<T>(
     event: DragAndDropEvent,
     initialWindowScroll: WindowScroll,
     droppableConfig: DroppableConfig<T> | undefined,
-    positionOnSourceDroppable?: number
+    positionOnSourceDroppable?: number,
   ) => {
     if (!droppableConfig) {
       return;
@@ -457,6 +458,7 @@ export default function useEmitEvents<T>(
   const toggleDraggingClass = (element: Element, force: boolean) => {
     element.classList.toggle(DRAGGING_CLASS, force);
     toogleHandlerDraggingClass(force, element);
+    handlerPublisher.toggleGrabClass(!force)
   };
   return {
     emitEventToSiblings,

@@ -33,12 +33,12 @@ import ExampleHorizontalCounterList from "./components/ExampleHorizontalCounterL
     <ExampleCounterList id="example-counter-list" />
   </div>
   <ExampleGroupOflist id="example-group-list" />
-  <!-- <ExampleOfPokemonList id="example-pokemon-list" /> -->
   <ExampleTable />
   <ExampleListWithRemove id="example-lists-with-remove" />
   <ExampleListGroupDroppableAndDraggableClasses id="example-list-group-droppable-and-draggable-classes" />
   <ExampleCompoundDroppable id="example-compound-droppable" />
-  <ExampleHorizontalCounterList id="example-horizontal-counter-list" />
+  <!-- <ExampleHorizontalCounterList id="example-horizontal-counter-list" /> -->
+  <!-- <ExampleOfPokemonList id="example-pokemon-list" /> -->
 
 </template>
 <style>

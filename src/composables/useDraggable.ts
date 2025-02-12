@@ -22,7 +22,8 @@ import {
   getClassesList,
   getClassesSelector,
 } from "../utils/dom/classList";
-import { DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS, GRABBING_CLASS, HANDLER_CLASS } from "../utils/classes";
+import { DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS, GRAB_CLASS, GRABBING_CLASS, HANDLER_CLASS } from "../utils/classes";
+import HandlerPublisher from "./HandlerPublisher";
 
 const DROPPABLE_CLASS = "droppable";
 
@@ -30,7 +31,8 @@ export default function useDraggable<T>(
   child: HTMLElement | undefined,
   index: number,
   config: CoreConfig<T>,
-  parent: HTMLElement
+  parent: HTMLElement,
+  handlerPublisher: HandlerPublisher
 ) {
   const {
     handlerSelector,
@@ -74,27 +76,34 @@ export default function useDraggable<T>(
     fixedWidth,
     index,
     parent,
-    droppableGroupClass
+    droppableGroupClass,
+    handlerPublisher
   );
   const setDraggable = () => {
     if (childRef.value) {
       childRef.value.classList.add(DRAGGABLE_CLASS);
     }
   };
+  function addHandlerClass(handlerElement:Element| HTMLElement){
+    handlerElement.classList.add(HANDLER_CLASS)
+    handlerPublisher.addSubscriber(handlerElement)
+  }
   const setHandlerStyles = () => {
     if (childRef.value && isDraggable(childRef.value)) {
       const handlerElement = childRef.value.querySelector(handlerSelector);
       if (handlerElement) {
-        handlerElement.classList.add(HANDLER_CLASS);
+        addHandlerClass(handlerElement)
       } else {
-        childRef.value.classList.add(HANDLER_CLASS);
+        addHandlerClass(childRef.value)
       }
     }
   };
+  
   const setCssStyles = () => {
     AddCssStylesToElement(document, [
       `.${DRAGGABLE_CLASS} { touch-action: manipulation; user-select: none; box-sizing: border-box !important; -webkit-user-select: none; }`,
-      `.${HANDLER_CLASS} { cursor: grab; pointer-events: auto !important; }`,
+      `.${HANDLER_CLASS} { pointer-events: auto !important; }`,
+      `.${GRAB_CLASS} { cursor: grab; }`,
       ".temp-child { touch-action: none; pointer-events: none; box-sizing: border-box !important; }",
       `.droppable { box-sizing: border-box !important; }`,
       `.${DRAGGING_CLASS} { position: fixed; z-index: 5000; width: var(--fixedWidth) !important; height: var(--fixedHeight) !important; }`,
@@ -448,3 +457,4 @@ export default function useDraggable<T>(
 //https://github.com/iamstevendao/vue-tel-input/blob/main/.github/workflows/deploy.yml
 
 // TODO: add warning on docs with tranform animation
+// TODO: fix bug of elements dragged in another droppable and drop outside this droppable have wrong drop position

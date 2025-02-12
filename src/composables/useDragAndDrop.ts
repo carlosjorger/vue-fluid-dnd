@@ -6,6 +6,7 @@ import { Config } from ".";
 import { observeMutation } from "../utils/observer";
 import ConfigHandler from "./configHandler";
 import { getConfig } from "../utils/config";
+import HandlerPublisher from "./HandlerPublisher";
 
 /**
  * Create the parent element of the draggable children and all the drag and drop events and styles.
@@ -15,6 +16,7 @@ import { getConfig } from "../utils/config";
  * @param config - Configuration of drag and drop tool.
  * @returns The reference of the parent element and function to remove an element.
  */
+const handlerPublisher = new HandlerPublisher()
 export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
   const INDEX_ATTR = "index";
   const parent = ref<HTMLElement | undefined>();
@@ -54,7 +56,8 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
           childHTMLElement,
           numberIndex,
           getConfig(onRemoveAtEvent, onInsertEvent, config),
-          parent.value
+          parent.value,
+          handlerPublisher
         );
         removeAtFromElements.push(removeAtFromElement);
       }
