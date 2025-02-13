@@ -22,17 +22,36 @@ export function useConfig<T>(
       .filter((element) => !element.isSameNode(draggable));
   }
   const currentDroppableConfig = ref<DroppableConfig<T>>();
+  const initialDroppableConfig = ref<DroppableConfig<T>|undefined>(parent?ConfigHandler.getConfig(parent):undefined);
+   function getElementBelow(
+    currentElement: HTMLElement,
+    event: DragMouseTouchEvent,
+    hiddenDraggable: boolean = true){
+      function getElementBelow(){
+        const [elementBelow] = getDraggableAncestor(
+          event.clientX,
+          event.clientY,
+          currentElement
+        );
+        return elementBelow
+      }
+      let elementBelow = null
+      if (hiddenDraggable) {
+        currentElement.hidden = true;
+        elementBelow = getElementBelow()
+        currentElement.hidden = false;
+      }
+      else{
+        elementBelow = getElementBelow()
+      }
+      return elementBelow
+   }
   function getCurrentDroppable(
     currentElement: HTMLElement,
-    event: DragMouseTouchEvent
+    event: DragMouseTouchEvent,
+    hiddenDraggable: boolean = true
   ) {
-    currentElement.hidden = true;
-    const [elementBelow] = getDraggableAncestor(
-      event.clientX,
-      event.clientY,
-      currentElement
-    );
-    currentElement.hidden = false;
+    const elementBelow = getElementBelow(currentElement, event, hiddenDraggable)
     if (!droppableGroupClass || !elementBelow) {
       return;
     }
@@ -88,12 +107,12 @@ export function useConfig<T>(
   function updateConfig(event: DragMouseTouchEvent) {
     currentDroppableConfig.value = getCurrentConfig(event);
   }
-  function isOutsideOfDroppable(event: DragMouseTouchEvent){
+  function isOutsideOfDroppable(event: DragMouseTouchEvent, hiddenDraggable: boolean = true){
     const currentElement = childRef.value;
     if (!currentElement) {
       return true;
     }
-    return !Boolean(getCurrentDroppable(currentElement,event))
+    return !Boolean(getCurrentDroppable(currentElement, event, hiddenDraggable))
   }
-  return { currentDroppableConfig, updateConfig, getCurrentConfig, isOutsideOfDroppable };
+  return { currentDroppableConfig, initialDroppableConfig, updateConfig, getCurrentConfig, isOutsideOfDroppable };
 }

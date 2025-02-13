@@ -58,7 +58,6 @@ export default function getTranslateBeforeDropping(
   let height = 0;
   let width = 0;
   const isGroupDropping = Boolean(sourceIndex < 0 && draggable);
-
   if (sourceIndex === targetIndex && !isGroupDropping) {
     return addScrollToTranslate(
       { height, width },

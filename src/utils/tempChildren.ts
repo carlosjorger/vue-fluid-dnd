@@ -124,7 +124,8 @@ export const removeTempChildrens = (
   droppable: HTMLElement,
   parent: HTMLElement,
   droppableGroupClass: string | null,
-  animationDuration: number
+  animationDuration: number,
+  draggedElementIsOutside: boolean = true
 ) => {
   if (!droppableGroupClass) {
     return;
@@ -135,7 +136,7 @@ export const removeTempChildrens = (
 
   children.forEach((tempChild) => {
     const childParent = tempChild.parentElement;
-    if (childParent?.isSameNode(parent) || childParent?.isSameNode(droppable)) {
+    if (!draggedElementIsOutside && (childParent?.isSameNode(parent) || childParent?.isSameNode(droppable))) {
       return;
     }
     const tempChildElement = tempChild as HTMLElement;

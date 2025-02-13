@@ -174,7 +174,7 @@ export default function useDraggable<T>(
       currentDroppableConfig.value
     );
   };
-  const { updateConfig, currentDroppableConfig, getCurrentConfig, isOutsideOfDroppable } =
+  const { updateConfig, currentDroppableConfig, initialDroppableConfig ,getCurrentConfig, isOutsideOfDroppable } =
     useConfig<T>(childRef, droppableGroupClass, parent, setTransformDragEvent);
   function toggleDroppableClass(isOutside:boolean){
     if (!currentDroppableConfig.value) {
@@ -196,15 +196,16 @@ export default function useDraggable<T>(
     if (!currentElement) {
       return;
     }
-    toggleDroppableClass(isOutsideOfDroppable(event))
+    const isOutside = isOutsideOfDroppable(event)
+    toggleDroppableClass(isOutside)
     if (draggingState.value === DraggingState.START_DRAGGING) {
       startDragging(event);
     } else if (draggingState.value === DraggingState.DRAGING) {
-      updateTempChildren();
+      updateTempChildren(isOutside);
       setTransformEvent(event);
     }
   };
-  const updateTempChildren = () => {
+  const updateTempChildren = (isOutside: boolean = true) => {
     if (!currentDroppableConfig.value) {
       return;
     }
@@ -213,8 +214,12 @@ export default function useDraggable<T>(
       droppable,
       parent,
       droppableGroupClass,
-      animationDuration
+      animationDuration,
+      isOutside
     );
+    if (isOutside) {
+      return
+    }
     addTempChild(
       childRef.value,
       parent,
@@ -294,7 +299,7 @@ export default function useDraggable<T>(
       toggleDroppableClass(true);
       const convertedEvent = convetEventToDragMouseTouchEvent(event);
       clearTimeout(delayTimeout.value);
-      onDropDraggingEvent();
+      onDropDraggingEvent(isOutsideOfDroppable(convertedEvent, false));
       document.removeEventListener(moveEvent, handlerMousemove);
       updateConfig(convertedEvent);
       const currentConfig = getCurrentConfig(convertedEvent);
@@ -355,7 +360,7 @@ export default function useDraggable<T>(
   const onScrollEvent = () => {
     setTransformDragEvent();
   };
-  const onDropDraggingEvent = () => {
+  const onDropDraggingEvent = (isOutsideAllDroppables: boolean) => {
     if (draggingState.value !== DraggingState.DRAGING) {
       draggingState.value = DraggingState.NOT_DRAGGING;
       return;
@@ -371,7 +376,7 @@ export default function useDraggable<T>(
       element,
       START_DROP_EVENT,
       windowScroll.value,
-      currentDroppableConfig.value,
+      isOutsideAllDroppables? initialDroppableConfig.value: currentDroppableConfig.value,
       index
     );
   };
@@ -455,6 +460,5 @@ export default function useDraggable<T>(
 
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
 //https://github.com/iamstevendao/vue-tel-input/blob/main/.github/workflows/deploy.yml
-
 // TODO: add warning on docs with tranform animation
-// TODO: fix bug of elements dragged in another droppable and drop outside this droppable have wrong drop position
+// TODO: dragging fast give wrong drop position

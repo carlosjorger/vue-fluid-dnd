@@ -121,6 +121,7 @@ const { id } = defineProps<{
   background-color: aliceblue;
   height: 400px;
   grid-area: vertical;
+  margin-top: 1rem;
 }
 .scrolled-list {
   padding-block: 20px;
