@@ -178,14 +178,8 @@ export default function useEmitEvents<T>(
 
     const targetPosition = targetBoundingClientRect[before];
     const targetSize = targetBoundingClientRect[distance];
-
     const targetMiddle = targetPosition + targetSize / 2;
 
-    const isTransitioned = targetElement.getAnimations().length !== 0;
-
-    if (isTransitioned) {
-      return;
-    }
     const targetTransform = getTransform(targetElement)[axis];
     const targetMiddleWithoutTransform = targetMiddle - targetTransform;
 
