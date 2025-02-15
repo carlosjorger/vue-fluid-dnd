@@ -136,7 +136,7 @@ export const removeTempChildrens = (
 
   children.forEach((tempChild) => {
     const childParent = tempChild.parentElement;
-    if (!draggedElementIsOutside && (childParent?.isSameNode(parent) || childParent?.isSameNode(droppable))) {
+    if ( (childParent?.isSameNode(parent) || !draggedElementIsOutside &&childParent?.isSameNode(droppable))) {
       return;
     }
     const tempChildElement = tempChild as HTMLElement;
