@@ -1,6 +1,7 @@
 import { Ref, ref } from "vue";
 import {
   draggableIsOutside,
+  getParentDraggableChildren,
   getPropByDirection,
   getSiblings,
   getTransform,
@@ -78,6 +79,30 @@ export default function useEmitEvents<T>(
       );
     }
   };
+  function emitInsertEventToSiblings(targetIndex: number, draggedElement: HTMLElement, droppable: HTMLElement, value: T, config: CoreConfig<T>){
+    const translation = getTranslationByDragging(
+      draggedElement,
+      'insert',
+      config.direction,
+      droppable
+    );
+    const {onInsertEvent} = config
+    const siblings = getParentDraggableChildren(droppable);
+    for (const [index, sibling] of siblings.entries()) {
+      if (!sibling.classList.contains(DRAGGABLE_CLASS)) {
+        continue;
+      }
+      if (index >= targetIndex) {
+        dragEventOverElement(sibling, translation);
+      }
+    }
+    setTimeout(() => {
+      onInsertEvent(targetIndex, value)
+      removeTempChild(parent, animationDuration, true);
+      removeElementDraggingStyles(draggedElement);
+      removeTranslateFromSiblings(draggedElement, parent);
+    }, animationDuration);
+  }
   function emitRemoveEventToSiblings(
     targetIndex: number,
     draggedElement: HTMLElement,
@@ -113,7 +138,6 @@ export default function useEmitEvents<T>(
     removeTempChild(parent, animationDuration, true);
     setTimeout(() => {
       removeElementDraggingStyles(draggedElement);
-      removeTranslateFromSiblings(draggedElement, parent);
       removeTranslateFromSiblings(draggedElement, parent);
     }, animationDuration);
   }
@@ -457,6 +481,7 @@ export default function useEmitEvents<T>(
   return {
     emitEventToSiblings,
     emitRemoveEventToSiblings,
+    emitInsertEventToSiblings,
     emitFinishRemoveEventToSiblings,
     toggleDraggingClass,
   };

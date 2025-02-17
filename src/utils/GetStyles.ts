@@ -205,6 +205,14 @@ export const getGroupDroppables = (
     document.querySelectorAll(`.droppable-group-${droppableGroup}`)
   );
 };
+export const getParentDraggableChildren = (parent: HTMLElement) =>{
+  const siblings = [...parent.children]
+      .filter(
+        (child) =>
+          child.classList.contains("draggable")
+      );
+  return siblings
+}
 export const getSiblingsByParent = (
   current: HTMLElement,
   parent: HTMLElement

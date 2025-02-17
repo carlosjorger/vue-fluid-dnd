@@ -67,6 +67,7 @@ export default function useDraggable<T>(
   const {
     emitEventToSiblings,
     emitRemoveEventToSiblings,
+    emitInsertEventToSiblings,
     emitFinishRemoveEventToSiblings,
     toggleDraggingClass,
   } = useEmitEvents<T>(
@@ -452,8 +453,9 @@ export default function useDraggable<T>(
   }
   function insertAtFromElement(targetIndex: number, value: T) {
     const element = childRef.value as HTMLElement;
+    // emitInsertEventToSiblings(targetIndex, )
     if (targetIndex === index) {
-      console.log({targetIndex, value}, currentDroppableConfig.value)
+      emitInsertEventToSiblings(targetIndex, element, parent, value, config)
     }
   }
   watch(currentDroppableConfig, changeDroppable, { deep: true });
