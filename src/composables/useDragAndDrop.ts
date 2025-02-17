@@ -21,9 +21,16 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
   const INDEX_ATTR = "index";
   const parent = ref<HTMLElement | undefined>();
   let removeAtFromElements = [] as ((index: number) => void)[];
+  let insertAtFromElements = [] as ((index: number, value: T) => void)[];
+
   function removeAt(index: number) {
     for (const removeAtFromElement of removeAtFromElements) {
       removeAtFromElement(index);
+    }
+  }
+  function insertAt(index: number,  value: T) {
+    for (const insertAtFromElement of insertAtFromElements) {
+      insertAtFromElement(index, value);
     }
   }
   const getOnRemoveAtEvent = (items: Ref<T[]>) => {
@@ -45,6 +52,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
     }
 
     removeAtFromElements = [];
+    insertAtFromElements = [];
 
     for (const child of parent.value!.children) {
       const index = child.getAttribute(INDEX_ATTR);
@@ -52,7 +60,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
       const childHTMLElement = child as HTMLElement;
 
       if (childHTMLElement && numberIndex >= 0) {
-        const { removeAtFromElement } = useDraggable(
+        const { removeAtFromElement, insertAtFromElement } = useDraggable(
           childHTMLElement,
           numberIndex,
           getConfig(onRemoveAtEvent, onInsertEvent, config),
@@ -60,6 +68,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
           handlerPublisher
         );
         removeAtFromElements.push(removeAtFromElement);
+        insertAtFromElements.push(insertAtFromElement);
       }
     }
   };
@@ -95,5 +104,5 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
     makeChildrensDraggable();
     ConfigHandler.removeObsoleteConfigs();
   });
-  return { parent, removeAt };
+  return { parent, removeAt, insertAt };
 }

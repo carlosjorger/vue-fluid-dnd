@@ -450,15 +450,20 @@ export default function useDraggable<T>(
       }, delayBeforeRemove);
     }
   }
+  function insertAtFromElement(targetIndex: number, value: T) {
+    const element = childRef.value as HTMLElement;
+    if (targetIndex === index) {
+      console.log({targetIndex, value}, currentDroppableConfig.value)
+    }
+  }
   watch(currentDroppableConfig, changeDroppable, { deep: true });
   createWatchOfStyle(fixedWidth, "--fixedWidth");
   createWatchOfStyle(fixedHeight, "--fixedHeight");
   setCssStyles();
   setSlotRefElementParams(childRef.value);
-  return { removeAtFromElement };
+  return { removeAtFromElement, insertAtFromElement };
 }
 
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7
 //https://github.com/iamstevendao/vue-tel-input/blob/main/.github/workflows/deploy.yml
 // TODO: add warning on docs with tranform animation
-// TODO: doest remove temp children on source droppable 
