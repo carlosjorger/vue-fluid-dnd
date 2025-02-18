@@ -33,6 +33,10 @@ export interface Config {
    */
   removingClass?: string;
   /**
+   * The CSS class that is setted when a element is start inserting.
+   */
+  insertingFromClass?: string;
+  /**
    * Delay time before removing an element in milisecond.
    */
   delayBeforeRemove?: number;
@@ -84,6 +88,10 @@ export type CoreConfig<T> = {
    * The CSS class that is setted when a element is removed.
    */
   removingClass: string;
+  /**
+   * The CSS class that is setted when a element is start inserting.
+   */
+  insertingFromClass: string;
   /**
    * Delay time before removing an element in milisecond.
    */

@@ -19,6 +19,7 @@ import { removeTempChild } from "../tempChildren";
 import { DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS, GRABBING_CLASS } from "../classes";
 import { getClassesSelector } from "../dom/classList";
 import HandlerPublisher from '../../composables/HandlerPublisher'
+import { observeMutation } from "../observer";
 const DELAY_TIME_TO_SWAP=50
 
 type DraggingEvent = typeof DRAG_EVENT | typeof START_DRAG_EVENT;
@@ -79,14 +80,14 @@ export default function useEmitEvents<T>(
       );
     }
   };
-  function emitInsertEventToSiblings(targetIndex: number, draggedElement: HTMLElement, droppable: HTMLElement, value: T, config: CoreConfig<T>){
+  function emitInsertEventToSiblings(targetIndex: number, draggedElement: HTMLElement, droppable: HTMLElement, value: T){
     const translation = getTranslationByDragging(
       draggedElement,
       'insert',
-      config.direction,
+      currentConfig.direction,
       droppable
     );
-    const { onInsertEvent } = config
+    const { onInsertEvent } = currentConfig
     const siblings = getParentDraggableChildren(droppable);
     for (const [index, sibling] of siblings.entries()) {
       if (!sibling.classList.contains(DRAGGABLE_CLASS)) {
@@ -98,10 +99,25 @@ export default function useEmitEvents<T>(
     }
     setTimeout(() => {
       onInsertEvent(targetIndex, value)
+      onFinishInsertElement(targetIndex, droppable)
       removeTempChild(parent, animationDuration, true);
       removeElementDraggingStyles(draggedElement);
       removeTranslateFromSiblings(draggedElement, parent);
     }, animationDuration);
+  }
+  function onFinishInsertElement(targetIndex:number, droppable: HTMLElement){
+    const { insertingFromClass } = currentConfig
+    const observer = observeMutation(() => {
+      const siblings = getParentDraggableChildren(droppable);
+      const newElement = siblings[targetIndex]
+      newElement.classList.add(insertingFromClass)
+      setTimeout(()=>{
+        newElement.classList.remove(insertingFromClass)
+        observer.disconnect()
+      }, animationDuration)
+    },parent,{
+      childList:true,
+    })
   }
   function emitRemoveEventToSiblings(
     targetIndex: number,

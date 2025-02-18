@@ -454,10 +454,10 @@ export default function useDraggable<T>(
   function insertAtFromElement(targetIndex: number, value: T) {
     const element = childRef.value as HTMLElement;
     if (targetIndex === index) {
-      emitInsertEventToSiblings(targetIndex, element, parent, value, config)
+      emitInsertEventToSiblings(targetIndex, element, parent, value)
     }
     else if (targetIndex === config.onGetLegth() && index === targetIndex-1){
-      emitInsertEventToSiblings(targetIndex, element, parent, value, config)
+      emitInsertEventToSiblings(targetIndex, element, parent, value)
     }
   }
   watch(currentDroppableConfig, changeDroppable, { deep: true });

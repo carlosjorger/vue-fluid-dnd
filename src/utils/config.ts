@@ -18,6 +18,7 @@ export const getConfig = <T>(
     handlerSelector: "draggable",
     draggingClass: "dragging",
     removingClass: "removing",
+    insertingFromClass: 'from-inserting',
     isDraggable: () => true,
     onRemoveAtEvent,
     onInsertEvent,
@@ -42,6 +43,7 @@ export const getConfig = <T>(
     onGetLegth,
     animationDuration: DEFAULT_CONFIG.animationDuration,
     removingClass: config.removingClass ?? DEFAULT_CONFIG.removingClass,
+    insertingFromClass: config.insertingFromClass ?? DEFAULT_CONFIG.insertingFromClass,
     delayBeforeRemove:
       config.delayBeforeRemove ?? DEFAULT_CONFIG.delayBeforeRemove,
   };

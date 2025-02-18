@@ -9,4 +9,5 @@ export const observeMutation = (
     });
   });
   observe.observe(element, options);
+  return observe
 };
