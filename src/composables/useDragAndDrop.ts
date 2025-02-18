@@ -1,4 +1,4 @@
-import { onInsertEventOnList, removeAtEventOnList } from "../utils/DropMethods";
+import { getLength, onInsertEventOnList, removeAtEventOnList } from "../utils/DropMethods";
 import { Ref, ref, watch } from "vue";
 import useDraggable from "./useDraggable";
 import { parseIntEmpty } from "../utils/GetStyles";
@@ -43,9 +43,14 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
       return onInsertEventOnList(items, index, value);
     };
   };
+  const getOnLegth = (items: Ref<T[]>) => {
+    return () => {
+      return getLength(items);
+    };
+  };
   const onRemoveAtEvent = getOnRemoveAtEvent(items);
   const onInsertEvent = getOnInsertEventOnList(items);
-
+  const onGetLegth = getOnLegth(items)
   const makeChildrensDraggable = () => {
     if (!parent.value) {
       return;
@@ -63,7 +68,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
         const { removeAtFromElement, insertAtFromElement } = useDraggable(
           childHTMLElement,
           numberIndex,
-          getConfig(onRemoveAtEvent, onInsertEvent, config),
+          getConfig(onRemoveAtEvent, onInsertEvent, onGetLegth ,config),
           parent.value,
           handlerPublisher
         );
@@ -93,7 +98,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
     if (parent.value) {
       ConfigHandler.addConfig(
         parent.value,
-        getConfig(onRemoveAtEvent, onInsertEvent, config)
+        getConfig(onRemoveAtEvent, onInsertEvent, onGetLegth, config)
       );
     }
   };

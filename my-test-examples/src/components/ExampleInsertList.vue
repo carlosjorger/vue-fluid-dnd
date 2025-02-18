@@ -4,7 +4,6 @@ import useDragAndDrop from "../../../src/composables/useDragAndDrop";
 const numbers = ref([1, 2, 3]);
 const numberToInsert = ref(0);
 const index = ref(0);
-const currentNumber = ref(numbers.value.length);
 const { id } = defineProps<{
   id: string;
 }>();
@@ -15,16 +14,19 @@ const { parent, insertAt } = useDragAndDrop<number>(numbers as any, {
 <template>
   <div class="counter-list">
     <ul ref="parent" :id="id" class="vertical-list">
-      <li
-        v-for="(element, index) in numbers"
-        :index="index"
-        :id="'child-counter-' + +element.toString()"
-        class="number"
-      >
-        <div class="inner-number">
-          {{ element }}
-        </div>
-      </li>
+      <TransitionGroup name="list">
+        <li
+          v-for="(element, index) in numbers"
+          :index="index"
+          :id="'child-counter-' + +element.toString()"
+          :key="element"
+          class="number"
+        >
+          <div class="inner-number">
+            {{ element }}
+          </div>
+        </li>
+      </TransitionGroup>
     </ul>
     <div class="insert-menu">
       <label for="number-to-insert">Number to insert<input type="number" v-model="numberToInsert"></label>
@@ -64,5 +66,13 @@ const { parent, insertAt } = useDragAndDrop<number>(numbers as any, {
   display: flex;
   gap: 8px;
   width: 100%;
+}
+.list-enter-active,
+.list-leave-active {
+  transition: opacity 0.5s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
 }
 </style>

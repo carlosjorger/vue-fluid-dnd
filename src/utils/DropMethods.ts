@@ -16,3 +16,7 @@ export const onInsertEventOnList = <T>(
   const listValue = list.value;
   listValue.splice(index, 0, value);
 };
+export function getLength <T> (list: Ref<T[]>) {
+  const listValue = list.value;
+  return listValue.length
+}

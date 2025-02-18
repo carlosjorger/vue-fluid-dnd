@@ -1,6 +1,7 @@
 import {
   Config,
   CoreConfig,
+  OnGetLength,
   OnInsertEvent,
   OnRemoveAtEvent,
   VERTICAL,
@@ -9,6 +10,7 @@ import {
 export const getConfig = <T>(
   onRemoveAtEvent: OnRemoveAtEvent<T>,
   onInsertEvent: OnInsertEvent<T>,
+  onGetLegth: OnGetLength,
   config?: Config
 ): CoreConfig<T> => {
   const DEFAULT_CONFIG = {
@@ -19,6 +21,7 @@ export const getConfig = <T>(
     isDraggable: () => true,
     onRemoveAtEvent,
     onInsertEvent,
+    onGetLegth,
     animationDuration: 200,
     delayBeforeRemove: 200,
     droppableClass:'droppable-hover'
@@ -36,6 +39,7 @@ export const getConfig = <T>(
     droppableGroup: config.droppableGroup,
     onRemoveAtEvent,
     onInsertEvent,
+    onGetLegth,
     animationDuration: DEFAULT_CONFIG.animationDuration,
     removingClass: config.removingClass ?? DEFAULT_CONFIG.removingClass,
     delayBeforeRemove:

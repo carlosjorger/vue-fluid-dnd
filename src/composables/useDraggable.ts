@@ -453,8 +453,10 @@ export default function useDraggable<T>(
   }
   function insertAtFromElement(targetIndex: number, value: T) {
     const element = childRef.value as HTMLElement;
-    // emitInsertEventToSiblings(targetIndex, )
     if (targetIndex === index) {
+      emitInsertEventToSiblings(targetIndex, element, parent, value, config)
+    }
+    else if (targetIndex === config.onGetLegth() && index === targetIndex-1){
       emitInsertEventToSiblings(targetIndex, element, parent, value, config)
     }
   }

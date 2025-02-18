@@ -60,6 +60,8 @@ export type OnDropEvent = (
 
 export type OnRemoveAtEvent<T> = (index: number) => T | undefined;
 export type OnInsertEvent<T> = (index: number, value: T) => void;
+export type OnGetLength = () => number;
+
 
 export type CoreConfig<T> = {
   /**
@@ -100,4 +102,5 @@ export type CoreConfig<T> = {
   animationDuration: number;
   onRemoveAtEvent: OnRemoveAtEvent<T>;
   onInsertEvent: OnInsertEvent<T>;
+  onGetLegth: OnGetLength;
 };

@@ -86,7 +86,7 @@ export default function useEmitEvents<T>(
       config.direction,
       droppable
     );
-    const {onInsertEvent} = config
+    const { onInsertEvent } = config
     const siblings = getParentDraggableChildren(droppable);
     for (const [index, sibling] of siblings.entries()) {
       if (!sibling.classList.contains(DRAGGABLE_CLASS)) {
