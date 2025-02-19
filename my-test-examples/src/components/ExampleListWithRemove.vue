@@ -108,4 +108,7 @@ const { parent: parent3, removeAt: removeAt3 } = useDragAndDrop<number>(
   float: left;
   padding: 0px 50px;
 }
+.vertical-list{
+  background-color: gray;
+}
 </style>

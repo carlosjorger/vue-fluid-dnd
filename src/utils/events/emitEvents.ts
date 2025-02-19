@@ -80,7 +80,7 @@ export default function useEmitEvents<T>(
       );
     }
   };
-  function emitInsertEventToSiblings(targetIndex: number, draggedElement: HTMLElement, droppable: HTMLElement, value: T){
+  function emitInsertEventToSiblings(targetIndex: number, draggedElement: HTMLElement, droppable: HTMLElement, value: T, startInserting:()=>void){
     const translation = getTranslationByDragging(
       draggedElement,
       'insert',
@@ -97,10 +97,11 @@ export default function useEmitEvents<T>(
         dragEventOverElement(sibling, translation);
       }
     }
+    startInserting()
     setTimeout(() => {
       onInsertEvent(targetIndex, value)
+      removeTempChild(parent, 0, true);
       onFinishInsertElement(targetIndex, droppable)
-      removeTempChild(parent, animationDuration, true);
       removeElementDraggingStyles(draggedElement);
       removeTranslateFromSiblings(draggedElement, parent);
     }, animationDuration);

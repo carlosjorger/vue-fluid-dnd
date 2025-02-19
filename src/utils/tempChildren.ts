@@ -80,7 +80,8 @@ export const addTempChild = <T>(
   draggedElement: HTMLElement | undefined,
   parent: Element,
   state: DraggingState,
-  droppableConfig?: DroppableConfig<T>
+  droppableConfig?: DroppableConfig<T>,
+  addingAnimationDuration?: number
 ) => {
   if (!droppableConfig) {
     return;
@@ -103,7 +104,7 @@ export const addTempChild = <T>(
   const distances = getDistance(droppable, draggedElement, direction);
   setTranistion(
     child,
-    animationDuration,
+    addingAnimationDuration??animationDuration,
     timingFunction,
     "width, min-width, height"
   );

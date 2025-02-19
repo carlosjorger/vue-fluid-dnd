@@ -48,10 +48,12 @@ function insert(index:number){
 .counter-list {
   display: flex;
   flex-direction: column;
+  margin-bottom: 100px;
 }
 .vertical-list {
   display: block;
   padding-inline: 10px;
+  background-color: bisque;
 }
 .number {
   padding: 15px;
