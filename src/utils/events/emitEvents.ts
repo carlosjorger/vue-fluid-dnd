@@ -80,6 +80,7 @@ export default function useEmitEvents<T>(
       );
     }
   };
+  // #region Insert
   function emitInsertEventToSiblings(targetIndex: number, draggedElement: HTMLElement, droppable: HTMLElement, value: T, startInserting:()=>void){
     const translation = getTranslationByDragging(
       draggedElement,
@@ -101,25 +102,13 @@ export default function useEmitEvents<T>(
     setTimeout(() => {
       onInsertEvent(targetIndex, value)
       removeTempChild(parent, 0, true);
-      onFinishInsertElement(targetIndex, droppable)
+      onFinishInsertElement(targetIndex, droppable, currentConfig)
       removeElementDraggingStyles(draggedElement);
       removeTranslateFromSiblings(draggedElement, parent);
     }, animationDuration);
   }
-  function onFinishInsertElement(targetIndex:number, droppable: HTMLElement){
-    const { insertingFromClass } = currentConfig
-    const observer = observeMutation(() => {
-      const siblings = getParentDraggableChildren(droppable);
-      const newElement = siblings[targetIndex]
-      newElement.classList.add(insertingFromClass)
-      setTimeout(()=>{
-        newElement.classList.remove(insertingFromClass)
-        observer.disconnect()
-      }, animationDuration)
-    },parent,{
-      childList:true,
-    })
-  }
+  
+    // #region Remove
   function emitRemoveEventToSiblings(
     targetIndex: number,
     draggedElement: HTMLElement,
@@ -502,4 +491,26 @@ export default function useEmitEvents<T>(
     emitFinishRemoveEventToSiblings,
     toggleDraggingClass,
   };
+}
+function onFinishInsertElement<T>(targetIndex:number, droppable: HTMLElement, config: CoreConfig<T>){
+    const { insertingFromClass, animationDuration } = config
+    const observer = observeMutation(() => {
+      const siblings = getParentDraggableChildren(droppable);
+      const newElement = siblings[targetIndex]
+      newElement.classList.add(insertingFromClass)
+      setTimeout(()=>{
+        newElement.classList.remove(insertingFromClass)
+        observer.disconnect()
+      }, animationDuration)
+    },droppable,{
+      childList:true,
+    })
+  }
+export function insertToListEmpty<T>(config: CoreConfig<T>, droppable: HTMLElement | undefined ,targetIndex: number,  value: T){
+  if (!droppable) {
+    return
+  }
+  const {onInsertEvent} = config
+  onInsertEvent(targetIndex, value)
+  onFinishInsertElement(targetIndex, droppable, config)
 }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import useDragAndDrop from "../../../src/composables/useDragAndDrop";
-const numbers = ref([1, 2, 3]);
+const numbers = ref([] as number[]);
 const numberToInsert = ref(0);
 const index = ref(0);
 const { id } = defineProps<{

@@ -7,6 +7,7 @@ import { observeMutation } from "../utils/observer";
 import ConfigHandler from "./configHandler";
 import { getConfig } from "../utils/config";
 import HandlerPublisher from "./HandlerPublisher";
+import { insertToListEmpty } from "../utils/events/emitEvents";
 
 /**
  * Create the parent element of the draggable children and all the drag and drop events and styles.
@@ -23,16 +24,6 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
   let removeAtFromElements = [] as ((index: number) => void)[];
   let insertAtFromElements = [] as ((index: number, value: T) => void)[];
 
-  function removeAt(index: number) {
-    for (const removeAtFromElement of removeAtFromElements) {
-      removeAtFromElement(index);
-    }
-  }
-  function insertAt(index: number,  value: T) {
-    for (const insertAtFromElement of insertAtFromElements) {
-      insertAtFromElement(index, value);
-    }
-  }
   const getOnRemoveAtEvent = (items: Ref<T[]>) => {
     return (index: number) => {
       return removeAtEventOnList(items, index);
@@ -51,6 +42,24 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
   const onRemoveAtEvent = getOnRemoveAtEvent(items);
   const onInsertEvent = getOnInsertEventOnList(items);
   const onGetLegth = getOnLegth(items)
+  const coreConfig = getConfig(onRemoveAtEvent, onInsertEvent, onGetLegth, config)
+  
+  function removeAt(index: number) {
+    for (const removeAtFromElement of removeAtFromElements) {
+      removeAtFromElement(index);
+    }
+  }
+  function insertAt(index: number,  value: T) {
+    const listLegth = coreConfig.onGetLegth()
+    if (listLegth === 0) {
+      insertToListEmpty(coreConfig, parent.value ,index, value)
+    }
+    else{
+      for (const insertAtFromElement of insertAtFromElements) {
+        insertAtFromElement(index, value);
+      }
+    }
+  }
   const makeChildrensDraggable = () => {
     if (!parent.value) {
       return;
@@ -68,7 +77,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
         const { removeAtFromElement, insertAtFromElement } = useDraggable(
           childHTMLElement,
           numberIndex,
-          getConfig(onRemoveAtEvent, onInsertEvent, onGetLegth ,config),
+          coreConfig,
           parent.value,
           handlerPublisher
         );
@@ -98,7 +107,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
     if (parent.value) {
       ConfigHandler.addConfig(
         parent.value,
-        getConfig(onRemoveAtEvent, onInsertEvent, onGetLegth, config)
+        coreConfig
       );
     }
   };
