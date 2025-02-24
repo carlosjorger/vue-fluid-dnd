@@ -15,7 +15,7 @@ import useEmitEvents from "../utils/events/emitEvents";
 import { DRAG_EVENT, draggableTargetTimingFunction, DraggingState, START_DRAG_EVENT, START_DROP_EVENT } from "../utils";
 import ConfigHandler, { DroppableConfig } from "./configHandler";
 import { isTouchEvent } from "../utils/touchDevice";
-import { addTempChild, removeTempChildrens } from "../utils/tempChildren";
+import { addTempChild, addTempChildOnInsert, removeTempChildrens } from "../utils/tempChildren";
 import { useConfig } from "../utils/useConfig";
 import {
   addMultipleClasses,
@@ -456,12 +456,10 @@ export default function useDraggable<T>(
     if (targetIndex === index || targetIndex === config.onGetLegth() && index === targetIndex-1) {
       emitInsertEventToSiblings(targetIndex, element, parent, value,
          () => {
-          addTempChild(
+          addTempChildOnInsert(
             element,
-            parent,
             draggingState.value,
-            initialDroppableConfig.value,
-            0
+            initialDroppableConfig.value
           );
         }
       )

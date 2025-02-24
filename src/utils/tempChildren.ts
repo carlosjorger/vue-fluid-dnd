@@ -1,5 +1,5 @@
 import { DroppableConfig } from "../composables/configHandler";
-import { Translate } from "../../index";
+import { Distance, Translate } from "../../index";
 import { Direction } from "../composables";
 import { getPropByDirection } from "./GetStyles";
 import { getGapPixels } from "./ParseStyles";
@@ -121,6 +121,52 @@ export const addTempChild = <T>(
   );
   droppable.appendChild(child);
 };
+export const addTempChildOnInsert = <T>(
+  draggedElement: HTMLElement | undefined,
+  state: DraggingState,
+  droppableConfig?: DroppableConfig<T>
+) => {
+  if (!droppableConfig) {
+    return;
+  }
+  const { droppable, config } = droppableConfig;
+  const { direction, animationDuration } = config;
+
+  fixScrollInitialChange(droppableConfig, state);
+
+  if (droppable.querySelector(`.${TEMP_CHILD_CLASS}`) || !draggedElement) {
+    return;
+  }
+
+  var tempChildTag =
+    draggedElement.tagName == "LI" ? "DIV" : draggedElement.tagName;
+  var child = document.createElement(tempChildTag);
+  child.classList.add(TEMP_CHILD_CLASS);
+  setSizes(child, 0, 0);
+
+  const distances = getDistance(droppable, draggedElement, direction);
+  setTranistion(
+    child,
+    animationDuration,
+    timingFunction,
+    "width, min-width, height"
+  );
+  droppable.appendChild(child);
+  setSizeAfterAppendChild(child, distances)
+};
+function setSizeAfterAppendChild(child:HTMLElement, size: Translate){
+  requestAnimationFrame(()=>{
+    setSizes(child, size.height, size.width)
+    requestAnimationFrame(()=>{
+      setTranistion(
+        child,
+        0,
+        timingFunction,
+        "width, min-width, height"
+      );
+    })
+  })
+}
 export const removeTempChildrens = (
   droppable: HTMLElement,
   parent: HTMLElement,

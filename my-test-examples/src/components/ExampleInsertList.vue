@@ -54,6 +54,7 @@ function insert(index:number){
   display: block;
   padding-inline: 10px;
   background-color: bisque;
+  min-height: 100px;
 }
 .number {
   padding: 15px;
