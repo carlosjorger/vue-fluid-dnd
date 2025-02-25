@@ -41,6 +41,10 @@ export interface Config {
    */
   delayBeforeRemove?: number;
   /**
+   * Delay time before inserting an element in milisecond.
+   */
+  delayBeforeInsert?: number;
+  /**
    * A function that returns whether a given element of the list is draggable.
    */
   isDraggable?: (element: HTMLElement) => boolean;
@@ -96,6 +100,10 @@ export type CoreConfig<T> = {
    * Delay time before removing an element in milisecond.
    */
   delayBeforeRemove: number;
+  /**
+   * Delay time before inserting an element in milisecond.
+   */
+  delayBeforeInsert: number;
   /**
    * A function that returns whether a given element of the list is draggable
    */

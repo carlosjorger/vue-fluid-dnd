@@ -9,6 +9,7 @@ const { id } = defineProps<{
 }>();
 const { parent, insertAt } = useDragAndDrop<number>(numbers as any, {
   handlerSelector: ".number",
+  delayBeforeInsert: 800
 });
 function insert(index:number){
   insertAt(index, numberToInsert.value)

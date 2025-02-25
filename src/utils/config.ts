@@ -25,6 +25,7 @@ export const getConfig = <T>(
     onGetLegth,
     animationDuration: 200,
     delayBeforeRemove: 200,
+    delayBeforeInsert: 200,
     droppableClass:'droppable-hover'
   } as CoreConfig<T>;
   if (!config) {
@@ -46,5 +47,7 @@ export const getConfig = <T>(
     insertingFromClass: config.insertingFromClass ?? DEFAULT_CONFIG.insertingFromClass,
     delayBeforeRemove:
       config.delayBeforeRemove ?? DEFAULT_CONFIG.delayBeforeRemove,
+    delayBeforeInsert: 
+      config.delayBeforeInsert ?? DEFAULT_CONFIG. delayBeforeInsert
   };
 };

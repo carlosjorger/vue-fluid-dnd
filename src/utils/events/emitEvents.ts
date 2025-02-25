@@ -42,6 +42,7 @@ export default function useEmitEvents<T>(
     handlerSelector,
     onRemoveAtEvent,
     animationDuration,
+    delayBeforeInsert,
     draggingClass
   } = currentConfig;
   const emitEventToSiblings = (
@@ -105,7 +106,7 @@ export default function useEmitEvents<T>(
       onFinishInsertElement(targetIndex, droppable, currentConfig)
       removeElementDraggingStyles(draggedElement);
       removeTranslateFromSiblings(draggedElement, parent);
-    }, animationDuration);
+    }, delayBeforeInsert);
   }
   
     // #region Remove
@@ -510,7 +511,10 @@ export function insertToListEmpty<T>(config: CoreConfig<T>, droppable: HTMLEleme
   if (!droppable) {
     return
   }
-  const {onInsertEvent} = config
-  onInsertEvent(targetIndex, value)
-  onFinishInsertElement(targetIndex, droppable, config)
+  const { onInsertEvent, delayBeforeInsert } = config
+  setTimeout(() => {
+    onInsertEvent(targetIndex, value)
+    onFinishInsertElement(targetIndex, droppable, config)
+    }, delayBeforeInsert);
+  
 }
