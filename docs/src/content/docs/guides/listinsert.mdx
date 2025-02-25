@@ -1,0 +1,119 @@
+---
+title: Remove on list
+description: A guide on how to use Vue Fluid DnD to remove elements from a list.
+---
+
+import ListWithInsert from "@/components/ListWithInsert.vue";
+import { Code } from "@astrojs/starlight/components";
+
+### List of number example
+
+To showing how to use **Vue Fluid DnD** for inserting elements to a list.
+First, we're going to create a list and extract the `insertAt` function from `useDragAndDrop`:
+
+export const listOfNumbers = `<script setup lang="ts">
+import { ref } from "vue";
+import { useDragAndDrop } from "vue-fluid-dnd";
+
+const list = ref([]);
+const { parent, insertAt } = useDragAndDrop(list);
+});
+
+</script>`;
+
+export const highlightsListOfNumbers = ["insertAt"];
+
+
+<Code code={listOfNumbers} lang="vue" mark={highlightsListOfNumbers} />
+
+### Creating the view
+
+After, we’ll create the list with an add button that call `insertAt`:
+
+export const highlightsDroppable = ['<button','button>',"insertAt"];
+
+export const listOfNumbersDroppable = `
+<template>
+   <ul ref="parent" class="number-list">
+    <li class="number" v-for="(element, index) in list" :index="index" :key="element">
+      {{ element }}
+    </li>
+  </ul>
+  <button class="insert-button" @click="insertAt(list.length, list.length)">+</button>
+</template>
+`;
+
+<Code code={listOfNumbersDroppable} lang="vue" mark={highlightsDroppable} />
+
+### Preview
+
+<div class="p-8 bg-[var(--sl-color-gray-6)]">
+  <ListWithInsert client:load />
+</div>
+
+## Add inserting Class
+
+You can add the css class setted when an element is inserted using the parameter `insertingFromClass`:
+
+export const listOfNumbersWithRemovingClass = `<script setup lang="ts">
+// ...
+const { parent, removeAt } = useDragAndDrop(list,{
+  insertingFromClass: "inserting"
+});
+
+</script>`;
+export const highlightsRemovingClass = ["insertingFromClass",'inserting'];
+
+<Code code={listOfNumbersWithRemovingClass} lang="vue" mark={highlightsRemovingClass}/>
+
+### Changing styles
+
+After, we’ll add the `inserting` styles and transition when the class is setted:
+
+export const highlightsStylesRemovingClass = ["inserting","transition"];
+
+export const stylesRemovingClass = `
+<style scoped>
+.number{
+  /*
+      ...
+  */
+  opacity: 1;
+  transition: opacity 200ms ease;
+}
+.number.inserting{
+  opacity: 0;
+}
+</style>
+`;
+
+<Code code={stylesRemovingClass} lang="vue" mark={highlightsStylesRemovingClass} />
+
+### Preview
+
+<div class="p-8 bg-[var(--sl-color-gray-6)]">
+  <ListWithInsert insertingFromClass="inserting" client:load  />
+</div>
+
+
+## Add delay before remove
+
+You can add the amount of delay time in miliseconds before removing the element (the default is 200 miliseconds):
+
+export const listOfNumbersDelay = `<script setup lang="ts">
+// ...
+const { parent, removeAt } = useDragAndDrop(list,{
+  insertingFromClass: "inserting",
+  delayBeforeRemove: 800
+});});
+
+</script>`;
+export const highlightsDelay = ["delayBeforeRemove"];
+
+<Code code={listOfNumbersDelay} lang="vue" mark={highlightsDelay}/>
+
+### Preview
+
+<div class="p-8 bg-[var(--sl-color-gray-6)]">
+  <ListWithInsert insertingFromClass="inserting" delayBeforeRemove={800} client:load  />
+</div>

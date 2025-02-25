@@ -145,10 +145,17 @@ export default defineConfig({
               },
             },
             {
-              label: "Remove on list",
+              label: "Remove on lists",
               link: "/guides/listremove/",
               translations: {
                 es: "Remover en listas",
+              },
+            },
+            {
+              label: "Insert on list",
+              link: "/guides/listinsert/",
+              translations: {
+                es: "Insertar en listas",
               },
             },
           ],
