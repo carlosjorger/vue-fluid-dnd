@@ -1,5 +1,5 @@
 import { DroppableConfig } from "../composables/configHandler";
-import { Distance, Translate } from "../../index";
+import { Translate } from "../../index";
 import { Direction } from "../composables";
 import { getPropByDirection } from "./GetStyles";
 import { getGapPixels } from "./ParseStyles";
