@@ -96,24 +96,24 @@ export const stylesRemovingClass = `
 </div>
 
 
-## Add delay before remove
+## Add delay before insert
 
-You can add the amount of delay time in miliseconds before removing the element (the default is 200 miliseconds):
+You can add the amount of delay time in miliseconds before inserting the element (the default is 200 miliseconds):
 
 export const listOfNumbersDelay = `<script setup lang="ts">
 // ...
 const { parent, removeAt } = useDragAndDrop(list,{
   insertingFromClass: "inserting",
-  delayBeforeRemove: 800
+  delayBeforeInsert: 800
 });});
 
 </script>`;
-export const highlightsDelay = ["delayBeforeRemove"];
+export const highlightsDelay = ["delayBeforeInsert"];
 
 <Code code={listOfNumbersDelay} lang="vue" mark={highlightsDelay}/>
 
 ### Preview
 
 <div class="p-8 bg-[var(--sl-color-gray-6)]">
-  <ListWithInsert insertingFromClass="inserting" delayBeforeRemove={800} client:load  />
+  <ListWithInsert insertingFromClass="inserting" delayBeforeInsert={800} client:load  />
 </div>
