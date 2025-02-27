@@ -2,14 +2,29 @@
 import Handler from "../icons/handler.vue";
 import Trash from "../icons/trash.vue";
 import type { Pokemon } from "./Pokemon";
-import { computed } from "vue";
-const { pokemon, handlerClass, hasRemove, index, removeEvent } = defineProps<{
-  pokemon: Pokemon;
-  handlerClass?: string;
-  hasRemove: boolean;
-  index: number;
-  removeEvent?: (index: number) => void;
-}>();
+import { computed, type PropType } from "vue";
+const { pokemon, handlerClass, hasRemove, index, removeEvent } = defineProps(
+  {
+    pokemon: {
+      type: Object as PropType<Pokemon>,
+      required: true
+    },
+    handlerClass: {
+      type: String
+    },
+    hasRemove: Boolean,
+    index: {
+      type: Number,
+      required: true
+    },
+    removeEvent:{
+      type: Object as PropType<(index: number) => void>
+   }
+  }
+);
+
+
+
 
 const remove = (index: number) => {};
 const removeEventNotUndefined = computed(() => {

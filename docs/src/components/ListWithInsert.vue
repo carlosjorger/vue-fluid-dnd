@@ -13,12 +13,12 @@ const { parent, insertAt } = useDragAndDrop(list,{
 });
 </script>
 <template>
-  <ul ref="parent" class="number-list p-8 bg-[var(--sl-color-gray-6)]">
+  <ul ref="parent" class="number-list px-8 py-4 bg-[var(--sl-color-gray-6)]">
     <li class="number" v-for="(element, index) in list" :index="index" :key="element">
       {{ element }}
     </li>
   </ul>
-  <button class="insert-button ml-4 bg-slate-100 rounded-xl w-12" @click="insertAt(list.length, list.length)">+</button>
+  <button class="insert-button mx-5 bg-slate-100 rounded-2xl w-12" @click="insertAt(list.length, list.length)">+</button>
 </template>
 
 <style scoped>

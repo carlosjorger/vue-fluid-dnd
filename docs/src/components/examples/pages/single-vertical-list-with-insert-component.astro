@@ -1,0 +1,51 @@
+---
+import SingleVerticalListOfPokemons from "@/components/examples/SingleVerticalListOfPokemonsWithInsert.vue";
+import ExampleLayout from "@/components/examples/ExampleLayout.astro";
+import Accordion from "@/components/Accordion.astro";
+import {getI18N} from '@/i18n/index.ts';  
+
+const { currentLocale } = Astro;
+const i18n = getI18N({ currentLocale });
+const verticalList=`
+<script setup lang="ts">
+import { ref } from "vue";
+import { useDragAndDrop } from "vue-fluid-dnd";
+import type { Pokemon } from "./Pokemon";
+import PokemonComponent from "./PokemonComponent.vue";
+import { fetchPokemons } from "@/server/pokemonServer";
+
+const pokemons = ref([] as Pokemon[]);
+pokemons.value = await fetchPokemons(9);
+const { parent } = useDragAndDrop(pokemons,{
+  draggingClass: "dragging-pokemon"
+});
+</script>
+<template>
+  <div class="flex max-sm:justify-center items-start">
+    <div
+      ref="parent"
+      class="bg-gray-200/60 border-solid border-black/40 rounded-2xl w-60 border-4 p-4 block"
+    >
+      <PokemonComponent
+        v-for="(pokemon, index) in pokemons"
+        :key="pokemon.name"
+        :index="index"
+        :pokemon="pokemon"
+      />
+    </div>
+  </div>
+</template>
+`
+const fileName = 'SingleVerticalListOfPokemons.vue';
+---
+<ExampleLayout title={i18n.SINGLE_VERTICAL_LIST}>
+  <SingleVerticalListOfPokemons client:load />
+   <Accordion  buttonText={i18n.CODE_MESSAGE} code={verticalList} fileName={fileName}/>
+</ExampleLayout>
+
+<style>
+ select {
+    background-color: auto !important;
+  }
+
+</style>
