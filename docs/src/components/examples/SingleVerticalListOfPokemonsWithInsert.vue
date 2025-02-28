@@ -41,7 +41,7 @@ function insertPokemon(){
           class="min-h-[200px]"
         />
       </div>
-     <div class="flex gap-4">
+     <div class="flex gap-4 max-sm:flex-col">
       <select v-model="pokemonToAdd" class="rounded-lg bg-gray-700 p-2 w-60">
         <option disabled :value="null">Please select one</option>
         <option v-for="(pokemon, index) in pokemonsToSelected" :value="pokemon">{{pokemon.name}}</option>
