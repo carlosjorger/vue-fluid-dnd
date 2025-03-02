@@ -8,7 +8,7 @@ const { parent } = useDragAndDrop<number>(droppables as any, {
   direction: "horizontal",
 });
 const dict={
-  'A':['a', 'b', 'c'],
+  'A':[],
   'B':['d', 'e', 'f']
 }
 const { id } = defineProps<{

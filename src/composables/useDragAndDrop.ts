@@ -1,13 +1,12 @@
 import { getLength, onInsertEventOnList, removeAtEventOnList } from "../utils/DropMethods";
 import { Ref, ref, watch } from "vue";
-import useDraggable from "./useDraggable";
-import { parseIntEmpty } from "../utils/GetStyles";
 import { Config } from ".";
 import { observeMutation } from "../utils/observer";
 import ConfigHandler from "./configHandler";
 import { getConfig } from "../utils/config";
 import HandlerPublisher from "./HandlerPublisher";
 import { insertToListEmpty } from "../utils/events/emitEvents";
+import useDroppable from "./useDroppable";
 
 /**
  * Create the parent element of the draggable children and all the drag and drop events and styles.
@@ -19,7 +18,6 @@ import { insertToListEmpty } from "../utils/events/emitEvents";
  */
 const handlerPublisher = new HandlerPublisher()
 export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
-  const INDEX_ATTR = "index";
   const parent = ref<HTMLElement | undefined>();
   let removeAtFromElements = [] as ((index: number) => void)[];
   let insertAtFromElements = [] as ((index: number, value: T) => void)[];
@@ -61,30 +59,9 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
     }
   }
   const makeChildrensDraggable = () => {
-    if (!parent.value) {
-      return;
-    }
-
-    removeAtFromElements = [];
-    insertAtFromElements = [];
-
-    for (const child of parent.value!.children) {
-      const index = child.getAttribute(INDEX_ATTR);
-      const numberIndex = parseIntEmpty(index);
-      const childHTMLElement = child as HTMLElement;
-
-      if (childHTMLElement && numberIndex >= 0) {
-        const { removeAtFromElement, insertAtFromElement } = useDraggable(
-          childHTMLElement,
-          numberIndex,
-          coreConfig,
-          parent.value,
-          handlerPublisher
-        );
-        removeAtFromElements.push(removeAtFromElement);
-        insertAtFromElements.push(insertAtFromElement);
-      }
-    }
+    const { removeAtFromElementList, insertAtFromElementList } = useDroppable(coreConfig, handlerPublisher, parent.value)
+    removeAtFromElements = removeAtFromElementList;
+    insertAtFromElements = insertAtFromElementList;
   };
   const observeChildrens = () => {
     if (!parent.value) {

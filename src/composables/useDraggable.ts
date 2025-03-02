@@ -114,12 +114,6 @@ export default function useDraggable<T>(
     ]);
     setHandlerStyles();
     setDraggable();
-    setDroppableGroupClass();
-  };
-  const setDroppableGroupClass = () => {
-    if (droppableGroupClass) {
-      addMultipleClasses(parent, droppableGroupClass);
-    }
   };
   function getHandler(element: HTMLElement | undefined){
     const handler = element?.querySelector(`.${HANDLER_CLASS}`)
