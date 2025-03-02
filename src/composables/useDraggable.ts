@@ -18,7 +18,6 @@ import { isTouchEvent } from "../utils/touchDevice";
 import { addTempChild, addTempChildOnInsert, removeTempChildrens } from "../utils/tempChildren";
 import { useConfig } from "../utils/useConfig";
 import {
-  addMultipleClasses,
   getClassesList,
   getClassesSelector,
 } from "../utils/dom/classList";
