@@ -15,6 +15,8 @@ import ExampleListGroupDroppableAndDraggableClasses from './components/ExampleLi
 import ExampleCompoundDroppable from './components/ExampleCompoundDroppable.vue'
 // import ExampleHorizontalCounterList from "./components/ExampleHorizontalCounterList.vue";
 import ExampleInsertList from "./components/ExampleInsertList.vue";
+import ExampleInsertHorizontalList from "./components/ExampleInsertHorizontalList.vue";
+
 </script>
 
 <template>
@@ -39,7 +41,8 @@ import ExampleInsertList from "./components/ExampleInsertList.vue";
   <ExampleCompoundDroppable id="example-compound-droppable" />
   <!-- <ExampleHorizontalCounterList id="example-horizontal-counter-list" /> -->
   <!-- <ExampleOfPokemonList id="example-pokemon-list" /> -->
-   <ExampleInsertList id="example-insert-list" />
+  <ExampleInsertList id="example-insert-list" />
+  <ExampleInsertHorizontalList id="example-insert-horizontal-list" />
 
 </template>
 <style>

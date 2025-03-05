@@ -42,7 +42,7 @@ export const getConfig = <T>(
     onRemoveAtEvent,
     onInsertEvent,
     onGetLegth,
-    animationDuration: DEFAULT_CONFIG.animationDuration,
+    animationDuration: config.animationDuration ?? DEFAULT_CONFIG.animationDuration,
     removingClass: config.removingClass ?? DEFAULT_CONFIG.removingClass,
     insertingFromClass: config.insertingFromClass ?? DEFAULT_CONFIG.insertingFromClass,
     delayBeforeRemove:
