@@ -16,7 +16,7 @@ import { DRAG_EVENT, draggableTargetTimingFunction, DraggingState, IsDropEvent, 
 import { DroppableConfig } from "../../composables/configHandler";
 import { IsHTMLElement } from "../touchDevice";
 import { removeTempChild } from "../tempChildren";
-import { DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS, GRABBING_CLASS } from "../classes";
+import { DISABLE_TRANSITION, DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS, GRABBING_CLASS } from "../classes";
 import { getClassesSelector } from "../dom/classList";
 import HandlerPublisher from '../../composables/HandlerPublisher'
 import { observeMutation } from "../observer";
@@ -499,7 +499,9 @@ function onFinishInsertElement<T>(targetIndex:number, droppable: HTMLElement, co
       const siblings = getParentDraggableChildren(droppable);
       const newElement = siblings[targetIndex]
       newElement.classList.add(insertingFromClass)
+      newElement.classList.add(DISABLE_TRANSITION)
       setTimeout(()=>{
+        newElement.classList.remove(DISABLE_TRANSITION)
         newElement.classList.remove(insertingFromClass)
         observer.disconnect()
       }, animationDuration)

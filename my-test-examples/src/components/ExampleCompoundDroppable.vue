@@ -4,7 +4,7 @@ import useDragAndDrop from "../../../src/composables/useDragAndDrop";
 import Droppable from "./Droppable.vue";
 
 const droppables = ref(['A', 'B']);
-const { parent } = useDragAndDrop<number>(droppables as any, {
+const { parent, insertAt } = useDragAndDrop<string>(droppables as any, {
   direction: "horizontal",
 });
 const dict={
@@ -14,7 +14,14 @@ const dict={
 const { id } = defineProps<{
   id: string;
 }>();
-
+function addDroppable(){
+  const lasValue = [...Object.keys(dict)].pop()
+  const ansiCode = lasValue?.charCodeAt(0)??0
+  const newValueCode = ansiCode+1
+  const newValue = String.fromCharCode(newValueCode)
+  dict[newValue]=[]
+  insertAt(droppables.value.length, newValue)
+}
 </script>
 <template>
   <div ref="parent" :id="id" class="list">
@@ -29,6 +36,7 @@ const { id } = defineProps<{
       <Droppable :elements="dict[element]" droppableGroup="nested-group"/>
     </div>
   </div>
+  <button @click="addDroppable">Add droppable</button>
 </template>
 <style scoped>
 .list {
@@ -42,5 +50,9 @@ const { id } = defineProps<{
   border-style: solid;
   border-width: 0.8rem;
   width: 200px;
+  transition: opacity 400ms ease;
+}
+.droppable-child.from-inserting{
+  opacity: 0;
 }
 </style>

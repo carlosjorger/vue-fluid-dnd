@@ -110,6 +110,7 @@ export default function useDraggable<T>(
       `.${DRAGGING_HANDLER_CLASS} { pointer-events: none !important; }`,
       `.${DROPPING_CLASS} { pointer-events: none !important; }`,
       `.${GRABBING_CLASS} { cursor: grabbing; }`,
+      `.disable-transition { transition: none !important; }`,
     ]);
     setHandlerStyles();
     setDraggable();
