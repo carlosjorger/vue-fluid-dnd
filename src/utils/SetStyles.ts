@@ -112,7 +112,8 @@ const getOffsetFromEvent = (
   }
 };
 export const convetEventToDragMouseTouchEvent = (
-  event: MouseEvent | TouchEvent
+  event: MouseEvent | TouchEvent,
+
 ): DragMouseTouchEvent => {
   const tempEvent = getEvent(event);
   if (!tempEvent) {
@@ -137,7 +138,7 @@ export const convetEventToDragMouseTouchEvent = (
 };
 const getEvent = (event: MouseEvent | TouchEvent) => {
   if (isTouchEvent(event)) {
-    return event.touches[0];
+    return event.touches[0] ?? event.changedTouches[0];
   }
   if (event instanceof MouseEvent) {
     return event;
