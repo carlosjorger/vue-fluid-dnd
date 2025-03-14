@@ -1,5 +1,16 @@
 import { DraggableElement } from "index";
 
+export interface DragStartEventData<T> {
+  index: number;
+  element: Element;
+  value: T
+}
+
+export interface DragEndEventData<T> {
+  index: number;
+  element: Element;
+  value: T
+}
 export const HORIZONTAL = "horizontal";
 export const VERTICAL = "vertical";
 /**
@@ -11,7 +22,7 @@ export type Direction = typeof HORIZONTAL | typeof VERTICAL;
  * Configuration of the drag and drop.
  * @public
  */
-export interface Config {
+export interface Config<T> {
   /**
    * The direction of the list to sort.
    */
@@ -49,6 +60,14 @@ export interface Config {
    */
   isDraggable?: (element: HTMLElement) => boolean;
   /**
+   * A function that returns whether a given element of the list is draggable.
+   */
+  onDragStart?: (element: DragStartEventData<T>) => void;
+  /**
+   * A function that returns whether a given element of the list is draggable.
+   */
+  onDragEnd?: (element: DragEndEventData<T>) => void
+  /**
    * Name of the group of the share droppables.
    */
   droppableGroup?: string;
@@ -69,7 +88,7 @@ export type OnDropEvent = (
 export type OnRemoveAtEvent<T> = (index: number) => T | undefined;
 export type OnInsertEvent<T> = (index: number, value: T) => void;
 export type OnGetLength = () => number;
-
+export type OnGetValue<T> = (index: number) => T;
 
 export type CoreConfig<T> = {
   /**
@@ -108,6 +127,14 @@ export type CoreConfig<T> = {
    * A function that returns whether a given element of the list is draggable
    */
   isDraggable: (element: HTMLElement) => boolean;
+    /**
+   * A function that returns whether a given element of the list is draggable.
+   */
+  onDragStart: (element: DragStartEventData<T>) => void;
+  /**
+   * A function that returns whether a given element of the list is draggable.
+   */
+  onDragEnd: (element: DragEndEventData<T>) => void
   /**
    * Name of the group of the share droppables
    */
@@ -119,4 +146,5 @@ export type CoreConfig<T> = {
   onRemoveAtEvent: OnRemoveAtEvent<T>;
   onInsertEvent: OnInsertEvent<T>;
   onGetLegth: OnGetLength;
+  onGetValue: OnGetValue<T>;
 };

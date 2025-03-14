@@ -9,7 +9,7 @@ function setDroppableGroupClass (droppableGroupClass: string, droppable: HTMLEle
         addMultipleClasses(droppable, droppableGroupClass);
     }
 };
-export default function useDroppable<T>(coreConfig: CoreConfig<T>,handlerPublisher: HandlerPublisher ,droppable?:HTMLElement){
+export default function useDroppable<T>(coreConfig: CoreConfig<T>, handlerPublisher: HandlerPublisher, droppable?:HTMLElement){
     const INDEX_ATTR = "index";
     let removeAtFromElementList = [] as  ((targetIndex: number) => void)[];
     let insertAtFromElementList = [] as  ((targetIndex: number, value: T) => void)[];

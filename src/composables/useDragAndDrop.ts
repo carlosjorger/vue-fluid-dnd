@@ -1,4 +1,4 @@
-import { getLength, onInsertEventOnList, removeAtEventOnList } from "../utils/DropMethods";
+import { getLength, getValue, onInsertEventOnList, removeAtEventOnList } from "../utils/DropMethods";
 import { Ref, ref, watch } from "vue";
 import { Config } from ".";
 import { observeMutation } from "../utils/observer";
@@ -17,7 +17,7 @@ import useDroppable from "./useDroppable";
  * @returns The reference of the parent element and function to remove an element.
  */
 const handlerPublisher = new HandlerPublisher()
-export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
+export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config<T>) {
   const parent = ref<HTMLElement | undefined>();
   let removeAtFromElements = [] as ((index: number) => void)[];
   let insertAtFromElements = [] as ((index: number, value: T) => void)[];
@@ -37,10 +37,16 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config) {
       return getLength(items);
     };
   };
+  function getOnValue(items: Ref<T[]>){
+    return (index:number) =>{
+      return getValue(items, index)
+    }
+  }
   const onRemoveAtEvent = getOnRemoveAtEvent(items);
   const onInsertEvent = getOnInsertEventOnList(items);
-  const onGetLegth = getOnLegth(items)
-  const coreConfig = getConfig(onRemoveAtEvent, onInsertEvent, onGetLegth, config)
+  const onGetLegth = getOnLegth(items);
+  const onGetValue = getOnValue(items);
+  const coreConfig = getConfig(onRemoveAtEvent, onInsertEvent, onGetLegth, onGetValue, config)
   
   function removeAt(index: number) {
     for (const removeAtFromElement of removeAtFromElements) {

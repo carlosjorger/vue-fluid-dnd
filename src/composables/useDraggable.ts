@@ -10,7 +10,7 @@ import {
 import { useTransform } from "../utils/SetTransform";
 import { DragMouseTouchEvent, MoveEvent, OnLeaveEvent } from "../../index";
 import { Ref, ref, watch } from "vue";
-import { CoreConfig } from ".";
+import { CoreConfig, DragEndEventData, DragStartEventData } from ".";
 import useEmitEvents from "../utils/events/emitEvents";
 import { DRAG_EVENT, draggableTargetTimingFunction, DraggingState, START_DRAG_EVENT, START_DROP_EVENT } from "../utils";
 import ConfigHandler, { DroppableConfig } from "./configHandler";
@@ -42,8 +42,11 @@ export default function useDraggable<T>(
     draggingClass,
     removingClass,
     onRemoveAtEvent,
-    droppableClass
+    droppableClass,
+    onDragStart,
+    onDragEnd,
   } = config;
+
   const droppableGroupClass = getClassesList(droppableGroup)
     .map((classGroup) => `droppable-group-${classGroup}`)
     .join(" ");
@@ -256,6 +259,20 @@ export default function useDraggable<T>(
     }
     return true
   }
+  function getDragStartEventData(element?: Element) : DragStartEventData<T>|undefined{
+    if (!element) {
+      return;
+    }
+    const value = config.onGetValue(index)
+    return ({ index, element, value})
+  }
+  function getDragEndEventData(element?: Element) : DragStartEventData<T>|undefined{
+    if (!element) {
+      return;
+    }
+    const value = config.onGetValue(index)
+    return ({ index, element, value})
+  }
   const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
     return (event: DragMouseTouchEvent) => {
       const element = childRef.value;
@@ -267,6 +284,8 @@ export default function useDraggable<T>(
       windowScroll.value = { scrollX, scrollY };
       if (draggingState.value === DraggingState.NOT_DRAGGING) {
         draggingState.value = DraggingState.START_DRAGGING;
+        const data = getDragStartEventData(element)
+        data && onDragStart(data)
         addTouchDeviceDelay(moveEvent, () => {
           if (moveEvent == 'touchmove') {
             updateConfig(event);
@@ -374,6 +393,8 @@ export default function useDraggable<T>(
       isOutsideAllDroppables? initialDroppableConfig.value: currentDroppableConfig.value,
       index
     );
+    const data = getDragEndEventData(element)
+    data && onDragEnd(data)
   };
   const removeDraggingStyles = (element: Element) => {
     setTranistion(element, animationDuration, draggableTargetTimingFunction);
