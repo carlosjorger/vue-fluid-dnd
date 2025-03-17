@@ -220,7 +220,8 @@ export const getSiblingsByParent = (
   const siblings = [...parent.children]
     .filter(
       (child) =>
-        !child.isEqualNode(current) && child.classList.contains("draggable")
+        child.classList.contains("draggable") &&
+        !child.isEqualNode(current) 
     )
     .toReversed();
 

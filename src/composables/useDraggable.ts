@@ -10,7 +10,7 @@ import {
 import { useTransform } from "../utils/SetTransform";
 import { DragMouseTouchEvent, MoveEvent, OnLeaveEvent } from "../../index";
 import { Ref, ref, watch } from "vue";
-import { CoreConfig, DragEndEventData, DragStartEventData } from ".";
+import { CoreConfig, DragStartEventData } from ".";
 import useEmitEvents from "../utils/events/emitEvents";
 import { DRAG_EVENT, draggableTargetTimingFunction, DraggingState, START_DRAG_EVENT, START_DROP_EVENT } from "../utils";
 import ConfigHandler, { DroppableConfig } from "./configHandler";
@@ -393,8 +393,6 @@ export default function useDraggable<T>(
       isOutsideAllDroppables? initialDroppableConfig.value: currentDroppableConfig.value,
       index
     );
-    const data = getDragEndEventData(element)
-    data && onDragEnd(data)
   };
   const removeDraggingStyles = (element: Element) => {
     setTranistion(element, animationDuration, draggableTargetTimingFunction);

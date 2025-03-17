@@ -9,7 +9,7 @@ import {
 } from "../GetStyles";
 import { Translate, WindowScroll } from "../../../index";
 import { moveTranslate, setTranistion } from "../SetStyles";
-import { CoreConfig, Direction, OnInsertEvent } from "../../composables";
+import { CoreConfig, Direction } from "../../composables";
 import getTranslationByDragging from "../translate/GetTranslationByDraggingAndEvent";
 import getTranslateBeforeDropping from "../translate/GetTranslateBeforeDropping";
 import { DRAG_EVENT, draggableTargetTimingFunction, DraggingState, IsDropEvent, START_DRAG_EVENT, START_DROP_EVENT, TEMP_CHILD_CLASS } from "..";
@@ -324,7 +324,7 @@ export default function useEmitEvents<T>(
     dropEventOverElement(
       targetIndex,
       draggedElement,
-      config.onInsertEvent,
+      config,
       droppable,
       positionOnSourceDroppable
     );
@@ -373,10 +373,11 @@ export default function useEmitEvents<T>(
   const dropEventOverElement = (
     targetIndex: number,
     element: HTMLElement,
-    onInsertEvent: OnInsertEvent<T>,
+    config:  CoreConfig<T>,
     droppable: HTMLElement,
     positionOnSourceDroppable?: number
   ) => {
+    const {onInsertEvent, onDragEnd} = config
     element.classList.add(DROPPING_CLASS);
     removeStytes(element, parent, droppable, () => {
       element.classList.remove(DROPPING_CLASS);
@@ -384,6 +385,7 @@ export default function useEmitEvents<T>(
         const value = onRemoveAtEvent(positionOnSourceDroppable);
         if (value) {
           onInsertEvent(targetIndex, value);
+          onDragEnd({ value, index: targetIndex})
         }
         manageDraggingClass(element)
         clearExcessTranslateStyles();

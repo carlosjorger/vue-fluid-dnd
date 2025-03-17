@@ -8,7 +8,6 @@ export interface DragStartEventData<T> {
 
 export interface DragEndEventData<T> {
   index: number;
-  element: Element;
   value: T
 }
 export const HORIZONTAL = "horizontal";
