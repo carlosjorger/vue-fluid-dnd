@@ -44,7 +44,6 @@ export default function useDraggable<T>(
     onRemoveAtEvent,
     droppableClass,
     onDragStart,
-    onDragEnd,
   } = config;
 
   const droppableGroupClass = getClassesList(droppableGroup)
@@ -260,13 +259,6 @@ export default function useDraggable<T>(
     return true
   }
   function getDragStartEventData(element?: Element) : DragStartEventData<T>|undefined{
-    if (!element) {
-      return;
-    }
-    const value = config.onGetValue(index)
-    return ({ index, element, value})
-  }
-  function getDragEndEventData(element?: Element) : DragStartEventData<T>|undefined{
     if (!element) {
       return;
     }
