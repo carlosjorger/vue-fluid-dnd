@@ -127,11 +127,11 @@ export type CoreConfig<T> = {
    */
   isDraggable: (element: HTMLElement) => boolean;
     /**
-   * A function that returns whether a given element of the list is draggable.
+   * A function that is called when the draggable element starts being dragged.
    */
   onDragStart: (element: DragStartEventData<T>) => void;
   /**
-   * A function that returns whether a given element of the list is draggable.
+   * A function that is called when the draggable element is dropped.
    */
   onDragEnd: (element: DragEndEventData<T>) => void
   /**
