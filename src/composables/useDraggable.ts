@@ -25,7 +25,7 @@ import { DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS
 import HandlerPublisher from "./HandlerPublisher";
 
 const DROPPABLE_CLASS = "droppable";
-
+// TODO: remove watch
 export default function useDraggable<T>(
   child: HTMLElement | undefined,
   index: number,

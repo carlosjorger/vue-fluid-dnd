@@ -1,11 +1,11 @@
-import { DragMouseTouchEvent, TransformEvent } from "../../index";
+import { Coordinate, DragMouseTouchEvent, ElementPosition, TransformEvent } from "../../index";
 import {
   draggableIsOutside,
   getBorderWidthProperty,
   getMarginStyleByProperty,
   getPropByDirection,
 } from "./GetStyles";
-import { Ref, ref, watch } from "vue";
+import { Ref, ref } from "vue";
 import { Direction } from "../composables";
 import { scrollByDirection } from "./scroll";
 import { HANDLER_CLASS, DRAGGING_CLASS } from "./classes";
@@ -17,28 +17,19 @@ export const useTransform = (
   const position = ref({ top: 0, left: 0 });
   const translate = ref({ x: 0, y: 0 });
 
-  watch(
-    translate,
-    (newTranslate) => {
-      const childElement = childRef.value;
+  function updateTranform(newTranslate: Coordinate){
+    const childElement = childRef.value;
       if (childElement) {
         childElement.style.transform = `translate( ${newTranslate.x}px, ${newTranslate.y}px)`;
       }
-    },
-    { deep: true }
-  );
-  watch(
-    position,
-    (newPosition) => {
-      const childElement = childRef.value;
-      if (childElement) {
-        childElement.style.top = `${newPosition.top}px`;
-        childElement.style.left = `${newPosition.left}px`;
-      }
-    },
-    { deep: true }
-  );
-
+  }
+  function updatePosition(newPosition: ElementPosition){
+    const childElement = childRef.value;
+    if (childElement) {
+      childElement.style.top = `${newPosition.top}px`;
+      childElement.style.left = `${newPosition.left}px`;
+    }
+  }
   function setTransform(
     element: HTMLElement,
     parent: HTMLElement,
@@ -128,6 +119,7 @@ export const useTransform = (
     const updateTranlateByDirection = (direction: Direction) => {
       const { axis } = getPropByDirection(direction);
       translate.value[axis] = getTranslateWihtDirection(direction);
+      updateTranform(translate.value)
     };
     updateTranlateByDirection("horizontal");
     updateTranlateByDirection("vertical");
@@ -146,6 +138,7 @@ export const useTransform = (
       top,
       left,
     };
+    updatePosition(position.value)
     currentOffset.value = { offsetX, offsetY };
   };
   return {
