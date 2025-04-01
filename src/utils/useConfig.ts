@@ -1,4 +1,4 @@
-import { Ref, ref } from "vue";
+import { ref } from "vue";
 import ConfigHandler, { DroppableConfig } from "../composables/configHandler";
 import { DragMouseTouchEvent } from "../../index";
 import { draggableIsOutside } from "./GetStyles";
@@ -7,7 +7,7 @@ import { setEventWithInterval } from "./SetStyles";
 import { getClassesSelector } from "./dom/classList";
 
 export function useConfig<T>(
-  childRef: Ref<HTMLElement | undefined>,
+  childRef: HTMLElement | undefined,
   droppableGroupClass: string | null,
   parent: HTMLElement,
   setTransformDragEvent: () => void
@@ -82,7 +82,7 @@ export function useConfig<T>(
     setEventWithInterval(droppable, "onscroll", onScrollEvent);
   }
   function getCurrentConfig(event: DragMouseTouchEvent) {
-    const currentElement = childRef.value;
+    const currentElement = childRef;
     if (!currentElement) {
       return;
     }
@@ -108,7 +108,7 @@ export function useConfig<T>(
     currentDroppableConfig.value = getCurrentConfig(event);
   }
   function isOutsideOfDroppable(event: DragMouseTouchEvent, hiddenDraggable: boolean = true){
-    const currentElement = childRef.value;
+    const currentElement = childRef;
     if (!currentElement) {
       return true;
     }
