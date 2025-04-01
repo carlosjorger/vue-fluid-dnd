@@ -61,7 +61,7 @@ export default function useDraggable<T>(
 
   const delayTimeout = ref<NodeJS.Timeout>();
   const { setTransform, updateTransformState } = useTransform(
-    childRef
+    childRef.value
   );
   const {
     emitEventToSiblings,
@@ -71,11 +71,11 @@ export default function useDraggable<T>(
     toggleDraggingClass,
   } = useEmitEvents<T>(
     config,
-    draggingState,
     index,
     parent,
     droppableGroupClass,
-    handlerPublisher
+    handlerPublisher,
+    ()=>(draggingState.value = DraggingState.NOT_DRAGGING)
   );
   const setDraggable = () => {
     if (childRef.value) {
@@ -159,7 +159,7 @@ export default function useDraggable<T>(
       return;
     }
     const { droppable, config } = currentDroppableConfig.value;
-    setTransform(element, droppable, pagePosition, config.direction);
+    setTransform(element, droppable, pagePosition.value, config.direction);
     emitEventToSiblings(
       element,
       DRAG_EVENT,

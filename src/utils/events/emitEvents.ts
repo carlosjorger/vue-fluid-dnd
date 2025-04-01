@@ -1,4 +1,3 @@
-import { Ref, ref } from "vue";
 import {
   draggableIsOutside,
   getParentDraggableChildren,
@@ -12,7 +11,7 @@ import { moveTranslate, setCustomFixedSize, setTranistion } from "../SetStyles";
 import { CoreConfig, Direction } from "../../composables";
 import getTranslationByDragging from "../translate/GetTranslationByDraggingAndEvent";
 import getTranslateBeforeDropping from "../translate/GetTranslateBeforeDropping";
-import { DRAG_EVENT, draggableTargetTimingFunction, DraggingState, IsDropEvent, START_DRAG_EVENT, START_DROP_EVENT, TEMP_CHILD_CLASS } from "..";
+import { DRAG_EVENT, draggableTargetTimingFunction, IsDropEvent, START_DRAG_EVENT, START_DROP_EVENT, TEMP_CHILD_CLASS } from "..";
 import { DroppableConfig } from "../../composables/configHandler";
 import { IsHTMLElement } from "../touchDevice";
 import { removeTempChild } from "../tempChildren";
@@ -28,13 +27,13 @@ type DropEvent = "drop" | typeof START_DROP_EVENT;
 
 export default function useEmitEvents<T>(
   currentConfig: CoreConfig<T>,
-  draggingState: Ref<DraggingState>,
   index: number,
   parent: HTMLElement,
   droppableGroupClass: string | null,
-  handlerPublisher: HandlerPublisher
+  handlerPublisher: HandlerPublisher,
+  endDraggingAction: () => void
 ) {
-  const actualIndex = ref(index);
+  let actualIndex = index;
   const {
     direction,
     handlerSelector,
@@ -229,11 +228,11 @@ export default function useEmitEvents<T>(
     
     const { distance } = getPropByDirection(direction);
     if (translation[distance] == 0) {
-      actualIndex.value = Math.max(actualIndex.value, siblingIndex);
+      actualIndex = Math.max(actualIndex, siblingIndex);
     } else {
-      actualIndex.value = Math.min(actualIndex.value, siblingIndex - 1);
+      actualIndex = Math.min(actualIndex, siblingIndex - 1);
     }
-    actualIndex.value = Math.min(actualIndex.value, itemsCount);
+    actualIndex = Math.min(actualIndex, itemsCount);
   };
   const startDragEventOverElement = (
     element: Element,
@@ -335,7 +334,7 @@ export default function useEmitEvents<T>(
   ) => {
     const isOutside = draggableIsOutside(draggedElement, droppable);
 
-    const targetIndex = isOutside ? elementPosition : actualIndex.value;
+    const targetIndex = isOutside ? elementPosition : actualIndex;
 
     const getPreviousAndNextElementIndex = () => {
       if (elementPosition < targetIndex) {
@@ -381,7 +380,7 @@ export default function useEmitEvents<T>(
       element.classList.remove(DROPPING_CLASS);
       if (positionOnSourceDroppable != undefined) {
         const value = onRemoveAtEvent(positionOnSourceDroppable);
-        if (value) {
+        if (value != undefined) {
           onInsertEvent(targetIndex, value);
           onDragEnd({ value, index: targetIndex})
         }
@@ -462,7 +461,7 @@ export default function useEmitEvents<T>(
     }
   };
   const removeElementDraggingStyles = (element: HTMLElement) => {
-    draggingState.value = DraggingState.NOT_DRAGGING;
+    endDraggingAction()
     toggleDraggingClass(element, false);
     element.style.transform = "";
     element.style.transition = "";

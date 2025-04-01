@@ -5,26 +5,25 @@ import {
   getMarginStyleByProperty,
   getPropByDirection,
 } from "./GetStyles";
-import { Ref, ref } from "vue";
 import { Direction } from "../composables";
 import { scrollByDirection } from "./scroll";
 import { HANDLER_CLASS, DRAGGING_CLASS } from "./classes";
 
 export const useTransform = (
-  childRef: Ref<HTMLElement | undefined>
+  draggedElement: HTMLElement | undefined
 ) => {
-  const currentOffset = ref({ offsetX: 0, offsetY: 0 });
-  const position = ref({ top: 0, left: 0 });
-  const translate = ref({ x: 0, y: 0 });
+  let currentOffset = { offsetX: 0, offsetY: 0 };
+  let position = { top: 0, left: 0 };
+  let translate = { x: 0, y: 0 };
 
   function updateTranform(newTranslate: Coordinate){
-    const childElement = childRef.value;
+    const childElement = draggedElement;
       if (childElement) {
         childElement.style.transform = `translate( ${newTranslate.x}px, ${newTranslate.y}px)`;
       }
   }
   function updatePosition(newPosition: ElementPosition){
-    const childElement = childRef.value;
+    const childElement = draggedElement;
     if (childElement) {
       childElement.style.top = `${newPosition.top}px`;
       childElement.style.left = `${newPosition.left}px`;
@@ -33,10 +32,10 @@ export const useTransform = (
   function setTransform(
     element: HTMLElement,
     parent: HTMLElement,
-    pagePosition: Ref<{
+    pagePosition: {
       pageX: number;
       pageY: number;
-    }>,
+    },
     direction?: Direction
   ) {
     const getTranslateWihtDirection = (translateDirection: Direction) => {
@@ -51,27 +50,27 @@ export const useTransform = (
         distance,
         axis,
       } = getPropByDirection(translateDirection);
-      const pageValue = pagePosition.value[page];
+      const pageValue = pagePosition[page];
       const scrollValue = window[scroll];
       const innerDistance = window[inner];
       const distanceValue = element.getBoundingClientRect()[distance];
       const border = getBorderWidthProperty(element, borderBeforeWidth);
       const margin = getMarginStyleByProperty(element, beforeMargin);
-      const elementPosittion = pageValue - currentOffset.value[offset];
+      const elementPosittion = pageValue - currentOffset[offset];
       if (
         elementPosittion >= scrollValue - distanceValue / 2 &&
         elementPosittion <= scrollValue + innerDistance
       ) {
         const newTranslate =
           elementPosittion -
-          position.value[before] -
+          position[before] -
           border -
           margin -
           scrollValue;
         updateScroll(translateDirection);
         return newTranslate;
       }
-      const defaultTransalation = translate.value[axis];
+      const defaultTransalation = translate[axis];
       return defaultTransalation;
     };
     const updateScroll = (translateDirection: Direction) => {
@@ -85,9 +84,9 @@ export const useTransform = (
 
         const parentBoundingClientRect = parent.getBoundingClientRect();
         const positionInsideParent =
-          position.value[before] -
+          position[before] -
           parentBoundingClientRect[before] +
-          translate.value[axis];
+          translate[axis];
 
         const parentDistance = parentBoundingClientRect[distance];
         const totalDistance = parentDistance - distanceValue;
@@ -118,8 +117,8 @@ export const useTransform = (
     };
     const updateTranlateByDirection = (direction: Direction) => {
       const { axis } = getPropByDirection(direction);
-      translate.value[axis] = getTranslateWihtDirection(direction);
-      updateTranform(translate.value)
+      translate[axis] = getTranslateWihtDirection(direction);
+      updateTranform(translate)
     };
     updateTranlateByDirection("horizontal");
     updateTranlateByDirection("vertical");
@@ -132,14 +131,14 @@ export const useTransform = (
     const { offsetX, offsetY, top, left } = getTransformState(
       event,
       element,
-      childRef.value
+      draggedElement
     );
-    position.value = {
+    position = {
       top,
       left,
     };
-    updatePosition(position.value)
-    currentOffset.value = { offsetX, offsetY };
+    updatePosition(position)
+    currentOffset = { offsetX, offsetY };
   };
   return {
     setTransform,
