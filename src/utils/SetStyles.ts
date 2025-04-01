@@ -1,5 +1,5 @@
 import { Direction } from "../composables";
-import { DragMouseTouchEvent } from "../../index";
+import { DragMouseTouchEvent, fixedSize } from "../../index";
 import { getBorderWidthProperty, getPropByDirection } from "./GetStyles";
 import { IsHTMLElement, isTouchEvent } from "./touchDevice";
 
@@ -219,3 +219,18 @@ const AddCssStyleToElement = (node: ParentNode, cssCode: string) => {
     style.sheet?.insertRule(cssCode, style.sheet.cssRules.length);
   }
 };
+export function setCustomFixedSize
+  (element: HTMLElement | undefined, 
+  fixedProps: fixedSize = {}) {
+    for (const fixedProp of Object.keys(fixedProps) as Array<keyof fixedSize>) {
+      const fixedValue = fixedProps[fixedProp]
+      if (fixedValue != undefined) {
+        setCustomProperty(element, `--${fixedProp}`, fixedValue)
+      }
+    }
+}
+function setCustomProperty(element: HTMLElement | undefined, fixedProp: string, newFixedSize: string) {
+  if (element) {
+    element.style.setProperty(fixedProp, newFixedSize);
+  }
+}

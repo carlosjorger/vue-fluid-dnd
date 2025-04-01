@@ -4,12 +4,13 @@ import {
   assignDraggingEvent,
   convetEventToDragMouseTouchEvent,
   moveTranslate,
+  setCustomFixedSize,
   setEventWithInterval,
   setTranistion,
 } from "../utils/SetStyles";
 import { useTransform } from "../utils/SetTransform";
 import { DragMouseTouchEvent, MoveEvent, OnLeaveEvent } from "../../index";
-import { Ref, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { CoreConfig, DragStartEventData } from ".";
 import useEmitEvents from "../utils/events/emitEvents";
 import { DRAG_EVENT, draggableTargetTimingFunction, DraggingState, START_DRAG_EVENT, START_DROP_EVENT } from "../utils";
@@ -58,9 +59,6 @@ export default function useDraggable<T>(
   });
   const pagePosition = ref({ pageX: 0, pageY: 0 });
 
-  const fixedWidth = ref("");
-  const fixedHeight = ref("");
-
   const delayTimeout = ref<NodeJS.Timeout>();
   const { setTransform, updateTransformState } = useTransform(
     childRef
@@ -74,8 +72,6 @@ export default function useDraggable<T>(
   } = useEmitEvents<T>(
     config,
     draggingState,
-    fixedHeight,
-    fixedWidth,
     index,
     parent,
     droppableGroupClass,
@@ -392,21 +388,15 @@ export default function useDraggable<T>(
   };
   const setDraggingStyles = (element: HTMLElement) => {
     const { height, width } = element.getBoundingClientRect();
-    fixedHeight.value = `${height}px`;
-    fixedWidth.value = `${width}px`;
+    setCustomFixedSize(element, {
+      fixedHeight: `${height}px`,
+      fixedWidth: `${width}px`
+    })
     toggleDraggingClass(element, true);
     element.classList.toggle(draggingClass,true);
     element.style.transition = "";
   };
 
-  const createWatchOfStyle = (fixedSize: Ref<string>, fixedProp: string) => {
-    watch(fixedSize, (newFixedSize: string) => {
-      const childElement = childRef.value;
-      if (childElement) {
-        childElement.style.setProperty(fixedProp, newFixedSize);
-      }
-    });
-  };
   const changeDroppable = (
     newdDroppableConfig: DroppableConfig<T> | undefined,
     oldDroppableConfig: DroppableConfig<T> | undefined
@@ -471,8 +461,6 @@ export default function useDraggable<T>(
     }
   }
   watch(currentDroppableConfig, changeDroppable, { deep: true });
-  createWatchOfStyle(fixedWidth, "--fixedWidth");
-  createWatchOfStyle(fixedHeight, "--fixedHeight");
   setCssStyles();
   setSlotRefElementParams(childRef.value);
   return { removeAtFromElement, insertAtFromElement };

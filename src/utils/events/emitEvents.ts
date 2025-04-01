@@ -8,7 +8,7 @@ import {
   getWindowScroll,
 } from "../GetStyles";
 import { Translate, WindowScroll } from "../../../index";
-import { moveTranslate, setTranistion } from "../SetStyles";
+import { moveTranslate, setCustomFixedSize, setTranistion } from "../SetStyles";
 import { CoreConfig, Direction } from "../../composables";
 import getTranslationByDragging from "../translate/GetTranslationByDraggingAndEvent";
 import getTranslateBeforeDropping from "../translate/GetTranslateBeforeDropping";
@@ -29,8 +29,6 @@ type DropEvent = "drop" | typeof START_DROP_EVENT;
 export default function useEmitEvents<T>(
   currentConfig: CoreConfig<T>,
   draggingState: Ref<DraggingState>,
-  fixedHeight: Ref<string>,
-  fixedWidth: Ref<string>,
   index: number,
   parent: HTMLElement,
   droppableGroupClass: string | null,
@@ -470,8 +468,10 @@ export default function useEmitEvents<T>(
     element.style.transition = "";
     element.style.top = "";
     element.style.left = "";
-    fixedHeight.value = "";
-    fixedWidth.value = "";
+    setCustomFixedSize(element, {
+      fixedHeight: '',
+      fixedWidth: ''
+    })
   };
   const toogleHandlerDraggingClass = (force: boolean, element: Element) => {
     const handlerElement = element.querySelector(handlerSelector);

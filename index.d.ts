@@ -56,3 +56,7 @@ export type WindowScroll = {
   readonly scrollX: number;
   readonly scrollY: number;
 };
+export type fixedSize ={
+  fixedWidth?: string,
+  fixedHeight?: string,
+}
