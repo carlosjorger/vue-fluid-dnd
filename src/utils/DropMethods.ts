@@ -1,5 +1,5 @@
 import { Ref } from "vue";
-
+// TODO: use an interface instead an concrate class
 export const removeAtEventOnList = <T>(list: Ref<T[]>, index: number) => {
   const listValue = list.value;
   if (listValue.length <= 0) {

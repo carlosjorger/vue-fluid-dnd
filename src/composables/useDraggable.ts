@@ -1,4 +1,3 @@
-import { getScroll } from "../utils/GetStyles";
 import {
   AddCssStylesToElement,
   assignDraggingEvent,
@@ -10,7 +9,7 @@ import {
 } from "../utils/SetStyles";
 import { useTransform } from "../utils/SetTransform";
 import { DragMouseTouchEvent, MoveEvent, OnLeaveEvent } from "../../index";
-import { ref, watch } from "vue";
+import { watch } from "vue";
 import { CoreConfig, DragStartEventData } from ".";
 import useEmitEvents from "../utils/events/emitEvents";
 import { DRAG_EVENT, draggableTargetTimingFunction, DraggingState, START_DRAG_EVENT, START_DROP_EVENT } from "../utils";
@@ -27,6 +26,7 @@ import HandlerPublisher from "./HandlerPublisher";
 
 const DROPPABLE_CLASS = "droppable";
 // TODO: remove watch
+// TODO: start returning array instead an object
 export default function useDraggable<T>(
   draggableElement: HTMLElement,
   index: number,
@@ -50,15 +50,14 @@ export default function useDraggable<T>(
   const droppableGroupClass = getClassesList(droppableGroup)
     .map((classGroup) => `droppable-group-${classGroup}`)
     .join(" ");
-  const draggingState = ref<DraggingState>(DraggingState.NOT_DRAGGING);
-  const scroll = ref({ scrollLeft: 0, scrollTop: 0 });
-  const windowScroll = ref({
+  let draggingState = DraggingState.NOT_DRAGGING;
+  let windowScroll = {
     scrollX: 0,
     scrollY: 0,
-  });
-  const pagePosition = ref({ pageX: 0, pageY: 0 });
+  };
+  let pagePosition = { pageX: 0, pageY: 0 };
 
-  const delayTimeout = ref<NodeJS.Timeout>();
+  let delayTimeout: NodeJS.Timeout|undefined;
   const { setTransform, updateTransformState } = useTransform(
     draggableElement
   );
@@ -74,7 +73,7 @@ export default function useDraggable<T>(
     parent,
     droppableGroupClass,
     handlerPublisher,
-    ()=>(draggingState.value = DraggingState.NOT_DRAGGING)
+    ()=>(draggingState = DraggingState.NOT_DRAGGING)
   );
   const setDraggable = () => {
     draggableElement.classList.add(DRAGGABLE_CLASS);
@@ -148,18 +147,18 @@ export default function useDraggable<T>(
     });
   }
   const setTransformDragEvent = () => {
-    if (pagePosition.value.pageX == 0 && pagePosition.value.pageY == 0) {
+    if (pagePosition.pageX == 0 && pagePosition.pageY == 0) {
       return;
     }
     if (!currentDroppableConfig.value) {
       return;
     }
     const { droppable, config } = currentDroppableConfig.value;
-    setTransform(draggableElement, droppable, pagePosition.value, config.direction);
+    setTransform(draggableElement, droppable, pagePosition, config.direction);
     emitEventToSiblings(
       draggableElement,
       DRAG_EVENT,
-      windowScroll.value,
+      windowScroll,
       currentDroppableConfig.value
     );
   };
@@ -183,9 +182,9 @@ export default function useDraggable<T>(
     updateConfig(event);
     const isOutside = isOutsideOfDroppable(event)
     toggleDroppableClass(isOutside)
-    if (draggingState.value === DraggingState.START_DRAGGING) {
+    if (draggingState === DraggingState.START_DRAGGING) {
       startDragging(event);
-    } else if (draggingState.value === DraggingState.DRAGING) {
+    } else if (draggingState === DraggingState.DRAGING) {
       updateTempChildren(isOutside);
       setTransformEvent(event);
     }
@@ -208,7 +207,7 @@ export default function useDraggable<T>(
     addTempChild(
       draggableElement,
       parent,
-      draggingState.value,
+      draggingState,
       currentDroppableConfig.value
     );
   };
@@ -223,7 +222,7 @@ export default function useDraggable<T>(
   };
   const addTouchDeviceDelay = (event: MoveEvent, callback: () => void) => {
     if (event == "touchmove") {
-      delayTimeout.value = setTimeout(() => {
+      delayTimeout = setTimeout(() => {
         callback();
       }, 200);
     } else {
@@ -260,9 +259,9 @@ export default function useDraggable<T>(
       }
       ConfigHandler.updateScrolls(parent, droppableGroupClass);
       const { scrollX, scrollY } = window;
-      windowScroll.value = { scrollX, scrollY };
-      if (draggingState.value === DraggingState.NOT_DRAGGING) {
-        draggingState.value = DraggingState.START_DRAGGING;
+      windowScroll = { scrollX, scrollY };
+      if (draggingState === DraggingState.NOT_DRAGGING) {
+        draggingState = DraggingState.START_DRAGGING;
         const data = getDragStartEventData(draggableElement)
         data && onDragStart(data)
         addTouchDeviceDelay(moveEvent, () => {
@@ -289,7 +288,7 @@ export default function useDraggable<T>(
     return (event: MouseEvent | TouchEvent) => {
       toggleDroppableClass(true);
       const convertedEvent = convetEventToDragMouseTouchEvent(event);
-      clearTimeout(delayTimeout.value);
+      clearTimeout(delayTimeout);
       onDropDraggingEvent(isOutsideOfDroppable(convertedEvent, false));
       document.removeEventListener(moveEvent, handlerMousemove);
       updateConfig(convertedEvent);
@@ -319,26 +318,25 @@ export default function useDraggable<T>(
     addTempChild(
       draggableElement,
       parent,
-      draggingState.value,
+      draggingState,
       currentDroppableConfig.value
     );
     updateDraggingStateBeforeDragging();
     emitEventToSiblings(
       draggableElement,
       START_DRAG_EVENT,
-      windowScroll.value,
+      windowScroll,
       currentDroppableConfig.value
     );
     updateTransformState(event, draggableElement);
     setDraggingStyles(draggableElement);
   };
   const updateDraggingStateBeforeDragging = () => {
-    scroll.value = getScroll(parent);
-    draggingState.value = DraggingState.DRAGING;
+    draggingState = DraggingState.DRAGING;
   };
   const setTransformEvent = (event: DragMouseTouchEvent) => {
     const { pageX, pageY } = event;
-    pagePosition.value = { pageX, pageY };
+    pagePosition = { pageX, pageY };
     setTransformDragEvent();
   };
   const makeScrollEventOnDroppable = (droppable: Element) => {
@@ -348,18 +346,18 @@ export default function useDraggable<T>(
     setTransformDragEvent();
   };
   const onDropDraggingEvent = (isOutsideAllDroppables: boolean) => {
-    if (draggingState.value !== DraggingState.DRAGING) {
-      draggingState.value = DraggingState.NOT_DRAGGING;
+    if (draggingState !== DraggingState.DRAGING) {
+      draggingState = DraggingState.NOT_DRAGGING;
       return;
     }
-    draggingState.value = DraggingState.END_DRAGGING;
+    draggingState = DraggingState.END_DRAGGING;
 
     removeDraggingStyles(draggableElement);
     
     emitEventToSiblings(
       draggableElement,
       START_DROP_EVENT,
-      windowScroll.value,
+      windowScroll,
       isOutsideAllDroppables? initialDroppableConfig.value: currentDroppableConfig.value,
       index
     );
@@ -385,13 +383,13 @@ export default function useDraggable<T>(
   ) => {
     if (
       oldDroppableConfig &&
-      draggingState.value == DraggingState.DRAGING &&
+      draggingState == DraggingState.DRAGING &&
       !newdDroppableConfig?.droppable.isSameNode(oldDroppableConfig.droppable)
     ) {
       emitEventToSiblings(
         draggableElement,
         DRAG_EVENT,
-        windowScroll.value,
+        windowScroll,
         oldDroppableConfig
       );
     }
@@ -411,7 +409,7 @@ export default function useDraggable<T>(
         addTempChild(
           draggableElement,
           parent,
-          draggingState.value,
+          draggingState,
           currentDroppableConfig.value
         );
         emitRemoveEventToSiblings(
@@ -432,7 +430,7 @@ export default function useDraggable<T>(
          () => {
           addTempChildOnInsert(
             draggableElement,
-            draggingState.value,
+            draggingState,
             initialDroppableConfig.value
           );
         }
