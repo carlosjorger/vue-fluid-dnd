@@ -8,7 +8,7 @@ import { observeMutation } from "./observer";
 // import { scrollByDirection } from "./scroll";
 import getTranslationByDragging from "./translate/GetTranslationByDraggingAndEvent";
 import { scrollPercent } from "./scroll";
-import { DraggingState, TEMP_CHILD_CLASS } from ".";
+import { TEMP_CHILD_CLASS } from ".";
 import { getClassesSelector } from "./dom/classList";
 
 const START_DRAG_EVENT = "startDrag";
@@ -27,17 +27,17 @@ const getDistance = (
   const gap = getGapPixels(droppable, direction);
   const { distance } = getPropByDirection(direction);
   distances[distance] -= gap;
-  const { large, largeDistance } = getlarge(direction, draggedElement);
+  const [ large, largeDistance ] = getlarge(direction, draggedElement);
   distances[largeDistance] = large;
   return distances;
 };
 const getlarge = (direction: Direction, draggedElement: HTMLElement) => {
   const largeDirection = direction == "horizontal" ? "vertical" : "horizontal";
   const { distance } = getPropByDirection(largeDirection);
-  return {
-    large: draggedElement.getBoundingClientRect()[distance],
-    largeDistance: distance,
-  };
+  return [
+    draggedElement.getBoundingClientRect()[distance],
+    distance,
+  ] as const;
 };
 const setSizes = (element: HTMLElement, height: number, width: number) => {
   element.style.height = `${height}px`;
@@ -59,9 +59,9 @@ const updateChildAfterCreated = (
 };
 const fixScrollInitialChange = <T>(
   droppableConfig: DroppableConfig<T>,
-  state: DraggingState
+  ifStartDragging: boolean
 ) => {
-  if (state != DraggingState.START_DRAGGING) {
+  if (!ifStartDragging) {
     return;
   }
   const { droppable, config, droppableScroll } = droppableConfig;
@@ -79,7 +79,7 @@ const fixScrollInitialChange = <T>(
 export const addTempChild = <T>(
   draggedElement: HTMLElement | undefined,
   parent: Element,
-  state: DraggingState,
+  ifStartDragging: boolean,
   droppableConfig?: DroppableConfig<T>,
   addingAnimationDuration?: number
 ) => {
@@ -89,7 +89,7 @@ export const addTempChild = <T>(
   const { droppable, config } = droppableConfig;
   const { direction, animationDuration } = config;
 
-  fixScrollInitialChange(droppableConfig, state);
+  fixScrollInitialChange(droppableConfig, ifStartDragging);
 
   if (droppable.querySelector(`.${TEMP_CHILD_CLASS}`) || !draggedElement) {
     return;
@@ -123,7 +123,7 @@ export const addTempChild = <T>(
 };
 export const addTempChildOnInsert = <T>(
   draggedElement: HTMLElement | undefined,
-  state: DraggingState,
+  ifStartDragging: boolean,
   droppableConfig?: DroppableConfig<T>
 ) => {
   if (!droppableConfig) {
@@ -132,7 +132,7 @@ export const addTempChildOnInsert = <T>(
   const { droppable, config } = droppableConfig;
   const { direction, animationDuration } = config;
 
-  fixScrollInitialChange(droppableConfig, state);
+  fixScrollInitialChange(droppableConfig, ifStartDragging);
 
   if (droppable.querySelector(`.${TEMP_CHILD_CLASS}`) || !draggedElement) {
     return;

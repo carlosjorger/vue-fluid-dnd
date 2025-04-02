@@ -47,7 +47,7 @@ function getTranslationByDragging(
   const before = getMarginStyleByProperty(current, beforeMargin);
   const nextBefore = getMarginStyleByProperty(nextElement, beforeMargin);
 
-  const { gap, hasGaps } = gapAndDisplayInformation(
+  const [ gap, hasGaps ] = gapAndDisplayInformation(
     current.parentElement,
     gapStyle
   );
@@ -56,7 +56,7 @@ function getTranslationByDragging(
   if (hasGaps) {
     return getTranslation(space, before, after, gap, 0, direction);
   }
-  const { afterSpace, beforeScace, rest } = getTranslationByDraggingWithoutGaps(
+  const [ afterSpace, beforeScace, rest ] = getTranslationByDraggingWithoutGaps(
     previous,
     nextBefore,
     after,
@@ -84,7 +84,7 @@ const getTranslationByDraggingWithoutGaps = (
     beforeScace = Math.max(previousAfterMargin, currentBeforeMargin);
     rest = Math.max(rest, previousAfterMargin);
   }
-  return { afterSpace, beforeScace, rest };
+  return [ afterSpace, beforeScace, rest ] as const;
 };
 const getTranslation = (
   size: number,

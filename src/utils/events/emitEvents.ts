@@ -121,7 +121,7 @@ export default function useEmitEvents<T>(
       return;
     }
     const { droppable, config } = droppableConfig;
-    let { siblings } = getSiblings(draggedElement, droppable);
+    let [ siblings ] = getSiblings(draggedElement, droppable);
     siblings = [draggedElement, ...siblings].toReversed();
     const translation = getTranslationByDragging(
       draggedElement,
@@ -153,7 +153,7 @@ export default function useEmitEvents<T>(
     droppableConfig: DroppableConfig<T>
   ) => {
     const { config, droppable } = droppableConfig;
-    const { siblings } = getSiblings(draggedElement, droppable);
+    const [ siblings ] = getSiblings(draggedElement, droppable);
     const isOutside = draggableIsOutside(draggedElement, droppable);
     if (siblings.length == 0) {
        updateActualIndexBaseOnTranslation(
@@ -256,7 +256,7 @@ export default function useEmitEvents<T>(
     positionOnSourceDroppable?: number
   ) => {
     const { droppable, droppableScroll, config } = droppableConfig;
-    const { siblings, positionOnDroppable } = getSiblings(
+    const [ siblings, positionOnDroppable ] = getSiblings(
       draggedElement,
       droppable
     );
@@ -265,7 +265,7 @@ export default function useEmitEvents<T>(
 
     allSiblings.splice(realPositionOnDroppable, 0, draggedElement);
 
-    const { previousElement, nextElement, targetIndex } =
+    const [ previousElement, nextElement, targetIndex ] =
       getPreviousAndNextElement(
         draggedElement,
         positionOnDroppable,
@@ -348,11 +348,11 @@ export default function useEmitEvents<T>(
     const [previousIndex, nextIndex] = getPreviousAndNextElementIndex();
     const previousElement = allSiblings[previousIndex] ?? null;
     const nextElement = allSiblings[nextIndex] ?? null;
-    return {
+    return [
       previousElement,
       nextElement,
       targetIndex,
-    };
+    ] as const;
   };
   const startDropEventOverElement = (
     targetElement: Element|undefined,
@@ -449,7 +449,7 @@ export default function useEmitEvents<T>(
     element: HTMLElement,
     parent: HTMLElement
   ) => {
-    const { siblings } = getSiblings(element, parent);
+    const [ siblings ] = getSiblings(element, parent);
     for (const sibling of [...siblings, element]) {
       removeTranslateWhitoutTransition(sibling);
     }
@@ -486,13 +486,13 @@ export default function useEmitEvents<T>(
     toogleHandlerDraggingClass(force, element);
     handlerPublisher.toggleGrabClass(!force)
   };
-  return {
+  return [
     emitEventToSiblings,
     emitRemoveEventToSiblings,
     emitInsertEventToSiblings,
     emitFinishRemoveEventToSiblings,
     toggleDraggingClass,
-  };
+  ] as const;
 }
 function onFinishInsertElement<T>(targetIndex:number, droppable: HTMLElement, config: CoreConfig<T>){
     const { insertingFromClass, animationDuration } = config

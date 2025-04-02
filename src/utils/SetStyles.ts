@@ -102,25 +102,24 @@ const getOffsetFromEvent = (
   };
   if (event instanceof MouseEvent) {
     const { offsetX, offsetY } = event;
-    return { offsetX, offsetY };
+    return [ offsetX, offsetY ] as const;
   } else {
     const element = event.target as Element;
-    return {
-      offsetX: getTouchEventOffset(element, "horizontal"),
-      offsetY: getTouchEventOffset(element, "vertical"),
-    };
+    return [
+      getTouchEventOffset(element, "horizontal"),
+      getTouchEventOffset(element, "vertical"),
+    ] as const;
   }
 };
 export const convetEventToDragMouseTouchEvent = (
-  event: MouseEvent | TouchEvent,
-
+  event: MouseEvent | TouchEvent
 ): DragMouseTouchEvent => {
   const tempEvent = getEvent(event);
   if (!tempEvent) {
     return getDefaultEvent(event);
   }
 
-  const { offsetX, offsetY } = getOffsetFromEvent(event, tempEvent);
+  const [ offsetX, offsetY ] = getOffsetFromEvent(event, tempEvent);
   const { clientX, clientY, pageX, pageY, screenX, screenY, target } =
     tempEvent;
 

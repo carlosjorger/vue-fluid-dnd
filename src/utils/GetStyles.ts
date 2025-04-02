@@ -128,6 +128,7 @@ export const getScrollElement = (element: HTMLElement) => {
   const { scrollLeft, scrollTop } = element;
   return { scrollLeft, scrollTop };
 };
+// TODO: optimize this function
 export const getPropByDirection = (
   direction: Direction
 ): {
@@ -229,9 +230,9 @@ export const getSiblingsByParent = (
     child.isEqualNode(current)
   );
   
-  return {
+  return [
     siblings,
     positionOnDroppable,
     parent,
-  };
+  ] as const;
 };

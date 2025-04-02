@@ -15,10 +15,10 @@ export default function useDroppable<T>(coreConfig: CoreConfig<T>, handlerPublis
     let insertAtFromElementList = [] as  ((targetIndex: number, value: T) => void)[];
     const {droppableGroup } = coreConfig
     if (!droppable) {
-        return {
+        return [
             removeAtFromElementList,
             insertAtFromElementList
-        }
+        ] as const
     }
     const droppableGroupClass = getClassesList(droppableGroup)
         .map((classGroup) => `droppable-group-${classGroup}`)
@@ -30,7 +30,7 @@ export default function useDroppable<T>(coreConfig: CoreConfig<T>, handlerPublis
           const childHTMLElement = child as HTMLElement;
     
           if (childHTMLElement && numberIndex >= 0) {
-            const { removeAtFromElement, insertAtFromElement } = useDraggable(
+            const [ removeAtFromElement, insertAtFromElement ] = useDraggable(
               childHTMLElement,
               numberIndex,
               coreConfig,
@@ -41,8 +41,8 @@ export default function useDroppable<T>(coreConfig: CoreConfig<T>, handlerPublis
             insertAtFromElementList.push(insertAtFromElement);
           }
     }
-    return {
+    return [
         removeAtFromElementList,
         insertAtFromElementList
-    }
+    ] as const
 }

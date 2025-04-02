@@ -12,7 +12,7 @@ import { DragMouseTouchEvent, MoveEvent, OnLeaveEvent } from "../../index";
 import { watch } from "vue";
 import { CoreConfig, DragStartEventData } from ".";
 import useEmitEvents from "../utils/events/emitEvents";
-import { DRAG_EVENT, draggableTargetTimingFunction, DraggingState, START_DRAG_EVENT, START_DROP_EVENT } from "../utils";
+import { DRAG_EVENT, draggableTargetTimingFunction, START_DRAG_EVENT, START_DROP_EVENT } from "../utils";
 import ConfigHandler, { DroppableConfig } from "./configHandler";
 import { isTouchEvent } from "../utils/touchDevice";
 import { addTempChild, addTempChildOnInsert, removeTempChildrens } from "../utils/tempChildren";
@@ -24,6 +24,12 @@ import {
 import { DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS, GRAB_CLASS, GRABBING_CLASS, HANDLER_CLASS } from "../utils/classes";
 import HandlerPublisher from "./HandlerPublisher";
 
+const enum DraggingState {
+  NOT_DRAGGING,
+  START_DRAGGING,
+  DRAGING,
+  END_DRAGGING,
+}
 const DROPPABLE_CLASS = "droppable";
 // TODO: remove watch
 // TODO: start returning array instead an object
@@ -50,7 +56,7 @@ export default function useDraggable<T>(
   const droppableGroupClass = getClassesList(droppableGroup)
     .map((classGroup) => `droppable-group-${classGroup}`)
     .join(" ");
-  let draggingState = DraggingState.NOT_DRAGGING;
+  let draggingState: DraggingState = DraggingState.NOT_DRAGGING;
   let windowScroll = {
     scrollX: 0,
     scrollY: 0,
@@ -58,16 +64,16 @@ export default function useDraggable<T>(
   let pagePosition = { pageX: 0, pageY: 0 };
 
   let delayTimeout: NodeJS.Timeout|undefined;
-  const { setTransform, updateTransformState } = useTransform(
+  const [ setTransform, updateTransformState ] = useTransform(
     draggableElement
   );
-  const {
+  const [
     emitEventToSiblings,
     emitRemoveEventToSiblings,
     emitInsertEventToSiblings,
     emitFinishRemoveEventToSiblings,
     toggleDraggingClass,
-  } = useEmitEvents<T>(
+   ] = useEmitEvents<T>(
     config,
     index,
     parent,
@@ -162,7 +168,7 @@ export default function useDraggable<T>(
       currentDroppableConfig.value
     );
   };
-  const { updateConfig, currentDroppableConfig, initialDroppableConfig ,getCurrentConfig, isOutsideOfDroppable } =
+  const [ currentDroppableConfig, initialDroppableConfig, updateConfig, getCurrentConfig, isOutsideOfDroppable ] =
     useConfig<T>(draggableElement, droppableGroupClass, parent, setTransformDragEvent);
   function toggleDroppableClass(isOutside:boolean){
     if (!currentDroppableConfig.value) {
@@ -207,7 +213,7 @@ export default function useDraggable<T>(
     addTempChild(
       draggableElement,
       parent,
-      draggingState,
+      draggingState == DraggingState.START_DRAGGING,
       currentDroppableConfig.value
     );
   };
@@ -318,7 +324,7 @@ export default function useDraggable<T>(
     addTempChild(
       draggableElement,
       parent,
-      draggingState,
+      draggingState == DraggingState.START_DRAGGING,
       currentDroppableConfig.value
     );
     updateDraggingStateBeforeDragging();
@@ -409,7 +415,7 @@ export default function useDraggable<T>(
         addTempChild(
           draggableElement,
           parent,
-          draggingState,
+          draggingState == DraggingState.START_DRAGGING,
           currentDroppableConfig.value
         );
         emitRemoveEventToSiblings(
@@ -430,7 +436,7 @@ export default function useDraggable<T>(
          () => {
           addTempChildOnInsert(
             draggableElement,
-            draggingState,
+            draggingState == DraggingState.START_DRAGGING,
             initialDroppableConfig.value
           );
         }
@@ -440,7 +446,7 @@ export default function useDraggable<T>(
   watch(currentDroppableConfig, changeDroppable, { deep: true });
   setCssStyles();
   setSlotRefElementParams(draggableElement);
-  return { removeAtFromElement, insertAtFromElement };
+  return [ removeAtFromElement, insertAtFromElement ] as const;
 }
 
 // TODO: use semantic-realese https://medium.comr/@davidkelley87/using-semantic-release-for-npm-libraries-with-github-actions-234461235fa7

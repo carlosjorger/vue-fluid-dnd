@@ -65,7 +65,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config<T>) {
     }
   }
   const makeChildrensDraggable = () => {
-    const { removeAtFromElementList, insertAtFromElementList } = useDroppable(coreConfig, handlerPublisher, parent.value)
+    const [ removeAtFromElementList, insertAtFromElementList ] = useDroppable(coreConfig, handlerPublisher, parent.value)
     removeAtFromElements = removeAtFromElementList;
     insertAtFromElements = insertAtFromElementList;
   };

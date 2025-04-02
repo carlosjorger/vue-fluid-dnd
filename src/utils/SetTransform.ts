@@ -128,7 +128,7 @@ export const useTransform = (
     event: DragMouseTouchEvent,
     element: HTMLElement
   ) => {
-    const { offsetX, offsetY, top, left } = getTransformState(
+    const [ top, left, offsetX, offsetY ] = getTransformState(
       event,
       element,
       draggedElement
@@ -140,10 +140,10 @@ export const useTransform = (
     updatePosition(position)
     currentOffset = { offsetX, offsetY };
   };
-  return {
+  return [
     setTransform,
     updateTransformState,
-  };
+  ] as const;
 };
 
 const getOffsetWithDraggable = (
@@ -170,7 +170,7 @@ const getOffset = (event: TransformEvent, draggable: Element | undefined) => {
     offsetX += getOffsetWithDraggable("horizontal", targetHandler, draggable);
     offsetY += getOffsetWithDraggable("vertical", targetHandler, draggable);
   }
-  return { offsetX, offsetY };
+  return [offsetX, offsetY ];
 };
 const getHandlerElementAncestor = (
   target: EventTarget | null,
@@ -205,18 +205,18 @@ export const getTransformState = (
   event: TransformEvent,
   element: HTMLElement,
   draggable?: Element
-) => {
-  const { offsetX, offsetY } = getOffset(event, draggable);
-  return {
-    top: getPositionByDistance("vertical", event, element, {
+): [number, number, number, number] => {
+  const [ offsetX, offsetY ] = getOffset(event, draggable);
+  return [
+    getPositionByDistance("vertical", event, element, {
       offsetX,
       offsetY,
     }),
-    left: getPositionByDistance("horizontal", event, element, {
+    getPositionByDistance("horizontal", event, element, {
       offsetX,
       offsetY,
     }),
     offsetX,
-    offsetY,
-  };
+    offsetY
+  ];
 };

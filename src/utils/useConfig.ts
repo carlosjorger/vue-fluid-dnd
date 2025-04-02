@@ -114,5 +114,5 @@ export function useConfig<T>(
     }
     return !Boolean(getCurrentDroppable(currentElement, event, hiddenDraggable))
   }
-  return { currentDroppableConfig, initialDroppableConfig, updateConfig, getCurrentConfig, isOutsideOfDroppable };
+  return [ currentDroppableConfig, initialDroppableConfig, updateConfig, getCurrentConfig, isOutsideOfDroppable ] as const;
 }

@@ -10,9 +10,3 @@ export type DragAndDropEvent = DraggingEvent | DropEvent | "remove" | "insert";
 export const IsDropEvent = (event: DragAndDropEvent): event is DropEvent => {
   return event === DROP_EVENT || event === START_DROP_EVENT;
 };
-export const enum DraggingState {
-  NOT_DRAGGING,
-  START_DRAGGING,
-  DRAGING,
-  END_DRAGGING,
-}
