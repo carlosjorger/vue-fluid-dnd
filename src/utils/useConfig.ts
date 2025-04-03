@@ -1,4 +1,3 @@
-import { ref, watch } from "vue";
 import ConfigHandler, { DroppableConfig } from "../composables/configHandler";
 import { DragMouseTouchEvent } from "../../index";
 import { draggableIsOutside } from "./GetStyles";
@@ -6,14 +5,29 @@ import { IsHTMLElement } from "./touchDevice";
 import { setEventWithInterval } from "./SetStyles";
 import { getClassesSelector } from "./dom/classList";
 
-export function useConfig<T>(
-  childRef: HTMLElement | undefined,
-  droppableGroupClass: string | null,
-  parent: HTMLElement,
-  setTransformDragEvent: () => void,
-  changeDroppable: (newdDroppableConfig: DroppableConfig<T> | undefined, oldDroppableConfig: DroppableConfig<T> | undefined) => void
-) {
-  function getDraggableAncestor(
+export class DroppableConfigurator<T>{
+  initialDroppableConfig: DroppableConfig<any> | undefined;
+  currentDroppableConfig: DroppableConfig<T> | undefined;
+  private parent: HTMLElement;
+  private childRef: HTMLElement | undefined;
+  private droppableGroupClass: string | null;
+  private setTransformDragEvent: () => void;
+  private changeDroppable: (newdDroppableConfig: DroppableConfig<T> | undefined, oldDroppableConfig: DroppableConfig<T> | undefined) => void
+
+  constructor(
+    childRef: HTMLElement | undefined,
+    droppableGroupClass: string | null,
+    parent: HTMLElement,
+    setTransformDragEvent: () => void,
+    changeDroppable: (newdDroppableConfig: DroppableConfig<T> | undefined, oldDroppableConfig: DroppableConfig<T> | undefined) => void) {
+    this.parent = parent;
+    this.childRef = childRef;
+    this.droppableGroupClass = droppableGroupClass;
+    this.setTransformDragEvent = setTransformDragEvent;
+    this.initialDroppableConfig = parent? ConfigHandler.getConfig(parent): undefined;
+    this.changeDroppable = changeDroppable
+  }
+  private getDraggableAncestor(
     clientX: number,
     clientY: number,
     draggable: Element | null
@@ -22,14 +36,12 @@ export function useConfig<T>(
       .elementsFromPoint(clientX, clientY)
       .filter((element) => !element.isSameNode(draggable));
   }
-  const currentDroppableConfig = ref<DroppableConfig<T>>();
-  const initialDroppableConfig = ref<DroppableConfig<T>|undefined>(parent?ConfigHandler.getConfig(parent):undefined);
-   function getElementBelow(
+  private getElementBelow(
     currentElement: HTMLElement,
     event: DragMouseTouchEvent,
     hiddenDraggable: boolean = true){
-      function getElementBelow(){
-        const [elementBelow] = getDraggableAncestor(
+      function getElementBelow(config: DroppableConfigurator<T>){
+        const [elementBelow] = config.getDraggableAncestor(
           event.clientX,
           event.clientY,
           currentElement
@@ -39,83 +51,82 @@ export function useConfig<T>(
       let elementBelow = null
       if (hiddenDraggable) {
         currentElement.hidden = true;
-        elementBelow = getElementBelow()
+        elementBelow = getElementBelow(this)
         currentElement.hidden = false;
       }
       else{
-        elementBelow = getElementBelow()
+        elementBelow = getElementBelow(this)
       }
       return elementBelow
-   }
-  function getCurrentDroppable(
+  }
+  private getCurrentDroppable(
     currentElement: HTMLElement,
     event: DragMouseTouchEvent,
     hiddenDraggable: boolean = true
   ) {
-    const elementBelow = getElementBelow(currentElement, event, hiddenDraggable)
-    if (!droppableGroupClass || !elementBelow) {
+    const elementBelow = this.getElementBelow(currentElement, event, hiddenDraggable)
+    if (!this.droppableGroupClass || !elementBelow) {
       return;
     }
     const currentDroppable = elementBelow.closest(
-      getClassesSelector(droppableGroupClass)
+      getClassesSelector(this.droppableGroupClass)
     );
     return currentDroppable;
   }
-  function isOutsideOfAllDroppables(currentElement: HTMLElement) {
-    const droppables = droppableGroupClass? Array.from(
-      document.querySelectorAll(getClassesSelector(droppableGroupClass))
-    ):[parent];
+  private isOutsideOfAllDroppables(currentElement: HTMLElement) {
+    const droppables = this.droppableGroupClass? Array.from(
+      document.querySelectorAll(getClassesSelector(this.droppableGroupClass))
+    ):[this.parent];
     return droppables.every((droppable) =>
       draggableIsOutside(currentElement, droppable)
     );
   }
-  function isNotInsideAnotherDroppable(
+  private isNotInsideAnotherDroppable(
     currentElement: HTMLElement,
     droppable: HTMLElement
   ) {
     const isOutside = draggableIsOutside(currentElement, droppable);
-    return !isOutside || isOutsideOfAllDroppables(currentElement);
+    return !isOutside || this.isOutsideOfAllDroppables(currentElement);
   }
-  const onScrollEvent = () => {
-    setTransformDragEvent();
+  private onScrollEvent() {
+    this.setTransformDragEvent();
   };
-  function makeScrollEventOnDroppable(droppable: Element) {
-    setEventWithInterval(droppable, "onscroll", onScrollEvent);
+  private makeScrollEventOnDroppable(droppable: Element) {
+    setEventWithInterval(droppable, "onscroll",()=> { this.onScrollEvent() });
   }
-  function getCurrentConfig(event: DragMouseTouchEvent) {
-    const currentElement = childRef;
+  getCurrentConfig(event: DragMouseTouchEvent) {
+    const currentElement = this.childRef;
     if (!currentElement) {
       return;
     }
     if (
-      currentDroppableConfig.value &&
-      isNotInsideAnotherDroppable(
+      this.currentDroppableConfig &&
+      this.isNotInsideAnotherDroppable(
         currentElement,
-        currentDroppableConfig.value?.droppable
+        this.currentDroppableConfig?.droppable
       )
     ) {
-      return currentDroppableConfig.value;
+      return this.currentDroppableConfig;
     }
-    const currentDroppable = getCurrentDroppable(currentElement, event);
+    const currentDroppable = this.getCurrentDroppable(currentElement, event);
     if (!currentDroppable) {
-      return ConfigHandler.getConfig(parent);
+      return ConfigHandler.getConfig(this.parent);
     }
     if (IsHTMLElement(currentDroppable) && !currentDroppable.onscroll) {
-      makeScrollEventOnDroppable(currentDroppable);
+      this.makeScrollEventOnDroppable(currentDroppable);
     }
     return ConfigHandler.getConfig(currentDroppable);
   }
-  function updateConfig(event: DragMouseTouchEvent) {
-    currentDroppableConfig.value = getCurrentConfig(event);
+  updateConfig(event: DragMouseTouchEvent) {
+    const oldDroppableConfig = this.currentDroppableConfig;
+    this.currentDroppableConfig = this.getCurrentConfig(event);
+    this.changeDroppable(this.currentDroppableConfig, oldDroppableConfig)
   }
-  function isOutsideOfDroppable(event: DragMouseTouchEvent, hiddenDraggable: boolean = true){
-    const currentElement = childRef;
+  isOutsideOfDroppable(event: DragMouseTouchEvent, hiddenDraggable: boolean = true){
+    const currentElement = this.childRef;
     if (!currentElement) {
       return true;
     }
-    return !Boolean(getCurrentDroppable(currentElement, event, hiddenDraggable))
+    return !Boolean(this.getCurrentDroppable(currentElement, event, hiddenDraggable))
   }
-  watch(currentDroppableConfig, changeDroppable, { deep: true });
-  
-  return [ currentDroppableConfig, initialDroppableConfig, updateConfig, getCurrentConfig, isOutsideOfDroppable ] as const;
 }
