@@ -9,7 +9,6 @@ import {
 } from "../utils/SetStyles";
 import { useTransform } from "../utils/SetTransform";
 import { DragMouseTouchEvent, MoveEvent, OnLeaveEvent } from "../../index";
-import { watch } from "vue";
 import { CoreConfig, DragStartEventData } from ".";
 import useEmitEvents from "../utils/events/emitEvents";
 import { DRAG_EVENT, draggableTargetTimingFunction, START_DRAG_EVENT, START_DROP_EVENT } from "../utils";
@@ -168,8 +167,25 @@ export default function useDraggable<T>(
       currentDroppableConfig.value
     );
   };
+  const changeDroppable = (
+    newdDroppableConfig: DroppableConfig<T> | undefined,
+    oldDroppableConfig: DroppableConfig<T> | undefined
+  ) => {
+    if (
+      oldDroppableConfig &&
+      draggingState == DraggingState.DRAGING &&
+      !newdDroppableConfig?.droppable.isSameNode(oldDroppableConfig.droppable)
+    ) {
+      emitEventToSiblings(
+        draggableElement,
+        DRAG_EVENT,
+        windowScroll,
+        oldDroppableConfig
+      );
+    }
+  };
   const [ currentDroppableConfig, initialDroppableConfig, updateConfig, getCurrentConfig, isOutsideOfDroppable ] =
-    useConfig<T>(draggableElement, droppableGroupClass, parent, setTransformDragEvent);
+    useConfig<T>(draggableElement, droppableGroupClass, parent, setTransformDragEvent, changeDroppable);
   function toggleDroppableClass(isOutside:boolean){
     if (!currentDroppableConfig.value) {
       return
@@ -383,23 +399,7 @@ export default function useDraggable<T>(
     element.style.transition = "";
   };
 
-  const changeDroppable = (
-    newdDroppableConfig: DroppableConfig<T> | undefined,
-    oldDroppableConfig: DroppableConfig<T> | undefined
-  ) => {
-    if (
-      oldDroppableConfig &&
-      draggingState == DraggingState.DRAGING &&
-      !newdDroppableConfig?.droppable.isSameNode(oldDroppableConfig.droppable)
-    ) {
-      emitEventToSiblings(
-        draggableElement,
-        DRAG_EVENT,
-        windowScroll,
-        oldDroppableConfig
-      );
-    }
-  };
+  
 
   function removeAtFromElement(targetIndex: number) {
     if (!currentDroppableConfig.value) {
@@ -443,7 +443,6 @@ export default function useDraggable<T>(
       )
     }
   }
-  watch(currentDroppableConfig, changeDroppable, { deep: true });
   setCssStyles();
   setSlotRefElementParams(draggableElement);
   return [ removeAtFromElement, insertAtFromElement ] as const;

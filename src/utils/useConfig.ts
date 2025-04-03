@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import ConfigHandler, { DroppableConfig } from "../composables/configHandler";
 import { DragMouseTouchEvent } from "../../index";
 import { draggableIsOutside } from "./GetStyles";
@@ -10,7 +10,8 @@ export function useConfig<T>(
   childRef: HTMLElement | undefined,
   droppableGroupClass: string | null,
   parent: HTMLElement,
-  setTransformDragEvent: () => void
+  setTransformDragEvent: () => void,
+  changeDroppable: (newdDroppableConfig: DroppableConfig<T> | undefined, oldDroppableConfig: DroppableConfig<T> | undefined) => void
 ) {
   function getDraggableAncestor(
     clientX: number,
@@ -114,5 +115,7 @@ export function useConfig<T>(
     }
     return !Boolean(getCurrentDroppable(currentElement, event, hiddenDraggable))
   }
+  watch(currentDroppableConfig, changeDroppable, { deep: true });
+  
   return [ currentDroppableConfig, initialDroppableConfig, updateConfig, getCurrentConfig, isOutsideOfDroppable ] as const;
 }
