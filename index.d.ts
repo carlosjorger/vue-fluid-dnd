@@ -21,6 +21,11 @@ export type TouchEvent = "touchstart" | "touchmove" | "touchend";
 export type OffsetElement = "offsetLeft" | "offsetTop";
 export type ScrollDistance = "scrollHeight" | "scrollWidth";
 export type ClientDistance = "clientHeight" | "clientWidth";
+export type Coordinate  = { x:number, y:number };
+export type ElementPosition = {
+  top: number;
+  left: number;
+};
 export type Translate = {
   height: number;
   width: number;
@@ -51,3 +56,7 @@ export type WindowScroll = {
   readonly scrollX: number;
   readonly scrollY: number;
 };
+export type fixedSize ={
+  fixedWidth?: string,
+  fixedHeight?: string,
+}

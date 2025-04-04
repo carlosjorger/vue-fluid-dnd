@@ -1,4 +1,4 @@
-import { GRAB_CLASS } from "../utils/classes";
+import { GRAB_CLASS } from "./utils/classes";
 
 export default class HandlerPublisher{
     handlers: Element [];

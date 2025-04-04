@@ -1,5 +1,4 @@
 import { Ref } from "vue";
-
 export const removeAtEventOnList = <T>(list: Ref<T[]>, index: number) => {
   const listValue = list.value;
   if (listValue.length <= 0) {

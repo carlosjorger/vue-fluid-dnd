@@ -1,6 +1,6 @@
-import { Direction } from "../composables";
-import { DragMouseTouchEvent } from "../../index";
-import { getBorderWidthProperty, getPropByDirection } from "./GetStyles";
+import { Direction } from "..";
+import { DragMouseTouchEvent, fixedSize } from "../../../index";
+import { getPropByDirection, getValueFromProperty } from "./GetStyles";
 import { IsHTMLElement, isTouchEvent } from "./touchDevice";
 
 type onTouchEvent = "ontouchstart" | "ontouchmove" | "ontouchend";
@@ -11,13 +11,20 @@ type TouchEventType = "touchstart" | "touchmove" | "touchend";
 const mouseEvents = ["mouseup", "mousedown", "mousemove"] as const;
 type MouseEventType = (typeof mouseEvents)[number];
 type DragEventCallback = (event: DragMouseTouchEvent) => void;
+export const setSizeStyles = (element: HTMLElement | undefined | null, height: number, width: number) => {  
+  if (!element) {
+    return;
+  }
+  element.style.height = `${height}px`;
+  element.style.width = `${width}px`;
+}
+
 export const fixSizeStyle = (element: HTMLElement | undefined | null) => {
   if (!element) {
     return;
   }
   const { height, width } = element.getBoundingClientRect();
-  element.style.height = `${height}px`;
-  element.style.width = `${width}px`;
+  setSizeStyles(element, height, width)
 };
 export const moveTranslate = (
   element: Element | undefined | null,
@@ -102,25 +109,24 @@ const getOffsetFromEvent = (
   };
   if (event instanceof MouseEvent) {
     const { offsetX, offsetY } = event;
-    return { offsetX, offsetY };
+    return [ offsetX, offsetY ] as const;
   } else {
     const element = event.target as Element;
-    return {
-      offsetX: getTouchEventOffset(element, "horizontal"),
-      offsetY: getTouchEventOffset(element, "vertical"),
-    };
+    return [
+      getTouchEventOffset(element, "horizontal"),
+      getTouchEventOffset(element, "vertical"),
+    ] as const;
   }
 };
 export const convetEventToDragMouseTouchEvent = (
-  event: MouseEvent | TouchEvent,
-
+  event: MouseEvent | TouchEvent
 ): DragMouseTouchEvent => {
   const tempEvent = getEvent(event);
   if (!tempEvent) {
     return getDefaultEvent(event);
   }
 
-  const { offsetX, offsetY } = getOffsetFromEvent(event, tempEvent);
+  const [ offsetX, offsetY ] = getOffsetFromEvent(event, tempEvent);
   const { clientX, clientY, pageX, pageY, screenX, screenY, target } =
     tempEvent;
 
@@ -157,7 +163,7 @@ const getOffset = (
     event[page] -
     window[scroll] -
     boundingClientRect[before] -
-    getBorderWidthProperty(element, borderBeforeWidth)
+    getValueFromProperty(element, borderBeforeWidth)
   );
 };
 export const setTranistion = (
@@ -219,3 +225,18 @@ const AddCssStyleToElement = (node: ParentNode, cssCode: string) => {
     style.sheet?.insertRule(cssCode, style.sheet.cssRules.length);
   }
 };
+export function setCustomFixedSize
+  (element: HTMLElement | undefined, 
+  fixedProps: fixedSize = {}) {
+    for (const fixedProp of Object.keys(fixedProps) as Array<keyof fixedSize>) {
+      const fixedValue = fixedProps[fixedProp]
+      if (fixedValue != undefined) {
+        setCustomProperty(element, `--${fixedProp}`, fixedValue)
+      }
+    }
+}
+function setCustomProperty(element: HTMLElement | undefined, fixedProp: string, newFixedSize: string) {
+  if (element) {
+    element.style.setProperty(fixedProp, newFixedSize);
+  }
+}

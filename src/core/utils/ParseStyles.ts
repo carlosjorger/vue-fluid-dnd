@@ -1,6 +1,6 @@
-import { GapStyle } from "../../index";
+import { GapStyle } from "../../../index";
 import { getPropByDirection, parseFloatEmpty } from "./GetStyles";
-import { Direction } from "../composables";
+import { Direction } from "..";
 
 export const getNumberFromPixels = (pixels: string | undefined) => {
   if (!pixels || pixels.length == 0) {
@@ -21,30 +21,24 @@ export const computeGapPixels = (element: Element, gapType: GapStyle) => {
 export const gapAndDisplayInformation = (
   element: Element | null,
   gapStyle: GapStyle
-) => {
+):[number, boolean] => {
   if (!(element instanceof Element))
-    return {
-      gap: 0,
-      hasGaps: false,
-    };
+    return [
+      0,
+      false,
+    ];
   const gap = computeGapPixels(element, gapStyle);
   const display = getComputedStyle(element).display;
   const hasGaps = gap > 0 || display === "flex";
-  return {
-    gap,
-    hasGaps,
-  };
+  return [ gap, hasGaps];
 };
-export const getBeforeStyles = (element: HTMLElement) => {
+export const getBeforeStyles = (element: HTMLElement):[number, number] => {
   const { top, left } = getComputedStyle(element);
-  return {
-    top: getNumberFromPixels(top),
-    left: getNumberFromPixels(left),
-  };
+  return [getNumberFromPixels(top), getNumberFromPixels(left)];
 };
 export const getGapPixels = (element: HTMLElement, direction: Direction) => {
   const { gap: gapStyle } = getPropByDirection(direction);
-  const { gap, hasGaps } = gapAndDisplayInformation(element, gapStyle);
+  const [gap, hasGaps] = gapAndDisplayInformation(element, gapStyle);
   if (hasGaps) {
     return gap;
   }

@@ -1,23 +1,10 @@
-import { Direction } from "../composables";
+import { Direction } from "..";
 import {
   BeforeMargin,
   AfterMargin,
-  GapStyle,
   BorderWidth,
-  Distance,
-  Before,
-  Axis,
-  Offset,
-  Scroll,
-  InnerDistance,
-  Page,
-  After,
-  OffsetElement,
-  ScrollElement,
-  ScrollDistance,
-  ClientDistance,
   PaddingBefore,
-} from "../../index";
+} from "../../../index";
 export const getScroll = (element: HTMLElement | undefined | null) => {
   if (element) {
     const { scrollLeft, scrollTop } = element;
@@ -96,100 +83,43 @@ const intersectionByDirection = (
     }
   );
 };
-export const getPaddingWidthProperty = (
+export const getValueFromProperty = (
   element: HTMLElement | Element | undefined | null,
-  property: PaddingBefore
-) => {
+  property: PaddingBefore | BorderWidth | BeforeMargin | AfterMargin
+) =>{
   if (element) {
     return parseFloatEmpty(getComputedStyle(element)[property]);
   }
   return 0;
-};
-export const getBorderWidthProperty = (
-  element: HTMLElement | Element | undefined | null,
-  property: BorderWidth
-) => {
-  if (element) {
-    return parseFloatEmpty(getComputedStyle(element)[property]);
-  }
-  return 0;
-};
-export const getMarginStyleByProperty = (
-  element: HTMLElement | Element | undefined | null,
-  property: BeforeMargin | AfterMargin
-) => {
-  if (element) {
-    return parseFloatEmpty(getComputedStyle(element)[property]);
-  }
-  return 0;
-};
-
+}
 export const getScrollElement = (element: HTMLElement) => {
   const { scrollLeft, scrollTop } = element;
   return { scrollLeft, scrollTop };
 };
 export const getPropByDirection = (
   direction: Direction
-): {
-  beforeMargin: BeforeMargin;
-  afterMargin: AfterMargin;
-  borderBeforeWidth: BorderWidth;
-  before: Before;
-  after: After;
-  gap: GapStyle;
-  distance: Distance;
-  axis: Axis;
-  offset: Offset;
-  scroll: Scroll;
-  scrollElement: ScrollElement;
-  page: Page;
-  inner: InnerDistance;
-  offsetElement: OffsetElement;
-  scrollDistance: ScrollDistance;
-  clientDistance: ClientDistance;
-  paddingBefore: PaddingBefore;
-} => {
-  if (direction == "horizontal") {
-    return {
-      beforeMargin: "marginLeft",
-      afterMargin: "marginRight",
-      borderBeforeWidth: "borderLeftWidth",
-      before: "left",
-      after: "right",
-      gap: "columnGap",
-      distance: "width",
-      axis: "x",
-      offset: "offsetX",
-      scroll: "scrollX",
-      scrollElement: "scrollLeft",
-      page: "pageX",
-      inner: "innerWidth",
-      offsetElement: "offsetLeft",
-      scrollDistance: "scrollWidth",
-      clientDistance: "clientWidth",
-      paddingBefore: 'paddingLeft'
-    };
-  } else {
-    return {
-      beforeMargin: "marginTop",
-      afterMargin: "marginBottom",
-      borderBeforeWidth: "borderTopWidth",
-      before: "top",
-      after: "down",
-      gap: "rowGap",
-      distance: "height",
-      axis: "y",
-      offset: "offsetY",
-      scroll: "scrollY",
-      scrollElement: "scrollTop",
-      page: "pageY",
-      inner: "innerHeight",
-      offsetElement: "offsetTop",
-      scrollDistance: "scrollHeight",
-      clientDistance: "clientHeight",
-      paddingBefore: 'paddingTop'
-    };
-  }
+)=> {
+  const ifHorizontal = direction == "horizontal";
+  return {
+    beforeMargin: ifHorizontal? "marginLeft": "marginTop",
+    afterMargin:  ifHorizontal? "marginRight": "marginBottom",
+    borderBeforeWidth: ifHorizontal? "borderLeftWidth": "borderTopWidth",
+    before:  ifHorizontal?"left": "top",
+    after:  ifHorizontal?"right": "down",
+    gap:  ifHorizontal?"columnGap": "rowGap",
+    distance:  ifHorizontal?"width": "height",
+    axis:  ifHorizontal?"x": "y",
+    offset:  ifHorizontal?"offsetX": "offsetY",
+    scroll:  ifHorizontal?"scrollX": "scrollY",
+    scrollElement:  ifHorizontal?"scrollLeft": "scrollTop",
+    page:  ifHorizontal?"pageX": "pageY",
+    inner:  ifHorizontal?"innerWidth": "innerHeight",
+    offsetElement:  ifHorizontal?"offsetLeft": "offsetTop",
+    scrollDistance:  ifHorizontal?"scrollWidth": "scrollHeight",
+    clientDistance:  ifHorizontal?"clientWidth": "clientHeight",
+    paddingBefore:  ifHorizontal?'paddingLeft': 'paddingTop',
+  } as const;
+  
 };
 export const getSiblings = (current: HTMLElement, parent: HTMLElement) => {
   return getSiblingsByParent(current, parent);
@@ -229,9 +159,9 @@ export const getSiblingsByParent = (
     child.isEqualNode(current)
   );
   
-  return {
+  return [
     siblings,
     positionOnDroppable,
     parent,
-  };
+  ] as const;
 };

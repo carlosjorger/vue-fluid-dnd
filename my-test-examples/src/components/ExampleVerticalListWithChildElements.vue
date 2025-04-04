@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import useDragAndDrop from "../../../src/composables/useDragAndDrop";
+import useDragAndDrop from "../../../src/vue/useDragAndDrop";
 const numbers = ref([
   { label: "a", value: 1 },
   { label: "b", value: 2 },

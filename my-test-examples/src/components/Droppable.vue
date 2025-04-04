@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { PropType, ref } from "vue";
-import useDragAndDrop from "../../../src/composables/useDragAndDrop";
-import { DragEndEventData } from "../../../src/composables";
+import useDragAndDrop from "../../../src/vue/useDragAndDrop";
+import { DragEndEventData } from "../../../src/core";
 
 const list = ref([] as string[])
 const { droppableGroup, elements, onDragEnd, onDragStart } = defineProps({

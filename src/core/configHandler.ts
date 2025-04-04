@@ -1,7 +1,7 @@
 import { ElementScroll } from "../../index";
 import { CoreConfig } from ".";
-import { getScrollElement } from "../utils/GetStyles";
-import { containstClasses } from "../utils/dom/classList";
+import { getScrollElement } from "./utils/GetStyles";
+import { containstClasses } from "./utils/dom/classList";
 
 export type DroppableConfig<T> = {
   droppable: HTMLElement;

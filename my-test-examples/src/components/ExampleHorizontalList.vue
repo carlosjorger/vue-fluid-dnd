@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import useDragAndDrop from "../../../src/composables/useDragAndDrop";
+import useDragAndDrop from "../../../src/vue/useDragAndDrop";
 
 const numbers = ref([1, 2, 3, 4, 5, 6]);
 const { parent } = useDragAndDrop<number>(numbers as any, {

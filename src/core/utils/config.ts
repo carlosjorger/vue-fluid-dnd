@@ -1,20 +1,30 @@
+import { ListCondig } from "..";
 import {
   Config,
   CoreConfig,
-  OnGetLength,
-  OnGetValue,
-  OnInsertEvent,
-  OnRemoveAtEvent,
   VERTICAL,
-} from "../composables";
+} from "..";
 
-export const getConfig = <T>(
-  onRemoveAtEvent: OnRemoveAtEvent<T>,
-  onInsertEvent: OnInsertEvent<T>,
-  onGetLegth: OnGetLength,
-  onGetValue: OnGetValue<T>,
+export const getConfig = <T>(listCondig: ListCondig<T>,
   config?: Config<T>
 ): CoreConfig<T> => {
+  
+  const onRemoveAtEvent =(index: number) =>{
+    return listCondig.removeAtEvent(index)
+  };
+  
+  const onInsertEvent = (index: number, value: T) =>{
+    return listCondig.insertEvent(index, value)
+  };
+  
+  const onGetLegth =()=>{
+    return listCondig.getLength()
+  };
+  
+  const onGetValue = (index: number)=> {
+    return listCondig.getValue(index)
+  };
+
   const DEFAULT_CONFIG = {
     direction: VERTICAL,
     handlerSelector: "draggable",
