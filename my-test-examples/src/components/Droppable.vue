@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { PropType, ref } from "vue";
-import useDragAndDrop from "../../../src/composables/useDragAndDrop";
+import useDragAndDrop from "../../../src/vue/useDragAndDrop";
 import { DragEndEventData } from "../../../src/composables";
 
 const list = ref([] as string[])

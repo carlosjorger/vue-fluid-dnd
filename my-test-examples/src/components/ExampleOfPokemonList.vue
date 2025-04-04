@@ -4,7 +4,7 @@ import PokemonComponent from "./PokemonComponent.vue";
 
 import { fetchPokemons } from "../../../docs/src/server/pokemonServer.ts";
 import type { Pokemon } from "../../../docs/src/components/examples/Pokemon";
-import useDragAndDrop from "../../../src/composables/useDragAndDrop";
+import useDragAndDrop from "../../../src/vue/useDragAndDrop";
 
 const pokemons = ref([] as Pokemon[]);
 
