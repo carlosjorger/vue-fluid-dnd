@@ -1,4 +1,4 @@
-import { getLength, getValue, onInsertEventOnList, removeAtEventOnList } from "../utils/DropMethods";
+import { getLength, getValue, onInsertEventOnList, removeAtEventOnList } from "../vue/utils/DropMethods";
 import { Ref, ref, watch } from "vue";
 import { Config } from ".";
 import { observeMutation } from "../utils/observer";
@@ -16,6 +16,7 @@ import useDroppable from "./useDroppable";
  * @param config - Configuration of drag and drop tool.
  * @returns The reference of the parent element and function to remove an element.
  */
+
 const handlerPublisher = new HandlerPublisher()
 export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config<T>) {
   const parent = ref<HTMLElement | undefined>();
@@ -46,6 +47,8 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config<T>) {
   const onInsertEvent = getOnInsertEventOnList(items);
   const onGetLegth = getOnLegth(items);
   const onGetValue = getOnValue(items);
+  // TODO: move to vue folder
+  //#region dragAndDrop file
   const coreConfig = getConfig(onRemoveAtEvent, onInsertEvent, onGetLegth, onGetValue, config)
   
   function removeAt(index: number) {
@@ -94,12 +97,15 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config<T>) {
       );
     }
   };
+  // TODO: replace with observe
   watch(parent, () => {
+    console.log(parent)
     makeDroppable();
     addConfigHandler();
     observeChildrens();
     makeChildrensDraggable();
     ConfigHandler.removeObsoleteConfigs();
   });
+  //#endregion
   return { parent, removeAt, insertAt };
 }
