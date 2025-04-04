@@ -1,11 +1,11 @@
-import { Coordinate, DragMouseTouchEvent, ElementPosition, TransformEvent } from "../../index";
+import { Coordinate, DragMouseTouchEvent, ElementPosition, TransformEvent } from "../../../index";
 import {
   draggableIsOutside,
   getBorderWidthProperty,
   getMarginStyleByProperty,
   getPropByDirection,
 } from "./GetStyles";
-import { Direction } from "../composables";
+import { Direction } from "..";
 import { scrollByDirection } from "./scroll";
 import { HANDLER_CLASS, DRAGGING_CLASS } from "./classes";
 

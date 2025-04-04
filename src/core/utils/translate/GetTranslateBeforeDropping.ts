@@ -1,4 +1,4 @@
-import { Direction } from "../../composables";
+import { Direction } from "../..";
 import {
   AfterMargin,
   BeforeMargin,
@@ -6,7 +6,7 @@ import {
   ScrollElement,
   Translate,
   WindowScroll,
-} from "../../../index";
+} from "../../../../index";
 import {
   getBorderWidthProperty,
   getMarginStyleByProperty,

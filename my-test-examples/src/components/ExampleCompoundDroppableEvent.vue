@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import useDragAndDrop from "../../../src/vue/useDragAndDrop";
 import Droppable from "./Droppable.vue";
-import { DragEndEventData } from "../../../src/composables";
+import { DragEndEventData } from "../../../src/core";
 
 const droppables = ref(['A', 'B']);
 const { parent, insertAt } = useDragAndDrop<string>(droppables as any, {
@@ -11,6 +11,8 @@ const { parent, insertAt } = useDragAndDrop<string>(droppables as any, {
 const dict={
   'A':[],
   'B':['d', 'e', 'f']
+} as {
+  [key: string]: string[]
 }
 const { id } = defineProps<{
   id: string;

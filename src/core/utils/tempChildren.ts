@@ -1,11 +1,10 @@
-import { DroppableConfig } from "../composables/configHandler";
-import { Translate } from "../../index";
-import { Direction } from "../composables";
+import { DroppableConfig } from "../configHandler";
+import { Translate } from "../../../index";
+import { Direction } from "..";
 import { getPropByDirection } from "./GetStyles";
 import { getGapPixels } from "./ParseStyles";
 import { setTranistion } from "./SetStyles";
 import { observeMutation } from "./observer";
-// import { scrollByDirection } from "./scroll";
 import getTranslationByDragging from "./translate/GetTranslationByDraggingAndEvent";
 import { scrollPercent } from "./scroll";
 import { TEMP_CHILD_CLASS } from ".";

@@ -1,9 +1,9 @@
-import { ListCondig } from "../core";
+import { ListCondig } from "..";
 import {
   Config,
   CoreConfig,
   VERTICAL,
-} from "../composables";
+} from "..";
 
 export const getConfig = <T>(listCondig: ListCondig<T>,
   config?: Config<T>

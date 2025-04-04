@@ -1,8 +1,8 @@
 import { Ref, ref, watch } from "vue";
-import { Config } from "../composables";
-import { observeMutation } from "../utils/observer";
-import ConfigHandler from "../composables/configHandler";
-import HandlerPublisher from "../composables/HandlerPublisher";
+import { Config } from "../core";
+import { observeMutation } from "../core/utils/observer";
+import ConfigHandler from "../core/configHandler";
+import HandlerPublisher from "../core/HandlerPublisher";
 import { VueListCondig } from "./utils/VueListCondig";
 import dragAndDrop from "../core/dragAndDrop";
 
@@ -20,18 +20,15 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config<T>) {
   const parent = ref<HTMLElement | undefined>();
   var listCondig = new VueListCondig(items, parent)
 
-  const [removeAt, insertAt, makeChildrensDraggableByParent, coreConfig] = dragAndDrop(listCondig, handlerPublisher ,config)
+  const [removeAt, insertAt, makeChildrensDraggable, coreConfig] = dragAndDrop(listCondig, handlerPublisher ,config)
 
-  const makeChildrensDraggable = () => {
-    makeChildrensDraggableByParent(parent.value)
-  };
   const observeChildrens = () => {
     if (!parent.value) {
       return;
     }
     observeMutation(
       () => {
-        makeChildrensDraggable();
+        makeChildrensDraggable(parent.value)
       },
       parent.value,
       { childList: true }
@@ -54,7 +51,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config<T>) {
     makeDroppable();
     addConfigHandler();
     observeChildrens();
-    makeChildrensDraggable();
+    makeChildrensDraggable(parent.value)
     ConfigHandler.removeObsoleteConfigs();
   });
   //#endregion

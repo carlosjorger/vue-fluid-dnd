@@ -10,3 +10,4 @@ export type DragAndDropEvent = DraggingEvent | DropEvent | "remove" | "insert";
 export const IsDropEvent = (event: DragAndDropEvent): event is DropEvent => {
   return event === DROP_EVENT || event === START_DROP_EVENT;
 };
+// TODO: pass util content to core folder

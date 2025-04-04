@@ -1,5 +1,5 @@
 import { ElementScroll } from "index";
-import { Direction } from "../composables";
+import { Direction } from "..";
 import { getPropByDirection } from "./GetStyles";
 export const scrollByDirection = (
   element: HTMLElement,

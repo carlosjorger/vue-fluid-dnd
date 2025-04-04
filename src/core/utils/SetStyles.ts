@@ -1,5 +1,5 @@
-import { Direction } from "../composables";
-import { DragMouseTouchEvent, fixedSize } from "../../index";
+import { Direction } from "..";
+import { DragMouseTouchEvent, fixedSize } from "../../../index";
 import { getBorderWidthProperty, getPropByDirection } from "./GetStyles";
 import { IsHTMLElement, isTouchEvent } from "./touchDevice";
 

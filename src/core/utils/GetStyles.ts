@@ -1,10 +1,10 @@
-import { Direction } from "../composables";
+import { Direction } from "..";
 import {
   BeforeMargin,
   AfterMargin,
   BorderWidth,
   PaddingBefore,
-} from "../../index";
+} from "../../../index";
 export const getScroll = (element: HTMLElement | undefined | null) => {
   if (element) {
     const { scrollLeft, scrollTop } = element;

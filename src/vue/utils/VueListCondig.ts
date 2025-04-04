@@ -1,8 +1,8 @@
-import { CoreConfig } from "@/composables";
+import { CoreConfig } from "../../core";
 import { ListCondig } from "../../core";
 import { Ref } from "vue";
 import { getLength, getValue, onInsertEventOnList, removeAtEventOnList } from "./DropMethods";
-import { insertToListEmpty } from "../../utils/events/emitEvents";
+import { insertToListEmpty } from "../../core/utils/events/emitEvents";
 
 export class VueListCondig<T> implements ListCondig<T>
 {

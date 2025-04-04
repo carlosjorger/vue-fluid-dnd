@@ -6,21 +6,21 @@ import {
   setCustomFixedSize,
   setEventWithInterval,
   setTranistion,
-} from "../utils/SetStyles";
-import { useTransform } from "../utils/SetTransform";
+} from "./utils/SetStyles";
+import { useTransform } from "./utils/SetTransform";
 import { DragMouseTouchEvent, MoveEvent, OnLeaveEvent } from "../../index";
 import { CoreConfig, DragStartEventData } from ".";
-import useEmitEvents from "../utils/events/emitEvents";
-import { DRAG_EVENT, draggableTargetTimingFunction, START_DRAG_EVENT, START_DROP_EVENT } from "../utils";
+import useEmitEvents from "./utils/events/emitEvents";
+import { DRAG_EVENT, draggableTargetTimingFunction, START_DRAG_EVENT, START_DROP_EVENT } from "./utils";
 import ConfigHandler, { DroppableConfig } from "./configHandler";
-import { isTouchEvent } from "../utils/touchDevice";
-import { addTempChild, addTempChildOnInsert, removeTempChildrens } from "../utils/tempChildren";
-import { DroppableConfigurator } from "../utils/useConfig";
+import { isTouchEvent } from "./utils/touchDevice";
+import { addTempChild, addTempChildOnInsert, removeTempChildrens } from "./utils/tempChildren";
+import { DroppableConfigurator } from "./utils/droppableConfigurator";
 import {
   getClassesList,
   getClassesSelector,
-} from "../utils/dom/classList";
-import { DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS, GRAB_CLASS, GRABBING_CLASS, HANDLER_CLASS } from "../utils/classes";
+} from "./utils/dom/classList";
+import { DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS, GRAB_CLASS, GRABBING_CLASS, HANDLER_CLASS } from "./utils/classes";
 import HandlerPublisher from "./HandlerPublisher";
 
 const enum DraggingState {

@@ -1,6 +1,6 @@
-import { GapStyle } from "../../index";
+import { GapStyle } from "../../../index";
 import { getPropByDirection, parseFloatEmpty } from "./GetStyles";
-import { Direction } from "../composables";
+import { Direction } from "..";
 
 export const getNumberFromPixels = (pixels: string | undefined) => {
   if (!pixels || pixels.length == 0) {

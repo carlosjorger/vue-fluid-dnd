@@ -1,8 +1,8 @@
-import { getConfig } from "../utils/config";
+import { getConfig } from "./utils/config";
 import { ListCondig } from ".";
-import { Config } from "../composables";
-import useDroppable from "../composables/useDroppable";
-import HandlerPublisher from "@/composables/HandlerPublisher";
+import { Config } from ".";
+import useDroppable from "./useDroppable";
+import HandlerPublisher from "@/core/HandlerPublisher";
 
 export default function dragAndDrop<T>(listCondig:ListCondig<T>,handlerPublisher: HandlerPublisher, config?: Config<T>) {
     let removeAtFromElements = [] as ((index: number) => void)[];

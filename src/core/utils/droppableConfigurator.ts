@@ -1,5 +1,5 @@
-import ConfigHandler, { DroppableConfig } from "../composables/configHandler";
-import { DragMouseTouchEvent } from "../../index";
+import ConfigHandler, { DroppableConfig } from "../configHandler";
+import { DragMouseTouchEvent } from "../../../index";
 import { draggableIsOutside } from "./GetStyles";
 import { IsHTMLElement } from "./touchDevice";
 import { setEventWithInterval } from "./SetStyles";

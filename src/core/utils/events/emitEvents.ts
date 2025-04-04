@@ -6,18 +6,18 @@ import {
   getTransform,
   getWindowScroll,
 } from "../GetStyles";
-import { Translate, WindowScroll } from "../../../index";
+import { Translate, WindowScroll } from "../../../../index";
 import { moveTranslate, setCustomFixedSize, setTranistion } from "../SetStyles";
-import { CoreConfig, Direction } from "../../composables";
+import { CoreConfig, Direction } from "../..";
 import getTranslationByDragging from "../translate/GetTranslationByDraggingAndEvent";
 import getTranslateBeforeDropping from "../translate/GetTranslateBeforeDropping";
 import { DRAG_EVENT, draggableTargetTimingFunction, IsDropEvent, START_DRAG_EVENT, START_DROP_EVENT, TEMP_CHILD_CLASS } from "..";
-import { DroppableConfig } from "../../composables/configHandler";
+import { DroppableConfig } from "../../configHandler";
 import { IsHTMLElement } from "../touchDevice";
 import { removeTempChild } from "../tempChildren";
 import { DISABLE_TRANSITION, DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS, GRABBING_CLASS } from "../classes";
 import { getClassesSelector } from "../dom/classList";
-import HandlerPublisher from '../../composables/HandlerPublisher'
+import HandlerPublisher from '../../HandlerPublisher'
 import { observeMutation } from "../observer";
 const DELAY_TIME_TO_SWAP=50
 

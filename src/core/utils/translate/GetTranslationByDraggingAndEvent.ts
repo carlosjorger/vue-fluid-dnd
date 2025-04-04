@@ -1,6 +1,6 @@
-import { Direction } from "../../composables";
+import { Direction } from "../..";
 import { DragAndDropEvent, DRAG_EVENT } from "..";
-import { AfterMargin } from "../../../index";
+import { AfterMargin } from "../../../../index";
 import {
   draggableIsOutside,
   getMarginStyleByProperty,

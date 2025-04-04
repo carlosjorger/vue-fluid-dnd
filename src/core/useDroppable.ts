@@ -1,6 +1,6 @@
-import { parseIntEmpty } from "../utils/GetStyles";
+import { parseIntEmpty } from "./utils/GetStyles";
 import { CoreConfig } from ".";
-import { addMultipleClasses, getClassesList } from "../utils/dom/classList";
+import { addMultipleClasses, getClassesList } from "./utils/dom/classList";
 import HandlerPublisher from "./HandlerPublisher";
 import useDraggable from "./useDraggable";
 
