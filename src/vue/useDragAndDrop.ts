@@ -21,7 +21,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config<T>) {
   var listCondig = new VueListCondig(items, parent)
 
   const [removeAt, insertAt, makeChildrensDraggable, coreConfig] = dragAndDrop(listCondig, handlerPublisher ,config)
-
+  // TODO: refactor the following code, covert parent.vue to parameter
   const observeChildrens = () => {
     if (!parent.value) {
       return;

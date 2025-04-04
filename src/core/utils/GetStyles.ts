@@ -83,34 +83,15 @@ const intersectionByDirection = (
     }
   );
 };
-export const getPaddingWidthProperty = (
+export const getValueFromProperty = (
   element: HTMLElement | Element | undefined | null,
-  property: PaddingBefore
-) => {
+  property: PaddingBefore | BorderWidth | BeforeMargin | AfterMargin
+) =>{
   if (element) {
     return parseFloatEmpty(getComputedStyle(element)[property]);
   }
   return 0;
-};
-export const getBorderWidthProperty = (
-  element: HTMLElement | Element | undefined | null,
-  property: BorderWidth
-) => {
-  if (element) {
-    return parseFloatEmpty(getComputedStyle(element)[property]);
-  }
-  return 0;
-};
-export const getMarginStyleByProperty = (
-  element: HTMLElement | Element | undefined | null,
-  property: BeforeMargin | AfterMargin
-) => {
-  if (element) {
-    return parseFloatEmpty(getComputedStyle(element)[property]);
-  }
-  return 0;
-};
-
+}
 export const getScrollElement = (element: HTMLElement) => {
   const { scrollLeft, scrollTop } = element;
   return { scrollLeft, scrollTop };

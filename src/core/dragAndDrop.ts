@@ -26,10 +26,10 @@ export default function dragAndDrop<T>(listCondig:ListCondig<T>,handlerPublisher
             }
         }
     }
-    const makeChildrensDraggableByParent = (parent: HTMLElement|undefined) => {
+    const makeChildrensDraggable = (parent: HTMLElement|undefined) => {
         const [ removeAtFromElementList, insertAtFromElementList ] = useDroppable(coreConfig, handlerPublisher, parent)
         removeAtFromElements = removeAtFromElementList;
         insertAtFromElements = insertAtFromElementList;
     };
-    return [removeAt, insertAt, makeChildrensDraggableByParent ,coreConfig] as const
+    return [removeAt, insertAt, makeChildrensDraggable ,coreConfig] as const
 }

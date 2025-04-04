@@ -8,10 +8,8 @@ import {
   WindowScroll,
 } from "../../../../index";
 import {
-  getBorderWidthProperty,
-  getMarginStyleByProperty,
-  getPaddingWidthProperty,
   getPropByDirection,
+  getValueFromProperty,
 } from "../GetStyles";
 import { gapAndDisplayInformation, getBeforeStyles } from "../ParseStyles";
 
@@ -34,11 +32,11 @@ const getGroupTranslate = (
 
   const {x: xDroppable, y: yDroppable} = droppable.getBoundingClientRect()
 
-  const borderBeforeWidthDroppableVertical =  getBorderWidthProperty(droppable, borderBeforeWidthVertical)
-  const borderBeforeWidthDroppableHorizontal =  getBorderWidthProperty(droppable, borderBeforeWidthHorizontal)
+  const borderBeforeWidthDroppableVertical =  getValueFromProperty(droppable, borderBeforeWidthVertical)
+  const borderBeforeWidthDroppableHorizontal =  getValueFromProperty(droppable, borderBeforeWidthHorizontal)
 
-  const paddingBeforeDroppableVertical =  getPaddingWidthProperty(droppable, paddingBeforeVertical)
-  const paddingBeforeDroppableHorizontal =  getPaddingWidthProperty(droppable, paddingBeforeHorizontal)
+  const paddingBeforeDroppableVertical =  getValueFromProperty(droppable, paddingBeforeVertical)
+  const paddingBeforeDroppableHorizontal =  getValueFromProperty(droppable, paddingBeforeHorizontal)
   return [
     xDroppable + paddingBeforeDroppableHorizontal + borderBeforeWidthDroppableHorizontal - left,
     yDroppable + paddingBeforeDroppableVertical + borderBeforeWidthDroppableVertical  - top
@@ -197,12 +195,12 @@ const spaceWithMargins = (
   if (siblings.length == 0) {
     return [ 0, 0, 0 ] as const;
   }
-  const beforeSpace = getMarginStyleByProperty(siblings[0], beforeMargin);
+  const beforeSpace = getValueFromProperty(siblings[0], beforeMargin);
   let afterSpace = 0;
   let space = -beforeSpace;
   for (const [index, sibling] of siblings.entries()) {
     const siblingSpace = sibling.getBoundingClientRect()[distance];
-    const siblingBeforeMargin = getMarginStyleByProperty(sibling, beforeMargin);
+    const siblingBeforeMargin = getValueFromProperty(sibling, beforeMargin);
     if (hasGaps) {
       afterSpace += siblingBeforeMargin;
     }
@@ -212,7 +210,7 @@ const spaceWithMargins = (
       afterSpace = Math.max(afterSpace, siblingBeforeMargin);
     }
     space += afterSpace + siblingSpace;
-    afterSpace = getMarginStyleByProperty(sibling, afterMargin);
+    afterSpace = getValueFromProperty(sibling, afterMargin);
   }
   return [ beforeSpace, space, afterSpace ] as const;
 };
@@ -264,11 +262,11 @@ const getBeforeAfterMargin = (
   if (hasGaps) {
     return [0, 0, 0] as const;
   }
-  const afterMargin = getMarginStyleByProperty(
+  const afterMargin = getValueFromProperty(
     isGroupDropping? null: previousElement,
     afterMarginProp
   );
-  const beforeMargin = getMarginStyleByProperty(nextElement, beforeMarginProp);
+  const beforeMargin = getValueFromProperty(nextElement, beforeMarginProp);
 
   let spaceBeforeDraggedElement = Math.max(afterMargin, beforeMargin);
   return [afterMargin, beforeMargin, spaceBeforeDraggedElement] as const;

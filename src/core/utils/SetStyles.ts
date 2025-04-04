@@ -1,6 +1,6 @@
 import { Direction } from "..";
 import { DragMouseTouchEvent, fixedSize } from "../../../index";
-import { getBorderWidthProperty, getPropByDirection } from "./GetStyles";
+import { getPropByDirection, getValueFromProperty } from "./GetStyles";
 import { IsHTMLElement, isTouchEvent } from "./touchDevice";
 
 type onTouchEvent = "ontouchstart" | "ontouchmove" | "ontouchend";
@@ -11,13 +11,20 @@ type TouchEventType = "touchstart" | "touchmove" | "touchend";
 const mouseEvents = ["mouseup", "mousedown", "mousemove"] as const;
 type MouseEventType = (typeof mouseEvents)[number];
 type DragEventCallback = (event: DragMouseTouchEvent) => void;
+export const setSizeStyles = (element: HTMLElement | undefined | null, height: number, width: number) => {  
+  if (!element) {
+    return;
+  }
+  element.style.height = `${height}px`;
+  element.style.width = `${width}px`;
+}
+
 export const fixSizeStyle = (element: HTMLElement | undefined | null) => {
   if (!element) {
     return;
   }
   const { height, width } = element.getBoundingClientRect();
-  element.style.height = `${height}px`;
-  element.style.width = `${width}px`;
+  setSizeStyles(element, height, width)
 };
 export const moveTranslate = (
   element: Element | undefined | null,
@@ -156,7 +163,7 @@ const getOffset = (
     event[page] -
     window[scroll] -
     boundingClientRect[before] -
-    getBorderWidthProperty(element, borderBeforeWidth)
+    getValueFromProperty(element, borderBeforeWidth)
   );
 };
 export const setTranistion = (

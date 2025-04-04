@@ -3,8 +3,8 @@ import { DragAndDropEvent, DRAG_EVENT } from "..";
 import { AfterMargin } from "../../../../index";
 import {
   draggableIsOutside,
-  getMarginStyleByProperty,
   getPropByDirection,
+  getValueFromProperty,
 } from "../GetStyles";
 import { gapAndDisplayInformation } from "../ParseStyles";
 
@@ -43,9 +43,9 @@ function getTranslationByDragging(
     gap: gapStyle,
   } = getPropByDirection(direction);
 
-  const after = getMarginStyleByProperty(current, afterMargin);
-  const before = getMarginStyleByProperty(current, beforeMargin);
-  const nextBefore = getMarginStyleByProperty(nextElement, beforeMargin);
+  const after = getValueFromProperty(current, afterMargin);
+  const before = getValueFromProperty(current, beforeMargin);
+  const nextBefore = getValueFromProperty(nextElement, beforeMargin);
 
   const [ gap, hasGaps ] = gapAndDisplayInformation(
     current.parentElement,
@@ -77,7 +77,7 @@ const getTranslationByDraggingWithoutGaps = (
   let rest = nextBeforeMargin;
 
   if (previousElement) {
-    const previousAfterMargin = getMarginStyleByProperty(
+    const previousAfterMargin = getValueFromProperty(
       previousElement,
       afterMargin
     );

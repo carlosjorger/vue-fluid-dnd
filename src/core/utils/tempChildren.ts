@@ -3,7 +3,7 @@ import { Translate } from "../../../index";
 import { Direction } from "..";
 import { getPropByDirection } from "./GetStyles";
 import { getGapPixels } from "./ParseStyles";
-import { setTranistion } from "./SetStyles";
+import { setSizeStyles, setTranistion } from "./SetStyles";
 import { observeMutation } from "./observer";
 import getTranslationByDragging from "./translate/GetTranslationByDraggingAndEvent";
 import { scrollPercent } from "./scroll";
@@ -39,8 +39,7 @@ const getlarge = (direction: Direction, draggedElement: HTMLElement) => {
   ] as const;
 };
 const setSizes = (element: HTMLElement, height: number, width: number) => {
-  element.style.height = `${height}px`;
-  element.style.width = `${width}px`;
+  setSizeStyles(element, height, width)
   element.style.minWidth = `${width}px`;
 };
 const updateChildAfterCreated = (

@@ -154,4 +154,3 @@ export interface DragStartEventData<T> {
     onGetLegth: OnGetLength;
     onGetValue: OnGetValue<T>;
   };
-  // TODO: pass composable content to core folder

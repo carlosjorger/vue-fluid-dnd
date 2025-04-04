@@ -1,9 +1,8 @@
 import { Coordinate, DragMouseTouchEvent, ElementPosition, TransformEvent } from "../../../index";
 import {
   draggableIsOutside,
-  getBorderWidthProperty,
-  getMarginStyleByProperty,
   getPropByDirection,
+  getValueFromProperty,
 } from "./GetStyles";
 import { Direction } from "..";
 import { scrollByDirection } from "./scroll";
@@ -54,8 +53,8 @@ export const useTransform = (
       const scrollValue = window[scroll];
       const innerDistance = window[inner];
       const distanceValue = element.getBoundingClientRect()[distance];
-      const border = getBorderWidthProperty(element, borderBeforeWidth);
-      const margin = getMarginStyleByProperty(element, beforeMargin);
+      const border = getValueFromProperty(element, borderBeforeWidth);
+      const margin = getValueFromProperty(element, beforeMargin);
       const elementPosittion = pageValue - currentOffset[offset];
       if (
         elementPosittion >= scrollValue - distanceValue / 2 &&
@@ -155,7 +154,7 @@ const getOffsetWithDraggable = (
   return (
     element.getBoundingClientRect()[before] -
     draggable.getBoundingClientRect()[before] -
-    getBorderWidthProperty(draggable, borderBeforeWidth)
+    getValueFromProperty(draggable, borderBeforeWidth)
   );
 };
 const getOffset = (event: TransformEvent, draggable: Element | undefined) => {
@@ -196,8 +195,8 @@ const getPositionByDistance = (
   return (
     event[page] -
     offsetEvent[offset] -
-    getMarginStyleByProperty(element, beforeMargin) -
-    getBorderWidthProperty(element, borderBeforeWidth) -
+    getValueFromProperty(element, beforeMargin) -
+    getValueFromProperty(element, borderBeforeWidth) -
     window[scroll]
   );
 };
