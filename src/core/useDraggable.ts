@@ -153,16 +153,16 @@ export default function useDraggable<T>(
     if (pagePosition.pageX == 0 && pagePosition.pageY == 0) {
       return;
     }
-    if (!droppableConfigurator.currentDroppableConfig) {
+    if (!droppableConfigurator.current) {
       return;
     }
-    const { droppable, config } = droppableConfigurator.currentDroppableConfig;
+    const { droppable, config } = droppableConfigurator.current;
     setTransform(draggableElement, droppable, pagePosition, config.direction);
     emitEventToSiblings(
       draggableElement,
       DRAG_EVENT,
       windowScroll,
-      droppableConfigurator.currentDroppableConfig
+      droppableConfigurator.current
     );
   };
   const changeDroppable = (
@@ -192,7 +192,7 @@ export default function useDraggable<T>(
     );
   
   function toggleDroppableClass(isOutside:boolean){
-    if (!droppableConfigurator.currentDroppableConfig) {
+    if (!droppableConfigurator.current) {
       return
     }
     const droppables = droppableGroupClass? Array.from(
@@ -202,7 +202,7 @@ export default function useDraggable<T>(
         droppable
           .classList
             .toggle(droppableClass, 
-                    !isOutside && droppable.isSameNode(droppableConfigurator.currentDroppableConfig.droppable))
+                    !isOutside && droppable.isSameNode(droppableConfigurator.current.droppable))
     }
   }
   const onmousemove = function (event: DragMouseTouchEvent) {
@@ -217,10 +217,10 @@ export default function useDraggable<T>(
     }
   };
   const updateTempChildren = (isOutside: boolean = true) => {
-    if (!droppableConfigurator.currentDroppableConfig) {
+    if (!droppableConfigurator.current) {
       return;
     }
-    const { droppable } = droppableConfigurator.currentDroppableConfig;
+    const { droppable } = droppableConfigurator.current;
     removeTempChildrens(
       droppable,
       parent,
@@ -235,7 +235,7 @@ export default function useDraggable<T>(
       draggableElement,
       parent,
       draggingState == DraggingState.START_DRAGGING,
-      droppableConfigurator.currentDroppableConfig
+      droppableConfigurator.current
     );
   };
   const handlerMousemove = (event: MouseEvent | TouchEvent) => {
@@ -346,14 +346,14 @@ export default function useDraggable<T>(
       draggableElement,
       parent,
       draggingState == DraggingState.START_DRAGGING,
-      droppableConfigurator.currentDroppableConfig
+      droppableConfigurator.current
     );
     updateDraggingStateBeforeDragging();
     emitEventToSiblings(
       draggableElement,
       START_DRAG_EVENT,
       windowScroll,
-      droppableConfigurator.currentDroppableConfig
+      droppableConfigurator.current
     );
     updateTransformState(event, draggableElement);
     setDraggingStyles(draggableElement);
@@ -386,8 +386,8 @@ export default function useDraggable<T>(
       START_DROP_EVENT,
       windowScroll,
       isOutsideAllDroppables? 
-        droppableConfigurator.initialDroppableConfig: 
-        droppableConfigurator.currentDroppableConfig,
+        droppableConfigurator.initial: 
+        droppableConfigurator.current,
       index
     );
   };
@@ -409,10 +409,10 @@ export default function useDraggable<T>(
   
 
   function removeAtFromElement(targetIndex: number) {
-    if (!droppableConfigurator.currentDroppableConfig) {
+    if (!droppableConfigurator.current) {
       return;
     }
-    const config = droppableConfigurator.currentDroppableConfig as DroppableConfig<T>;
+    const config = droppableConfigurator.current as DroppableConfig<T>;
 
     if (targetIndex == index) {
       draggableElement.classList.add(removingClass);
@@ -423,7 +423,7 @@ export default function useDraggable<T>(
           draggableElement,
           parent,
           draggingState == DraggingState.START_DRAGGING,
-          droppableConfigurator.currentDroppableConfig
+          droppableConfigurator.current
         );
         emitRemoveEventToSiblings(
           targetIndex,
@@ -444,7 +444,7 @@ export default function useDraggable<T>(
           addTempChildOnInsert(
             draggableElement,
             draggingState == DraggingState.START_DRAGGING,
-            droppableConfigurator.initialDroppableConfig
+            droppableConfigurator.initial
           );
         }
       )

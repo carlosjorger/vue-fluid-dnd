@@ -3,6 +3,8 @@ import { ListCondig } from ".";
 import { Config } from ".";
 import useDroppable from "./useDroppable";
 import HandlerPublisher from "@/core/HandlerPublisher";
+import ConfigHandler from "./configHandler";
+import { observeMutation } from "./utils/observer";
 
 export default function dragAndDrop<T>(listCondig:ListCondig<T>,handlerPublisher: HandlerPublisher, config?: Config<T>) {
     let removeAtFromElements = [] as ((index: number) => void)[];
@@ -31,5 +33,33 @@ export default function dragAndDrop<T>(listCondig:ListCondig<T>,handlerPublisher
         removeAtFromElements = removeAtFromElementList;
         insertAtFromElements = insertAtFromElementList;
     };
-    return [removeAt, insertAt, makeChildrensDraggable ,coreConfig] as const
+    function observeChildrens (parent: HTMLElement) {
+        observeMutation(
+          () => {
+            makeChildrensDraggable(parent)
+          },
+          parent,
+          { childList: true }
+        );
+      };
+      function makeDroppable (parent: HTMLElement) {
+        parent.classList.add("droppable");
+      };
+      function addConfigHandler  (parent: HTMLElement) {
+        ConfigHandler.addConfig(
+          parent,
+          coreConfig
+        );
+      };
+      function onChangeParent (parent: HTMLElement | undefined) {
+        if (!parent) {
+          return;
+        }
+        makeDroppable(parent);
+        addConfigHandler(parent);
+        observeChildrens(parent);
+        makeChildrensDraggable(parent)
+        ConfigHandler.removeObsoleteConfigs();
+      }
+    return [removeAt, insertAt, onChangeParent] as const
 }

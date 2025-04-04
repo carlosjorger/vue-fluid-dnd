@@ -6,8 +6,8 @@ import { setEventWithInterval } from "./SetStyles";
 import { getClassesSelector } from "./dom/classList";
 
 export class DroppableConfigurator<T>{
-  initialDroppableConfig: DroppableConfig<any> | undefined;
-  currentDroppableConfig: DroppableConfig<T> | undefined;
+  initial: DroppableConfig<any> | undefined;
+  current: DroppableConfig<T> | undefined;
   private parent: HTMLElement;
   private childRef: HTMLElement | undefined;
   private droppableGroupClass: string | null;
@@ -24,7 +24,7 @@ export class DroppableConfigurator<T>{
     this.childRef = childRef;
     this.droppableGroupClass = droppableGroupClass;
     this.setTransformDragEvent = setTransformDragEvent;
-    this.initialDroppableConfig = parent? ConfigHandler.getConfig(parent): undefined;
+    this.initial = parent? ConfigHandler.getConfig(parent): undefined;
     this.changeDroppable = changeDroppable
   }
   private getDraggableAncestor(
@@ -100,13 +100,13 @@ export class DroppableConfigurator<T>{
       return;
     }
     if (
-      this.currentDroppableConfig &&
+      this.current &&
       this.isNotInsideAnotherDroppable(
         currentElement,
-        this.currentDroppableConfig?.droppable
+        this.current?.droppable
       )
     ) {
-      return this.currentDroppableConfig;
+      return this.current;
     }
     const currentDroppable = this.getCurrentDroppable(currentElement, event);
     if (!currentDroppable) {
@@ -118,9 +118,9 @@ export class DroppableConfigurator<T>{
     return ConfigHandler.getConfig(currentDroppable);
   }
   updateConfig(event: DragMouseTouchEvent) {
-    const oldDroppableConfig = this.currentDroppableConfig;
-    this.currentDroppableConfig = this.getCurrentConfig(event);
-    this.changeDroppable(this.currentDroppableConfig, oldDroppableConfig)
+    const oldDroppableConfig = this.current;
+    this.current = this.getCurrentConfig(event);
+    this.changeDroppable(this.current, oldDroppableConfig)
   }
   isOutsideOfDroppable(event: DragMouseTouchEvent, hiddenDraggable: boolean = true){
     const currentElement = this.childRef;
