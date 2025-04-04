@@ -66,7 +66,7 @@ jobs:
           git tag ${{ env.NEW_VERSION }}
       # Publish version to public repository
       - name: Publish
-        run: pnpm publish --verbose --access public --tag ${{ env.RELEASE_TAG }}
+        run: pnpm publish --verbose --access public --no-git-checks --tag ${{ env.RELEASE_TAG }} 
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
