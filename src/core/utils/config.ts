@@ -4,6 +4,7 @@ import {
   CoreConfig,
   VERTICAL,
 } from "..";
+import { DRAGGABLE_CLASS } from "./classes";
 
 export const getConfig = <T>(listCondig: ListCondig<T>,
   config?: Config<T>
@@ -27,7 +28,7 @@ export const getConfig = <T>(listCondig: ListCondig<T>,
 
   return {
     direction: config?.direction ?? VERTICAL,
-    handlerSelector: config?.handlerSelector ?? "draggable",
+    handlerSelector: config?.handlerSelector ?? DRAGGABLE_CLASS,
     draggingClass: config?.draggingClass ?? "dragging",
     droppableClass: config?.droppableClass ?? 'droppable-hover',
     isDraggable: config?.isDraggable ?? (() => true),

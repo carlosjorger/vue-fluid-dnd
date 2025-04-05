@@ -1,4 +1,5 @@
 import { GRAB_CLASS } from "./utils/classes";
+import { addClass, toggleClass } from "./utils/dom/classList";
 
 export default class HandlerPublisher{
     handlers: Element [];
@@ -10,11 +11,11 @@ export default class HandlerPublisher{
             return
         }
         this.handlers.push(subscriber)
-        subscriber.classList.add(GRAB_CLASS)
+        addClass(subscriber, GRAB_CLASS)
     }
     toggleGrabClass(force:boolean){
         for (const handler of this.handlers) {
-            handler.classList.toggle(GRAB_CLASS, force)
+            toggleClass(handler, GRAB_CLASS, force)
         }
     }
 }

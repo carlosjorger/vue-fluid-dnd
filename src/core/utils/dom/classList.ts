@@ -1,7 +1,18 @@
-//TODO: Create togle, contain, add remove, classlist
+export const containClass =(element: Element, cssClass: string) =>{
+  return element.classList.contains(cssClass)
+}
+export const toggleClass = (element: Element, cssClass: string,force: boolean = false) => {
+  element.classList.toggle(cssClass, force);
+}
+export const addClass = (element: Element, cssClass: string) =>{
+  element.classList.add(cssClass);
+}
+export const removeClass =  (element: Element, cssClass: string) =>{
+  element.classList.remove(cssClass);
+}
 export const containstClasses = (element: HTMLElement, classes: string) => {
   return getClassesList(classes).every((cssClass) =>
-    element.classList.contains(cssClass)
+    containClass(element, cssClass)
   );
 }
 export const getClassesSelector = (classes: string | null) => {

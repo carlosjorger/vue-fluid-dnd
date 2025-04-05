@@ -8,7 +8,7 @@ import { observeMutation } from "./observer";
 import getTranslationByDragging from "./translate/GetTranslationByDraggingAndEvent";
 import { scrollPercent } from "./scroll";
 import { TEMP_CHILD_CLASS } from ".";
-import { getClassesSelector } from "./dom/classList";
+import { addClass, getClassesSelector } from "./dom/classList";
 
 const START_DRAG_EVENT = "startDrag";
 const timingFunction = "cubic-bezier(0.2, 0, 0, 1)";
@@ -96,7 +96,7 @@ const getTempChild =<T>(
   var tempChildTag =
     draggedElement.tagName == "LI" ? "DIV" : draggedElement.tagName;
   var child = document.createElement(tempChildTag);
-  child.classList.add(TEMP_CHILD_CLASS);
+  addClass(child, TEMP_CHILD_CLASS)
   setSizes(child, 0, 0);
   const distances = getDistance(droppable, draggedElement, direction);
   setTranistion(

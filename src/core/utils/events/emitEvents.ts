@@ -16,7 +16,7 @@ import { DroppableConfig } from "../../configHandler";
 import { IsHTMLElement } from "../touchDevice";
 import { removeTempChild } from "../tempChildren";
 import { DISABLE_TRANSITION, DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS, GRABBING_CLASS } from "../classes";
-import { getClassesSelector } from "../dom/classList";
+import { addClass, containClass, getClassesSelector, removeClass, toggleClass } from "../dom/classList";
 import HandlerPublisher from '../../HandlerPublisher'
 import { observeMutation } from "../observer";
 const DELAY_TIME_TO_SWAP=50
@@ -42,6 +42,9 @@ export default function useEmitEvents<T>(
     delayBeforeInsert,
     draggingClass
   } = currentConfig;
+
+  const { distance } = getPropByDirection(direction);
+
   const emitEventToSiblings = (
     draggedElement: HTMLElement,
     event: DragAndDropEvent,
@@ -89,7 +92,7 @@ export default function useEmitEvents<T>(
     const { onInsertEvent } = currentConfig
     const siblings = getParentDraggableChildren(droppable);
     for (const [index, sibling] of siblings.entries()) {
-      if (!sibling.classList.contains(DRAGGABLE_CLASS)) {
+      if (!containClass(sibling, DRAGGABLE_CLASS)) {
         continue;
       }
       if (index >= targetIndex) {
@@ -164,7 +167,7 @@ export default function useEmitEvents<T>(
       );
     }
     for (const [index, sibling] of siblings.entries()) {
-      if (!sibling.classList.contains(DRAGGABLE_CLASS)) {
+      if (!containClass(sibling,DRAGGABLE_CLASS)) {
         continue;
       }
       const siblingTransition = canChangeDraggable(
@@ -223,10 +226,9 @@ export default function useEmitEvents<T>(
     siblings: Element[]
   ) => {
     const itemsCount = siblings.filter((sibling) =>
-      sibling.classList.contains("draggable")
+      containClass(sibling, DRAGGABLE_CLASS)
     ).length;
     
-    const { distance } = getPropByDirection(direction);
     if (translation[distance] == 0) {
       actualIndex = Math.max(actualIndex, siblingIndex);
     } else {
@@ -308,7 +310,7 @@ export default function useEmitEvents<T>(
       }
       if (
         event === START_DROP_EVENT &&
-        !sibling.classList.contains(TEMP_CHILD_CLASS)
+        !containClass(sibling, TEMP_CHILD_CLASS)
       ) {
         startDropEventOverElement(
           sibling,
@@ -375,9 +377,9 @@ export default function useEmitEvents<T>(
     positionOnSourceDroppable?: number
   ) => {
     const {onInsertEvent, onDragEnd} = config
-    element.classList.add(DROPPING_CLASS);
+    addClass(element, DROPPING_CLASS)
     removeStytes(element, parent, droppable, () => {
-      element.classList.remove(DROPPING_CLASS);
+      removeClass(element, DROPPING_CLASS)
       if (positionOnSourceDroppable != undefined) {
         const value = onRemoveAtEvent(positionOnSourceDroppable);
         if (value != undefined) {
@@ -402,7 +404,7 @@ export default function useEmitEvents<T>(
   }
   const manageDraggingClass = (element: HTMLElement) => {
     setTimeout(() => {
-      element.classList.remove(draggingClass);
+      removeClass(element, draggingClass)
     }, DELAY_TIME_TO_SWAP);
   }
   const removeStytes = (
@@ -440,7 +442,6 @@ export default function useEmitEvents<T>(
     if (!lastChildren) {
       return;
     }
-    const { distance } = getPropByDirection(direction);
     if (IsHTMLElement(lastChildren)) {
       lastChildren.style[distance] = "0px";
     }
@@ -474,15 +475,15 @@ export default function useEmitEvents<T>(
   };
   const toogleHandlerDraggingClass = (force: boolean, element: Element) => {
     const handlerElement = element.querySelector(handlerSelector);
-    document.body.classList.toggle(GRABBING_CLASS, force);
+    toggleClass(document.body, GRABBING_CLASS, force)
     if (handlerElement) {
-      handlerElement.classList.toggle(DRAGGING_HANDLER_CLASS, force);
+      toggleClass(handlerElement, DRAGGING_HANDLER_CLASS, force);
     } else {
-      element.classList.toggle(DRAGGING_HANDLER_CLASS, force);
+      toggleClass(element, DRAGGING_HANDLER_CLASS, force);
     }
   };
   const toggleDraggingClass = (element: Element, force: boolean) => {
-    element.classList.toggle(DRAGGING_CLASS, force);
+    toggleClass(element, DRAGGING_CLASS, force);
     toogleHandlerDraggingClass(force, element);
     handlerPublisher.toggleGrabClass(!force)
   };
@@ -499,11 +500,11 @@ const onFinishInsertElement = <T>(targetIndex:number, droppable: HTMLElement, co
     const observer = observeMutation(() => {
       const siblings = getParentDraggableChildren(droppable);
       const newElement = siblings[targetIndex]
-      newElement.classList.add(insertingFromClass)
-      newElement.classList.add(DISABLE_TRANSITION)
+      addClass(newElement, insertingFromClass)
+      addClass(newElement, DISABLE_TRANSITION)
       setTimeout(()=>{
-        newElement.classList.remove(DISABLE_TRANSITION)
-        newElement.classList.remove(insertingFromClass)
+        removeClass(newElement, DISABLE_TRANSITION)
+        removeClass(newElement, insertingFromClass)
         observer.disconnect()
       }, animationDuration)
     },droppable,{

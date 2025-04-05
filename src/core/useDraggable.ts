@@ -17,10 +17,14 @@ import { IsHTMLElement, isTouchEvent } from "./utils/touchDevice";
 import { addTempChild, addTempChildOnInsert, removeTempChildrens } from "./utils/tempChildren";
 import { DroppableConfigurator } from "./utils/droppableConfigurator";
 import {
+  addClass,
+  containClass,
   getClassesList,
   getClassesSelector,
+  removeClass,
+  toggleClass,
 } from "./utils/dom/classList";
-import { DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPING_CLASS, GRAB_CLASS, GRABBING_CLASS, HANDLER_CLASS } from "./utils/classes";
+import { DRAGGABLE_CLASS, DRAGGING_CLASS, DRAGGING_HANDLER_CLASS, DROPPABLE_CLASS, DROPPING_CLASS, GRAB_CLASS, GRABBING_CLASS, HANDLER_CLASS } from "./utils/classes";
 import HandlerPublisher from "./HandlerPublisher";
 
 const enum DraggingState {
@@ -29,7 +33,6 @@ const enum DraggingState {
   DRAGING,
   END_DRAGGING,
 }
-const DROPPABLE_CLASS = "droppable";
 export default function useDraggable<T>(
   draggableElement: HTMLElement,
   index: number,
@@ -79,10 +82,10 @@ export default function useDraggable<T>(
     ()=>(draggingState = DraggingState.NOT_DRAGGING)
   );
   const setDraggable = () => {
-    draggableElement.classList.add(DRAGGABLE_CLASS);
+    addClass(draggableElement, DRAGGABLE_CLASS)
   };
   const addHandlerClass = (handlerElement:Element| HTMLElement) => {
-    handlerElement.classList.add(HANDLER_CLASS)
+    addClass(handlerElement, HANDLER_CLASS)
     handlerPublisher.addSubscriber(handlerElement)
   }
   const setHandlerStyles = () => {
@@ -116,7 +119,7 @@ export default function useDraggable<T>(
     const handler = element?.querySelector(`.${HANDLER_CLASS}`)
     const handlerParent = handler?.parentElement
     if (handler && handlerParent 
-        && handlerParent.classList.contains(DROPPABLE_CLASS) 
+        && containClass(handlerParent, DROPPABLE_CLASS)
         && !handlerParent.isSameNode(parent)) {
       return null
     }
@@ -140,7 +143,7 @@ export default function useDraggable<T>(
     if (!element?.isSameNode(handlerElement)) {
       assignDraggingEvent(element, "onmousedown", mousedownOnDraggablefunction);
     }
-    parent.classList.add(DROPPABLE_CLASS);
+    addClass(parent, DROPPABLE_CLASS)
   };
   const disableMousedownEventFromImages = (handlerElement: Element) => {
     // Avoid dragging inner images
@@ -390,7 +393,7 @@ export default function useDraggable<T>(
       fixedWidth: `${width}px`
     })
     toggleDraggingClass(element, true);
-    element.classList.toggle(draggingClass,true);
+    toggleClass(element, draggingClass, true)
     element.style.transition = "";
   };
 
@@ -401,10 +404,10 @@ export default function useDraggable<T>(
     const config = droppableConfigurator.current as DroppableConfig<T>;
 
     if (targetIndex == index) {
-      draggableElement.classList.add(removingClass);
+      addClass(draggableElement, removingClass)
       setTimeout(() => {
         onRemoveAtEvent(index);
-        draggableElement.classList.remove(removingClass);
+        removeClass(draggableElement, removingClass)
         addTempChild(
           draggableElement,
           parent,

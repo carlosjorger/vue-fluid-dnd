@@ -5,6 +5,8 @@ import {
   BorderWidth,
   PaddingBefore,
 } from "../../../index";
+import { DRAGGABLE_CLASS } from "./classes";
+import { containClass } from "./dom/classList";
 
 export const getWindowScroll = () => {
   const { scrollX, scrollY } = window;
@@ -136,7 +138,7 @@ export const getParentDraggableChildren = (parent: HTMLElement) =>{
   const siblings = [...parent.children]
       .filter(
         (child) =>
-          child.classList.contains("draggable")
+          containClass(child, DRAGGABLE_CLASS)
       );
   return siblings
 }
@@ -147,7 +149,7 @@ export const getSiblingsByParent = (
   const siblings = [...parent.children]
     .filter(
       (child) =>
-        child.classList.contains("draggable") &&
+        containClass(child, DRAGGABLE_CLASS) &&
         !child.isEqualNode(current) 
     )
     .toReversed();

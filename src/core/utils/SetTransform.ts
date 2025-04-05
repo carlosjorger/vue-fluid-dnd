@@ -7,6 +7,7 @@ import {
 import { Direction, HORIZONTAL, VERTICAL } from "..";
 import { scrollByDirection } from "./scroll";
 import { HANDLER_CLASS, DRAGGING_CLASS } from "./classes";
+import { containClass } from "./dom/classList";
 
 export const useTransform = (
   draggedElement: HTMLElement
@@ -70,7 +71,7 @@ export const useTransform = (
     const updateScroll = (translateDirection: Direction) => {
       if (
         element &&
-        element.classList.contains(DRAGGING_CLASS) &&
+        containClass(element, DRAGGING_CLASS) &&
         translateDirection === direction
       ) {
         const { before, distance, axis, getRect } = getPropByDirection(direction);
