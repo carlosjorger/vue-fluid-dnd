@@ -42,9 +42,6 @@ export default function useEmitEvents<T>(
     delayBeforeInsert,
     draggingClass
   } = currentConfig;
-
-  const { distance } = getPropByDirection(direction);
-
   const emitEventToSiblings = (
     draggedElement: HTMLElement,
     event: DragAndDropEvent,
@@ -229,6 +226,7 @@ export default function useEmitEvents<T>(
       containClass(sibling, DRAGGABLE_CLASS)
     ).length;
     
+    const { distance } = getPropByDirection(direction);
     if (translation[distance] == 0) {
       actualIndex = Math.max(actualIndex, siblingIndex);
     } else {
@@ -442,6 +440,7 @@ export default function useEmitEvents<T>(
     if (!lastChildren) {
       return;
     }
+    const { distance } = getPropByDirection(direction);
     if (IsHTMLElement(lastChildren)) {
       lastChildren.style[distance] = "0px";
     }
