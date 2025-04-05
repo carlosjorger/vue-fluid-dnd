@@ -1,4 +1,4 @@
-import { Direction } from "../..";
+import { Direction, HORIZONTAL, VERTICAL } from "../..";
 import {
   AfterMargin,
   BeforeMargin,
@@ -12,34 +12,33 @@ import {
   getValueFromProperty,
 } from "../GetStyles";
 import { gapAndDisplayInformation, getBeforeStyles } from "../ParseStyles";
-
+const getContentPosition = (direction: Direction, droppable: HTMLElement) => {
+  const {
+    borderBeforeWidth,
+    paddingBefore,
+    axis,
+    getRect
+  } = getPropByDirection(direction);
+  
+  const borderBeforeWidthDroppable =  getValueFromProperty(droppable, borderBeforeWidth)
+  const paddingBeforeDroppable =  getValueFromProperty(droppable, paddingBefore)
+  const axisValue = getRect(droppable)[axis]
+  
+  return borderBeforeWidthDroppable + paddingBeforeDroppable + axisValue
+}
 const getGroupTranslate = (
   droppable: HTMLElement,
   draggable: HTMLElement,
 ) =>{
-  const {
-    borderBeforeWidth: borderBeforeWidthVertical,
-    paddingBefore: paddingBeforeVertical
-  } = getPropByDirection("vertical");
-
-  const { 
-    borderBeforeWidth: borderBeforeWidthHorizontal,
-    paddingBefore: paddingBeforeHorizontal
-  } =
-    getPropByDirection("horizontal");
 
   const [top, left] = getBeforeStyles(draggable);
 
-  const {x: xDroppable, y: yDroppable} = droppable.getBoundingClientRect()
+  const verticalContentPosition =  getContentPosition( VERTICAL, droppable)
+  const horizontalContentPosition =  getContentPosition( HORIZONTAL, droppable)
 
-  const borderBeforeWidthDroppableVertical =  getValueFromProperty(droppable, borderBeforeWidthVertical)
-  const borderBeforeWidthDroppableHorizontal =  getValueFromProperty(droppable, borderBeforeWidthHorizontal)
-
-  const paddingBeforeDroppableVertical =  getValueFromProperty(droppable, paddingBeforeVertical)
-  const paddingBeforeDroppableHorizontal =  getValueFromProperty(droppable, paddingBeforeHorizontal)
   return [
-    xDroppable + paddingBeforeDroppableHorizontal + borderBeforeWidthDroppableHorizontal - left,
-    yDroppable + paddingBeforeDroppableVertical + borderBeforeWidthDroppableVertical  - top
+    horizontalContentPosition - left,
+    verticalContentPosition  - top
   ]
 }
 export default function getTranslateBeforeDropping(
@@ -122,9 +121,9 @@ export default function getTranslateBeforeDropping(
     : spaceBeforeDraggedElement - spaceBetween;
 
   const translate = spaceCalc - scrollChange;
-  if (direction === "vertical") {
+  if (direction === VERTICAL) {
     height += translate;
-  } else if (direction === "horizontal") {
+  } else if (direction === HORIZONTAL) {
     width += translate;
   }
   return addScrollToTranslate(

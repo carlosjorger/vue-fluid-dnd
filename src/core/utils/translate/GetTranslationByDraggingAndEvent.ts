@@ -1,4 +1,4 @@
-import { Direction } from "../..";
+import { Direction, HORIZONTAL } from "../..";
 import { DragAndDropEvent, DRAG_EVENT } from "..";
 import { AfterMargin } from "../../../../index";
 import {
@@ -41,6 +41,7 @@ const getTranslationByDragging = (
     beforeMargin,
     distance,
     gap: gapStyle,
+    getRect
   } = getPropByDirection(direction);
 
   const after = getValueFromProperty(current, afterMargin);
@@ -52,7 +53,7 @@ const getTranslationByDragging = (
     gapStyle
   );
 
-  const space = current.getBoundingClientRect()[distance];
+  const space = getRect(current)[distance];
   if (hasGaps) {
     return getTranslation(space, before, after, gap, 0, direction);
   }
@@ -97,7 +98,7 @@ const getTranslation = (
   return getDistancesByDirection(direction, size + before + after + gap - rest);
 };
 const getDistancesByDirection = (direction: Direction, value: number) => {
-  if (direction == "horizontal") {
+  if (direction == HORIZONTAL) {
     return { width: value, height: 0 };
   } else {
     return { width: 0, height: value };

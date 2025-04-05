@@ -1,4 +1,4 @@
-import { Direction } from "..";
+import { Direction, HORIZONTAL, VERTICAL } from "..";
 import { DragMouseTouchEvent, fixedSize } from "../../../index";
 import {  getPropByDirection, getValueFromProperty } from "./GetStyles";
 import { IsHTMLElement, isTouchEvent } from "./touchDevice";
@@ -113,8 +113,8 @@ const getOffsetFromEvent = (
   } else {
     const element = event.target as Element;
     return [
-      getTouchEventOffset(element, "horizontal"),
-      getTouchEventOffset(element, "vertical"),
+      getTouchEventOffset(element, HORIZONTAL),
+      getTouchEventOffset(element, VERTICAL),
     ] as const;
   }
 };
@@ -156,9 +156,9 @@ const getOffset = (
   direction: Direction,
   element: Element
 ) => {
-  const { page, scroll, before, borderBeforeWidth } =
+  const { page, scroll, before, borderBeforeWidth, getRect } =
     getPropByDirection(direction);
-  const boundingClientRect = element.getBoundingClientRect();
+  const boundingClientRect = getRect(element);
   return (
     event[page] -
     window[scroll] -

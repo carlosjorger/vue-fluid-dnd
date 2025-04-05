@@ -198,9 +198,9 @@ export default function useEmitEvents<T>(
     targetElement: Element,
     translation: Translate
   ) => {
-    const { before, distance, axis } = getPropByDirection(direction);
-    const currentBoundingClientRect = sourceElement.getBoundingClientRect();
-    const targetBoundingClientRect = targetElement.getBoundingClientRect();
+    const { before, distance, axis, getRect } = getPropByDirection(direction);
+    const currentBoundingClientRect = getRect(sourceElement);
+    const targetBoundingClientRect = getRect(targetElement);
 
     const currentPosition = currentBoundingClientRect[before];
 

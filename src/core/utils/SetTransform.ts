@@ -4,7 +4,7 @@ import {
   getPropByDirection,
   getValueFromProperty,
 } from "./GetStyles";
-import { Direction } from "..";
+import { Direction, HORIZONTAL, VERTICAL } from "..";
 import { scrollByDirection } from "./scroll";
 import { HANDLER_CLASS, DRAGGING_CLASS } from "./classes";
 
@@ -48,11 +48,12 @@ export const useTransform = (
         inner,
         distance,
         axis,
+        getRect
       } = getPropByDirection(translateDirection);
       const pageValue = pagePosition[page];
       const scrollValue = window[scroll];
       const innerDistance = window[inner];
-      const distanceValue = element.getBoundingClientRect()[distance];
+      const distanceValue = getRect(element)[distance];
       const border = getValueFromProperty(element, borderBeforeWidth);
       const margin = getValueFromProperty(element, beforeMargin);
       const elementPosittion = pageValue - currentOffset[offset];
@@ -78,10 +79,10 @@ export const useTransform = (
         element.classList.contains(DRAGGING_CLASS) &&
         translateDirection === direction
       ) {
-        const { before, distance, axis } = getPropByDirection(direction);
-        const distanceValue = element.getBoundingClientRect()[distance];
+        const { before, distance, axis, getRect } = getPropByDirection(direction);
+        const distanceValue = getRect(element)[distance];
 
-        const parentBoundingClientRect = parent.getBoundingClientRect();
+        const parentBoundingClientRect = getRect(parent);
         const positionInsideParent =
           position[before] -
           parentBoundingClientRect[before] +
@@ -119,8 +120,8 @@ export const useTransform = (
       translate[axis] = getTranslateWihtDirection(direction);
       updateTranform(translate)
     };
-    updateTranlateByDirection("horizontal");
-    updateTranlateByDirection("vertical");
+    updateTranlateByDirection(HORIZONTAL);
+    updateTranlateByDirection(VERTICAL);
   }
 
   const updateTransformState = (
@@ -150,10 +151,10 @@ const getOffsetWithDraggable = (
   element: Element,
   draggable: Element
 ) => {
-  const { borderBeforeWidth, before } = getPropByDirection(direction);
+  const { borderBeforeWidth, before, getRect } = getPropByDirection(direction);
   return (
-    element.getBoundingClientRect()[before] -
-    draggable.getBoundingClientRect()[before] -
+    getRect(element)[before] -
+    getRect(draggable)[before] -
     getValueFromProperty(draggable, borderBeforeWidth)
   );
 };
@@ -162,12 +163,12 @@ const getOffset = (event: TransformEvent, draggable: Element | undefined) => {
   let targetHandler = getHandlerElementAncestor(target, draggable);
   const targetElement = target as HTMLElement;
   if (targetElement && targetHandler && !targetElement.isSameNode(targetHandler)) {
-    offsetX += getOffsetWithDraggable("horizontal", targetElement, targetHandler);
-    offsetY += getOffsetWithDraggable("vertical", targetElement, targetHandler);
+    offsetX += getOffsetWithDraggable(HORIZONTAL, targetElement, targetHandler);
+    offsetY += getOffsetWithDraggable(VERTICAL, targetElement, targetHandler);
   }
   if (draggable && targetHandler && draggable != target) {
-    offsetX += getOffsetWithDraggable("horizontal", targetHandler, draggable);
-    offsetY += getOffsetWithDraggable("vertical", targetHandler, draggable);
+    offsetX += getOffsetWithDraggable(HORIZONTAL, targetHandler, draggable);
+    offsetY += getOffsetWithDraggable(VERTICAL, targetHandler, draggable);
   }
   return [offsetX, offsetY ];
 };
@@ -207,11 +208,11 @@ export const getTransformState = (
 ): [number, number, number, number] => {
   const [ offsetX, offsetY ] = getOffset(event, draggable);
   return [
-    getPositionByDistance("vertical", event, element, {
+    getPositionByDistance(VERTICAL, event, element, {
       offsetX,
       offsetY,
     }),
-    getPositionByDistance("horizontal", event, element, {
+    getPositionByDistance(HORIZONTAL, event, element, {
       offsetX,
       offsetY,
     }),

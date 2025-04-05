@@ -1,4 +1,4 @@
-import { Direction } from "..";
+import { Direction, HORIZONTAL, VERTICAL } from "..";
 import {
   BeforeMargin,
   AfterMargin,
@@ -56,11 +56,11 @@ export const draggableIsOutside = (draggable: Element, droppable: Element) => {
   return !hasIntersection(draggable, droppable);
 };
 export const hasIntersection = (element1: Element, element2: Element) => {
-  const rect1 = element1.getBoundingClientRect();
-  const rect2 = element2.getBoundingClientRect();
+  const rect1 = getRect(element1);
+  const rect2 = getRect(element2);
 
-  const intersectionY = intersectionByDirection(rect1, rect2, "vertical");
-  const intersectionX = intersectionByDirection(rect1, rect2, "horizontal");
+  const intersectionY = intersectionByDirection(rect1, rect2, VERTICAL);
+  const intersectionX = intersectionByDirection(rect1, rect2, HORIZONTAL);
   return (
     intersectionY >= Math.min(rect1.height, rect2.height) / 2 &&
     intersectionX >= Math.min(rect1.width, rect2.width) / 2
@@ -96,10 +96,13 @@ export const getScrollElement = (element: HTMLElement) => {
   const { scrollLeft, scrollTop } = element;
   return { scrollLeft, scrollTop };
 };
+const getRect = (element: Element) => {
+  return element.getBoundingClientRect();
+}
 export const getPropByDirection = (
   direction: Direction
 )=> {
-  const ifHorizontal = direction == "horizontal";
+  const ifHorizontal = direction == HORIZONTAL;
   return {
     beforeMargin: ifHorizontal? "marginLeft": "marginTop",
     afterMargin:  ifHorizontal? "marginRight": "marginBottom",
@@ -118,8 +121,8 @@ export const getPropByDirection = (
     scrollDistance:  ifHorizontal?"scrollWidth": "scrollHeight",
     clientDistance:  ifHorizontal?"clientWidth": "clientHeight",
     paddingBefore:  ifHorizontal?'paddingLeft': 'paddingTop',
+    getRect
   } as const;
-  
 };
 export const getSiblings = (current: HTMLElement, parent: HTMLElement) => {
   return getSiblingsByParent(current, parent);

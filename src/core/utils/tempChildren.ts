@@ -1,6 +1,6 @@
 import { DroppableConfig } from "../configHandler";
 import { Translate } from "../../../index";
-import { Direction } from "..";
+import { Direction, HORIZONTAL, VERTICAL } from "..";
 import { getPropByDirection } from "./GetStyles";
 import { getGapPixels } from "./ParseStyles";
 import { setSizeStyles, setTranistion } from "./SetStyles";
@@ -34,10 +34,10 @@ const getDistance = (
   return distances;
 };
 const getlarge = (direction: Direction, draggedElement: HTMLElement) => {
-  const largeDirection = direction == "horizontal" ? "vertical" : "horizontal";
-  const { distance } = getPropByDirection(largeDirection);
+  const largeDirection = direction == HORIZONTAL ? VERTICAL : HORIZONTAL;
+  const { distance, getRect } = getPropByDirection(largeDirection);
   return [
-    draggedElement.getBoundingClientRect()[distance],
+    getRect(draggedElement)[distance],
     distance,
   ] as const;
 };
