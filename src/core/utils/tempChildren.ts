@@ -12,6 +12,9 @@ import { getClassesSelector } from "./dom/classList";
 
 const START_DRAG_EVENT = "startDrag";
 const timingFunction = "cubic-bezier(0.2, 0, 0, 1)";
+  // TODO: optimize this module
+  // remove duplicated code
+
 const getDistance = (
   droppable: HTMLElement,
   draggedElement: HTMLElement,

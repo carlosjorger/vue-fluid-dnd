@@ -24,7 +24,7 @@ export const getConfig = <T>(listCondig: ListCondig<T>,
   const onGetValue = (index: number)=> {
     return listCondig.getValue(index)
   };
-
+  // TODO: optimize the default config
   const DEFAULT_CONFIG = {
     direction: VERTICAL,
     handlerSelector: "draggable",

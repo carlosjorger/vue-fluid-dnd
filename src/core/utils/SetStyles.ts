@@ -1,6 +1,6 @@
 import { Direction } from "..";
 import { DragMouseTouchEvent, fixedSize } from "../../../index";
-import { getPropByDirection, getValueFromProperty } from "./GetStyles";
+import {  getPropByDirection, getValueFromProperty } from "./GetStyles";
 import { IsHTMLElement, isTouchEvent } from "./touchDevice";
 
 type onTouchEvent = "ontouchstart" | "ontouchmove" | "ontouchend";

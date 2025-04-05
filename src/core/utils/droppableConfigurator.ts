@@ -11,7 +11,7 @@ export class DroppableConfigurator<T>{
   private parent: HTMLElement;
   private childRef: HTMLElement | undefined;
   private droppableGroupClass: string | null;
-  private setTransformDragEvent: () => void;
+  private dragEvent: () => void;
   private changeDroppable: (newdDroppableConfig: DroppableConfig<T> | undefined, oldDroppableConfig: DroppableConfig<T> | undefined) => void
 
   constructor(
@@ -23,7 +23,7 @@ export class DroppableConfigurator<T>{
     this.parent = parent;
     this.childRef = childRef;
     this.droppableGroupClass = droppableGroupClass;
-    this.setTransformDragEvent = setTransformDragEvent;
+    this.dragEvent = setTransformDragEvent;
     this.initial = parent? ConfigHandler.getConfig(parent): undefined;
     this.changeDroppable = changeDroppable
   }
@@ -59,7 +59,7 @@ export class DroppableConfigurator<T>{
       }
       return elementBelow
   }
-  private getCurrentDroppable(
+  private getCurrent(
     currentElement: HTMLElement,
     event: DragMouseTouchEvent,
     hiddenDraggable: boolean = true
@@ -89,9 +89,9 @@ export class DroppableConfigurator<T>{
     return !isOutside || this.isOutsideOfAllDroppables(currentElement);
   }
   private onScrollEvent() {
-    this.setTransformDragEvent();
+    this.dragEvent();
   };
-  private makeScrollEventOnDroppable(droppable: Element) {
+  private setOnScroll(droppable: Element) {
     setEventWithInterval(droppable, "onscroll",()=> { this.onScrollEvent() });
   }
   getCurrentConfig(event: DragMouseTouchEvent) {
@@ -108,12 +108,12 @@ export class DroppableConfigurator<T>{
     ) {
       return this.current;
     }
-    const currentDroppable = this.getCurrentDroppable(currentElement, event);
+    const currentDroppable = this.getCurrent(currentElement, event);
     if (!currentDroppable) {
       return ConfigHandler.getConfig(this.parent);
     }
     if (IsHTMLElement(currentDroppable) && !currentDroppable.onscroll) {
-      this.makeScrollEventOnDroppable(currentDroppable);
+      this.setOnScroll(currentDroppable);
     }
     return ConfigHandler.getConfig(currentDroppable);
   }
@@ -127,6 +127,6 @@ export class DroppableConfigurator<T>{
     if (!currentElement) {
       return true;
     }
-    return !Boolean(this.getCurrentDroppable(currentElement, event, hiddenDraggable))
+    return !Boolean(this.getCurrent(currentElement, event, hiddenDraggable))
   }
 }
