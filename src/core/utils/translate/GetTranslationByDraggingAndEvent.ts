@@ -30,12 +30,12 @@ export default function getTranslationByDraggingAndEvent(
   return { height, width };
 }
 
-function getTranslationByDragging(
+const getTranslationByDragging = (
   direction: Direction,
   current: HTMLElement,
   previous: Element | null,
   nextElement: Element | null
-) {
+) => {
   const {
     afterMargin,
     beforeMargin,

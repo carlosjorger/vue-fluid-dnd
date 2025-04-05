@@ -4,7 +4,7 @@ import { addMultipleClasses, getClassesList } from "./utils/dom/classList";
 import HandlerPublisher from "./HandlerPublisher";
 import useDraggable from "./useDraggable";
 
-function setDroppableGroupClass (droppableGroupClass: string, droppable: HTMLElement) {
+const setDroppableGroupClass = (droppableGroupClass: string, droppable: HTMLElement) => {
     if (droppableGroupClass) {
         addMultipleClasses(droppable, droppableGroupClass);
     }

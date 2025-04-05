@@ -79,7 +79,7 @@ export default function useEmitEvents<T>(
     }
   };
   // #region Insert
-  function emitInsertEventToSiblings(targetIndex: number, draggedElement: HTMLElement, droppable: HTMLElement, value: T, startInserting:()=>void){
+  const emitInsertEventToSiblings = (targetIndex: number, draggedElement: HTMLElement, droppable: HTMLElement, value: T, startInserting:()=>void) => {
     const translation = getTranslationByDragging(
       draggedElement,
       'insert',
@@ -107,12 +107,12 @@ export default function useEmitEvents<T>(
   }
   
     // #region Remove
-  function emitRemoveEventToSiblings(
+  const emitRemoveEventToSiblings = (
     targetIndex: number,
     draggedElement: HTMLElement,
     droppableConfig: DroppableConfig<T>,
     onFinishRemoveEvent: (element: HTMLElement) => void
-  ) {
+  ) => {
     if (
       !droppableConfig ||
       !droppableConfig.droppable ||
@@ -138,7 +138,7 @@ export default function useEmitEvents<T>(
       }
     }
   }
-  function emitFinishRemoveEventToSiblings(draggedElement: HTMLElement) {
+  const emitFinishRemoveEventToSiblings = (draggedElement: HTMLElement) => {
     removeTempChild(parent, animationDuration, true);
     setTimeout(() => {
       removeElementDraggingStyles(draggedElement);
@@ -389,7 +389,7 @@ export default function useEmitEvents<T>(
       }
     });
   };
-  function clearExcessTranslateStyles(){
+  const clearExcessTranslateStyles = () => {
     if (!droppableGroupClass) {
       return
     }
@@ -400,17 +400,17 @@ export default function useEmitEvents<T>(
       removeTranslateWhitoutTransition(element)
     }
   }
-  function manageDraggingClass(element: HTMLElement){
+  const manageDraggingClass = (element: HTMLElement) => {
     setTimeout(() => {
       element.classList.remove(draggingClass);
     }, DELAY_TIME_TO_SWAP);
   }
-  function removeStytes(
+  const removeStytes = (
     element: HTMLElement,
     parent: HTMLElement,
     droppable: HTMLElement,
     func?: () => void
-  ) {
+  ) => {
     setTimeout(() => {
       func && func();
       removeTempChildOnDroppables(parent, droppable);
@@ -421,10 +421,10 @@ export default function useEmitEvents<T>(
       
     }, animationDuration);
   }
-  function removeTempChildOnDroppables(
+  const removeTempChildOnDroppables = (
     parent: HTMLElement,
     droppable: HTMLElement
-  ) {
+  ) => {
     if (parent.isSameNode(droppable)) {
       removeTempChild(parent, animationDuration);
     } else {
@@ -494,7 +494,7 @@ export default function useEmitEvents<T>(
     toggleDraggingClass,
   ] as const;
 }
-function onFinishInsertElement<T>(targetIndex:number, droppable: HTMLElement, config: CoreConfig<T>){
+const onFinishInsertElement = <T>(targetIndex:number, droppable: HTMLElement, config: CoreConfig<T>) => { 
     const { insertingFromClass, animationDuration } = config
     const observer = observeMutation(() => {
       const siblings = getParentDraggableChildren(droppable);
@@ -510,7 +510,7 @@ function onFinishInsertElement<T>(targetIndex:number, droppable: HTMLElement, co
       childList:true,
     })
   }
-export function insertToListEmpty<T>(config: CoreConfig<T>, droppable: HTMLElement | undefined ,targetIndex: number,  value: T){
+export const insertToListEmpty = <T>(config: CoreConfig<T>, droppable: HTMLElement | undefined ,targetIndex: number,  value: T) => { 
   if (!droppable) {
     return
   }

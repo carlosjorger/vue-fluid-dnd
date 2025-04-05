@@ -40,7 +40,7 @@ export class DroppableConfigurator<T>{
     currentElement: HTMLElement,
     event: DragMouseTouchEvent,
     hiddenDraggable: boolean = true){
-      function getElementBelow(config: DroppableConfigurator<T>){
+      const getElementBelow = (config: DroppableConfigurator<T>) => {
         const [elementBelow] = config.getDraggableAncestor(
           event.clientX,
           event.clientY,

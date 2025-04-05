@@ -225,9 +225,9 @@ const AddCssStyleToElement = (node: ParentNode, cssCode: string) => {
     style.sheet?.insertRule(cssCode, style.sheet.cssRules.length);
   }
 };
-export function setCustomFixedSize
+export const setCustomFixedSize =
   (element: HTMLElement | undefined, 
-  fixedProps: fixedSize = {}) {
+  fixedProps: fixedSize = {}) => {
     for (const fixedProp of Object.keys(fixedProps) as Array<keyof fixedSize>) {
       const fixedValue = fixedProps[fixedProp]
       if (fixedValue != undefined) {
@@ -235,8 +235,6 @@ export function setCustomFixedSize
       }
     }
 }
-function setCustomProperty(element: HTMLElement | undefined, fixedProp: string, newFixedSize: string) {
-  if (element) {
-    element.style.setProperty(fixedProp, newFixedSize);
-  }
+const setCustomProperty = (element: HTMLElement | undefined, fixedProp: string, newFixedSize: string) => {
+  return element && element.style.setProperty(fixedProp, newFixedSize);
 }

@@ -15,20 +15,20 @@ export const useTransform = (
   let position = { top: 0, left: 0 };
   let translate = { x: 0, y: 0 };
 
-  function updateTranform(newTranslate: Coordinate){
+  const updateTranform = (newTranslate: Coordinate) => {
     const childElement = draggedElement;
       if (childElement) {
         childElement.style.transform = `translate( ${newTranslate.x}px, ${newTranslate.y}px)`;
       }
   }
-  function updatePosition(newPosition: ElementPosition){
+  const updatePosition = (newPosition: ElementPosition) =>{
     const childElement = draggedElement;
     if (childElement) {
       childElement.style.top = `${newPosition.top}px`;
       childElement.style.left = `${newPosition.left}px`;
     }
   }
-  function setTransform(
+  const setTransform = (
     element: HTMLElement,
     parent: HTMLElement,
     pagePosition: {
@@ -36,7 +36,7 @@ export const useTransform = (
       pageY: number;
     },
     direction?: Direction
-  ) {
+  ) => {
     const getTranslateWihtDirection = (translateDirection: Direction) => {
       const {
         beforeMargin,

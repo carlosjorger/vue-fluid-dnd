@@ -12,12 +12,12 @@ export default function dragAndDrop<T>(listCondig:ListCondig<T>,handlerPublisher
 
     const coreConfig = getConfig(listCondig, config)
       
-    function removeAt(index: number) {
-    for (const removeAtFromElement of removeAtFromElements) {
-        removeAtFromElement(index);
+    const removeAt = (index: number) => {
+        for (const removeAtFromElement of removeAtFromElements) {
+            removeAtFromElement(index);
+        }
     }
-    }
-    function insertAt(index: number,  value: T) {
+    const insertAt = (index: number,  value: T) => {
         const listLegth = coreConfig.onGetLegth()
         if (listLegth === 0) {
             listCondig.insertToListEmpty(coreConfig, index, value)
@@ -33,7 +33,7 @@ export default function dragAndDrop<T>(listCondig:ListCondig<T>,handlerPublisher
         removeAtFromElements = removeAtFromElementList;
         insertAtFromElements = insertAtFromElementList;
     };
-    function observeChildrens (parent: HTMLElement) {
+    const observeChildrens = (parent: HTMLElement) => {
         observeMutation(
           () => {
             makeChildrensDraggable(parent)
@@ -41,25 +41,25 @@ export default function dragAndDrop<T>(listCondig:ListCondig<T>,handlerPublisher
           parent,
           { childList: true }
         );
-      };
-      function makeDroppable (parent: HTMLElement) {
+    };
+    const makeDroppable = (parent: HTMLElement) => {
         parent.classList.add("droppable");
-      };
-      function addConfigHandler  (parent: HTMLElement) {
+    };
+    const addConfigHandler = (parent: HTMLElement) => {
         ConfigHandler.addConfig(
-          parent,
-          coreConfig
+            parent,
+            coreConfig
         );
-      };
-      function onChangeParent (parent: HTMLElement | undefined) {
+    };
+    const onChangeParent = (parent: HTMLElement | undefined) => {
         if (!parent) {
-          return;
+            return;
         }
         makeDroppable(parent);
         addConfigHandler(parent);
         observeChildrens(parent);
         makeChildrensDraggable(parent)
         ConfigHandler.removeObsoleteConfigs();
-      }
+    }
     return [removeAt, insertAt, onChangeParent] as const
 }

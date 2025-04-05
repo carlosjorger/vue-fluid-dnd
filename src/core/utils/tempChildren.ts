@@ -155,8 +155,8 @@ export const addTempChildOnInsert = <T>(
   droppable.appendChild(child);
   setSizeAfterAppendChild(child, distances)
 };
-function setSizeAfterAppendChild(child:HTMLElement, size: Translate){
-  requestAnimationFrame(()=>{
+const setSizeAfterAppendChild = (child:HTMLElement, size: Translate) => {
+  return requestAnimationFrame(()=>{
     setSizes(child, size.height, size.width)
     requestAnimationFrame(()=>{
       setTranistion(

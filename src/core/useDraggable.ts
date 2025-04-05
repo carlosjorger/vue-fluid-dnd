@@ -81,7 +81,7 @@ export default function useDraggable<T>(
   const setDraggable = () => {
     draggableElement.classList.add(DRAGGABLE_CLASS);
   };
-  function addHandlerClass(handlerElement:Element| HTMLElement){
+  const addHandlerClass = (handlerElement:Element| HTMLElement) => {
     handlerElement.classList.add(HANDLER_CLASS)
     handlerPublisher.addSubscriber(handlerElement)
   }
@@ -112,7 +112,7 @@ export default function useDraggable<T>(
     setHandlerStyles();
     setDraggable();
   };
-  function getHandler(element: HTMLElement | undefined){
+  const getHandler = (element: HTMLElement | undefined) => {
     const handler = element?.querySelector(`.${HANDLER_CLASS}`)
     const handlerParent = handler?.parentElement
     if (handler && handlerParent 
@@ -142,7 +142,7 @@ export default function useDraggable<T>(
     }
     parent.classList.add(DROPPABLE_CLASS);
   };
-  function disableMousedownEventFromImages(handlerElement: Element) {
+  const disableMousedownEventFromImages = (handlerElement: Element) => {
     // Avoid dragging inner images
     const images = handlerElement.querySelectorAll("img");
     Array.from(images).forEach((image) => {
@@ -191,7 +191,7 @@ export default function useDraggable<T>(
       changeDroppable
     );
   
-  function toggleDroppableClass(isOutside:boolean){
+  const toggleDroppableClass = (isOutside:boolean) =>{
     if (!droppableConfigurator.current) {
       return
     }
@@ -205,7 +205,7 @@ export default function useDraggable<T>(
                     !isOutside && droppable.isSameNode(droppableConfigurator.current.droppable))
     }
   }
-  const onmousemove = function (event: DragMouseTouchEvent) {
+  const onmousemove =  (event: DragMouseTouchEvent) => {
     droppableConfigurator.updateConfig(event);
     const isOutside = droppableConfigurator.isOutsideOfDroppable(event)
     toggleDroppableClass(isOutside)
@@ -256,23 +256,14 @@ export default function useDraggable<T>(
       callback();
     }
   };
-  function clickOnChildDraggable(event: DragMouseTouchEvent, element: HTMLElement | undefined){
+  const clickOnChildDraggable = (event: DragMouseTouchEvent, element: HTMLElement | undefined) =>{
     const {clientX, clientY} = event
     const elementBelow = document.elementFromPoint(clientX, clientY)
     const draggableAncestor = elementBelow?.closest(`.${DRAGGABLE_CLASS}`)
-    
-    if (!elementBelow|| !element) {
-      return false
-    }
-    if (!draggableAncestor) {
-      return false
-    }
-    if (element.isSameNode(draggableAncestor)) {
-      return false
-    }
-    return true
+
+    return elementBelow && element && draggableAncestor && !element.isSameNode(draggableAncestor)
   }
-  function getDragStartEventData(element?: Element) : DragStartEventData<T>|undefined{
+  const getDragStartEventData = (element?: Element) : DragStartEventData<T>|undefined => {
     if (!element) {
       return;
     }
@@ -308,8 +299,8 @@ export default function useDraggable<T>(
       }
     };
   };
-  function mousedownOnDraggablefunction(event: DragMouseTouchEvent) {
-    droppableConfigurator.updateConfig(event);
+  const mousedownOnDraggablefunction = (event: DragMouseTouchEvent) => {
+    return droppableConfigurator.updateConfig(event);
   }
   const onLeave = (moveEvent: MoveEvent) => {
     return (event: MouseEvent | TouchEvent) => {
@@ -367,10 +358,10 @@ export default function useDraggable<T>(
     setTransformDragEvent();
   };
   const makeScrollEventOnDroppable = (droppable: Element) => {
-    setEventWithInterval(droppable, "onscroll", onScrollEvent);
+    return setEventWithInterval(droppable, "onscroll", onScrollEvent);
   };
   const onScrollEvent = () => {
-    setTransformDragEvent();
+    return setTransformDragEvent();
   };
   const onDropDraggingEvent = (isOutsideAllDroppables: boolean) => {
     if (draggingState !== DraggingState.DRAGING) {
@@ -406,9 +397,7 @@ export default function useDraggable<T>(
     element.style.transition = "";
   };
 
-  
-
-  function removeAtFromElement(targetIndex: number) {
+  const removeAtFromElement =(targetIndex: number) => {
     if (!droppableConfigurator.current) {
       return;
     }
@@ -437,7 +426,7 @@ export default function useDraggable<T>(
       }, delayBeforeRemove);
     }
   }
-  function insertAtFromElement(targetIndex: number, value: T) {
+  const insertAtFromElement = (targetIndex: number, value: T) => {
     if (targetIndex === index || targetIndex === config.onGetLegth() && index === targetIndex-1) {
       emitInsertEventToSiblings(targetIndex, draggableElement, parent, value,
          () => {
