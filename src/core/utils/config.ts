@@ -24,48 +24,24 @@ export const getConfig = <T>(listCondig: ListCondig<T>,
   const onGetValue = (index: number)=> {
     return listCondig.getValue(index)
   };
-  // TODO: optimize the default config
-  const DEFAULT_CONFIG = {
-    direction: VERTICAL,
-    handlerSelector: "draggable",
-    draggingClass: "dragging",
-    removingClass: "removing",
-    insertingFromClass: 'from-inserting',
-    isDraggable: () => true,
-    onDragStart: () => {},
-    onDragEnd: () => {},
-    onRemoveAtEvent,
-    onInsertEvent,
-    onGetLegth,
-    onGetValue,
-    animationDuration: 200,
-    delayBeforeRemove: 200,
-    delayBeforeInsert: 200,
-    droppableClass:'droppable-hover'
-  } as CoreConfig<T>;
-  if (!config) {
-    return DEFAULT_CONFIG;
-  }
 
   return {
-    direction: config.direction ?? DEFAULT_CONFIG.direction,
-    handlerSelector: config.handlerSelector ?? DEFAULT_CONFIG.handlerSelector,
-    draggingClass: config.draggingClass ?? DEFAULT_CONFIG.draggingClass,
-    droppableClass: config.droppableClass ?? DEFAULT_CONFIG.droppableClass,
-    isDraggable: config.isDraggable ?? DEFAULT_CONFIG.isDraggable,
-    onDragStart: config.onDragStart ?? DEFAULT_CONFIG.onDragStart,
-    onDragEnd: config.onDragEnd ?? DEFAULT_CONFIG.onDragEnd,
-    droppableGroup: config.droppableGroup,
+    direction: config?.direction ?? VERTICAL,
+    handlerSelector: config?.handlerSelector ?? "draggable",
+    draggingClass: config?.draggingClass ?? "dragging",
+    droppableClass: config?.droppableClass ?? 'droppable-hover',
+    isDraggable: config?.isDraggable ?? (() => true),
+    onDragStart: config?.onDragStart ?? (() => {}),
+    onDragEnd: config?.onDragEnd ?? (() => {}),
+    droppableGroup: config?.droppableGroup,
     onRemoveAtEvent,
     onInsertEvent,
     onGetLegth,
     onGetValue,
-    animationDuration: config.animationDuration ?? DEFAULT_CONFIG.animationDuration,
-    removingClass: config.removingClass ?? DEFAULT_CONFIG.removingClass,
-    insertingFromClass: config.insertingFromClass ?? DEFAULT_CONFIG.insertingFromClass,
-    delayBeforeRemove:
-      config.delayBeforeRemove ?? DEFAULT_CONFIG.delayBeforeRemove,
-    delayBeforeInsert: 
-      config.delayBeforeInsert ?? DEFAULT_CONFIG. delayBeforeInsert
+    animationDuration: config?.animationDuration ?? 150,
+    removingClass: config?.removingClass ?? "removing",
+    insertingFromClass: config?.insertingFromClass ?? 'from-inserting',
+    delayBeforeRemove: config?.delayBeforeRemove ?? 200,
+    delayBeforeInsert: config?.delayBeforeInsert ?? 200
   };
 };

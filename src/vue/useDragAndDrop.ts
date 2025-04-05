@@ -20,6 +20,7 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config<T>) {
 
   const [removeAt, insertAt, onChangeParent] = dragAndDrop(listCondig, handlerPublisher, config)
  
+  // TODO: test with observe element
   watch(parent, () => {
     onChangeParent(parent.value);
   });
