@@ -255,7 +255,7 @@ export default function useEmitEvents<T>(
     droppableConfig: DroppableConfig<T>,
     positionOnSourceDroppable?: number
   ) => {
-    const { droppable, droppableScroll, config } = droppableConfig;
+    const { droppable, scroll, config } = droppableConfig;
     const [ siblings, positionOnDroppable ] = getSiblings(
       draggedElement,
       droppable
@@ -287,7 +287,7 @@ export default function useEmitEvents<T>(
       positionOnDroppable,
       targetIndex,
       windowScroll,
-      droppableScroll,
+      scroll,
       initialWindowScroll,
       droppable,
       draggedElement

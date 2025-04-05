@@ -5,3 +5,7 @@ export const isTouchEvent = (
 export const IsHTMLElement = (
   element: Element | undefined
 ): element is HTMLElement => element instanceof HTMLElement;
+
+export const IsMouseEvent = (
+  event: MouseEvent | TouchEvent
+): event is MouseEvent => event instanceof MouseEvent;

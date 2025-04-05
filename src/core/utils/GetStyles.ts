@@ -5,13 +5,7 @@ import {
   BorderWidth,
   PaddingBefore,
 } from "../../../index";
-export const getScroll = (element: HTMLElement | undefined | null) => {
-  if (element) {
-    const { scrollLeft, scrollTop } = element;
-    return { scrollLeft, scrollTop };
-  }
-  return { scrollLeft: 0, scrollTop: 0 };
-};
+
 export const getWindowScroll = () => {
   const { scrollX, scrollY } = window;
   return { scrollX, scrollY };

@@ -12,8 +12,6 @@ import { getClassesSelector } from "./dom/classList";
 
 const START_DRAG_EVENT = "startDrag";
 const timingFunction = "cubic-bezier(0.2, 0, 0, 1)";
-  // TODO: optimize this module
-  // remove duplicated code
 
 const getDistance = (
   droppable: HTMLElement,
@@ -65,11 +63,11 @@ const fixScrollInitialChange = <T>(
   if (!ifStartDragging) {
     return;
   }
-  const { droppable, config, droppableScroll } = droppableConfig;
+  const { droppable, config, scroll } = droppableConfig;
   const { direction } = config;
 
   const scrollCompleted =
-    scrollPercent(config.direction, droppable, droppableScroll) > 0.99;
+    scrollPercent(config.direction, droppable, scroll) > 0.99;
   const { scrollDistance, clientDistance, scrollElement } =
     getPropByDirection(direction);
   if (scrollCompleted) {
@@ -77,13 +75,12 @@ const fixScrollInitialChange = <T>(
       droppable[scrollDistance] - droppable[clientDistance];
   }
 };
-export const addTempChild = <T>(
+const getTempChild =<T>(
   draggedElement: HTMLElement | undefined,
-  parent: Element,
   ifStartDragging: boolean,
   droppableConfig?: DroppableConfig<T>,
   addingAnimationDuration?: number
-) => {
+)=>{
   if (!droppableConfig) {
     return;
   }
@@ -101,7 +98,6 @@ export const addTempChild = <T>(
   var child = document.createElement(tempChildTag);
   child.classList.add(TEMP_CHILD_CLASS);
   setSizes(child, 0, 0);
-
   const distances = getDistance(droppable, draggedElement, direction);
   setTranistion(
     child,
@@ -109,6 +105,20 @@ export const addTempChild = <T>(
     timingFunction,
     "width, min-width, height"
   );
+  return [child, distances, droppable] as const
+}
+export const addTempChild = <T>(
+  draggedElement: HTMLElement | undefined,
+  parent: Element,
+  ifStartDragging: boolean,
+  droppableConfig?: DroppableConfig<T>,
+  addingAnimationDuration?: number
+) => {
+  const result = getTempChild(draggedElement, ifStartDragging, droppableConfig, addingAnimationDuration)
+  if (!result) {
+    return;
+  }
+  const [child, distances, droppable] = result;
   if (parent.isSameNode(droppable)) {
     setSizes(child, distances.height, distances.width);
   }
@@ -127,31 +137,11 @@ export const addTempChildOnInsert = <T>(
   ifStartDragging: boolean,
   droppableConfig?: DroppableConfig<T>
 ) => {
-  if (!droppableConfig) {
+  const result = getTempChild(draggedElement, ifStartDragging, droppableConfig)
+  if (!result) {
     return;
   }
-  const { droppable, config } = droppableConfig;
-  const { direction, animationDuration } = config;
-
-  fixScrollInitialChange(droppableConfig, ifStartDragging);
-
-  if (droppable.querySelector(`.${TEMP_CHILD_CLASS}`) || !draggedElement) {
-    return;
-  }
-
-  var tempChildTag =
-    draggedElement.tagName == "LI" ? "DIV" : draggedElement.tagName;
-  var child = document.createElement(tempChildTag);
-  child.classList.add(TEMP_CHILD_CLASS);
-  setSizes(child, 0, 0);
-
-  const distances = getDistance(droppable, draggedElement, direction);
-  setTranistion(
-    child,
-    animationDuration,
-    timingFunction,
-    "width, min-width, height"
-  );
+  const [child, distances, droppable] = result;
   droppable.appendChild(child);
   setSizeAfterAppendChild(child, distances)
 };

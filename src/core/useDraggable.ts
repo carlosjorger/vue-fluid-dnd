@@ -13,7 +13,7 @@ import { CoreConfig, DragStartEventData } from ".";
 import useEmitEvents from "./utils/events/emitEvents";
 import { DRAG_EVENT, draggableTargetTimingFunction, START_DRAG_EVENT, START_DROP_EVENT } from "./utils";
 import ConfigHandler, { DroppableConfig } from "./configHandler";
-import { isTouchEvent } from "./utils/touchDevice";
+import { IsHTMLElement, isTouchEvent } from "./utils/touchDevice";
 import { addTempChild, addTempChildOnInsert, removeTempChildrens } from "./utils/tempChildren";
 import { DroppableConfigurator } from "./utils/droppableConfigurator";
 import {
@@ -122,9 +122,9 @@ export default function useDraggable<T>(
     }
     return handler
   }
-  const setSlotRefElementParams = (element: HTMLElement | undefined) => {
+  const setSlotRefElementParams = (element: HTMLElement) => {
     const handlerElement = (getHandler(element) ?? element) as HTMLElement;
-    if (handlerElement && element && isDraggable(element)) {
+    if (handlerElement && isDraggable(element)) {
       assignDraggingEvent(
         handlerElement,
         "onmousedown",
@@ -137,7 +137,7 @@ export default function useDraggable<T>(
       );
       disableMousedownEventFromImages(handlerElement);
     }
-    if (element && !element?.isSameNode(handlerElement)) {
+    if (!element?.isSameNode(handlerElement)) {
       assignDraggingEvent(element, "onmousedown", mousedownOnDraggablefunction);
     }
     parent.classList.add(DROPPABLE_CLASS);
@@ -207,7 +207,7 @@ export default function useDraggable<T>(
   }
   const onmousemove =  (event: DragMouseTouchEvent) => {
     droppableConfigurator.updateConfig(event);
-    const isOutside = droppableConfigurator.isOutsideOfDroppable(event)
+    const isOutside = droppableConfigurator.isOutside(event)
     toggleDroppableClass(isOutside)
     if (draggingState === DraggingState.START_DRAGGING) {
       startDragging(event);
@@ -263,16 +263,13 @@ export default function useDraggable<T>(
 
     return elementBelow && element && draggableAncestor && !element.isSameNode(draggableAncestor)
   }
-  const getDragStartEventData = (element?: Element) : DragStartEventData<T>|undefined => {
-    if (!element) {
-      return;
-    }
+  const getDragStartEventData = (element: Element) : DragStartEventData<T>|undefined => {
     const value = config.onGetValue(index)
     return ({ index, element, value})
   }
   const onmousedown = (moveEvent: MoveEvent, onLeaveEvent: OnLeaveEvent) => {
     return (event: DragMouseTouchEvent) => {
-      if(clickOnChildDraggable(event, draggableElement)){
+      if (clickOnChildDraggable(event, draggableElement)){
         return
       }
       ConfigHandler.updateScrolls(parent, droppableGroupClass);
@@ -285,7 +282,7 @@ export default function useDraggable<T>(
         addTouchDeviceDelay(moveEvent, () => {
           if (moveEvent == 'touchmove') {
             droppableConfigurator.updateConfig(event);
-            toggleDroppableClass(droppableConfigurator.isOutsideOfDroppable(event))
+            toggleDroppableClass(droppableConfigurator.isOutside(event))
             startDragging(event)
           }
           document.addEventListener(moveEvent, handlerMousemove, {
@@ -307,7 +304,7 @@ export default function useDraggable<T>(
       toggleDroppableClass(true);
       const convertedEvent = convetEventToDragMouseTouchEvent(event);
       clearTimeout(delayTimeout);
-      onDropDraggingEvent(droppableConfigurator.isOutsideOfDroppable(convertedEvent, false));
+      onDropDraggingEvent(droppableConfigurator.isOutside(convertedEvent, false));
       document.removeEventListener(moveEvent, handlerMousemove);
       droppableConfigurator.updateConfig(convertedEvent);
       const currentConfig = droppableConfigurator.getCurrentConfig(convertedEvent);
@@ -327,7 +324,7 @@ export default function useDraggable<T>(
       document.querySelectorAll(getClassesSelector(droppableGroupClass))
     );
     for (const droppable of droppables) {
-      if (droppable instanceof HTMLElement) {
+      if (IsHTMLElement(droppable)) {
         droppable.onscroll = null;
       }
     }

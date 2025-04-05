@@ -1,3 +1,4 @@
+//TODO: Create togle, contain, add remove, classlist
 export const containstClasses = (element: HTMLElement, classes: string) => {
   return getClassesList(classes).every((cssClass) =>
     element.classList.contains(cssClass)

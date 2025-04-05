@@ -9,20 +9,20 @@ export class DroppableConfigurator<T>{
   initial: DroppableConfig<any> | undefined;
   current: DroppableConfig<T> | undefined;
   private parent: HTMLElement;
-  private childRef: HTMLElement | undefined;
-  private droppableGroupClass: string | null;
+  private draggableElement: HTMLElement;
+  private groupClass: string | null;
   private dragEvent: () => void;
   private changeDroppable: (newdDroppableConfig: DroppableConfig<T> | undefined, oldDroppableConfig: DroppableConfig<T> | undefined) => void
 
   constructor(
-    childRef: HTMLElement | undefined,
+    draggableElement: HTMLElement,
     droppableGroupClass: string | null,
     parent: HTMLElement,
     setTransformDragEvent: () => void,
     changeDroppable: (newdDroppableConfig: DroppableConfig<T> | undefined, oldDroppableConfig: DroppableConfig<T> | undefined) => void) {
     this.parent = parent;
-    this.childRef = childRef;
-    this.droppableGroupClass = droppableGroupClass;
+    this.draggableElement = draggableElement;
+    this.groupClass = droppableGroupClass;
     this.dragEvent = setTransformDragEvent;
     this.initial = parent? ConfigHandler.getConfig(parent): undefined;
     this.changeDroppable = changeDroppable
@@ -65,17 +65,17 @@ export class DroppableConfigurator<T>{
     hiddenDraggable: boolean = true
   ) {
     const elementBelow = this.getElementBelow(currentElement, event, hiddenDraggable)
-    if (!this.droppableGroupClass || !elementBelow) {
+    if (!this.groupClass || !elementBelow) {
       return;
     }
     const currentDroppable = elementBelow.closest(
-      getClassesSelector(this.droppableGroupClass)
+      getClassesSelector(this.groupClass)
     );
     return currentDroppable;
   }
   private isOutsideOfAllDroppables(currentElement: HTMLElement) {
-    const droppables = this.droppableGroupClass? Array.from(
-      document.querySelectorAll(getClassesSelector(this.droppableGroupClass))
+    const droppables = this.groupClass? Array.from(
+      document.querySelectorAll(getClassesSelector(this.groupClass))
     ):[this.parent];
     return droppables.every((droppable) =>
       draggableIsOutside(currentElement, droppable)
@@ -95,10 +95,7 @@ export class DroppableConfigurator<T>{
     setEventWithInterval(droppable, "onscroll",()=> { this.onScrollEvent() });
   }
   getCurrentConfig(event: DragMouseTouchEvent) {
-    const currentElement = this.childRef;
-    if (!currentElement) {
-      return;
-    }
+    const currentElement = this.draggableElement;
     if (
       this.current &&
       this.isNotInsideAnotherDroppable(
@@ -122,11 +119,8 @@ export class DroppableConfigurator<T>{
     this.current = this.getCurrentConfig(event);
     this.changeDroppable(this.current, oldDroppableConfig)
   }
-  isOutsideOfDroppable(event: DragMouseTouchEvent, hiddenDraggable: boolean = true){
-    const currentElement = this.childRef;
-    if (!currentElement) {
-      return true;
-    }
+  isOutside(event: DragMouseTouchEvent, hiddenDraggable: boolean = true){
+    const currentElement = this.draggableElement;
     return !Boolean(this.getCurrent(currentElement, event, hiddenDraggable))
   }
 }

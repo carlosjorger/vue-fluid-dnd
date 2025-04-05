@@ -9,24 +9,18 @@ import { scrollByDirection } from "./scroll";
 import { HANDLER_CLASS, DRAGGING_CLASS } from "./classes";
 
 export const useTransform = (
-  draggedElement: HTMLElement | undefined
+  draggedElement: HTMLElement
 ) => {
   let currentOffset = { offsetX: 0, offsetY: 0 };
   let position = { top: 0, left: 0 };
   let translate = { x: 0, y: 0 };
 
   const updateTranform = (newTranslate: Coordinate) => {
-    const childElement = draggedElement;
-      if (childElement) {
-        childElement.style.transform = `translate( ${newTranslate.x}px, ${newTranslate.y}px)`;
-      }
+    draggedElement.style.transform = `translate( ${newTranslate.x}px, ${newTranslate.y}px)`;
   }
   const updatePosition = (newPosition: ElementPosition) =>{
-    const childElement = draggedElement;
-    if (childElement) {
-      childElement.style.top = `${newPosition.top}px`;
-      childElement.style.left = `${newPosition.left}px`;
-    }
+    draggedElement.style.top = `${newPosition.top}px`;
+    draggedElement.style.left = `${newPosition.left}px`;
   }
   const setTransform = (
     element: HTMLElement,
@@ -158,7 +152,7 @@ const getOffsetWithDraggable = (
     getValueFromProperty(draggable, borderBeforeWidth)
   );
 };
-const getOffset = (event: TransformEvent, draggable: Element | undefined) => {
+const getOffset = (event: TransformEvent, draggable: Element) => {
   let { offsetX, offsetY, target } = event;
   let targetHandler = getHandlerElementAncestor(target, draggable);
   const targetElement = target as HTMLElement;
@@ -166,7 +160,7 @@ const getOffset = (event: TransformEvent, draggable: Element | undefined) => {
     offsetX += getOffsetWithDraggable(HORIZONTAL, targetElement, targetHandler);
     offsetY += getOffsetWithDraggable(VERTICAL, targetElement, targetHandler);
   }
-  if (draggable && targetHandler && draggable != target) {
+  if (targetHandler && draggable != target) {
     offsetX += getOffsetWithDraggable(HORIZONTAL, targetHandler, draggable);
     offsetY += getOffsetWithDraggable(VERTICAL, targetHandler, draggable);
   }
@@ -174,10 +168,10 @@ const getOffset = (event: TransformEvent, draggable: Element | undefined) => {
 };
 const getHandlerElementAncestor = (
   target: EventTarget | null,
-  draggable?: Element
+  draggable: Element
 ) => {
   const targetHandler = (target as Element)?.closest(`.${HANDLER_CLASS}`);
-  if (targetHandler && draggable && targetHandler.isSameNode(draggable)) {
+  if (targetHandler && targetHandler.isSameNode(draggable)) {
     return target as Element;
   }
   return targetHandler;
@@ -204,7 +198,7 @@ const getPositionByDistance = (
 export const getTransformState = (
   event: TransformEvent,
   element: HTMLElement,
-  draggable?: Element
+  draggable: Element
 ): [number, number, number, number] => {
   const [ offsetX, offsetY ] = getOffset(event, draggable);
   return [

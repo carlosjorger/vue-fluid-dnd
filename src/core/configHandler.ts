@@ -6,7 +6,7 @@ import { containstClasses } from "./utils/dom/classList";
 export type DroppableConfig<T> = {
   droppable: HTMLElement;
   config: CoreConfig<T>;
-  droppableScroll: ElementScroll;
+  scroll: ElementScroll;
 };
 export default class ConfigHandler {
   static configs = [] as DroppableConfig<any>[];
@@ -14,11 +14,11 @@ export default class ConfigHandler {
     const configs = ConfigHandler.configs.filter(
       (configHandler) => !configHandler.droppable.isSameNode(droppable)
     );
-    const droppableScroll = getScrollElement(droppable);
+    const scroll = getScrollElement(droppable);
     configs.push({
       droppable,
       config,
-      droppableScroll,
+      scroll,
     });
     ConfigHandler.configs = configs;
   }
@@ -40,7 +40,7 @@ export default class ConfigHandler {
           containstClasses(droppable, droppableGroupClass)) ||
         droppable.isSameNode(currentDroppable)
       ) {
-        configHandler.droppableScroll = getScrollElement(droppable);
+        configHandler.scroll = getScrollElement(droppable);
       }
     }
   }

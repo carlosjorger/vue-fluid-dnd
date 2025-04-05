@@ -1,7 +1,7 @@
 import { Direction, HORIZONTAL, VERTICAL } from "..";
 import { DragMouseTouchEvent, fixedSize } from "../../../index";
 import {  getPropByDirection, getValueFromProperty } from "./GetStyles";
-import { IsHTMLElement, isTouchEvent } from "./touchDevice";
+import { IsHTMLElement, IsMouseEvent, isTouchEvent } from "./touchDevice";
 
 type onTouchEvent = "ontouchstart" | "ontouchmove" | "ontouchend";
 const onMouseEvents = ["onmouseup", "onmousedown", "onmousemove"] as const;
@@ -107,7 +107,7 @@ const getOffsetFromEvent = (
   const getTouchEventOffset = (element: Element, direction: Direction) => {
     return getOffset(tempEvent, window, direction, element);
   };
-  if (event instanceof MouseEvent) {
+  if (IsMouseEvent(event)) {
     const { offsetX, offsetY } = event;
     return [ offsetX, offsetY ] as const;
   } else {
@@ -146,7 +146,7 @@ const getEvent = (event: MouseEvent | TouchEvent) => {
   if (isTouchEvent(event)) {
     return event.touches[0] ?? event.changedTouches[0];
   }
-  if (event instanceof MouseEvent) {
+  if (IsMouseEvent(event)) {
     return event;
   }
 };
