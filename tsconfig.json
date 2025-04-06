@@ -31,7 +31,7 @@
     "examples",
     "docs",
     "src/assets",
-    "my-test-examples"
+    "vue-test-examples"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

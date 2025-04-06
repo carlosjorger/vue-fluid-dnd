@@ -3,8 +3,8 @@ import { onMounted, ref } from "vue";
 import PokemonComponent from "./PokemonComponent.vue";
 
 import { fetchPokemons } from "../../../docs/src/server/pokemonServer.ts";
-import type { Pokemon } from "../../../docs/src/components/examples/Pokemon";
-import useDragAndDrop from "../../../src/vue/useDragAndDrop";
+import type { Pokemon } from "../../../docs/src/components/examples/Pokemon.ts";
+import useDragAndDrop from "../../../src/vue/useDragAndDrop.ts";
 
 const pokemons = ref([] as Pokemon[]);
 

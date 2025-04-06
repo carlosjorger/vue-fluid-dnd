@@ -17,7 +17,7 @@ import ExampleCompoundDroppable from './components/ExampleCompoundDroppable.vue'
 import ExampleInsertList from "./components/ExampleInsertList.vue";
 import ExampleInsertHorizontalList from "./components/ExampleInsertHorizontalList.vue";
 import ExampleCompoundDroppableEvent from './components/ExampleCompoundDroppableEvent.vue'
-
+import ExampleInsideDialog from "./components/ExampleInsideDialog.vue";
 
 </script>
 
@@ -46,6 +46,8 @@ import ExampleCompoundDroppableEvent from './components/ExampleCompoundDroppable
   <ExampleInsertList id="example-insert-list" />
   <ExampleInsertHorizontalList id="example-insert-horizontal-list" />
   <ExampleCompoundDroppableEvent id="example-compound-droppable" />
+  <ExampleInsideDialog id="example-inside-dialog" />
+  
 </template>
 <style>
 .example-cols {

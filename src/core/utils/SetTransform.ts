@@ -188,6 +188,9 @@ const getPositionByDistance = (
 ) => {
   const { offset, beforeMargin, page, borderBeforeWidth, scroll } =
     getPropByDirection(direction);
+  console.log(event[page] -
+    offsetEvent[offset] -
+    window[scroll], event)
   return (
     event[page] -
     offsetEvent[offset] -
