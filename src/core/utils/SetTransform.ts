@@ -54,7 +54,7 @@ export const useTransform = (
       const margin = getValueFromProperty(element, beforeMargin);
       const elementPosittion = pageValue - currentOffset[offset];
       
-      const beforefixecParentValue = getNearestFixedParentPosition(element, before);
+      const beforefixecParentValue = getNearestFixedParentPosition(element, translateDirection);
       if (
         elementPosittion >= scrollValue - distanceValue / 2 &&
         elementPosittion <= scrollValue + innerDistance
@@ -190,10 +190,10 @@ const getPositionByDistance = (
     offsetY: number;
   }
 ) => {
-  const { offset, beforeMargin, page, borderBeforeWidth, scroll, before } =
+  const { offset, beforeMargin, page, borderBeforeWidth, scroll } =
     getPropByDirection(direction);
 
-  const beforefixecParentValue = getNearestFixedParentPosition(element, before);
+  const beforefixecParentValue = getNearestFixedParentPosition(element, direction);
 
   return (
     event[page] -

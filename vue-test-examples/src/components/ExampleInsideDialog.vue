@@ -24,7 +24,7 @@ const { parent } = useDragAndDrop<number>(numbers as any);
         Share
       </Button>
     </DialogTrigger>
-    <DialogContent class="sm:max-w-md">
+    <DialogContent class="sm:max-w-md border-8 border-red-900">
         <div>
             <ul ref="parent" class="vertical-list">
                 <li

@@ -1,3 +1,4 @@
+import { get } from "http";
 import { Direction, HORIZONTAL, VERTICAL } from "..";
 import {
   BeforeMargin,
@@ -180,7 +181,11 @@ const getNearestFixedParent = (element: Element) => {
   return null; // No fixed parent found
 }
 
-export const getNearestFixedParentPosition = (element: Element, prop: Before) => { 
+export const getNearestFixedParentPosition = (element: Element, direction: Direction) => { 
+  const {
+    before,
+    borderBeforeWidth
+  } = getPropByDirection(direction);
   const fixedParent = getNearestFixedParent(element);
-  return fixedParent ? getRect(fixedParent)[prop] : 0;
+  return fixedParent ? (getRect(fixedParent)[before] + getValueFromProperty(fixedParent, borderBeforeWidth)) : 0;
 }
