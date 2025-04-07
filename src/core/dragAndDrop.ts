@@ -8,7 +8,7 @@ import { observeMutation } from "./utils/observer";
 import { addClass } from "./utils/dom/classList";
 import { DROPPABLE_CLASS } from "./utils/classes";
 
-export default function dragAndDrop<T>(listCondig:ListCondig<T>,handlerPublisher: HandlerPublisher, config?: Config<T>) {
+export default function dragAndDrop<T>(listCondig:ListCondig<T>,handlerPublisher: HandlerPublisher, config?: Config<T>, indexAttr: string ='index' ) {
     let removeAtFromElements = [] as ((index: number) => void)[];
     let insertAtFromElements = [] as ((index: number, value: T) => void)[];
 
@@ -31,7 +31,7 @@ export default function dragAndDrop<T>(listCondig:ListCondig<T>,handlerPublisher
         }
     }
     const makeChildrensDraggable = (parent: HTMLElement|undefined) => {
-        const [ removeAtFromElementList, insertAtFromElementList ] = useDroppable(coreConfig, handlerPublisher, parent)
+        const [ removeAtFromElementList, insertAtFromElementList ] = useDroppable(coreConfig, handlerPublisher, parent, indexAttr)
         removeAtFromElements = removeAtFromElementList;
         insertAtFromElements = insertAtFromElementList;
     };

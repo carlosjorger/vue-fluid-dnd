@@ -9,8 +9,8 @@ const setDroppableGroupClass = (droppableGroupClass: string, droppable: HTMLElem
         addMultipleClasses(droppable, droppableGroupClass);
     }
 };
-export default function useDroppable<T>(coreConfig: CoreConfig<T>, handlerPublisher: HandlerPublisher, droppable?:HTMLElement){
-    const INDEX_ATTR = "index";
+export default function useDroppable<T>(coreConfig: CoreConfig<T>, handlerPublisher: HandlerPublisher,droppable?:HTMLElement, indexAttr: string ='index' ){
+    const INDEX_ATTR = indexAttr;
     let removeAtFromElementList = [] as  ((targetIndex: number) => void)[];
     let insertAtFromElementList = [] as  ((targetIndex: number, value: T) => void)[];
     const {droppableGroup } = coreConfig
@@ -28,7 +28,6 @@ export default function useDroppable<T>(coreConfig: CoreConfig<T>, handlerPublis
           const index = child.getAttribute(INDEX_ATTR);
           const numberIndex = parseIntEmpty(index);
           const childHTMLElement = child as HTMLElement;
-    
           if (childHTMLElement && numberIndex >= 0) {
             const [ removeAtFromElement, insertAtFromElement ] = useDraggable(
               childHTMLElement,

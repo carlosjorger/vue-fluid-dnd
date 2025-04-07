@@ -3,7 +3,6 @@ import { Config } from "../core";
 import HandlerPublisher from "../core/HandlerPublisher";
 import { VueListCondig } from "./utils/VueListCondig";
 import dragAndDrop from "../core/dragAndDrop";
-import { observeMutation } from "../core/utils/observer";
 
 /**
  * Create the parent element of the draggable children and all the drag and drop events and styles.

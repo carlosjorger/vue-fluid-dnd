@@ -52,7 +52,6 @@ export default function useDraggable<T>(
     droppableClass,
     onDragStart,
   } = config;
-
   const droppableGroupClass = getClassesList(droppableGroup)
     .map((classGroup) => `droppable-group-${classGroup}`)
     .join(" ");
@@ -398,11 +397,10 @@ export default function useDraggable<T>(
   };
 
   const removeAtFromElement =(targetIndex: number) => {
-    if (!droppableConfigurator.current) {
+    if (!droppableConfigurator.initial) {
       return;
     }
-    const config = droppableConfigurator.current as DroppableConfig<T>;
-
+    const config = droppableConfigurator.initial as DroppableConfig<T>;
     if (targetIndex == index) {
       addClass(draggableElement, removingClass)
       setTimeout(() => {
@@ -412,7 +410,7 @@ export default function useDraggable<T>(
           draggableElement,
           parent,
           draggingState == DraggingState.START_DRAGGING,
-          droppableConfigurator.current
+          droppableConfigurator.initial
         );
         emitRemoveEventToSiblings(
           targetIndex,

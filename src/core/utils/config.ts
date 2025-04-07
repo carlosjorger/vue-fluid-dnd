@@ -25,7 +25,7 @@ export const getConfig = <T>(listCondig: ListCondig<T>,
   const onGetValue = (index: number)=> {
     return listCondig.getValue(index)
   };
-
+  
   return {
     direction: config?.direction ?? VERTICAL,
     handlerSelector: config?.handlerSelector ?? DRAGGABLE_CLASS,
