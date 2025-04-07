@@ -1,6 +1,7 @@
 import { Coordinate, DragMouseTouchEvent, ElementPosition, TransformEvent } from "../../../index";
 import {
   draggableIsOutside,
+  getNearestFixedParentPosition,
   getPropByDirection,
   getValueFromProperty,
 } from "./GetStyles";
@@ -52,6 +53,8 @@ export const useTransform = (
       const border = getValueFromProperty(element, borderBeforeWidth);
       const margin = getValueFromProperty(element, beforeMargin);
       const elementPosittion = pageValue - currentOffset[offset];
+      
+      const beforefixecParentValue = getNearestFixedParentPosition(element, before);
       if (
         elementPosittion >= scrollValue - distanceValue / 2 &&
         elementPosittion <= scrollValue + innerDistance
@@ -61,7 +64,8 @@ export const useTransform = (
           position[before] -
           border -
           margin -
-          scrollValue;
+          scrollValue -
+          beforefixecParentValue;
         updateScroll(translateDirection);
         return newTranslate;
       }
@@ -186,17 +190,18 @@ const getPositionByDistance = (
     offsetY: number;
   }
 ) => {
-  const { offset, beforeMargin, page, borderBeforeWidth, scroll } =
+  const { offset, beforeMargin, page, borderBeforeWidth, scroll, before } =
     getPropByDirection(direction);
-  console.log(event[page] -
-    offsetEvent[offset] -
-    window[scroll], event)
+
+  const beforefixecParentValue = getNearestFixedParentPosition(element, before);
+
   return (
     event[page] -
     offsetEvent[offset] -
     getValueFromProperty(element, beforeMargin) -
     getValueFromProperty(element, borderBeforeWidth) -
-    window[scroll]
+    window[scroll]-
+    beforefixecParentValue
   );
 };
 export const getTransformState = (

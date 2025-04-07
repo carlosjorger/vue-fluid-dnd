@@ -41,8 +41,6 @@ import ExampleInsideDialog from "./components/ExampleInsideDialog.vue";
   <ExampleListWithRemove id="example-lists-with-remove" />
   <ExampleListGroupDroppableAndDraggableClasses id="example-list-group-droppable-and-draggable-classes" />
   <ExampleCompoundDroppable id="example-compound-droppable" />
-  <!-- <ExampleHorizontalCounterList id="example-horizontal-counter-list" /> -->
-  <!-- <ExampleOfPokemonList id="example-pokemon-list" /> -->
   <ExampleInsertList id="example-insert-list" />
   <ExampleInsertHorizontalList id="example-insert-horizontal-list" />
   <ExampleCompoundDroppableEvent id="example-compound-droppable" />

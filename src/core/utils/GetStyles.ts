@@ -4,6 +4,7 @@ import {
   AfterMargin,
   BorderWidth,
   PaddingBefore,
+  Before,
 } from "../../../index";
 import { DRAGGABLE_CLASS } from "./classes";
 import { containClass } from "./dom/classList";
@@ -81,7 +82,7 @@ const intersectionByDirection = (
 };
 export const getValueFromProperty = (
   element: HTMLElement | Element | undefined | null,
-  property: PaddingBefore | BorderWidth | BeforeMargin | AfterMargin
+  property: PaddingBefore | BorderWidth | BeforeMargin | AfterMargin | Before
 ) =>{
   if (element) {
     return parseFloatEmpty(getComputedStyle(element)[property]);
@@ -164,3 +165,22 @@ export const getSiblingsByParent = (
     parent,
   ] as const;
 };
+
+const getNearestFixedParent = (element: Element) => {
+  let parent = element.parentElement;
+
+  while (parent) {
+    const position = window.getComputedStyle(parent).position;
+    if (position === 'fixed') {
+      return parent;
+    }
+    parent = parent.parentElement;
+  }
+  
+  return null; // No fixed parent found
+}
+
+export const getNearestFixedParentPosition = (element: Element, prop: Before) => { 
+  const fixedParent = getNearestFixedParent(element);
+  return fixedParent ? getRect(fixedParent)[prop] : 0;
+}
