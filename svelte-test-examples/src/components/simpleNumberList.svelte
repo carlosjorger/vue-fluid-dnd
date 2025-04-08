@@ -13,7 +13,8 @@
       }
    }
    const Append=()=>{
-      insertAt(numbers.length,Math.max(...numbers)+1)
+      const maxNumber = (numbers.length>0?Math.max(...numbers):0)
+      insertAt(numbers.length,maxNumber+1)
    }
 </script>
 
