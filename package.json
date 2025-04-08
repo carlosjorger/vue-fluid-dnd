@@ -1,5 +1,5 @@
 {
-  "name": "vue-fluid-dnd",
+  "name": "fluid-dnd",
   "version": "0.14.3",
   "description": "A Vue 3 drag and drop library to sort all kind of lists",
   "type": "module",
@@ -12,15 +12,34 @@
     "dist",
     "src/components/"
   ],
-  "main": "./dist/vue-fluid-dnd.umd.cjs",
-  "module": "./dist/vue-fluid-dnd.js",
+  "main": "./dist/fluid-dnd.umd.cjs",
+  "module": "./dist/fluid-dnd.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/vue-fluid-dnd.js",
-      "require": "./dist/vue-fluid-dnd.umd.cjs"
+      "import": "./dist/fluid-dnd.js",
+      "require": "./dist/fluid-dnd.umd.cjs"
     },
-    "./style.css": "./dist/style.css"
+    "./vue": {
+      "require": {
+        "types": "./vue/index.d.cts",
+        "default": "./vue/index.cjs"
+      },
+      "import": {
+        "types": "./vue/index.d.ts",
+        "default": "./vue/index.mjs"
+      }
+    },
+    "./svelte": {
+      "require": {
+        "types": "./svelte/index.d.cts",
+        "default": "./svelte/index.cjs"
+      },
+      "import": {
+        "types": "./svelte/index.d.ts",
+        "default": "./svelte/index.mjs"
+      }
+    }
   },
   "types": "./dist/index.d.ts",
   "typings": "./dist/index.d.ts",

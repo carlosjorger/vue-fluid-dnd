@@ -32,7 +32,7 @@ const listWithMixedStyles = ref([
 defineProps<{
   id: string;
 }>();
-const { parent: parent1 } = useDragAndDrop<number>(listWithMixedStyles as any, {
+const [ parent1 ] = useDragAndDrop<number>(listWithMixedStyles as any, {
   droppableGroup: "groupWithStyles",
 });
 const listWithMixedStylesAndGaps = ref([
@@ -63,7 +63,7 @@ const listWithMixedStylesAndGaps = ref([
       "color: white; background-color: blue; padding: 20px 0; margin: 12px; margin-right: 120px;",
   },
 ]);
-const { parent: parent2 } = useDragAndDrop<number>(
+const [ parent2 ] = useDragAndDrop<number>(
   listWithMixedStylesAndGaps as any,
   {
     isDraggable: (el) => {

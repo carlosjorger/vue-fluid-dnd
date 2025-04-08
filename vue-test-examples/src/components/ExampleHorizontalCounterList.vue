@@ -6,7 +6,7 @@ const currentNumber = ref(numbers.value.length);
 const { id } = defineProps<{
   id: string;
 }>();
-const { parent } = useDragAndDrop<number>(numbers as any, {
+const [ parent ] = useDragAndDrop<number>(numbers as any, {
   handlerSelector: ".number",
   direction:'horizontal'
 });

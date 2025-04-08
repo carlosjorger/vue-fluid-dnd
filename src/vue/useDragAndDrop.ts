@@ -2,7 +2,7 @@ import { Ref, ref, watch } from "vue";
 import { Config } from "../core";
 import HandlerPublisher from "../core/HandlerPublisher";
 import { VueListCondig } from "./utils/VueListCondig";
-import dragAndDrop from "../core/dragAndDrop";
+import { dragAndDrop } from "../index";
 
 /**
  * Create the parent element of the draggable children and all the drag and drop events and styles.
@@ -23,5 +23,5 @@ export default function useDragAndDrop<T>(items: Ref<T[]>, config?: Config<T>) {
   watch(parent, () => {
     onChangeParent(parent.value);
   });
-  return { parent, removeAt, insertAt };
+  return [ parent, insertAt, removeAt ] as const;
 }

@@ -3,7 +3,7 @@ import { ref } from "vue";
 import useDragAndDrop from "../../../src/vue/useDragAndDrop";
 
 const numbers = ref([1, 2, 3, 4, 5, 6]);
-const { parent } = useDragAndDrop<number>(numbers as any, {
+const [ parent ] = useDragAndDrop<number>(numbers as any, {
   direction: "horizontal",
 });
 

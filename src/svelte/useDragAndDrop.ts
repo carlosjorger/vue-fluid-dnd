@@ -1,8 +1,6 @@
-import { derived } from "svelte/store";
 import { Config } from "../core";
 import HandlerPublisher from "../core/HandlerPublisher";
-// import { VueListCondig } from "./utils/VueListCondig";
-import dragAndDrop from "../core/dragAndDrop";
+import { dragAndDrop } from "../index";
 import { SvelteListCondig } from "./utils/SvelteListCondig";
 /**
  * Create the parent element of the draggable children and all the drag and drop events and styles.
@@ -17,9 +15,7 @@ const handlerPublisher = new HandlerPublisher()
 export default function useDragAndDrop<T>( items: T[], config?: Config<T>) {
   const listCondig = new SvelteListCondig(items);
   const [removeAt, insertAt, onChangeParent] = dragAndDrop(listCondig, handlerPublisher, config, 'data-index')
-  // watch(parent, () => {
-  //   onChangeParent(parent.value);
-  // });
+
   const dragAndDropAction = (parent: HTMLElement) => {
     listCondig.setParent(parent);
     onChangeParent(parent);
@@ -29,5 +25,5 @@ export default function useDragAndDrop<T>( items: T[], config?: Config<T>) {
       }
     }
   }
-  return [dragAndDropAction, removeAt, insertAt] as const;
+  return [dragAndDropAction, insertAt, removeAt] as const;
 }

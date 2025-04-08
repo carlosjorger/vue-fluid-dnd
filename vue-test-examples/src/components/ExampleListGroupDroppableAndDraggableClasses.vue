@@ -3,14 +3,14 @@ import { ref } from "vue";
 import useDragAndDrop from "../../../src/vue/useDragAndDrop";
 
 const numbers1 = ref([1, 2, 3, 4, 5, 6]);
-const { parent: parent1 } = useDragAndDrop<number>(numbers1 as any, {
+const [ parent1 ] = useDragAndDrop<number>(numbers1 as any, {
   direction: "vertical",
   droppableGroup: "group1",
   draggingClass: 'dragging-group',
 });
 
 const numbers2 = ref([7, 8, 9, 10, 11, 12, 13, 14, 15]);
-const { parent: parent2 } = useDragAndDrop<number>(numbers2 as any, {
+const [ parent2 ] = useDragAndDrop<number>(numbers2 as any, {
   direction: "vertical",
   droppableGroup: "group1",
   draggingClass: 'dragging-group',

@@ -12,7 +12,7 @@ onMounted(async () => {
   pokemons.value = await fetchPokemons(9);
 });
 const handlerSelector = ".pokemon-handler";
-const { parent, removeAt: removeEvent } = useDragAndDrop(pokemons as any, {
+const [ parent,_, removeEvent ] = useDragAndDrop(pokemons as any, {
   handlerSelector,
   delayBeforeRemove: 300,
 });

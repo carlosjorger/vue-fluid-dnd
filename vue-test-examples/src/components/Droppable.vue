@@ -20,7 +20,7 @@ const { droppableGroup, elements, onDragEnd, onDragStart } = defineProps({
     },
 });
 list.value = elements
-const { parent } = useDragAndDrop<string>(list as any,
+const [ parent ] = useDragAndDrop<string>(list as any,
   {
     droppableGroup,
     onDragEnd,

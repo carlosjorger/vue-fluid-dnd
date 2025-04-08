@@ -3,36 +3,36 @@ import { ref } from "vue";
 import useDragAndDrop from "../../../src/vue/useDragAndDrop";
 
 const numbers1 = ref([1, 2, 3, 4, 5, 6]);
-const { parent: parent1 } = useDragAndDrop<number>(numbers1 as any, {
+const [ parent1 ] = useDragAndDrop<number>(numbers1 as any, {
   direction: "vertical",
   droppableGroup: "group1",
 });
 
 const numbers2 = ref([7, 8, 9, 10, 11, 12, 13, 14, 15]);
-const { parent: parent2 } = useDragAndDrop<number>(numbers2 as any, {
+const [ parent2 ] = useDragAndDrop<number>(numbers2 as any, {
   direction: "vertical",
   droppableGroup: "group1",
 });
 
 const numbers3 = ref([16, 17, 18, 19, 20, 21]);
-const { parent: parent3 } = useDragAndDrop<number>(numbers3 as any, {
+const [ parent3 ] = useDragAndDrop<number>(numbers3 as any, {
   direction: "horizontal",
   droppableGroup: "group1",
 });
 
 const numbers4 = ref([22, 23, 24, 25, 26, 27]);
-const { parent: parent41 } = useDragAndDrop<number>(numbers4 as any, {
+const [ parent41 ] = useDragAndDrop<number>(numbers4 as any, {
   direction: "horizontal",
   droppableGroup: "group1",
 });
 
 const list = ref([1, 2, 3, 4]);
-const { parent: parent4 } = useDragAndDrop<number>(list as any, {
+const [ parent4 ] = useDragAndDrop<number>(list as any, {
   droppableGroup: "group2 group3",
 });
 
 const list2 = ref([5, 6, 7, 8]);
-const { parent: parent5 } = useDragAndDrop<number>(list2 as any, {
+const [ parent5 ] = useDragAndDrop<number>(list2 as any, {
   droppableGroup: "group2",
   direction: "horizontal",
 });

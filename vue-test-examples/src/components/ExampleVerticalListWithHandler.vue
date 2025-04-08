@@ -6,7 +6,7 @@ const numbers = ref([1, 2, 3, 4, 5, 6]);
 const { id } = defineProps<{
   id: string;
 }>();
-const { parent } = useDragAndDrop<number>(numbers as any, {
+const [ parent ] = useDragAndDrop<number>(numbers as any, {
   handlerSelector: ".drag-handle",
 });
 </script>

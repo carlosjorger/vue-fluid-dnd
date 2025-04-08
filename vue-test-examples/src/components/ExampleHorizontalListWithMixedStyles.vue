@@ -27,7 +27,7 @@ defineProps<{
   id: string;
 }>();
 
-const { parent } = useDragAndDrop<number>(lsitWithMixedStyles as any, {
+const [ parent ] = useDragAndDrop<number>(lsitWithMixedStyles as any, {
   direction: "horizontal",
 });
 </script>

@@ -7,7 +7,7 @@ const index = ref(0);
 const { id } = defineProps<{
   id: string;
 }>();
-const { parent, insertAt } = useDragAndDrop<number>(numbers as any, {
+const [ parent, insertAt ] = useDragAndDrop<number>(numbers as any, {
   handlerSelector: ".number",
   delayBeforeInsert: 200
 });

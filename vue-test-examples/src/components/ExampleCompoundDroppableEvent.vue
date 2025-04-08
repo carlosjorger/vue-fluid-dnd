@@ -5,7 +5,7 @@ import Droppable from "./Droppable.vue";
 import { DragEndEventData } from "../../../src/core";
 
 const droppables = ref(['A', 'B']);
-const { parent, insertAt } = useDragAndDrop<string>(droppables as any, {
+const [ parent, insertAt ] = useDragAndDrop<string>(droppables as any, {
   direction: "horizontal",
 });
 const dict={

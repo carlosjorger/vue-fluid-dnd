@@ -3,7 +3,7 @@ import { ref } from "vue";
 import useDragAndDrop from "../../../src/vue/useDragAndDrop";
 
 const numbers = ref([1, 2, 3, 4, 5, 6]);
-const { parent, removeAt } = useDragAndDrop<number>(numbers as any, {
+const [ parent,,removeAt ] = useDragAndDrop<number>(numbers as any, {
   direction: "horizontal",
   removingClass: "removed",
   delayBeforeRemove: 500,
@@ -16,14 +16,14 @@ defineProps<{
   id: string;
 }>();
 
-const { parent: parent2, removeAt: removeAt2 } = useDragAndDrop<number>(
+const [ parent2,,removeAt2 ] = useDragAndDrop<number>(
   verticalNumbers as any,
   {
     removingClass: "removed",
     delayBeforeRemove: 500,
   }
 );
-const { parent: parent3, removeAt: removeAt3 } = useDragAndDrop<number>(
+const [ parent3,_ ,removeAt3 ] = useDragAndDrop<number>(
   numbersWithHandler as any,
   {
     handlerSelector: ".drag-handle",

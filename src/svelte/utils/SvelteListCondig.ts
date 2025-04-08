@@ -30,6 +30,7 @@ export class SvelteListCondig<T> implements ListCondig<T>
         return this.items[index ]
     }
     insertToListEmpty(config: CoreConfig<T>,index:number, value: T){  
-        
+        console.log({config, index, value})
+        console.log(this.parent)
     }
 }

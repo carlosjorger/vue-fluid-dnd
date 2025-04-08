@@ -10,7 +10,7 @@ defineProps<{
   id: string;
 }>();
 
-const { parent } = useDragAndDrop<number>(numbers as any, {
+const [ parent ] = useDragAndDrop<number>(numbers as any, {
   direction: "horizontal",
 });
 </script>

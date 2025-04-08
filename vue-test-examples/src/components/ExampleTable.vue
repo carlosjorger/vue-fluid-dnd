@@ -11,7 +11,7 @@ const table = ref<Person[]>([
   { name: "Jorgito", age: 34, alias: "Pipo" },
   { name: "Ivis", age: 68, alias: "Mamá" },
 ]);
-const { parent } = useDragAndDrop<Person>(table, {
+const [ parent ] = useDragAndDrop<Person>(table, {
   draggingClass: "drag-row",
 });
 </script>
