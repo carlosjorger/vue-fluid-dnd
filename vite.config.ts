@@ -16,9 +16,16 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: path.resolve(__dirname, "src/index.ts"),
+      entry: {
+        vue: path.resolve(__dirname, 'src/vue/index.ts'),
+        svelte: path.resolve(__dirname, 'src/svelte/index.ts'),
+        index: path.resolve(__dirname, "src/index.ts")
+      },
       name: "FluidDnd",
-      fileName: "fluid-dnd",
+      fileName: (format, entryName) => {
+        const ext = format === 'es' ? 'mjs' : 'cjs';
+        return `${entryName}/index.${ext}`;
+      }
     },
     rollupOptions: {
       external: ["vue"],

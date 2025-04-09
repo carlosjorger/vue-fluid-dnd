@@ -15,30 +15,20 @@
   "main": "./dist/fluid-dnd.umd.cjs",
   "module": "./dist/fluid-dnd.js",
   "exports": {
+    "./vue": {
+      "types": "./vue/index.d.ts",
+      "import": "./vue/fluid-dnd.js",
+      "require": "./vue/fluid-dnd.cjs"
+    },
+    "./svelte": {
+      "types": "./svelte/index.d.ts",
+      "import": "./svelte/fluid-dnd.js",
+      "require": "./svelte/fluid-dnd.cjs"
+    },
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/fluid-dnd.js",
       "require": "./dist/fluid-dnd.umd.cjs"
-    },
-    "./vue": {
-      "require": {
-        "types": "./vue/index.d.cts",
-        "default": "./vue/index.cjs"
-      },
-      "import": {
-        "types": "./vue/index.d.ts",
-        "default": "./vue/index.mjs"
-      }
-    },
-    "./svelte": {
-      "require": {
-        "types": "./svelte/index.d.cts",
-        "default": "./svelte/index.cjs"
-      },
-      "import": {
-        "types": "./svelte/index.d.ts",
-        "default": "./svelte/index.mjs"
-      }
     }
   },
   "types": "./dist/index.d.ts",

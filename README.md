@@ -7,7 +7,7 @@
 
 ![npm bundle size](https://img.shields.io/bundlephobia/minzip/vue-fluid-dnd)
 [![license](https://img.shields.io/github/license/carlosjorger/vue-fluid-dnd?label=license)](https://github.com/carlosjorger/vue-fluid-dnd/blob/main/LICENSE)
-[![version](https://img.shields.io/npm/v/vue-fluid-dnd)](https://www.npmjs.com/package/vue-fluid-dnd)
+[![version](https://img.shields.io/npm/v/vue-fluid-dnd)](https://www.npmjs.com/package/fluid-dnd)
 ![GitHub issues](https://img.shields.io/github/issues/carlosjorger/vue-fluid-dnd)
 ![GitHub stars](https://img.shields.io/github/stars/carlosjorger/vue-fluid-dnd)
 [![twitter](https://img.shields.io/twitter/follow/carlosjorgerc)](https://twitter.com/carlosjorgerc)
@@ -15,8 +15,8 @@
 
 </div>
 
-Vue Fluid DnD is a [**fluid**, **smooth** and **versatil** drag and drop
-library for lists on Vue 3](https://vue-fluid-dnd.netlify.app/). It's a**lightweight** tool ~7 Kb (gzip) with no depenencies. This library is a **Vue Draggable Next** alternative if you looking for a better ui experience.
+Fluid DnD is a [**fluid**, **agnostic** and **versatil** drag and drop
+library for lists with support for Vue 3 and Svelte](https://vue-fluid-dnd.netlify.app/). It's a**lightweight** tool ~7 Kb (gzip) with no depenencies.
 
 <img src="https://github.com/user-attachments/assets/b350f9a4-7dd7-40ca-ae3f-ecca166a9081" width="100%"/>
 
