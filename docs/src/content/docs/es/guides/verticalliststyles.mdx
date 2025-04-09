@@ -1,6 +1,6 @@
 ---
 title: Lista con elementos con varios estilos
-description: Una guía para usar Vue Fluid DnD con una lista de elementos con diferentes estilos.
+description: Una guía para usar Fluid DnD con una lista de elementos con diferentes estilos.
 ---
 
 import SingleVerticalListWithDiferentStyles from "@/components/SingleVerticalListWithDiferentStyles.vue";
@@ -38,7 +38,7 @@ export const listOfNumbers = `
 Tu puedes pasar a cada elemento sus propios `estilos`.
 
 :::caution
-Cada elemento debe tener su propio `estilo` antes y después de cambiar su posición en la `lista` usando **Vue Fluid DnD**. Evita stilos con **psedo-classes** como [nth-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-last-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-of-type](https://developer.mozilla.org/es/docs/Web/CSS/:nth-of-type), etc, porque añade estilos a los elementos de la lista basado en otras propiedades como la posición, número de hijos, etc.
+Cada elemento debe tener su propio `estilo` antes y después de cambiar su posición en la `lista` usando **Fluid DnD**. Evita stilos con **psedo-classes** como [nth-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-last-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-of-type](https://developer.mozilla.org/es/docs/Web/CSS/:nth-of-type), etc, porque añade estilos a los elementos de la lista basado en otras propiedades como la posición, número de hijos, etc.
 :::
 
 export const highlightsDnD = [':style="element.style"'];

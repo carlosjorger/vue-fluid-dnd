@@ -1,23 +1,23 @@
 ---
 title: Getting Started
-description: A guide to install Vue Fluid DnD.
+description: A guide to install Fluid DnD.
 ---
 
 import { Tabs, TabItem, Code } from "@astrojs/starlight/components";
 
 ### Installation
 
-Install **Vue Fluid DnD** using your preferred package manager:
+Install **Fluid DnD** using your preferred package manager:
 
 ```bash
 # with npm:
-npm i vue-fluid-dnd
+npm i fluid-dnd
 
 # with yarn:
-yarn add vue-fluid-dnd
+yarn add fluid-dnd
 
 # with pnpm:
-pnpm i vue-fluid-dnd
+pnpm i fluid-dnd
 ```
 
 ### Usage
@@ -30,7 +30,7 @@ export const globalUsage = `
 import { createApp } from "vue";
 import App from './App.vue';
 
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 
 const app = createApp(App);
 
@@ -46,7 +46,7 @@ Import **composable** (`useDragAndDrop`):
 
 export const compositionApiCode = `
 <script>
-  import { useDragAndDrop } from 'vue-fluid-dnd';
+  import { useDragAndDrop } from 'fluid-dnd/vue';
 </script>`;
 
 <Code code={compositionApiCode} lang="vue" />

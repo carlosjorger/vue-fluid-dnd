@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 import Handler from "./icons/handler.vue";
+
 const handlerSelector = ".handler";
 const list = ref([1, 2, 3, 4, 5]);
-const { parent } = useDragAndDrop(list, {
+const [ parent ] = useDragAndDrop(list, {
   handlerSelector,
 });
 </script>

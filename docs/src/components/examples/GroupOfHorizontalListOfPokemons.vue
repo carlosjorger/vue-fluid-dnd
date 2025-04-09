@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 import type { Pokemon } from "./Pokemon";
 import PokemonComponent from "./PokemonComponent.vue";
 import { fetchPokemons } from "@/server/pokemonServer";
@@ -14,20 +14,20 @@ pokemon2G.value = await fetchPokemons(9, 151);
 const pokemon3G = ref([] as Pokemon[]);
 pokemon3G.value = await fetchPokemons(9, 251);
 
-const { parent } = useDragAndDrop(pokemons, {
+const [ parent ] = useDragAndDrop(pokemons, {
   droppableGroup: "group",
   direction: "horizontal",
   draggingClass: "dragging-pokemon",
   droppableClass:'hover'
 });
-const { parent: parent2 } = useDragAndDrop(pokemon2G, {
+const [ parent2 ] = useDragAndDrop(pokemon2G, {
   droppableGroup: "group",
   direction: "horizontal",
   draggingClass: "dragging-pokemon",
   droppableClass:'hover'
 });
 
-const { parent: parent3 } = useDragAndDrop(pokemon3G, {
+const [ parent3 ] = useDragAndDrop(pokemon3G, {
   droppableGroup: "group",
   direction: "horizontal",
   draggingClass: "dragging-pokemon",

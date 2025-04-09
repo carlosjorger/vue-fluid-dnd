@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 
 const {insertingFromClass, delayBeforeInsert} = defineProps<{
   insertingFromClass?: string;
   delayBeforeInsert?: number;
 }>();
 const list = ref([] as number []);
-const { parent, insertAt } = useDragAndDrop(list,{
+const [ parent, insertAt ] = useDragAndDrop(list,{
   insertingFromClass,
   delayBeforeInsert,
 });

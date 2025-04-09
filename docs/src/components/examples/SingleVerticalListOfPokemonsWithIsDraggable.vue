@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 import type { Pokemon } from "./Pokemon";
 import PokemonComponent from "./PokemonComponent.vue";
 import { fetchPokemons } from "@/server/pokemonServer";
@@ -20,7 +20,7 @@ const getSize = (weight: number) => {
     }
   }
 };
-const { parent } = useDragAndDrop(pokemons, {
+const [ parent ] = useDragAndDrop(pokemons, {
   isDraggable: (el) => !el.classList.contains("is-not-draggable"),
   draggingClass: "dragging-pokemon",
 });

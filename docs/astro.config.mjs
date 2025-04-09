@@ -15,9 +15,9 @@ export default defineConfig({
   integrations: [
     starlight({
       favicon: "/favicon.png",
-      title: "Vue Fluid DnD",
+      title: "Fluid DnD",
       description:
-        "Official documentation for Vue Fluid DnD, a fluid, smooth and versatil drag and drop library for lists with Vue.",
+        "Official documentation for Fluid DnD, a fluid, agnostic and versatil drag and drop library for lists with Vue.",
       defaultLocale: "root",
       locales: {
         root: {

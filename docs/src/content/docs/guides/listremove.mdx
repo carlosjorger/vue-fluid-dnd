@@ -1,6 +1,6 @@
 ---
 title: Remove on list
-description: A guide on how to use Vue Fluid DnD to remove elements from a list.
+description: A guide on how to use Fluid DnD to remove elements from a list.
 ---
 
 import ListWithRemove from "@/components/ListWithRemove.vue";
@@ -8,16 +8,15 @@ import { Code } from "@astrojs/starlight/components";
 
 ### List of number example
 
-To showing how to use **Vue Fluid DnD** for removing elements from a list.
+To showing how to use **Fluid DnD** for removing elements from a list.
 First, we're going to create a list and extract the `removeAt` function from `useDragAndDrop`:
 
 export const listOfNumbers = `<script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 
 const list = ref([1, 2, 3, 4, 5]);
-const { parent, removeAt } = useDragAndDrop(list);
-});
+const [ parent,_, removeAt ] = useDragAndDrop(list);
 
 </script>`;
 

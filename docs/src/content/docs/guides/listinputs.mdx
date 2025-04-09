@@ -1,6 +1,6 @@
 ---
 title: List with inputs
-description: A guide to use Vue Fluid DnD to adding forms and inputs.
+description: A guide to use Fluid DnD to adding forms and inputs.
 ---
 
 import SingleVerticalPersonList from "@/components/SingleVerticalPersonList.vue";
@@ -8,19 +8,19 @@ import { Code } from "@astrojs/starlight/components";
 
 ### List of number example
 
-To showing how to use **Vue Fluid DnD** for sorting a list with editable data.
+To showing how to use **Fluid DnD** for sorting a list with editable data.
 First, we're going to create a list of people:
 
 export const listOfPeople = `<script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 
 const list = ref([
-{ number: 1, name: "Carlos", edit: false },
-{ number: 2, name: "Jorge", edit: false },
-{ number: 1, name: "Ivis", edit: false },
+  { number: 1, name: "Carlos", edit: false },
+  { number: 2, name: "Jorge", edit: false },
+  { number: 1, name: "Ivis", edit: false },
 ]);
-const { parent } = useDragAndDrop(list);
+const [ parent ] = useDragAndDrop(list);
 
 </script>`;
 

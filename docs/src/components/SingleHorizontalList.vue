@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 
 const list = ref([1, 2, 3, 4, 5]);
-const { parent } = useDragAndDrop(list, { direction: "horizontal" });
+const [ parent ] = useDragAndDrop(list, { direction: "horizontal" });
 </script>
 <template>
   <div ref="parent" class="number-list">

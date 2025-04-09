@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 
 type Person = {
   name: string;
@@ -12,7 +12,7 @@ const table = ref<Person[]>([
   { name: "Jorgito", age: 34, alias: "Pipo" },
   { name: "Ivis", age: 68, alias: "Mamá" },
 ]);
-const { parent } = useDragAndDrop<Person>(table, {
+const [ parent ] = useDragAndDrop(table, {
   draggingClass: "drag-row",
 });
 </script>

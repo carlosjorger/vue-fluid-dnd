@@ -1,6 +1,6 @@
 ---
 title: Estilos al arrastrar
-description: Una guía para usar Vue Fluid DnD con la estilos al arrastrar los elementos.
+description: Una guía para usar Fluid DnD con la estilos al arrastrar los elementos.
 ---
 
 import ListWithDraggingStyles from "@/components/ListWithDraggingStyles.vue";
@@ -8,17 +8,17 @@ import { Code } from "@astrojs/starlight/components";
 
 ### List of number example
 
-Para mostar como usar **Vue Fluid DnD** para añadir estilos al arrastrar elementos.
+Para mostar como usar **Fluid DnD** para añadir estilos al arrastrar elementos.
 Primero, vamos a crear una lista de números añadiendo el valor a la confuración `draggingclass`:
 
 export const highlightsListOfNumbers = ['draggingClass','"dragging"'];
 
 export const listOfNumbers = `<script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 
 const list = ref([1, 2, 3]);
-const { parent } = useDragAndDrop(list,{
+const [ parent ] = useDragAndDrop(list,{
 draggingClass: "dragging",
 });
 

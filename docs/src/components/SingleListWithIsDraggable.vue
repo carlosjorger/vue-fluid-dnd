@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 const list = ref([1, 2, 3, 4]);
-const { parent } = useDragAndDrop(list, {
+const [ parent ] = useDragAndDrop(list, {
   isDraggable: (el) => !el.classList.contains("is-not-draggable"),
 });
 </script>

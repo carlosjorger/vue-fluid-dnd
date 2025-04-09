@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 import type { Pokemon } from "./Pokemon";
 import PokemonComponent from "./PokemonComponent.vue";
 import { fetchPokemons } from "@/server/pokemonServer";
 
 const pokemons = ref([] as Pokemon[]);
 pokemons.value = await fetchPokemons(9);
-const { parent } = useDragAndDrop(pokemons, {
+const [ parent ] = useDragAndDrop(pokemons, {
   direction: "horizontal",
   draggingClass: "dragging-pokemon",
 });

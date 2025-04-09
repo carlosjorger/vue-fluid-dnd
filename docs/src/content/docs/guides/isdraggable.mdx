@@ -1,6 +1,6 @@
 ---
 title: isDraggable
-description: A guide to use Vue Fluid DnD with isDraggable property.
+description: A guide to use Fluid DnD with isDraggable property.
 ---
 
 import SingleListWithIsDraggable from "@/components/SingleListWithIsDraggable.vue";
@@ -8,16 +8,16 @@ import { Code } from "@astrojs/starlight/components";
 
 ### List of number example
 
-With **Vue Fluid DnD** you can control which element can be dragged and which not using `isDraggable` property:
+With **Fluid DnD** you can control which element can be dragged and which not using `isDraggable` property:
 
 export const listOfNumbers = `<script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 
 const list = ref([1, 2, 3, 4], {
 isDraggable: (el) => !el.classList.contains("is-not-draggable"),
 });
-const { parent } = useDragAndDrop(list);
+const [ parent ] = useDragAndDrop(list);
 
 </script>`;
 

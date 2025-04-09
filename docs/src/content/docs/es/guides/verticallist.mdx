@@ -1,6 +1,6 @@
 ---
 title: Lista vertical
-description: Guía para usar Vue Fluid DnD con una sola lista vertical.
+description: Guía para usar Fluid DnD con una sola lista vertical.
 ---
 
 import SingleVerticalList from "@/components/SingleVerticalList.vue";
@@ -8,15 +8,15 @@ import { Code } from "@astrojs/starlight/components";
 
 ### Ejemplo de lista de número
 
-Para mostrar como usar **Vue Fluid DnD** para ordernar una simple lista.
+Para mostrar como usar **Fluid DnD** para ordernar una simple lista.
 Primero, vamos a crear una lista de números:
 
 export const listOfNumbers = `<script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 
 const list = ref([1, 2, 3]);
-const { parent } = useDragAndDrop(list);
+const [ parent ] = useDragAndDrop(list);
 
 </script>`;
 

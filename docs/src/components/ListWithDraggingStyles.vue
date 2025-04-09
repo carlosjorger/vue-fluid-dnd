@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 
 const list = ref([1, 2, 3]);
-const { parent } = useDragAndDrop(list, {
+const [ parent ] = useDragAndDrop(list, {
   draggingClass: "dragging",
 });
 </script>

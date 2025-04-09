@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 
 const list = ref([...Array(20).keys()]);
-const { parent } = useDragAndDrop(list);
+const [ parent ] = useDragAndDrop(list);
 </script>
 <template>
   <ul ref="parent" class="number-list">

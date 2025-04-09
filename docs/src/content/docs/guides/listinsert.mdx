@@ -1,6 +1,6 @@
 ---
 title: Insert on list
-description: A guide on how to use Vue Fluid DnD to remove elements from a list.
+description: A guide on how to use Fluid DnD to remove elements from a list.
 ---
 
 import ListWithInsert from "@/components/ListWithInsert.vue";
@@ -8,16 +8,15 @@ import { Code } from "@astrojs/starlight/components";
 
 ### List of number example
 
-To showing how to use **Vue Fluid DnD** for inserting elements to a list.
+To showing how to use **Fluid DnD** for inserting elements to a list.
 First, we're going to create a list and extract the `insertAt` function from `useDragAndDrop`:
 
 export const listOfNumbers = `<script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 
 const list = ref([]);
-const { parent, insertAt } = useDragAndDrop(list);
-});
+const [ parent, insertAt ] = useDragAndDrop(list);
 
 </script>`;
 

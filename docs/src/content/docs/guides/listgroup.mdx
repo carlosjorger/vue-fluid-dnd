@@ -1,6 +1,6 @@
 ---
 title: Groups of lists
-description: A guide to use Vue Fluid DnD with group of lists.
+description: A guide to use Fluid DnD with group of lists.
 ---
 
 import ListGroup from "@/components/ListGroup.vue";
@@ -10,7 +10,7 @@ import { Code } from "@astrojs/starlight/components";
 
 ### List of number example
 
-With **Vue Fluid DnD** you can drag and drop element between two or more list.\
+With **Fluid DnD** you can drag and drop element between two or more list.\
 We'll define two list and pass to `droppableGroup` parameter the same group name:
 
 export const highlightsListOfNumbers = ["droppableGroup", "group1"];
@@ -18,12 +18,12 @@ export const highlightsListOfNumbers = ["droppableGroup", "group1"];
 export const listOfNumbers = `<script setup lang="ts">
 ...
 const list1 = ref([1, 2, 3, 4]);
-const { parent: parent1 } = useDragAndDrop(list1, {
+const [ parent1 ] = useDragAndDrop(list1, {
   droppableGroup: "group1",
 });
 ...
 const list2 = ref([5, 6, 7, 8]);
-const { parent: parent2 } = useDragAndDrop(list2, {
+const [ parent2 ] = useDragAndDrop(list2, {
   droppableGroup: "group1",
   direction: "horizontal",
 });
@@ -92,12 +92,12 @@ export const highlightsListOfNumbersGroups = ["group2"];
 export const listOfNumbersGroups = `<script setup lang="ts">
 ...
 const list1 = ref([1, 2, 3, 4]);
-const { parent: parent1 } = useDragAndDrop(list1, {
+const [ parent1 ] = useDragAndDrop(list1, {
   droppableGroup: "group1",
 });
 ...
 const list2 = ref([5, 6, 7, 8]);
-const { parent: parent2 } = useDragAndDrop(list2, {
+const [ parent2 ] = useDragAndDrop(list2, {
   droppableGroup: "group1 group2",
   direction: "horizontal",
 });

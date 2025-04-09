@@ -1,6 +1,6 @@
 ---
 title: Lista en un contenedor con scroll
-description: Una guía para usar Vue Fluid DnD para hacer autoscroll en una lista.
+description: Una guía para usar Fluid DnD para hacer autoscroll en una lista.
 ---
 
 import SingleVerticalListWithAutoscroll from "@/components/SingleVerticalListWithAutoscroll.vue";
@@ -13,7 +13,7 @@ Primero, creamos la larga lista de números:
 
 export const listOfNumbers = `<script setup lang="ts">
   const list = ref([...Array(20).keys()]);
-  const { parent } = useDragAndDrop(list);
+  const [ parent ] = useDragAndDrop(list);
 </script>`;
 
 <Code code={listOfNumbers} lang="vue" />

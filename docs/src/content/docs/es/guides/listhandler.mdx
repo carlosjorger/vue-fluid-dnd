@@ -1,6 +1,6 @@
 ---
 title: Lista con handler
-description: Una guía de como usar Vue Fluid DnD para añadir un drag handler a una lista.
+description: Una guía de como usar Fluid DnD para añadir un drag handler a una lista.
 ---
 
 import SingleListWithHandler from "@/components/SingleListWithHandler.vue";
@@ -8,16 +8,16 @@ import { Code } from "@astrojs/starlight/components";
 
 ### Ejemplo de lista de números
 
-Con **Vue Fluid DnD** no tienes que arrastrar los elementos por toda su superficie, solo pasa un **selector para el handler** a `handlerSelector` esto se usará para encontrar el handler en el elemento:
+Con **Fluid DnD** no tienes que arrastrar los elementos por toda su superficie, solo pasa un **selector para el handler** a `handlerSelector` esto se usará para encontrar el handler en el elemento:
 
 export const listOfNumbers = `<script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 import Handler from "./icons/handler.vue";
 
 const list = ref([1, 2, 3, 4, 5]);
 const handlerSelector = ".handler";
-const { parent } = useDragAndDrop(list, { handlerSelector });
+const [ parent ] = useDragAndDrop(list, { handlerSelector });
 
 </script>`;
 

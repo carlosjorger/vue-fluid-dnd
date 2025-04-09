@@ -1,6 +1,6 @@
 ---
 title: Remover en listas
-description: Una guía de como usar Vue Fluid DnD para remover elemntos en una lista.
+description: Una guía de como usar Fluid DnD para remover elemntos en una lista.
 ---
 
 import ListWithRemove from "@/components/ListWithRemove.vue";
@@ -8,16 +8,15 @@ import { Code } from "@astrojs/starlight/components";
 
 ### Ejemplo de lista de números
 
-Para mostrar como usar **Vue Fluid DnD** para remover elementos de un lista.
+Para mostrar como usar **Fluid DnD** para remover elementos de un lista.
 Primero, vamos a crear una lista y extraer la función `removeAt` de `useDragAndDrop`:
 
 export const listOfNumbers = `<script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 
 const list = ref([1, 2, 3, 4, 5]);
-const { parent, removeAt } = useDragAndDrop(list);
-});
+const [ parent,_, removeAt ] = useDragAndDrop(list);
 
 </script>`;
 
@@ -57,7 +56,7 @@ Tu puedes añadir la clase css que se fija cuando un elemento es removido con el
 
 export const listOfNumbersWithRemovingClass = `<script setup lang="ts">
 // ...
-const { parent, removeAt } = useDragAndDrop(list,{
+const [ parent,_, removeAt ] = useDragAndDrop(list,{
   removingClass: "removed"
 });
 
@@ -102,10 +101,10 @@ Puedes añadir la cantidad de tiempo en milisegundos antes de remover el element
 
 export const listOfNumbersDelay = `<script setup lang="ts">
 // ...
-const { parent, removeAt } = useDragAndDrop(list,{
+const [ parent,_, removeAt ] = useDragAndDrop(list,{
   removingClass: "removed",
   delayBeforeRemove: 800
-});});
+});
 
 </script>`;
 export const highlightsDelay = ["delayBeforeRemove"];

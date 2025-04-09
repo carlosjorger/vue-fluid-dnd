@@ -1,6 +1,6 @@
 ---
 title: Dragging styles
-description: A guide to use Vue Fluid DnD with custom dragging styles.
+description: A guide to use Fluid DnD with custom dragging styles.
 ---
 
 import ListWithDraggingStyles from "@/components/ListWithDraggingStyles.vue";
@@ -8,17 +8,17 @@ import { Code } from "@astrojs/starlight/components";
 
 ### List of number example
 
-To showing how to use **Vue Fluid DnD** to adding dragging styles.
+To showing how to use **Fluid DnD** to adding dragging styles.
 First, we're going to create a list of numbers setting the name of the `draggingclass`:
 
 export const highlightsListOfNumbers = ['draggingClass','"dragging"'];
 
 export const listOfNumbers = `<script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 
 const list = ref([1, 2, 3]);
-const { parent } = useDragAndDrop(list,{
+const [ parent ] = useDragAndDrop(list,{
 draggingClass: "dragging",
 });
 

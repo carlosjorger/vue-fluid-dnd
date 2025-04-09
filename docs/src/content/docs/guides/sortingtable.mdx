@@ -1,6 +1,6 @@
 ---
 title: Sorting tables
-description: A guide on how to use Vue Fluid DnD for sort tables.
+description: A guide on how to use Fluid DnD for sort tables.
 ---
 
 import SortingTable from "@/components/SortingTable.vue";
@@ -8,25 +8,25 @@ import { Code } from "@astrojs/starlight/components";
 
 ### Table with person data
 
-To showing how to use **Vue Fluid DnD** for sorting a table.
+To showing how to use **Fluid DnD** for sorting a table.
 First, we're going to create a table with person data:
 
 export const listOfNumbers = `<script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 
 type Person = {
-name: string;
-age: number;
-alias: string;
+  name: string;
+  age: number;
+  alias: string;
 };
 const table = ref<Person[]>([
-{ name: "Carlos", age: 26, alias: "Carli" },
-{ name: "Jorgito", age: 34, alias: "Pipo" },
-{ name: "Ivis", age: 68, alias: "Mamá" },
+  { name: "Carlos", age: 26, alias: "Carli" },
+  { name: "Jorgito", age: 34, alias: "Pipo" },
+  { name: "Ivis", age: 68, alias: "Mamá" },
 ]);
-const { parent } = useDragAndDrop<Person>(table, {
-draggingClass: "drag-row",
+const [ parent ] = useDragAndDrop<Person>(table, {
+  draggingClass: "drag-row",
 });
 
 </script>`;

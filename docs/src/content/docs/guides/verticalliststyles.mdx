@@ -1,6 +1,6 @@
 ---
 title: List with mixed styles
-description: A guide to use Vue Fluid DnD with a list of elements with mixed styles.
+description: A guide to use Fluid DnD with a list of elements with mixed styles.
 ---
 
 import SingleVerticalListWithDiferentStyles from "@/components/SingleVerticalListWithDiferentStyles.vue";
@@ -29,7 +29,8 @@ export const listOfNumbers = `
     style:
       "margin: 10px 0px; border-style: solid; border-width: 0.4rem; padding: 15px;",
     content: "3",
-  },`;
+  }
+])`
 
 <Code code={listOfNumbers} lang="js" />
 
@@ -38,7 +39,7 @@ export const listOfNumbers = `
 You can pass for each element its `styles`.
 
 :::caution
-Each element must have its own `style` before and after change its position on the `list` using **Vue Fluid DnD**. Avoid style with **psedo-classes** like [nth-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-last-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-of-type](https://developer.mozilla.org/es/docs/Web/CSS/:nth-of-type), etc because add styles to the elements of the list based in other properties like position, number of children, etc.
+Each element must have its own `style` before and after change its position on the `list` using **Fluid DnD**. Avoid style with **psedo-classes** like [nth-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-last-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-of-type](https://developer.mozilla.org/es/docs/Web/CSS/:nth-of-type), etc because add styles to the elements of the list based in other properties like position, number of children, etc.
 :::
 
 export const highlightsDnD = [':style="element.style"'];

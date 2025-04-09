@@ -1,6 +1,6 @@
 ---
 title: Dropping styles
-description: A guide to use Vue Fluid DnD with custom dropping styles.
+description: A guide to use Fluid DnD with custom dropping styles.
 ---
 
 import { Code } from "@astrojs/starlight/components";
@@ -15,13 +15,13 @@ export const highlightsListOfNumbers = ["droppableClass", "'droppable-hover'"];
 export const listOfNumbers = `<script setup lang="ts">
 ...
 const list1 = ref([1, 2, 3, 4]);
-const { parent: parent1 } = useDragAndDrop(list1, {
+const [ parent1 ] = useDragAndDrop(list1, {
   droppableGroup: "group1",
   droppableClass: 'droppable-hover'
 });
 ...
 const list2 = ref([5, 6, 7, 8]);
-const { parent: parent2 } = useDragAndDrop(list2, {
+const [ parent2 ] = useDragAndDrop(list2, {
   droppableGroup: "group1",
   direction: "horizontal",
   droppableClass: 'droppable-hover'

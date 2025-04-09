@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { ref, watch } from "vue";
+import { useDragAndDrop } from "fluid-dnd/vue";
 import type { Pokemon } from "./Pokemon";
 import PokemonComponent from "./PokemonComponent.vue";
 import { fetchPokemons } from "@/server/pokemonServer";
@@ -12,7 +12,7 @@ watch(pokemons,async()=>{
   deep: true
 })
 pokemons.value = await fetchPokemons(3);
-const { parent, insertAt } = useDragAndDrop(pokemons, {
+const [ parent, insertAt ] = useDragAndDrop(pokemons, {
   removingClass: "removed",
   delayBeforeRemove: 300,
 });

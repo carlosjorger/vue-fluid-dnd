@@ -64,14 +64,14 @@ const horizontalItems=[
     label: getLabel('group of lists','grupo de listas')
   },
 ]
-const description = getLabel('Sorting a list of pokemons with vue-fluid-dnd','Ordenar una lista de pokemones con vue-fluid-dnd') 
+const description = getLabel('Sorting a list of pokemons with fluid-dnd','Ordenar una lista de pokemones con fluid-dnd') 
 
 ---
 
 <StarlightPage
   lang={currentLocale},
   sidebar={[
-      { label: 'Vue Fluid DnD', href: '/' },
+      { label: 'Fluid DnD', href: '/' },
       {
         label: getLabel('Single vertical list','Simple lista vertical'),
         items: verticalItems.map(({link, label})=>getItem(label,link)),

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 
 const list = ref([
   {
@@ -22,7 +22,7 @@ const list = ref([
     content: "3",
   },
 ]);
-const { parent } = useDragAndDrop(list);
+const [ parent ] = useDragAndDrop(list);
 </script>
 <template>
   <ul ref="parent" class="number-list" style="height: 280px">

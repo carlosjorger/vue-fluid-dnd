@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "vue-fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 
 const list = ref([1, 2, 3, 4, 5]);
-const { parent: parent1 } = useDragAndDrop<number>(list, {
+const [ parent1 ] = useDragAndDrop<number>(list, {
   droppableGroup: "group1",
 });
 
 const list2 = ref([6, 7, 8, 9, 10]);
-const { parent: parent2 } = useDragAndDrop<number>(list2, {
+const [ parent2 ] = useDragAndDrop<number>(list2, {
   droppableGroup: "group1 group2",
   direction: "horizontal",
 });
