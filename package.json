@@ -14,14 +14,14 @@
   "main": ".dist/index.cjs",
   "exports": {
     "./vue": {
-      "types": ".dist/vue/index.d.ts",
-      "import": ".dist/vue/index.mjs",
-      "require": ".dist/vue/index.cjs"
+      "types": "./dist/vue/index.d.ts",
+      "import": "./dist/vue/index.mjs",
+      "require": "./dist/vue/index.cjs"
     },
     "./svelte": {
-      "types": ".dist/svelte/index.d.ts",
-      "import": ".dist/svelte/index.mjs",
-      "require": ".dist/svelte/index.cjs"
+      "types": "./dist/svelte/index.d.ts",
+      "import": "./dist/svelte/index.mjs",
+      "require": "./dist/svelte/index.cjs"
     },
     ".": {
       "types": "./dist/index.d.ts",
