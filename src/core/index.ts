@@ -1,5 +1,6 @@
-import { DraggableElement } from "index";
-
+export type DraggableElement =
+  | { index: number; draggableId: string }
+  | { index: number };
 export interface ListCondig<T>{
     removeAtEvent: (index: number) => T | undefined;
     insertEvent: (index: number, value: T) => void;
