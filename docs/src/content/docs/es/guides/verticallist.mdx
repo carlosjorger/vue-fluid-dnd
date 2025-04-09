@@ -8,7 +8,7 @@ import { Code } from "@astrojs/starlight/components";
 
 ### Ejemplo de lista de número
 
-Para mostrar como usar **Fluid DnD** para ordernar una simple lista.
+Para mostrar como usar **Fluid DnD** para ordenar una simple lista.
 Primero, vamos a crear una lista de números:
 
 export const listOfNumbers = `<script setup lang="ts">
@@ -45,6 +45,10 @@ export const listOfNumbersHTML = `
 `;
 
 <Code code={listOfNumbersHTML} lang="vue" />
+
+:::caution
+Evita confirar la propiedad `transform` o las propiedades de `transition` entre diferentes valores de `transform` a los elementos **draggable** debido a que **Fluid DnD** cambia estas propiedades automáticamente.
+:::
 
 ### Añadiendo referencia al elemento padre
 
