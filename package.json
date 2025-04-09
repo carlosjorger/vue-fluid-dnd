@@ -1,7 +1,7 @@
 {
   "name": "fluid-dnd",
   "version": "0.14.3",
-  "description": "A Vue 3 drag and drop library to sort all kind of lists",
+  "description": "An agnostic drag and drop library to sort all kind of lists. With current support for vue 3 and svelte",
   "type": "module",
   "homepage": "https://vue-fluid-dnd.netlify.app",
   "repository": {
