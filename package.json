@@ -12,27 +12,25 @@
     "dist",
     "src/components/"
   ],
-  "main": "./dist/fluid-dnd.umd.cjs",
-  "module": "./dist/fluid-dnd.js",
+  "main": "./index.cjs",  
   "exports": {
     "./vue": {
       "types": "./vue/index.d.ts",
-      "import": "./vue/fluid-dnd.js",
-      "require": "./vue/fluid-dnd.cjs"
+      "import": "./vue/index.js",
+      "require": "./vue/index.cjs"
     },
     "./svelte": {
       "types": "./svelte/index.d.ts",
-      "import": "./svelte/fluid-dnd.js",
-      "require": "./svelte/fluid-dnd.cjs"
+      "import": "./svelte/index.js",
+      "require": "./svelte/index.cjs"
     },
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/fluid-dnd.js",
-      "require": "./dist/fluid-dnd.umd.cjs"
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs"
     }
   },
-  "types": "./dist/index.d.ts",
-  "typings": "./dist/index.d.ts",
+  "types": "./index.d.ts",
   "scripts": {
     "dev": "cd my-test-examples && vite",
     "build": "vite build && vue-tsc --emitDeclarationOnly",

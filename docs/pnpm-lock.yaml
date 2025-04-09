@@ -30,8 +30,8 @@ importers:
         specifier: ^4.4.8
         version: 4.16.18(rollup@4.39.0)(typescript@5.8.3)
       fluid-dnd:
-        specifier: 1.0.0-beta.0
-        version: 1.0.0-beta.0(vue@3.5.13(typescript@5.8.3))
+        specifier: 1.0.1-beta.0
+        version: 1.0.1-beta.0(vue@3.5.13(typescript@5.8.3))
       sharp:
         specifier: ^0.32.5
         version: 0.32.6
@@ -1497,8 +1497,8 @@ packages:
     resolution: {integrity: sha512-9UbaD6XdAL97+k/n+N7JwX46K/M6Zc6KcFYskrYL8wbBV/Uyk0CTAMY0VT+qiK5PM7AIc9aTWYtq65U7T+aCNQ==}
     engines: {node: '>=8'}
 
-  fluid-dnd@1.0.0-beta.0:
-    resolution: {integrity: sha512-Dl03GUwAnYHtZi528MYxd7fLVAu81M7FoUpht7aSde+m22yW7ZRYZFVxyz2CEY8vQ7c85w559E8FCDHNg0QN/g==}
+  fluid-dnd@1.0.1-beta.0:
+    resolution: {integrity: sha512-nGOsSpJhTKvN4QM5g2kUltEZZckyj8OEtEGhmsVI1BKmVvsgFNSauIRJGuYY8XoF9pi4iFgVmoElLA0YAX14UQ==}
     peerDependencies:
       vue: '>=3.4.0'
 
@@ -4857,7 +4857,7 @@ snapshots:
 
   flattie@1.1.1: {}
 
-  fluid-dnd@1.0.0-beta.0(vue@3.5.13(typescript@5.8.3)):
+  fluid-dnd@1.0.1-beta.0(vue@3.5.13(typescript@5.8.3)):
     dependencies:
       vue: 3.5.13(typescript@5.8.3)
 
