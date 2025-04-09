@@ -16,17 +16,17 @@
   "exports": {
     "./vue": {
       "types": "./vue/index.d.ts",
-      "import": "./vue/index.js",
+      "import": "./vue/index.mjs",
       "require": "./vue/index.cjs"
     },
     "./svelte": {
       "types": "./svelte/index.d.ts",
-      "import": "./svelte/index.js",
+      "import": "./svelte/index.mjs",
       "require": "./svelte/index.cjs"
     },
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
+      "import": "./dist/index.mjs",
       "require": "./dist/index.umd.cjs"
     }
   },
