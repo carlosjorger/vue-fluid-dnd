@@ -1,6 +1,6 @@
  <h1 align="center">
     <img src="https://github.com/carlosjorger/vue-fluid-dnd/assets/50055316/dab15832-5290-42ca-b425-db177a2e589e" alt="Icon" width="150" height="140" />
-  <br>Vue Fluid DnD<br>
+  <br>Fluid DnD<br>
 </h1>
 
 <div align="center">
@@ -37,57 +37,20 @@ library for lists on Vue 3](https://vue-fluid-dnd.netlify.app/). It's a**lightwe
 
 ## 🚀 Getting Started
 
-1. **Install vue-fluid-dnd:**
+1. **Install fluid-dnd:**
 
    ```bash
    # with npm:
-   npm i vue-fluid-dnd
+   npm i fluid-dnd
 
    # with yarn:
-   yarn add vue-fluid-dnd
+   yarn add fluid-dnd
 
    # with pnpm:
-   pnpm i vue-fluid-dnd
+   pnpm i fluid-dnd
    ```
 
-2. **Import the vue composable**
-
-   ```js
-   import { useDragAndDrop } from "vue-fluid-dnd";
-   ```
-
-3. **Create a list that your want to sort an use useDragAndDrop**
-
-   ```js
-   // Each element have its own styles or classes and the draggable-id
-   const listToSort = ref([
-     {
-       number: 1,
-       style:
-         "color: white; background-color: red; width: 50px; margin: 23px 0;",
-     },
-     //...
-   ]);
-   // create the parent element and set drag and drop configuration on the parent and children elements (creating events, statees, styles, etc) calling useDragAndDrop composable
-   const { parent } = useDragAndDrop(listToSort);
-   ```
-
-4. **Create childrens**
-
-   ```jsx
-   <template>
-      <div ref="parent" style="width: 40%; display: block">
-         <div
-            v-for="(element, index) in listToSort"
-            :index="index"
-            :style="element.style"
-         >{{ element.number }}
-         </div>
-      </div>
-   </template>
-   ```
-
-5. **Documentation**
+3. **Documentation**
 
 - 📚 Check out all the [docs](https://vue-fluid-dnd.netlify.app/).
 - 🛠️ Edit the previous [here](https://codesandbox.io/s/nifty-hooks-5plkpl).
