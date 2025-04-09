@@ -1,6 +1,6 @@
 {
   "name": "fluid-dnd",
-  "version": "0.14.3",
+  "version": "1.0.0-beta.0",
   "description": "An agnostic drag and drop library to sort all kind of lists. With current support for vue 3 and svelte",
   "type": "module",
   "homepage": "https://vue-fluid-dnd.netlify.app",
@@ -76,7 +76,7 @@
     "vite-plugin-dts": "^3.7.0",
     "vitest": "^1.2.2",
     "vue-tsc": "^2.2.8",
-		"prettier-plugin-svelte": "^3.3.3",
-		"svelte": "^5.0.0"
+    "prettier-plugin-svelte": "^3.3.3",
+    "svelte": "^5.0.0"
   }
 }
