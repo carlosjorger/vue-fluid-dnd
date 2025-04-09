@@ -9,20 +9,19 @@
     "url": "https://github.com/carlosjorger/vue-fluid-dnd.git"
   },
   "files": [
-    "dist",
-    "src/components/"
+    "dist"
   ],
-  "main": "./index.cjs",
+  "main": ".dist/index.cjs",
   "exports": {
     "./vue": {
-      "types": "./vue/index.d.ts",
-      "import": "./vue/index.mjs",
-      "require": "./vue/index.cjs"
+      "types": ".dist/vue/index.d.ts",
+      "import": ".dist/vue/index.mjs",
+      "require": ".dist/vue/index.cjs"
     },
     "./svelte": {
-      "types": "./svelte/index.d.ts",
-      "import": "./svelte/index.mjs",
-      "require": "./svelte/index.cjs"
+      "types": ".dist/svelte/index.d.ts",
+      "import": ".dist/svelte/index.mjs",
+      "require": ".dist/svelte/index.cjs"
     },
     ".": {
       "types": "./dist/index.d.ts",
