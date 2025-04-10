@@ -19,14 +19,3 @@ export const fetchPokemons = async (limit: number, offset: number = 0, notInclud
   }
   return pokemons;
 };
-
-async function getPokemonByNumber(pokemonNumber:number){
-  const { results } = await fetch(
-    `https://pokeapi.co/api/v2/pokemon/${pokemonNumber}`
-  ).then<{
-    results: PokemonLink[];
-  }>((res) => res.json());
-  const [pokemonLink] = results
-  const pokemon = await fetch(pokemonLink.url).then<Pokemon>((res) => res.json());
-  return pokemon
-}

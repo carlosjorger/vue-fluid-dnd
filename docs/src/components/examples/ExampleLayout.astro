@@ -1,7 +1,6 @@
 ---
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 
-const {pathname}= Astro.url
 const { currentLocale } = Astro;
 const baseUrl = currentLocale==='en'?'/example':`/${currentLocale}/example`
 const verticalBaseUrl = `${baseUrl}/vertical-list`
@@ -10,8 +9,8 @@ const horizontalBaseUrl =  `${baseUrl}/horizontal-list`
 interface Props {
    title: string;
 }
-const getItem = (label:string,href:string)=>{
-  return { label, href,  isCurrent: href===pathname }
+const getItem = (label:string,link:string)=>{
+  return { label, link}
 }
 const getLabel = (label:string, spanishLabel:string)=>{
   if (currentLocale==='es') {
@@ -71,7 +70,7 @@ const description = getLabel('Sorting a list of pokemons with fluid-dnd','Ordena
 <StarlightPage
   lang={currentLocale},
   sidebar={[
-      { label: 'Fluid DnD', href: '/' },
+      { label: 'Fluid DnD', link: '/' },
       {
         label: getLabel('Single vertical list','Simple lista vertical'),
         items: verticalItems.map(({link, label})=>getItem(label,link)),

@@ -8,10 +8,6 @@ const site = "https://fluid-dnd.netlify.app/";
 // TODO: add pr to starlight https://github.com/withastro/starlight/blob/main/CONTRIBUTING.md#showcase
 export default defineConfig({
   site: "https://fluid-dnd.netlify.app/",
-  i18n: {
-    defaultLocale: "en",
-    locales: ["en", "es"],
-  },
   integrations: [
     starlight({
       favicon: "/favicon.png",
@@ -38,11 +34,11 @@ export default defineConfig({
           "https://github.com/carlosjorger/fluid-dnd/tree/main/docs/",
       },
       customCss: process.env.NO_GRADIENTS ? [] : ["/src/assets/landing.css"],
-      social: {
-        github: "https://github.com/carlosjorger/fluid-dnd",
-        linkedin: "https://github.com/carlosjorger",
-        "x.com": "https://twitter.com/carlosjorgerc",
-      },
+      social: [
+        { icon: 'github', label: 'GitHub', href: "https://github.com/carlosjorger/fluid-dnd" },
+        { icon: 'linkedin', label: 'Linkedin', href: "https://github.com/carlosjorger" },
+        { icon: 'x.com', label: 'X', href: "https://x.com/carcu_ps" },
+      ],
       components: {
         SiteTitle: "./src/components/CustomTitle.astro",
       },

@@ -9,7 +9,7 @@ const i18n = getI18N({ currentLocale });
 const verticalList=`
 <script setup lang="ts">
 import { ref } from "vue";
-import { useDragAndDrop } from "fluid-dnd";
+import { useDragAndDrop } from "fluid-dnd/vue";
 import type { Pokemon } from "./Pokemon";
 import PokemonComponent from "./PokemonComponent.vue";
 import { fetchPokemons } from "@/server/pokemonServer";
