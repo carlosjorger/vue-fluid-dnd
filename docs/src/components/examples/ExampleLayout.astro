@@ -1,14 +1,15 @@
 ---
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 
-const { currentLocale } = Astro;
-const baseUrl = currentLocale==='en'?'/example':`/${currentLocale}/example`
-const verticalBaseUrl = `${baseUrl}/vertical-list`
-const horizontalBaseUrl =  `${baseUrl}/horizontal-list`
-
 interface Props {
    title: string;
 }
+
+const { currentLocale } = Astro;
+const baseUrl = '/example'
+const verticalBaseUrl = `${baseUrl}/vertical-list`
+const horizontalBaseUrl =  `${baseUrl}/horizontal-list`
+
 const getItem = (label:string,link:string)=>{
   return { label, link}
 }
@@ -63,6 +64,8 @@ const horizontalItems=[
     label: getLabel('group of lists','grupo de listas')
   },
 ]
+console.log({horizontalItems})
+
 const description = getLabel('Sorting a list of pokemons with fluid-dnd','Ordenar una lista de pokemones con fluid-dnd') 
 
 ---

@@ -3,7 +3,7 @@ import starlight from "@astrojs/starlight";
 import vue from "@astrojs/vue";
 import tailwind from "@astrojs/tailwind";
 import netlify from "@astrojs/netlify";
-
+import { FRAMEWORKS_TEMPLATE } from './src/types'
 const site = "https://fluid-dnd.netlify.app/";
 // TODO: add pr to starlight https://github.com/withastro/starlight/blob/main/CONTRIBUTING.md#showcase
 export default defineConfig({
@@ -11,7 +11,7 @@ export default defineConfig({
   integrations: [
     starlight({
       favicon: "/favicon.png",
-      title: "Fluid DnD",
+        title: "Fluid DnD",
       description:
         "Official documentation for Fluid DnD, a fluid, agnostic and versatil drag and drop library for lists with Vue.",
       defaultLocale: "root",
@@ -41,7 +41,9 @@ export default defineConfig({
       ],
       components: {
         SiteTitle: "./src/components/CustomTitle.astro",
+        // Sidebar: './src/components/override/CustomSidebar.astro'
       },
+      routeMiddleware: './src/middlewares/frameworkSidebaMiddleWare.ts',
       sidebar: [
         {
           label: "Introduction",
@@ -49,7 +51,7 @@ export default defineConfig({
             // Each item here is one entry in the navigation menu.
             {
               label: "Getting Started",
-              link: "/introduction/introduction/",
+              link: "/framework/introduction/introduction/",
               translations: {
                 es: "Inicio rápido",
               },
@@ -65,91 +67,91 @@ export default defineConfig({
             // Each item here is one entry in the navigation menu.
             {
               label: "Single vertical list",
-              link: "/guides/verticallist/",
+              link: `/${FRAMEWORKS_TEMPLATE}/guides/verticallist/`,
               translations: {
                 es: "Lista vertical simple",
               },
             },
             {
               label: "List with mixed styles",
-              link: "/guides/verticalliststyles/",
+              link: `/${FRAMEWORKS_TEMPLATE}/guides/verticalliststyles/`,
               translations: {
                 es: "Lista vertical con diferentes estilos",
               },
             },
             {
               label: "List on a scroll",
-              link: "/guides/verticallistautoscroll/",
+              link: `/${FRAMEWORKS_TEMPLATE}/guides/verticallistautoscroll/`,
               translations: {
                 es: "Lista en un contenedor con scroll",
               },
             },
             {
               label: "Single horizontal list",
-              link: "/guides/horizontallist/",
+              link: `/${FRAMEWORKS_TEMPLATE}/guides/horizontallist/`,
               translations: {
                 es: "Lista horizontal simple",
               },
             },
             {
               label: "List with handler",
-              link: "/guides/listhandler/",
+              link: `/${FRAMEWORKS_TEMPLATE}/guides/listhandler/`,
               translations: {
                 es: "Lista con handler",
               },
             },
             {
               label: "isDraggable",
-              link: "/guides/isdraggable/",
+              link: `/${FRAMEWORKS_TEMPLATE}/guides/isdraggable/`,
               translations: {
                 es: "isDraggable",
               },
             },
             {
               label: "List group",
-              link: "/guides/listgroup/",
+              link: `/${FRAMEWORKS_TEMPLATE}/guides/listgroup/`,
               translations: {
                 es: "Grupo de listas",
               },
             },
             {
               label: "List with inputs",
-              link: "/guides/listinputs/",
+              link: `/${FRAMEWORKS_TEMPLATE}/guides/listinputs/`,
               translations: {
                 es: "Listas con inputs",
               },
             },
             {
               label: "Dragging styles",
-              link: "/guides/draggingclass/",
+              link: `/${FRAMEWORKS_TEMPLATE}/guides/draggingclass/`,
               translations: {
                 es: "Estilos al arrastrar",
               },
             },
              {
               label: "Dropping styles",
-              link: "/guides/droppableclass/",
+              link: `/${FRAMEWORKS_TEMPLATE}/guides/droppableclass/`,
               translations: {
                 es: "Estilos al soltar",
               },
             },
             {
               label: "Sorting tables",
-              link: "/guides/sortingtable/",
+              link: `/${FRAMEWORKS_TEMPLATE}/guides/sortingtable/`,
               translations: {
                 es: "Ordenar tablas",
               },
             },
             {
               label: "Remove on lists",
-              link: "/guides/listremove/",
+              link: `/${FRAMEWORKS_TEMPLATE}/guides/listremove/`, 
               translations: {
                 es: "Remover en listas",
               },
             },
             {
               label: "Insert on list",
-              link: "/guides/listinsert/",
+              link: `/${FRAMEWORKS_TEMPLATE}/guides/listinsert/`,
               translations: {
                 es: "Insertar en listas",
               },
