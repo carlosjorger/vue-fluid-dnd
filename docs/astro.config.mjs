@@ -4,10 +4,10 @@ import vue from "@astrojs/vue";
 import tailwind from "@astrojs/tailwind";
 import netlify from "@astrojs/netlify";
 
-const site = "https://vue-fluid-dnd.netlify.app/";
+const site = "https://fluid-dnd.netlify.app/";
 // TODO: add pr to starlight https://github.com/withastro/starlight/blob/main/CONTRIBUTING.md#showcase
 export default defineConfig({
-  site: "https://vue-fluid-dnd.netlify.app/",
+  site: "https://fluid-dnd.netlify.app/",
   i18n: {
     defaultLocale: "en",
     locales: ["en", "es"],
@@ -35,11 +35,11 @@ export default defineConfig({
       },
       editLink: {
         baseUrl:
-          "https://github.com/carlosjorger/vue-fluid-dnd/tree/main/docs/",
+          "https://github.com/carlosjorger/fluid-dnd/tree/main/docs/",
       },
       customCss: process.env.NO_GRADIENTS ? [] : ["/src/assets/landing.css"],
       social: {
-        github: "https://github.com/carlosjorger/vue-fluid-dnd",
+        github: "https://github.com/carlosjorger/fluid-dnd",
         linkedin: "https://github.com/carlosjorger",
         "x.com": "https://twitter.com/carlosjorgerc",
       },

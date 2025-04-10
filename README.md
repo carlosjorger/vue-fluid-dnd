@@ -1,22 +1,22 @@
  <h1 align="center">
-    <img src="https://github.com/carlosjorger/vue-fluid-dnd/assets/50055316/dab15832-5290-42ca-b425-db177a2e589e" alt="Icon" width="150" height="140" />
+    <img src="https://github.com/carlosjorger/fluid-dnd/assets/50055316/dab15832-5290-42ca-b425-db177a2e589e" alt="Icon" width="150" height="140" />
   <br>Fluid DnD<br>
 </h1>
 
 <div align="center">
 
-![npm bundle size](https://img.shields.io/bundlephobia/minzip/vue-fluid-dnd)
-[![license](https://img.shields.io/github/license/carlosjorger/vue-fluid-dnd?label=license)](https://github.com/carlosjorger/vue-fluid-dnd/blob/main/LICENSE)
-[![version](https://img.shields.io/npm/v/vue-fluid-dnd)](https://www.npmjs.com/package/fluid-dnd)
-![GitHub issues](https://img.shields.io/github/issues/carlosjorger/vue-fluid-dnd)
-![GitHub stars](https://img.shields.io/github/stars/carlosjorger/vue-fluid-dnd)
+![npm bundle size](https://img.shields.io/bundlephobia/minzip/fluid-dnd)
+[![license](https://img.shields.io/github/license/carlosjorger/fluid-dnd?label=license)](https://github.com/carlosjorger/fluid-dnd/blob/main/LICENSE)
+[![version](https://img.shields.io/npm/v/fluid-dnd)](https://www.npmjs.com/package/fluid-dnd)
+![GitHub issues](https://img.shields.io/github/issues/carlosjorger/fluid-dnd)
+![GitHub stars](https://img.shields.io/github/stars/carlosjorger/fluid-dnd)
 [![twitter](https://img.shields.io/twitter/follow/carlosjorgerc)](https://twitter.com/carlosjorgerc)
-[![test_coverage](https://api.codeclimate.com/v1/badges/6b27047dcf150ccddfac/test_coverage)](https://codeclimate.com/github/carlosjorger/vue-fluid-dnd/test_coverage)
+[![test_coverage](https://api.codeclimate.com/v1/badges/6b27047dcf150ccddfac/test_coverage)](https://codeclimate.com/github/carlosjorger/fluid-dnd/test_coverage)
 
 </div>
 
 Fluid DnD is a [**fluid**, **agnostic** and **versatil** drag and drop
-library for lists with support for Vue 3 and Svelte](https://vue-fluid-dnd.netlify.app/). It's a**lightweight** tool ~7 Kb (gzip) with no depenencies.
+library for lists with support for Vue 3 and Svelte](https://fluid-dnd.netlify.app/). It's a**lightweight** tool ~7 Kb (gzip) with no depenencies.
 
 <img src="https://github.com/user-attachments/assets/b350f9a4-7dd7-40ca-ae3f-ecca166a9081" width="100%"/>
 
@@ -52,14 +52,14 @@ library for lists with support for Vue 3 and Svelte](https://vue-fluid-dnd.netli
 
 3. **Documentation**
 
-- 📚 Check out all the [docs](https://vue-fluid-dnd.netlify.app/).
+- 📚 Check out all the [docs](https://fluid-dnd.netlify.app/).
 - 🛠️ Edit the previous [here](https://codesandbox.io/s/nifty-hooks-5plkpl).
-- 📘 See others examples [here](https://vue-fluid-dnd.netlify.app/example/vertical-list/single-vertical-list/).
+- 📘 See others examples [here](https://fluid-dnd.netlify.app/example/vertical-list/single-vertical-list/).
 
 ## 🤝 Contributing
 
-If you're interested in contributing to [vue-fluid-dnd](https://github.com/carlosjorger/vue-fluid-dnd), please read our contributing docs before submitting a pull request [CONTRIBUTING](./CONTRIBUTING.md).
+If you're interested in contributing to [fluid-dnd](https://github.com/carlosjorger/fluid-dnd), please read our contributing docs before submitting a pull request [CONTRIBUTING](./CONTRIBUTING.md).
 
 ## 🔑 License
 
-- [MIT](https://github.com/carlosjorger/vue-fluid-dnd/blob/main/LICENSE).
+- [MIT](https://github.com/carlosjorger/fluid-dnd/blob/main/LICENSE).

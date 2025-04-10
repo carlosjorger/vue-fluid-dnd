@@ -44,9 +44,6 @@ importers:
       vue:
         specifier: ^3.4.13
         version: 3.5.13(typescript@5.8.3)
-      vue-fluid-dnd:
-        specifier: ^0.12.7
-        version: 0.12.8(vue@3.5.13(typescript@5.8.3))
 
 packages:
 
@@ -3037,11 +3034,6 @@ packages:
 
   vscode-uri@3.1.0:
     resolution: {integrity: sha512-/BpdSx+yCQGnCvecbyXdxHDkuk55/G3xwnC0GqY4gmQ3j+A+g8kzzgB4Nk/SINjqn6+waqw3EgbVF2QKExkRxQ==}
-
-  vue-fluid-dnd@0.12.8:
-    resolution: {integrity: sha512-lwcUesxfCTvP7TlLRI3R6tEkGCd/A0wt3h5G3GyfWTYH88Idea53HPRiezvZ0SaOtrDyMs+4rpTOJAS78akekw==}
-    peerDependencies:
-      vue: '>=3.4.0'
 
   vue@3.5.13:
     resolution: {integrity: sha512-wmeiSMxkZCSc+PM2w2VRsOYAZC8GdipNFRTsLSfodVqI9mbejKeXEGr8SckuLnrQPGe3oJN5c3K0vpoU9q/wCQ==}
@@ -7011,10 +7003,6 @@ snapshots:
   vscode-nls@5.2.0: {}
 
   vscode-uri@3.1.0: {}
-
-  vue-fluid-dnd@0.12.8(vue@3.5.13(typescript@5.8.3)):
-    dependencies:
-      vue: 3.5.13(typescript@5.8.3)
 
   vue@3.5.13(typescript@5.8.3):
     dependencies:
