@@ -1,33 +1,23 @@
 <template>
-    <div class="icon-selector">
+    <div class="relative font-sans">
       <button 
-        class="selector-input px-2 py-1.5 relative"
+        class="selector-input flex min-w-28 px-2.5 py-1.5 relative items-center justify-between rounded-lg cursor-pointer transition-all duration-200 ease-in-out bg-[#FFFFFF] hover:border-gray-900 border-[1px] border-solid border-gray-300 dark:border-gray-700 dark:text-gray-300 dark:bg-gray-900 dark:hover:border-gray-200"
         @click="(()=>toggleDropdown())"
       >
-        <div class="selected-option">
-          <component 
-            :is="selectedOption.icon" 
-            v-if="selectedOption.icon" 
-            class="option-icon"
-          />
-          <span class="option-label">{{ selectedOption.label }}</span>
+        <div class="flex items-center gap-2">
+          <IconComponent :option="selectedOption"/>
         </div>
-        <ChevronDownIcon class="dropdown-icon" />
+        <!-- <ChevronDownIcon class="dropdown-icon" /> -->
       </button>
   
-      <div v-if="isOpen" class="dropdown-menu">
+      <div v-if="isOpen" class="absolute top-full left-0 right-0 z-50 mt-1 bg-[#FFFFFF] rounded-lg shadow-lg dark:bg-gray-900 dark:shadow-accent-200/50 overflow-hidden">
         <div
           v-for="option in options"
           :key="option.value"
-          class="dropdown-item"
+          class="flex items-center px-4 py-2 gap-2 cursor-pointer transition-[opacity,background-color] duration-200 ease hover:bg-[#f7fafc] dark:text-gray-300 dark:hover:bg-gray-800/50"
           @click="selectOption(option)"
         >
-          <component 
-            :is="option.icon" 
-            v-if="option.icon" 
-            class="option-icon"
-          />
-          <span class="option-label">{{ option.label }}</span>
+          <IconComponent :option/>
         </div>
       </div>
     </div>
@@ -35,7 +25,8 @@
   
 <script  setup lang="ts">
   import { ref } from 'vue';
-  
+  import IconComponent from './icons/IconComponent.vue';
+
   interface SelectOption {
     value: string | number;
     label: string;
@@ -64,7 +55,6 @@
 
   const toggleDropdown = () => {
     isOpen.value = !isOpen.value;
-    console.log(isOpen.value)
   };
 
   const selectOption = (option: SelectOption) => {
@@ -75,35 +65,8 @@
 </script>
   
   <style scoped>
-  .icon-selector {
-    position: relative;
-    width: 100%;
-    max-width: 300px;
-    font-family: 'Segoe UI', sans-serif;
-  }
   
-  .selector-input {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    background-color: white;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .selector-input:hover {
-    border-color: #cbd5e0;
-  }
-  
-  .selected-option {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .dropdown-icon {
+  /* .dropdown-icon {
     width: 16px;
     height: 16px;
     color: #718096;
@@ -112,45 +75,8 @@
   
   .icon-selector[aria-expanded="true"] .dropdown-icon {
     transform: rotate(180deg);
-  }
+  } */
   
-  .dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    margin-top: 4px;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    background-color: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 50;
-    max-height: 300px;
-    overflow-y: auto;
-  }
+ 
   
-  .dropdown-item {
-    display: flex;
-    align-items: center;
-    padding: 10px 16px;
-    gap: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  
-  .dropdown-item:hover {
-    background-color: #f7fafc;
-  }
-  
-  .option-icon {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-  }
-  
-  .option-label {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
   </style>
