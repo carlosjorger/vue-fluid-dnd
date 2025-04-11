@@ -31,3 +31,6 @@ iframe[id="stackblitz-iframe"] {
   width: 100%;
   min-height: 600px;
 }
+.title-wrapper{
+  overflow: visible;
+}

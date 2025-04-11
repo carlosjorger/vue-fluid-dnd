@@ -41,7 +41,6 @@ export default defineConfig({
       ],
       components: {
         SiteTitle: "./src/components/CustomTitle.astro",
-        // Sidebar: './src/components/override/CustomSidebar.astro'
       },
       routeMiddleware: './src/middlewares/frameworkSidebaMiddleWare.ts',
       sidebar: [

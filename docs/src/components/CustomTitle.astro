@@ -1,5 +1,8 @@
 ---
 import Default from '@astrojs/starlight/components/SiteTitle.astro';
+import FrameworkSelector from "@/components/FrameworkSelector.vue";
+
+
 const localte={
     es:{
         label:'Ejemplos'
@@ -14,10 +17,11 @@ const { currentLocale } = Astro;
 const baseUrl= currentLocale==='en'?'/':`/${currentLocale}/`
 ---
 
-<div class="flex flex-row items-center gap-6 max-sm:gap-2">
+<div class="flex flex-row items-center relative gap-6 max-sm:gap-2">
     <Default {...Astro.props}/>
     <div class="h-8 border-solid border-[0.5px] border-gray-900/30 dark:border-gray-300/20 max-sm:hidden" />
     <a href=`${baseUrl}example/vertical-list/single-vertical-list/` class="no-underline max-sm:hidden">
         <span class="text-2xl max-sm:text-base text-accent-600 dark:text-accent-200 font-semibold transition-colors">{label}</span>
     </a>
+    <FrameworkSelector client:load/>
 </div>
