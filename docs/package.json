@@ -14,13 +14,15 @@
     "@astrojs/netlify": "^6.2.5",
     "@astrojs/starlight": "^0.33.0",
     "@astrojs/starlight-tailwind": "^3.0.1",
+    "@astrojs/svelte": "^7.0.9",
     "@astrojs/tailwind": "^6.0.2",
     "@astrojs/vue": "^5.0.9",
     "astro": "^5.6.1",
     "fluid-dnd": "1.0.6-beta.0",
     "sharp": "^0.34.1",
+    "svelte": "^5.26.1",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5.3.3",
+    "typescript": "^5.8.3",
     "vue": "^3.4.13"
   },
   "pnpm": {

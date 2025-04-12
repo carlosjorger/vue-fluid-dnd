@@ -1,0 +1,94 @@
+---
+title: Single vertical list
+description: A guide to use Fluid DnD with a single vertical list.
+---
+
+import SingleVerticalList from "@/components/svelte/SingleVerticalList.svelte";
+import { Code } from "@astrojs/starlight/components";
+
+### List of number example
+
+To showing how to use **Fluid DnD** for sorting a single list.
+First, we're going to create a list of numbers:
+
+export const listOfNumbers = `<script setup lang="ts">
+import { useDragAndDrop } from "fluid-dnd/vue";
+
+const list = state([1, 2, 3]);
+const [ parent ] = useDragAndDrop(list);
+
+</script>`;
+
+<Code code={listOfNumbers} lang="svelte" />
+
+Next, create a list of numbers on svelte:
+
+export const listOfNumbersHTML = `
+<ul class="number-list">
+    {#each list as element, index (element)}
+        <li  class="number">
+            {element}
+        </li>
+    {/each}
+</ul>
+<style>
+  .number {
+    border-style: solid;
+    padding-left: 5px;
+    margin-top: 0.25rem;
+    border-width: 2px;
+  }
+  .number-list {
+    display: block;
+    padding: 10px;
+  }
+</style>
+`;
+
+<Code code={listOfNumbersHTML} lang="svelte" />
+
+:::caution
+Avoid to setting _css_ `transform` property or `transitions` between diferent `transform` values to **draggable** elements because **Fluid DnD** update those properties automagically.
+:::
+
+### Adding reference to parent element
+
+First, add a reference to the created `parent` _action_ from `useDragAndDrop`:
+
+export const highlightsDroppable = ["use:parent"];
+
+export const listOfNumbersDroppable = `
+<ul use:parent class="number-list">
+    {#each list as element, index (element)}
+        <li class="number">
+            {element}
+        </li>
+    {/each}
+</ul>
+`;
+
+<Code code={listOfNumbersDroppable} lang="svelte" mark={highlightsDroppable} />
+
+### Adding reference to children
+
+For each `<li>` element we'll pass the `data-index` **attribute** to knowing the actual position and pick the `(element)` value that uniquely identify each element:
+
+export const listOfNumbersDraggable = `
+
+<ul use:parent class="number-list">
+    {#each list as element, index (element)}
+        <li class="number" data-index={index}>
+            {element}
+        </li>
+    {/each}
+</ul>`;
+
+export const highlightsDraggable = ['data-index={index}','(element)'];
+
+<Code code={listOfNumbersDraggable} lang="svelte" mark={highlightsDraggable} />
+
+### Preview
+
+<div class="pl-8">
+  <SingleVerticalList client:load />
+</div>
