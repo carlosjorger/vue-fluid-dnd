@@ -1,13 +1,16 @@
 <template>
     <div class="relative font-sans">
       <button 
-        class="selector-input flex min-w-28 px-2.5 py-1.5 relative items-center justify-between rounded-lg cursor-pointer transition-all duration-200 ease-in-out bg-[#FFFFFF] hover:border-gray-900 border-[1px] border-solid border-gray-300 dark:border-gray-700 dark:text-gray-300 dark:bg-gray-900 dark:hover:border-gray-200"
+        class="selector-input flex min-w-28 px-2.5 py-1.5 pr-3 relative items-center justify-between rounded-lg cursor-pointer transition-all duration-200 ease-in-out bg-[#FFFFFF] hover:bg-[#f7fafc] hover:border-gray-900 border-[1px] border-solid border-gray-300 dark:border-gray-700 dark:text-gray-300 dark:bg-gray-900 dark:hover:border-gray-200 dark:hover:bg-gray-800/50"
         @click="(()=>toggleDropdown())"
       >
         <div class="flex items-center gap-2">
           <IconComponent :option="selectedOption"/>
+          <component 
+            :is="arrowDown" 
+            class="w-4 h-4 flex-shrink-0 right-2"
+          />
         </div>
-        <!-- <ChevronDownIcon class="dropdown-icon" /> -->
       </button>
   
       <div v-if="isOpen" class="absolute top-full left-0 right-0 z-50 mt-1 bg-[#FFFFFF] rounded-lg shadow-lg dark:bg-gray-900 dark:shadow-accent-200/50 overflow-hidden">
@@ -26,6 +29,7 @@
 <script  setup lang="ts">
   import { ref } from 'vue';
   import IconComponent from './icons/IconComponent.vue';
+  import arrowDown from './icons/arrowDown.vue';
 
   interface SelectOption {
     value: string | number;
@@ -64,7 +68,7 @@
   };
 </script>
   
-  <style scoped>
+<style scoped>
   
   /* .dropdown-icon {
     width: 16px;
@@ -76,7 +80,4 @@
   .icon-selector[aria-expanded="true"] .dropdown-icon {
     transform: rotate(180deg);
   } */
-  
- 
-  
   </style>

@@ -8,6 +8,9 @@ const site = "https://fluid-dnd.netlify.app/";
 // TODO: add pr to starlight https://github.com/withastro/starlight/blob/main/CONTRIBUTING.md#showcase
 export default defineConfig({
   site: "https://fluid-dnd.netlify.app/",
+  redirects: {
+    '/': '/vue'
+  },
   integrations: [
     starlight({
       favicon: "/favicon.png",

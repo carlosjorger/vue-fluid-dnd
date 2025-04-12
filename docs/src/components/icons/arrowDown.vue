@@ -1,0 +1,3 @@
+<template>
+    <svg aria-hidden="true" class="icon caret astro-u5zmi32e astro-63pnjh3l" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;" data-astro-source-file="D:/PROGRAMMING/personal/vue3-juice-dnd/docs/node_modules/.pnpm/@astrojs+starlight@0.33.0_a_689b7f583f3153a33ca0beeb75c15192/node_modules/@astrojs/starlight/user-components/Icon.astro" data-astro-source-loc="22:3"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"></path></svg>
+</template>

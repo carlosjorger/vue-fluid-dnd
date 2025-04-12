@@ -1,11 +1,18 @@
 <script  setup lang="ts">
     import { FRAMEWORKS_TYPES, type FRAMEWORKS_TYPE } from '@/types';
-    import { ref, type Component } from 'vue';
+    import { ref, watch, type Component } from 'vue';
     import svelteLogo from './icons/logos/svelte.vue';
     import vueLogo from './icons/logos/vue.vue';
     import IconSelector from './IconSelector.vue';
+    import { getFrameworkFromUrl } from '@/utils/frameworkConfig';
 
-    
+
+    const props = defineProps({
+        url: {
+            type: String,
+            required: true,
+        }
+    })
     const frameworkOptions = ref<{value: FRAMEWORKS_TYPE,label: string; icon: Component}[]>([
         {
             value: FRAMEWORKS_TYPES.vue,
@@ -18,7 +25,16 @@
             icon: svelteLogo
         }
     ])
-    const currentFramework = ref<FRAMEWORKS_TYPE>()
+
+    const initialFramework = getFrameworkFromUrl(props.url)
+    const currentFramework = ref<FRAMEWORKS_TYPE>(initialFramework)
+    watch(
+        currentFramework,
+        (newValue, oldValue)=>{
+            const newUrl = location.pathname.replace(oldValue, newValue)
+            location.replace(newUrl);
+        }
+    )
 </script>
 
 <template>
