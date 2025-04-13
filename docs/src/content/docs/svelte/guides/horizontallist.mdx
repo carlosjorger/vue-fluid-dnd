@@ -3,7 +3,7 @@ title: Single horizontal list
 description: A guide to use Fluid DnD with a single horizontal list.
 ---
 
-import SingleHorizontalList from "@/components/vue/SingleHorizontalList.vue";
+import SingleHorizontalList from "@/components/svelte/SingleHorizontalList.svelte";
 import { Code } from "@astrojs/starlight/components";
 
 ### List of number example
@@ -11,27 +11,27 @@ import { Code } from "@astrojs/starlight/components";
 In this example we'll use **Fluid DnD** for sorting a horizontal list.
 First, we're going to create a list of numbers and adding the property `direction` with value `horizontal`:
 
-export const listOfNumbers = `<script setup lang="ts">
-    const list = ref([1, 2, 3, 4, 5]);
+export const listOfNumbers = `<script lang="ts">
+    const list = $state([1, 2, 3, 4, 5]);
     const [ parent ] = useDragAndDrop(list, { direction: "horizontal" });
 </script>`;
 
-<Code code={listOfNumbers} lang="vue" />
+<Code code={listOfNumbers} lang="svelte" />
 
 ### Using useDragAndDrop
 
-After, we'll add the reference:
+After, we'll add the *action*:
 
 export const highlightsDnD = ['direction="horizontal"','.number-list'];
 
 export const listOfNumberInsideDnD = `
-<template>
-  <div ref="parent" class="number-list">
-    <div class="number" v-for="(element, index) in list" :index="index">
-      {{ element }}
+<div use:parent class="number-list">
+  {#each list as element, index (element)}
+    <div class="number" data-index = {index}>
+      { element }
     </div>
-  </div>
-</template>
+  {/each}
+</div>
 
 <style>
 /* ... */
@@ -40,10 +40,9 @@ export const listOfNumberInsideDnD = `
   flex-direction: row;
 }
 </style>
-
 `;
 
-<Code code={listOfNumberInsideDnD} lang="vue" mark={highlightsDnD} />
+<Code code={listOfNumberInsideDnD} lang="svelte" mark={highlightsDnD} />
 
 ### Preview
 

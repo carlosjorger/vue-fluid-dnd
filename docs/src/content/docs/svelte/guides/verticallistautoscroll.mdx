@@ -3,7 +3,7 @@ title: List on a scroll container
 description: A guide to use Fluid DnD to make autoscroll on a list.
 ---
 
-import SingleVerticalListWithAutoscroll from "@/components/vue/SingleVerticalListWithAutoscroll.vue";
+import SingleVerticalListWithAutoscroll from "@/components/svelte/SingleVerticalListWithAutoscroll.svelte";
 import { Code } from "@astrojs/starlight/components";
 
 ### List of number example
@@ -12,11 +12,11 @@ If you have a large list of elements with a scroll, you can easily navigate thro
 First, we're going to create a large list of numbers:
 
 export const listOfNumbers = `<script setup lang="ts">
-  const list = ref([...Array(20).keys()]);
-  const [ parent ] = useDragAndDrop(list);
+    const list = $state([...Array(20).keys()]);
+    const [ parent ] = useDragAndDrop(list);
 </script>`;
 
-<Code code={listOfNumbers} lang="vue" />
+<Code code={listOfNumbers} lang="svelte" />
 
 ### Using useDragAndDrop
 
@@ -25,13 +25,13 @@ We're going to make `parent` element scrollable:
 export const highlightsDnD = ['number-list','overflow: auto;'];
 
 export const listOfNumberInsideDnD = `
-<template>
-  <ul ref="parent" class="number-list">
-    <li class="number" v-for="(element, index) in list" :index="index">
-      {{ element }}
+<ul ref="parent" class="number-list">
+  {#each list as element, index }
+    <li class="number" data-index = {index}>
+        { element }
     </li>
-  </ul>
-</template>
+  {/each }
+</ul>
 <style>
 // ....
 .number-list {
@@ -40,12 +40,10 @@ export const listOfNumberInsideDnD = `
     overflow: auto;
     height: 300px;
 }
-
 </style>
-
 `;
 
-<Code code={listOfNumberInsideDnD} lang="vue" mark={highlightsDnD} />
+<Code code={listOfNumberInsideDnD} lang="svelte" mark={highlightsDnD} />
 ### Preview
 
 This is what you got as a result:

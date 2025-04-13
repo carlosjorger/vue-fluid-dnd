@@ -1,18 +1,18 @@
 ---
-title: Single vertical list
-description: A guide to use Fluid DnD with a single vertical list.
+title: Lista vertical
+description: Guía para usar Fluid DnD con una sola lista vertical.
 ---
 
 import SingleVerticalList from "@/components/svelte/SingleVerticalList.svelte";
 import { Code } from "@astrojs/starlight/components";
 
-### List of number example
+### Ejemplo de lista de número
 
-To showing how to use **Fluid DnD** for sorting a single list.
-First, we're going to create a list of numbers:
+Para mostrar como usar **Fluid DnD** para ordenar una simple lista.
+Primero, vamos a crear una lista de números:
 
 export const listOfNumbers = `<script setup lang="ts">
-import { useDragAndDrop } from "fluid-dnd/vue";
+import { useDragAndDrop } from "fluid-dnd/svelte";
 
 const list = state([1, 2, 3]);
 const [ parent ] = useDragAndDrop(list);
@@ -21,7 +21,7 @@ const [ parent ] = useDragAndDrop(list);
 
 <Code code={listOfNumbers} lang="svelte" />
 
-Next, create a list of numbers on svelte:
+Después, crear las lista de números en la vista:
 
 export const listOfNumbersHTML = `
 <ul class="number-list">
@@ -48,30 +48,28 @@ export const listOfNumbersHTML = `
 <Code code={listOfNumbersHTML} lang="svelte" />
 
 :::caution
-Avoid to setting _css_ `transform` property or `transitions` between diferent `transform` values to **draggable** elements because **Fluid DnD** update those properties automagically.
+Evita confirar la propiedad `transform` o las propiedades de `transition` entre diferentes valores de `transform` a los elementos **draggable** debido a que **Fluid DnD** cambia estas propiedades automáticamente.
 :::
 
-### Adding reference to parent element
+### Añadiendo referencia al elemento padre
 
-First, add a reference to the created `parent` _action_ from `useDragAndDrop`:
+Primero, añademos el _action_ `parent`creado de `useDragAndDrop`:
 
-export const highlightsDroppable = ["use:parent"];
+export const highlightsDroppable = ["droppable-id", "direction", "items"];
 
 export const listOfNumbersDroppable = `
-<ul use:parent class="number-list">
-    {#each list as element, index (element)}
-        <li class="number">
-            {element}
-        </li>
-    {/each}
-</ul>
+<template>
+  <ul ref="parent" class="number-list">
+      <li class="number">{{ element }}</li>
+   </ul>
+</template>
 `;
 
 <Code code={listOfNumbersDroppable} lang="svelte" mark={highlightsDroppable} />
 
-### Adding reference to children
+### Añadiendo referencia a los elementos hijos
 
-For each `<li>` element we'll pass the `data-index` **attribute** to knowing the actual position and pick the `(element)` value that uniquely identify each element:
+Por cada elemento `<li>` solo pasaremos el **atributo** `data-index` para saber su posición actual y seleccionamos `(element)` como valor único representativo de cada element `li`:
 
 export const listOfNumbersDraggable = `
 <ul use:parent class="number-list">
@@ -86,7 +84,7 @@ export const highlightsDraggable = ['data-index={index}','(element)'];
 
 <Code code={listOfNumbersDraggable} lang="svelte" mark={highlightsDraggable} />
 
-### Preview
+### Resultado
 
 <div class="pl-8">
   <SingleVerticalList client:load />

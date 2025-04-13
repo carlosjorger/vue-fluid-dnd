@@ -1,0 +1,46 @@
+---
+title: isDraggable
+description: A guide to use Fluid DnD with isDraggable property.
+---
+
+import SingleListWithIsDraggable from "@/components/svelte/SingleListWithIsDraggable.svelte";
+import { Code } from "@astrojs/starlight/components";
+
+### List of number example
+
+With **Fluid DnD** you can control which element can be dragged and which not using `isDraggable` property:
+
+export const listOfNumbers = `<script lang="ts">
+import { useDragAndDrop } from "fluid-dnd/vue";
+
+const list = $state([1, 2, 3, 4], {
+  isDraggable: (el) => !el.classList.contains("is-not-draggable"),
+});
+const [ parent ] = useDragAndDrop(list);
+
+</script>`;
+
+<Code code={listOfNumbers} lang="svelte" />
+
+### Creating the view
+
+After, we'll create the view and add `is-not-draggable` class to the even numbers:
+
+export const listOfNumbersDraggable = `
+<ul use:parent class="number-list">
+  {#each list as element, index (element)}
+    <li class="number { element % 2 == 0? 'is-not-draggable' : ''}" data-index={index}>
+     { element }
+    </li>
+  {/each}
+</ul>`;
+
+export const highlightsDraggable = ["is-not-draggable"];
+
+<Code code={listOfNumbersDraggable} lang="svelte" mark={highlightsDraggable} />
+
+### Preview
+
+<div class="pl-8">
+  <SingleListWithIsDraggable client:load />
+</div>

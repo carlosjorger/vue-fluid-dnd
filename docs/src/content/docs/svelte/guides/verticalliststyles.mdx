@@ -3,7 +3,7 @@ title: List with mixed styles
 description: A guide to use Fluid DnD with a list of elements with mixed styles.
 ---
 
-import SingleVerticalListWithDiferentStyles from "@/components/vue/SingleVerticalListWithDiferentStyles.vue";
+import SingleVerticalListWithDiferentStyles from "@/components/svelte/SingleVerticalListWithDiferentStyles.svelte";
 import { Code } from "@astrojs/starlight/components";
 
 ### Example of list of elements with mixed styles
@@ -11,7 +11,7 @@ import { Code } from "@astrojs/starlight/components";
 We can sort lists of elements with diferents `styles`:
 
 export const listOfNumbers = `
-  const list = ref([
+  const list = $state([
   {
     id: "1",
     style:
@@ -42,24 +42,23 @@ You can pass for each element its `styles`.
 Each element must have its own `style` before and after change its position on the `list` using **Fluid DnD**. Avoid style with **psedo-classes** like [nth-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-last-child](https://developer.mozilla.org/es/docs/Web/CSS/:nth-last-child), [nth-of-type](https://developer.mozilla.org/es/docs/Web/CSS/:nth-of-type), etc because add styles to the elements of the list based in other properties like position, number of children, etc.
 :::
 
-export const highlightsDnD = [':style="element.style"'];
+export const highlightsDnD = ['style={element.style}'];
 
 export const listOfNumberInsideDnD = `
-<template>
-  <ul ref="parent" class="number-list" style="height: 280px">
+<ul use:parent class="block px-2 h-72">
+  {#each list as element, index }
     <li
-      class="number"
-      v-for="(element, index) in list"
-      :index="index"
-      :style="element.style"
+      class="border-solid pl-1 mt-1 border-2"
+      data-index={index}
+      style={element.style}
     >
-      {{ element.content }}
+      { element.content }
     </li>
-  </ul>
-</template>
+  {/each}
+</ul>
 `;
 
-<Code code={listOfNumberInsideDnD} lang="vue" mark={highlightsDnD} />
+<Code code={listOfNumberInsideDnD} lang="svelte" mark={highlightsDnD} />
 
 ### Preview
 

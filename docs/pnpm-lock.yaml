@@ -38,6 +38,9 @@ importers:
       sharp:
         specifier: ^0.34.1
         version: 0.34.1
+      starlight-sidebar-topics:
+        specifier: ^0.6.0
+        version: 0.6.0(@astrojs/starlight@0.33.0(astro@5.6.1(@netlify/blobs@8.1.2)(jiti@1.21.7)(rollup@4.39.0)(typescript@5.8.3)(yaml@2.7.1)))
       svelte:
         specifier: ^5.26.1
         version: 5.26.1
@@ -2552,6 +2555,12 @@ packages:
   speakingurl@14.0.1:
     resolution: {integrity: sha512-1POYv7uv2gXoyGFpBCmpDVSNV74IfsWlDW216UPjbWufNf+bSU6GdbDsxdcxtfwb4xlI3yxzOTKClUosxARYrQ==}
     engines: {node: '>=0.10.0'}
+
+  starlight-sidebar-topics@0.6.0:
+    resolution: {integrity: sha512-ysmOR7zaHYKtk18/mpW4MbEMDioR/ZBsisu9bdQrq0v9BlHWpW7gAdWlqFWO9zdv1P7l0Mo1WKd0wJ0UtqOVEQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@astrojs/starlight': '>=0.32.0'
 
   stream-replace-string@2.0.0:
     resolution: {integrity: sha512-TlnjJ1C0QrmxRNrON00JvaFFlNh5TTG00APw23j74ET7gkQpTASi6/L2fuiav8pzK715HXtUeClpBTw2NPSn6w==}
@@ -6346,6 +6355,11 @@ snapshots:
   space-separated-tokens@2.0.2: {}
 
   speakingurl@14.0.1: {}
+
+  starlight-sidebar-topics@0.6.0(@astrojs/starlight@0.33.0(astro@5.6.1(@netlify/blobs@8.1.2)(jiti@1.21.7)(rollup@4.39.0)(typescript@5.8.3)(yaml@2.7.1))):
+    dependencies:
+      '@astrojs/starlight': 0.33.0(astro@5.6.1(@netlify/blobs@8.1.2)(jiti@1.21.7)(rollup@4.39.0)(typescript@5.8.3)(yaml@2.7.1))
+      picomatch: 4.0.2
 
   stream-replace-string@2.0.0: {}
 
