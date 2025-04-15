@@ -3,7 +3,7 @@ title: List with inputs
 description: A guide to use Fluid DnD to adding forms and inputs.
 ---
 
-import SingleVerticalPersonList from "@/components/vue/SingleVerticalPersonList.vue";
+import SingleVerticalPersonList from "@/components/svelte/SingleVerticalPersonList.svelte";
 import { Code } from "@astrojs/starlight/components";
 
 ### List of number example
@@ -15,7 +15,7 @@ export const listOfPeople = `<script setup lang="ts">
 import { ref } from "vue";
 import { useDragAndDrop } from "fluid-dnd/vue";
 
-const list = ref([
+const list = $state([
   { number: 1, name: "Carlos", edit: false },
   { number: 2, name: "Jorge", edit: false },
   { number: 1, name: "Ivis", edit: false },
@@ -24,20 +24,20 @@ const [ parent ] = useDragAndDrop(list);
 
 </script>`;
 
-<Code code={listOfPeople} lang="vue" />
+<Code code={listOfPeople} lang="svelte" />
 
-Next, create a list of people on vue template and pass the attributes to be modified to `v-model`:
+Next, create a list of people on the view and pass the attributes to be modified with `bind` directives:
 
-export const highlights = [`v-model="person.name"`, `v-model="person.edit"`];
+export const highlights = [`bind:value={person.name}`, `bind:checked={person.edit}`];
 
 export const listOfNumbersHTML = `
 </script>
 <template>
   <ul ref="parent" class="person-list p-8 bg-[var(--sl-color-gray-6)]">
-    <li class="person" v-for="(person, index) in list" :index="index">
-      <input type="text" v-model="person.name" :disabled="!person.edit" />
-      <input type="checkbox" v-model="person.edit" />
-    </li>
+    {#each list as  person, index (person.number) }
+      <input type="text" bind:value={person.name}  disabled={!person.edit}/>
+      <input type="checkbox" bind:checked={person.edit} />
+    {/each}
   </ul>
 </template>
 
@@ -60,7 +60,7 @@ export const listOfNumbersHTML = `
 
 `;
 
-<Code code={listOfNumbersHTML} mark={highlights} lang="vue" />
+<Code code={listOfNumbersHTML} mark={highlights} lang="svelte" />
 
 ### Preview
 

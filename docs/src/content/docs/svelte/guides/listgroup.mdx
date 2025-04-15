@@ -3,8 +3,8 @@ title: Groups of lists
 description: A guide to use Fluid DnD with group of lists.
 ---
 
-import ListGroup from "@/components/vue/ListGroup.vue";
-import ListGroups from "@/components/vue/ListGroups.vue";
+import ListGroup from "@/components/svelte/ListGroup.svelte";
+import ListGroups from "@/components/svelte/ListGroups.svelte";
 
 import { Code } from "@astrojs/starlight/components";
 
@@ -15,51 +15,43 @@ We'll define two list and pass to `droppableGroup` parameter the same group name
 
 export const highlightsListOfNumbers = ["droppableGroup", "group1"];
 
-export const listOfNumbers = `<script setup lang="ts">
+export const listOfNumbers = `<script lang="ts">
 ...
-const list1 = ref([1, 2, 3, 4]);
+const list1 = $state([1, 2, 3, 4]);
 const [ parent1 ] = useDragAndDrop(list1, {
   droppableGroup: "group1",
 });
 ...
-const list2 = ref([5, 6, 7, 8]);
+const list2 = $state([5, 6, 7, 8]);
 const [ parent2 ] = useDragAndDrop(list2, {
   droppableGroup: "group1",
   direction: "horizontal",
 });
 </script>`;
 
-<Code code={listOfNumbers} lang="vue" mark={highlightsListOfNumbers} />
+<Code code={listOfNumbers} lang="svelte" mark={highlightsListOfNumbers} />
 
 ### Creating the view
 
 After, we'll create the two lists on the view:
 
 export const listOfNumbersDraggable = `
-<template>
-  <div class="group-list">
-    <ul ref="parent1" class="number-list">
-      <li
-        class="number"
-        v-for="(element, index) in list1"
-        :index
-        :key="element"
-      >
-        {{ element }}
+<div class="group-list">
+  <ul ref="parent1" class="number-list">
+    {#each list as  element, index (element)}
+      <li class="number" data-index={index}>
+        { element }
       </li>
-    </ul>
-    <div ref="parent2" class="number-list-h">
-      <div
-        class="number"
-        v-for="(element, index) in list2"
-        :index
-        :key="element"
-      >
-        {{ element }}
-      </div>
-    </div>
+    {/each}
+  </ul>
+  <div ref="parent2" class="number-list-h">
+    {#each list2 as  element, index (element)}
+      <li class="number" data-index={index}>
+        { element }
+      </li>
+    {/each}
   </div>
-</template>
+</div>
 <style>
  ...
 </style>
@@ -67,7 +59,7 @@ export const listOfNumbersDraggable = `
 
 export const highlightsDraggable = ["parent1", "parent2"];
 
-<Code code={listOfNumbersDraggable} lang="vue" mark={highlightsDraggable} />
+<Code code={listOfNumbersDraggable} lang="svelte" mark={highlightsDraggable} />
 
 ### Preview
 
@@ -89,14 +81,14 @@ We'll change the early code adding another group:
 
 export const highlightsListOfNumbersGroups = ["group2"];
 
-export const listOfNumbersGroups = `<script setup lang="ts">
+export const listOfNumbersGroups = `<script lang="ts">
 ...
-const list1 = ref([1, 2, 3, 4]);
+const list1 = $state([1, 2, 3, 4]);
 const [ parent1 ] = useDragAndDrop(list1, {
   droppableGroup: "group1",
 });
 ...
-const list2 = ref([5, 6, 7, 8]);
+const list2 = $state([5, 6, 7, 8]);
 const [ parent2 ] = useDragAndDrop(list2, {
   droppableGroup: "group1 group2",
   direction: "horizontal",

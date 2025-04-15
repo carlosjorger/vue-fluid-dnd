@@ -3,7 +3,7 @@ title: Sorting tables
 description: A guide on how to use Fluid DnD for sort tables.
 ---
 
-import SortingTable from "@/components/vue/SortingTable.vue";
+import SortingTable from "@/components/svelte/SortingTable.svelte";
 import { Code } from "@astrojs/starlight/components";
 
 ### Table with person data
@@ -11,35 +11,34 @@ import { Code } from "@astrojs/starlight/components";
 To showing how to use **Fluid DnD** for sorting a table.
 First, we're going to create a table with person data:
 
-export const listOfNumbers = `<script setup lang="ts">
-import { ref } from "vue";
-import { useDragAndDrop } from "fluid-dnd/vue";
+export const listOfNumbers = `<script lang="ts">
+import { useDragAndDrop } from "fluid-dnd/svelte";
 
 type Person = {
   name: string;
   age: number;
   alias: string;
 };
-const table = ref<Person[]>([
+const table = $state<Person[]>([
   { name: "Carlos", age: 26, alias: "Carli" },
   { name: "Jorgito", age: 34, alias: "Pipo" },
   { name: "Ivis", age: 68, alias: "Mamá" },
 ]);
+
 const [ parent ] = useDragAndDrop<Person>(table, {
   draggingClass: "drag-row",
 });
 
 </script>`;
 
-<Code code={listOfNumbers} lang="vue" />
+<Code code={listOfNumbers} lang="svelte" />
 
 ## Creating the view
 
-Next, create a table on vue template using `parent` element from `useDragAndDrop`:
+Next, create a table on the view section:
 
 export const tableView = `
-<template>
-  <table class="table-auto border-collapse">
+<table class="table-auto border-collapse">
     <thead>
       <tr>
         <th>Name</th>
@@ -47,15 +46,16 @@ export const tableView = `
         <th>Alias</th>
       </tr>
     </thead>
-    <tbody ref="parent">
-      <tr v-for="(person, index) in table" :index="index" :key="person.name">
-        <td>{{ person.name }}</td>
-        <td>{{ person.age }}</td>
-        <td>{{ person.alias }}</td>
+  <tbody use:parent>
+    {#each table as person, index (person.name) }
+      <tr data-index={index}>
+        <td>{ person.name }</td>
+        <td>{ person.age }</td>
+        <td>{ person.alias }</td>
       </tr>
-    </tbody>
+    {/each}
+  </tbody>
   </table>
-</template>
 <style scoped>
 /*...*/
 table tbody tr td {
@@ -70,7 +70,7 @@ table tbody tr td {
 </style>
 `;
 
-<Code code={tableView} lang="vue" />
+<Code code={tableView} lang="svelte" />
 
 :::caution
 Set a fixed width to `tr` and `td` elements because it maintains the proportion of the columns when the row is dragged.

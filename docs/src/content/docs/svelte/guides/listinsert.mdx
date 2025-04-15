@@ -3,7 +3,7 @@ title: Insert on list
 description: A guide on how to use Fluid DnD to remove elements from a list.
 ---
 
-import ListWithInsert from "@/components/vue/ListWithInsert.vue";
+import ListWithInsert from "@/components/svelte/ListWithInsert.svelte";
 import { Code } from "@astrojs/starlight/components";
 
 ### List of number example
@@ -11,11 +11,10 @@ import { Code } from "@astrojs/starlight/components";
 To showing how to use **Fluid DnD** for inserting elements to a list.
 First, we're going to create a list and extract the `insertAt` function from `useDragAndDrop`:
 
-export const listOfNumbers = `<script setup lang="ts">
-import { ref } from "vue";
+export const listOfNumbers = `<script lang="ts">
 import { useDragAndDrop } from "fluid-dnd/vue";
 
-const list = ref([]);
+const list = $state([]);
 const [ parent, insertAt ] = useDragAndDrop(list);
 
 </script>`;
@@ -23,7 +22,7 @@ const [ parent, insertAt ] = useDragAndDrop(list);
 export const highlightsListOfNumbers = ["insertAt"];
 
 
-<Code code={listOfNumbers} lang="vue" mark={highlightsListOfNumbers} />
+<Code code={listOfNumbers} lang="svelte" mark={highlightsListOfNumbers} />
 
 ### Creating the view
 
@@ -32,17 +31,17 @@ After, we’ll create the list with an add button that call `insertAt`:
 export const highlightsDroppable = ['<button','button>',"insertAt"];
 
 export const listOfNumbersDroppable = `
-<template>
-   <ul ref="parent" class="number-list">
-    <li class="number" v-for="(element, index) in list" :index="index" :key="element">
-      {{ element }}
+<ul use:parent class="number-list">
+  {#each list as element, index (element) }
+    <li class="number" data-index={index}>
+      { element }
     </li>
-  </ul>
-  <button class="insert-button" @click="insertAt(list.length, list.length)">+</button>
-</template>
+  {/each}
+</ul>
+<button class="insert-button" onclick={insertAt(list.length, list.length)}>+</button>
 `;
 
-<Code code={listOfNumbersDroppable} lang="vue" mark={highlightsDroppable} />
+<Code code={listOfNumbersDroppable} lang="svelte" mark={highlightsDroppable} />
 
 ### Preview
 
@@ -56,7 +55,7 @@ You can add the css class setted when an element is inserted using the parameter
 
 export const listOfNumbersWithRemovingClass = `<script setup lang="ts">
 // ...
-const { parent, removeAt } = useDragAndDrop(list,{
+const [ parent, removeAt ] = useDragAndDrop(list,{
   insertingFromClass: "inserting"
 });
 
@@ -99,9 +98,9 @@ export const stylesRemovingClass = `
 
 You can add the amount of delay time in miliseconds before inserting the element (the default is 200 miliseconds):
 
-export const listOfNumbersDelay = `<script setup lang="ts">
+export const listOfNumbersDelay = `<script lang="ts">
 // ...
-const { parent, removeAt } = useDragAndDrop(list,{
+const [ parent, removeAt ] = useDragAndDrop(list,{
   insertingFromClass: "inserting",
   delayBeforeInsert: 800
 });});
