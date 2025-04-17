@@ -6,9 +6,7 @@ interface Props {
 }
 
 const { currentLocale } = Astro;
-const baseUrl = '/example'
-const verticalBaseUrl = `${baseUrl}/vertical-list`
-const horizontalBaseUrl =  `${baseUrl}/horizontal-list`
+
 
 const getItem = (label:string,link:string)=>{
   return { label, link}
@@ -19,52 +17,71 @@ const getLabel = (label:string, spanishLabel:string)=>{
   }
   return label
 }
-const verticalItems=[
-   {
-    link:`${verticalBaseUrl}/single-vertical-list/`,
-    label: getLabel('basic','básico')
-  },
-  {
-    link:`${verticalBaseUrl}/single-vertical-list-autoscroll/`,
-    label: getLabel('list on a scroller','lista en un scroller')
-  },
-  {
-    link: `${verticalBaseUrl}/single-vertical-list-component-with-handler/`,
-    label: getLabel('list with handler','lista con un handler')
-  },
-  {
-    link: `${verticalBaseUrl}/single-vertical-list-component-with-is-draggable/`,
-    label: getLabel('IsDraggable','IsDraggable')
-  },
-  {
-    link: `${verticalBaseUrl}/group-vertical-lists/`,
-    label: getLabel('group of lists','grupo de listas')
-  },
-  {
-    link:`${verticalBaseUrl}/single-vertical-list-with-remove/`,
-    label: getLabel('List with remove','Lista con remover')
-  },
-  {
-    link:`${verticalBaseUrl}/single-vertical-list-with-insert/`,
-    label: getLabel('List with insert','Lista con insertar')
-  }
-]
+const getItems = (framework:string)=> {
+  const baseUrl = `/${framework}/example`
+  const verticalBaseUrl = `${baseUrl}/vertical-list`
+  const horizontalBaseUrl =  `${baseUrl}/horizontal-list`
+  const verticalItems = [
+    {
+      link:`${verticalBaseUrl}/single-vertical-list/`,
+      label: getLabel('basic','básico')
+    },
+    {
+      link:`${verticalBaseUrl}/single-vertical-list-autoscroll/`,
+      label: getLabel('list on a scroller','lista en un scroller')
+    },
+    {
+      link: `${verticalBaseUrl}/single-vertical-list-component-with-handler/`,
+      label: getLabel('list with handler','lista con un handler')
+    },
+    {
+      link: `${verticalBaseUrl}/single-vertical-list-component-with-is-draggable/`,
+      label: getLabel('IsDraggable','IsDraggable')
+    },
+    {
+      link: `${verticalBaseUrl}/group-vertical-lists/`,
+      label: getLabel('group of lists','grupo de listas')
+    },
+    {
+      link:`${verticalBaseUrl}/single-vertical-list-with-remove/`,
+      label: getLabel('List with remove','Lista con remover')
+    },
+    {
+      link:`${verticalBaseUrl}/single-vertical-list-with-insert/`,
+      label: getLabel('List with insert','Lista con insertar')
+    }
+  ]
 
-const horizontalItems=[
-  {
-    link:`${horizontalBaseUrl}/single-horizontal-list/`,
-    label: getLabel('basic','básico')
-  },
-  {
-    link: `${horizontalBaseUrl}/single-horizontal-list-autoscroll/`,
-    label: getLabel('list on a scroller','lista en un scroller')
-  },
-   {
-    link: `${horizontalBaseUrl}/group-horizontal-lists/`,
-    label: getLabel('group of lists','grupo de listas')
-  },
-]
+  const horizontalItems=[
+    {
+      link:`${horizontalBaseUrl}/single-horizontal-list/`,
+      label: getLabel('basic','básico')
+    },
+    {
+      link: `${horizontalBaseUrl}/single-horizontal-list-autoscroll/`,
+      label: getLabel('list on a scroller','lista en un scroller')
+    },
+    {
+      link: `${horizontalBaseUrl}/group-horizontal-lists/`,
+      label: getLabel('group of lists','grupo de listas')
+    },
+  ]
+  return [verticalItems, horizontalItems] as const
+}
 
+const getSideBarItems = (framework:string) => {
+  const [verticalItems, horizontalItems] = getItems(framework)
+  return [
+    {
+      label: getLabel('Single vertical list','Simple lista vertical'),
+      items: verticalItems.map(({link, label})=>getItem(label,link)),
+    },
+    {
+      label: getLabel('Single horizontal list','Simple lista horizontal'),
+      items: horizontalItems.map(({link, label})=>getItem(label,link)),
+    },
+  ]
+}
 const description = getLabel('Sorting a list of pokemons with fluid-dnd','Ordenar una lista de pokemones con fluid-dnd') 
 
 ---
@@ -72,15 +89,8 @@ const description = getLabel('Sorting a list of pokemons with fluid-dnd','Ordena
 <StarlightPage
   lang={currentLocale},
   sidebar={[
-      { label: 'Fluid DnD', link: '/' },
-      {
-        label: getLabel('Single vertical list','Simple lista vertical'),
-        items: verticalItems.map(({link, label})=>getItem(label,link)),
-      },
-      {
-        label: getLabel('Single horizontal list','Simple lista horizontal'),
-        items: horizontalItems.map(({link, label})=>getItem(label,link)),
-      },
+      ...getSideBarItems('vue'),
+      ...getSideBarItems('svelte'),
     ]} 
   frontmatter={{ ...Astro.props, description ,tableOfContents:false }}  >
   <slot/>

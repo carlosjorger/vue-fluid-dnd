@@ -1,6 +1,7 @@
 ---
 import Default from '@astrojs/starlight/components/SiteTitle.astro';
 import FrameworkSelector from "@/components/FrameworkSelector.vue";
+import { getFrameworkFromUrl } from '@/utils/frameworkConfig';
 
 
 const locales={
@@ -14,8 +15,8 @@ const locales={
 }
 const { label } = locales[Astro.props.locale=='es'?'es':'en']
 const { currentLocale } = Astro;
-const baseUrl = currentLocale==='en'?'/':`/${currentLocale}/`
-
+const framework = getFrameworkFromUrl(Astro.url.pathname)
+const baseUrl = currentLocale==='en'?`/${framework}/`:`/${currentLocale}/${framework}/`
 ---
 
 <div class="flex flex-row items-center relative gap-6 max-sm:gap-2">
