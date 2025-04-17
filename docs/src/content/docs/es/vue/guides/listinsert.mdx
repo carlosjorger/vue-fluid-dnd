@@ -1,0 +1,117 @@
+---
+title: Insertar en listas
+description: Una guía de como usar Fluid DnD para insertar elemntos en una lista.
+---
+
+import ListWithInsert from "@/components/vue/ListWithInsert.vue";
+import { Code } from "@astrojs/starlight/components";
+
+### Ejemplo de lista de números
+
+Para mostrar como usar **Fluid DnD** para insertar elementos en un lista.
+Primero, vamos a crear una lista y extraer la función `insertAt` de `useDragAndDrop`:
+
+export const listOfNumbers = `<script setup lang="ts">
+import { ref } from "vue";
+import { useDragAndDrop } from "fluid-dnd/vue";
+
+const list = ref([]);
+const [ parent, insertAt ] = useDragAndDrop(list);
+
+</script>`;
+
+export const highlightsListOfNumbers = ["insertAt"];
+
+
+<Code code={listOfNumbers} lang="vue" mark={highlightsListOfNumbers} />
+
+### Creando la vista
+
+Después, crearemos la lista con un botón para insertar nuevos elementos llamado `insertAt` :
+
+export const highlightsDroppable = ['<button','button>',"insertAt"];
+
+export const listOfNumbersDroppable = `
+<template>
+   <ul ref="parent" class="number-list">
+    <li class="number" v-for="(element, index) in list" :index="index" :key="element">
+      {{ element }}
+    </li>
+  </ul>
+  <button class="insert-button" @click="insertAt(list.length, list.length)">+</button>
+</template>
+`;
+
+<Code code={listOfNumbersDroppable} lang="vue" mark={highlightsDroppable} />
+
+### Resultado
+
+<div class="p-8 bg-[var(--sl-color-gray-6)]">
+  <ListWithInsert client:load />
+</div>
+
+## Añadir la clase de inserting
+
+Tu puedes añadir la clase css que se fija cuando un elemento es insertado con el parámetro `insertingFromClass`:
+
+export const listOfNumbersWithRemovingClass = `<script setup lang="ts">
+// ...
+const { parent, removeAt } = useDragAndDrop(list,{
+  insertingFromClass: "inserting"
+});
+
+</script>`;
+export const highlightsRemovingClass = ["insertingFromClass",'inserting'];
+
+<Code code={listOfNumbersWithRemovingClass} lang="vue" mark={highlightsRemovingClass}/>
+
+### Cambiando los estilos
+
+Después, añadiremos los estilos `inserting` y transiciones cuando la clase es fijada:
+
+export const highlightsStylesRemovingClass = ["inserting","transition"];
+
+export const stylesRemovingClass = `
+<style scoped>
+.number{
+  /*
+      ...
+  */
+  opacity: 1;
+  transition: opacity 200ms ease;
+}
+.number.inserting{
+  opacity: 0;
+}
+</style>
+`;
+
+<Code code={stylesRemovingClass} lang="vue" mark={highlightsStylesRemovingClass} />
+
+### Resultado
+
+<div class="p-8 bg-[var(--sl-color-gray-6)]">
+  <ListWithInsert insertingFromClass="inserting" client:load  />
+</div>
+
+## Añadiendo el tiempo de demora antes de insertar
+
+Puedes añadir la cantidad de tiempo en milisegundos antes de insertar un elemento (el tiempo por defecto es de 200 milisegundos):
+
+export const listOfNumbersDelay = `<script setup lang="ts">
+// ...
+const { parent, removeAt } = useDragAndDrop(list,{
+  insertingFromClass: "inserting",
+  delayBeforeInsert: 800
+});});
+
+</script>`;
+export const highlightsDelay = ["delayBeforeInsert"];
+
+<Code code={listOfNumbersDelay} lang="vue" mark={highlightsDelay}/>
+
+### Resultado
+
+<div class="p-8 bg-[var(--sl-color-gray-6)]">
+  <ListWithInsert insertingFromClass="inserting" delayBeforeInsert={800} client:load  />
+</div>

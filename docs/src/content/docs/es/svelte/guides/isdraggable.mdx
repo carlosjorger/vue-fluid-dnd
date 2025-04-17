@@ -1,0 +1,46 @@
+---
+title: isDraggable
+description: Una guía para usar Fluid DnD con la confuración isDraggable.
+---
+
+import SingleListWithIsDraggable from "@/components/svelte/SingleListWithIsDraggable.svelte";
+import { Code } from "@astrojs/starlight/components";
+
+### Ejemplo de listas de números
+
+Con **Fluid DnD**, puedes controlar cuál elemento puede ser arrastrado y cuál no usando la propiedad `isDraggable`:
+
+export const listOfNumbers = `<script lang="ts">
+import { useDragAndDrop } from "fluid-dnd/vue";
+
+const list = $state([1, 2, 3, 4], {
+  isDraggable: (el) => !el.classList.contains("is-not-draggable"),
+});
+const [ parent ] = useDragAndDrop(list);
+
+</script>`;
+
+<Code code={listOfNumbers} lang="svelte" />
+
+### Creando la vista
+
+Después, crearemos la vista y añadiremos la clase `is-not-draggable` a los números pares:
+
+export const listOfNumbersDraggable = `
+<ul use:parent class="number-list">
+  {#each list as element, index (element)}
+    <li class="number { element % 2 == 0? 'is-not-draggable' : ''}" data-index={index}>
+     { element }
+    </li>
+  {/each}
+</ul>`;
+
+export const highlightsDraggable = ["is-not-draggable"];
+
+<Code code={listOfNumbersDraggable} lang="svelte" mark={highlightsDraggable} />
+
+### Resultado
+
+<div class="pl-8">
+  <SingleListWithIsDraggable client:load />
+</div>

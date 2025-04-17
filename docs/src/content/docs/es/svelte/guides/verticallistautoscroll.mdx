@@ -1,0 +1,53 @@
+---
+title: Lista en un contenedor con scroll
+description: Una guía para usar Fluid DnD para hacer autoscroll en una lista.
+---
+
+import SingleVerticalListWithAutoscroll from "@/components/svelte/SingleVerticalListWithAutoscroll.svelte";
+import { Code } from "@astrojs/starlight/components";
+
+### Ejemplo de lista de números
+
+Si tienes una larga lista de número con scroll, puedes navegar fácilmente por la lista.
+Primero, creamos la larga lista de números:
+
+export const listOfNumbers = `<script setup lang="ts">
+    const list = $state([...Array(20).keys()]);
+    const [ parent ] = useDragAndDrop(list);
+</script>`;
+
+<Code code={listOfNumbers} lang="svelte" />
+
+### Usando useDragAndDrop
+
+Después, hacer scrollable a lista parasando el action `parent`:
+
+export const highlightsDnD = ['number-list','overflow: auto;'];
+
+export const listOfNumberInsideDnD = `
+<ul use:parent class="number-list">
+  {#each list as element, index }
+    <li class="number" data-index = {index}>
+        { element }
+    </li>
+  {/each }
+</ul>
+<style>
+// ....
+.number-list {
+    display: block;
+    padding-inline: 10px;
+    overflow: auto;
+    height: 300px;
+}
+</style>
+`;
+
+<Code code={listOfNumberInsideDnD} lang="svelte" mark={highlightsDnD} />
+### Resultado
+
+Esto es lo que obtienes como resultado:
+
+<div class="p-8 bg-[var(--sl-color-gray-6)] h-96">
+  <SingleVerticalListWithAutoscroll client:load />
+</div>

@@ -3,7 +3,7 @@ title: Estilos al arrastrar
 description: Una guía para usar Fluid DnD con la estilos al arrastrar los elementos.
 ---
 
-import ListWithDraggingStyles from "@/components/vue/ListWithDraggingStyles.vue";
+import ListWithDraggingStyles from "@/components/svelte/ListWithDraggingStyles.svelte";
 import { Code } from "@astrojs/starlight/components";
 
 ### Ejemplo de lista de números
@@ -13,18 +13,17 @@ Primero, vamos a crear una lista de números añadiendo el valor a la confuraci�
 
 export const highlightsListOfNumbers = ['draggingClass','"dragging"'];
 
-export const listOfNumbers = `<script setup lang="ts">
-import { ref } from "vue";
-import { useDragAndDrop } from "fluid-dnd/vue";
+export const listOfNumbers = `<script lang="ts">
+import { useDragAndDrop } from "fluid-dnd/svelte";
 
-const list = ref([1, 2, 3]);
+const list = $state([1, 2, 3]);
 const [ parent ] = useDragAndDrop(list,{
-draggingClass: "dragging",
+  draggingClass: "dragging",
 });
 
 </script>`;
 
-<Code code={listOfNumbers} lang="vue" mark={highlightsListOfNumbers} />
+<Code code={listOfNumbers} lang="svelte" mark={highlightsListOfNumbers} />
 
 ### Creando la vista
 
@@ -33,17 +32,13 @@ Después, crearemos la lista de números en la vista y el selector de clase para
 export const highlights = ['dragging'];
 
 export const listOfNumbersHTML = `
-<template>
-  <ul ref="parent" class="block px-6 p-8">
-    <li
-      class="number border-solid mt-1 pl-1 border-2"
-      v-for="(element, index) in list"
-      :index="index"
-    >
-      {{ element }}
-    </li>
-  </ul>
-</template>
+<ul use:parent class="number-list">   
+  {#each list as element, index (element) }
+      <li class="number" data-index = {index}>
+          { element }
+      </li>
+  {/each}
+</ul>
 
 <style>
 /*....*/
@@ -56,7 +51,7 @@ export const listOfNumbersHTML = `
 
 `;
 
-<Code code={listOfNumbersHTML} mark={highlights} lang="vue" />
+<Code code={listOfNumbersHTML} mark={highlights} lang="svelte" />
 
 ### Resultado
 

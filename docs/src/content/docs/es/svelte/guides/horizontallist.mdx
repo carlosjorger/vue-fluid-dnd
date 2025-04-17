@@ -1,0 +1,51 @@
+---
+title: Lista horizontal
+description: Una guía para usar Fluid DnD con una simple lista horizontal.
+---
+
+import SingleHorizontalList from "@/components/svelte/SingleHorizontalList.svelte";
+import { Code } from "@astrojs/starlight/components";
+
+### Ejemplo de lista de números
+
+En este ejemplo vamos usar **Fluid DnD** para ordernar una lista horizontal.
+Primero, vamos a crear una lista de números y vamos añadir el propiedad `direction` con valor igual `horizontal`:
+
+export const listOfNumbers = `<script lang="ts">
+    const list = $state([1, 2, 3, 4, 5]);
+    const [ parent ] = useDragAndDrop(list, { direction: "horizontal" });
+</script>`;
+
+<Code code={listOfNumbers} lang="svelte" />
+
+### Usando useDragAndDrop
+
+Después añadiremos el *action*:
+
+export const highlightsDnD = ['direction="horizontal"','.number-list'];
+
+export const listOfNumberInsideDnD = `
+<div use:parent class="number-list">
+  {#each list as element, index (element)}
+    <div class="number" data-index = {index}>
+      { element }
+    </div>
+  {/each}
+</div>
+
+<style>
+/* ... */
+.number-list {
+  display: flex;
+  flex-direction: row;
+}
+</style>
+`;
+
+<Code code={listOfNumberInsideDnD} lang="svelte" mark={highlightsDnD} />
+
+### Resultado
+
+<div class="p-8 bg-[var(--sl-color-gray-6)]">
+  <SingleHorizontalList client:load />
+</div>

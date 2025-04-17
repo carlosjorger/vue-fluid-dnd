@@ -3,7 +3,7 @@ title: Remover en listas
 description: Una guía de como usar Fluid DnD para remover elemntos en una lista.
 ---
 
-import ListWithRemove from "@/components/vue/ListWithRemove.vue";
+import ListWithRemove from "@/components/svelte/ListWithRemove.svelte";
 import { Code } from "@astrojs/starlight/components";
 
 ### Ejemplo de lista de números
@@ -12,10 +12,9 @@ Para mostrar como usar **Fluid DnD** para remover elementos de un lista.
 Primero, vamos a crear una lista y extraer la función `removeAt` de `useDragAndDrop`:
 
 export const listOfNumbers = `<script setup lang="ts">
-import { ref } from "vue";
-import { useDragAndDrop } from "fluid-dnd/vue";
+import { useDragAndDrop } from "fluid-dnd/svelte";
 
-const list = ref([1, 2, 3, 4, 5]);
+const list = $state([1, 2, 3, 4, 5]);
 const [ parent,_, removeAt ] = useDragAndDrop(list);
 
 </script>`;
@@ -23,7 +22,7 @@ const [ parent,_, removeAt ] = useDragAndDrop(list);
 export const highlightsListOfNumbers = ["removeAt"];
 
 
-<Code code={listOfNumbers} lang="vue" mark={highlightsListOfNumbers} />
+<Code code={listOfNumbers} lang="svelte" mark={highlightsListOfNumbers} />
 
 ### Creando la vista
 
@@ -32,17 +31,17 @@ Después, crearemos la lista con un botón `remove` por cada elemento que llama 
 export const highlightsDroppable = ['<button','button>',"removeAt"];
 
 export const listOfNumbersDroppable = `
-<template>
-   <ul ref="parent" class="number-list">
-    <li class="number" v-for="(element, index) in list" :index="index" :key="element">
-      {{ element }}
-      <button class="remove-button" @click="removeAt(index)">x</button>
+<ul use:parent class="number-list">
+  {#each list as element, index (element)}
+    <li class="number" data-index={index}>
+      { element }
+      <button class="remove-button" onclick={removeAt(index)}>x</button>
     </li>
-  </ul>
-</template>
+  {/each}
+</ul>
 `;
 
-<Code code={listOfNumbersDroppable} lang="vue" mark={highlightsDroppable} />
+<Code code={listOfNumbersDroppable} lang="svelte" mark={highlightsDroppable} />
 
 ### Resultado
 
@@ -54,9 +53,9 @@ export const listOfNumbersDroppable = `
 
 Tu puedes añadir la clase css que se fija cuando un elemento es removido con el parámetro `removingClass`:
 
-export const listOfNumbersWithRemovingClass = `<script setup lang="ts">
+export const listOfNumbersWithRemovingClass = `<script lang="ts">
 // ...
-const [ parent,_, removeAt ] = useDragAndDrop(list,{
+const [ parent, removeAt ] = useDragAndDrop(list,{
   removingClass: "removed"
 });
 
@@ -94,17 +93,16 @@ export const stylesRemovingClass = `
   <ListWithRemove removingClass="removed" client:load  />
 </div>
 
-
 ## Añadiendo el tiempo de demora antes de remover
 
 Puedes añadir la cantidad de tiempo en milisegundos antes de remover el elemento (el tiempo por defecto es de 200 milisegundos):
 
-export const listOfNumbersDelay = `<script setup lang="ts">
+export const listOfNumbersDelay = `<script lang="ts">
 // ...
-const [ parent,_, removeAt ] = useDragAndDrop(list,{
+const [ parent, removeAt ] = useDragAndDrop(list,{
   removingClass: "removed",
   delayBeforeRemove: 800
-});
+});});
 
 </script>`;
 export const highlightsDelay = ["delayBeforeRemove"];

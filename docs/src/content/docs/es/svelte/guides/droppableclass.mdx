@@ -4,23 +4,24 @@ description: Una guía de como usar Fluid DnD para añadir estilos al soltar.
 ---
 
 import { Code } from "@astrojs/starlight/components";
-import DroppableStyles from "@/components/vue/DroppableStyles.vue";
+import DroppableStyles from "@/components/svelte/DroppableStyles.svelte";
 
 
 ### Ejemplo de lista de números
-Primero, Definiremos el `group1` de dos listas y pasar al parámetro `droppableClass` el nombre de la clase que se asigna en un elemento **droppable** cuando un elemento **draggable** es arrastrado sobre él:
+
+Primero, definiremos el `group1` de dos listas y pasar al parámetro `droppableClass` el nombre de la clase que se asigna en un elemento **droppable** cuando un elemento **draggable** es arrastrado sobre él:
 
 export const highlightsListOfNumbers = ["droppableClass", "'droppable-hover'"];
 
 export const listOfNumbers = `<script setup lang="ts">
 ...
-const list1 = ref([1, 2, 3, 4]);
+const list1 = $state([1, 2, 3, 4]);
 const [ parent1 ] = useDragAndDrop(list1, {
   droppableGroup: "group1",
   droppableClass: 'droppable-hover'
 });
 ...
-const list2 = ref([5, 6, 7, 8]);
+const list2 = $state([5, 6, 7, 8]);
 const [ parent2 ] = useDragAndDrop(list2, {
   droppableGroup: "group1",
   direction: "horizontal",
@@ -28,26 +29,25 @@ const [ parent2 ] = useDragAndDrop(list2, {
 });
 </script>`;
 
-<Code code={listOfNumbers} lang="vue"  mark={highlightsListOfNumbers} />
+<Code code={listOfNumbers} lang="svelte"  mark={highlightsListOfNumbers} />
 
 ### Creando la vista
 
 Después, crearemos dos listas en la vista y añadimos los estilos `.number-list.droppable-hover` y `.number-list-h.droppable-hover`:
 
 export const listOfNumbersDraggable = `
-<template>
-  <div class="group-list">
-    <ul ref="parent1" class="number-list">
-      <!-- ...  -->
-    </ul>
-    <div ref="parent2" class="number-list-h">
-      <!-- ...  -->
-    </div>
+<div class="group-list">
+  <ul use:parent1 class="number-list">
+    <!-- ...  -->
+  </ul>
+  <div use:parent2 class="number-list-h">
+    <!-- ...  -->
   </div>
-</template>
+</div>
+
 <style>
  /*...*/
- .number-list {
+.number-list {
   /*...*/
   transition: background-color 150ms ease-in;
 }
@@ -67,7 +67,7 @@ export const listOfNumbersDraggable = `
 
 export const highlightsDraggable = ["parent1", "parent2",".droppable-hover",".droppable-hover"];
 
-<Code code={listOfNumbersDraggable} lang="vue" mark={highlightsDraggable} />
+<Code code={listOfNumbersDraggable} lang="svelte" mark={highlightsDraggable} />
 
 ### Resultado
 
