@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Handler from "../icons/handler.vue";
-import Trash from "../icons/trash.vue";
-import type { Pokemon } from "./Pokemon";
+import Handler from "@/components/icons/handler.vue";
+import Trash from "@/components/icons/trash.vue";
+import type { Pokemon } from "@/components/examples/Pokemon";
 import { computed, type PropType } from "vue";
 const { pokemon, handlerClass, hasRemove, index, removeEvent } = defineProps(
   {
@@ -22,9 +22,6 @@ const { pokemon, handlerClass, hasRemove, index, removeEvent } = defineProps(
    }
   }
 );
-
-
-
 
 const remove = (index: number) => {};
 const removeEventNotUndefined = computed(() => {
@@ -149,7 +146,7 @@ const darkPokeColor = {
 <style scoped>
 .pokemon {
   margin-top: 0rem !important;
-  background-image: url("../../assets/pokemon-bg.svg");
+  background-image: url("../../../assets/pokemon-bg.svg");
   transition: background-color 200ms ease-in;
   transition: opacity 200ms ease;
 }

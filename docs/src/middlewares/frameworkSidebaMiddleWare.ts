@@ -1,4 +1,4 @@
-import { FRAMEWORKS_TEMPLATE, FRAMEWORKS_TYPES } from '@/types';
+import { FRAMEWORKS_TEMPLATE } from '@/types';
 import { getFrameworkFromUrl } from '@/utils/frameworkConfig';
 import { defineRouteMiddleware } from '@astrojs/starlight/route-data';
 import type { SidebarEntry } from 'node_modules/@astrojs/starlight/utils/routing/types';

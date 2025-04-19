@@ -2,7 +2,7 @@
 import { ref, watch } from "vue";
 import { useDragAndDrop } from "fluid-dnd/vue";
 import type { Pokemon } from "./Pokemon";
-import PokemonComponent from "./PokemonComponent.vue";
+import PokemonComponent from "@/components/examples/vue/PokemonComponent.vue";
 import { fetchPokemons } from "@/server/pokemonServer";
 
 const pokemons = ref([] as Pokemon[]);
